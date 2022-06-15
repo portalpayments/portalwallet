@@ -43,3 +43,11 @@ web3auth - shards key between different identity prividers
 https://docs.tor.us/key-infrastructure/technical-architecture
 
 https://docs.web3auth.io/overview/web3auth-and-wallets
+
+## web3auth / shamir secret sharing
+
+1 gmail / safari origin
+2 discord / safari private browsing
+3 gmail and safari different website
+
+If this techdoesn't suck, 1 and 3 should have been the same wallet
