@@ -32,10 +32,12 @@ Till the Sandman he comes
 const birthday = "19810321";
 
 const convertPhraseToSeed = async (
-  phrase: string
-  // birthday: string
+  phrase: string,
+  birthday: string
 ): Promise<Uint8Array> => {
-  const phraseHash = createHash("sha256").update(phrase).digest("hex");
+  const phraseHash = createHash("sha256")
+    .update(phrase + birthday)
+    .digest("hex");
 
   log(`seedHash is`, phraseHash);
 
@@ -83,7 +85,7 @@ const putSolIntoWallet = async (
 (async () => {
   try {
     log(`Making seed`);
-    const seed = await convertPhraseToSeed(phrase);
+    const seed = await convertPhraseToSeed(phrase, birthday);
     log(`Making wallet with seed...`, seed);
     const wallet = await seedToWallet(seed);
     log(
@@ -98,9 +100,6 @@ const putSolIntoWallet = async (
       solanaWeb3.clusterApiUrl(SOLANA_CLUSTER),
       "confirmed"
     );
-    // const Solana = new solanaWeb3.Connection(
-    //   "YOUR_QUICKNODE_HTTP_PROVIDER__HERE"
-    // );
     log(`Latest epoch:`);
     const epochInfo = await connection.getEpochInfo();
     log(print(epochInfo));
