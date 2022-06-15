@@ -1,12 +1,15 @@
 #!/usr/bin/env ts-node
 
-// https://crypto.stackexchange.com/questions/24514/deterministically-generate-a-rsa-public-private-key-pair-from-a-passphrase-with
-
 // https://solana-labs.github.io/solana-web3.js/
 
 import * as solanaWeb3 from "@solana/web3.js";
-import * as bcrypt from "bcrypt";
-import { createHash } from "crypto";
+import { promisify } from "util";
+
+// Convert `fs.readFile()` into a function that takes the
+// same parameters but returns a promise.
+import { scrypt as scryptCallback, scryptSync } from "crypto";
+
+const scrypt = promisify(scryptCallback);
 
 const log = console.log.bind(console);
 
@@ -35,17 +38,13 @@ const convertPhraseToSeed = async (
   phrase: string,
   birthday: string
 ): Promise<Uint8Array> => {
-  const phraseHash = createHash("sha256")
-    .update(phrase + birthday)
-    .digest("hex");
+  // Use scrypt
+  // See https://crypto.stackexchange.com/questions/24514/deterministically-generate-a-rsa-public-private-key-pair-from-a-passphrase-with
 
-  log(`seedHash is`, phraseHash);
-
-  // From https://nodejs.org/api/buffer.html#buffer_buffer
-  // 'The Buffer class is a subclass of JavaScript's Uint8Array class'
-  const seedBytes = Buffer.from(phraseHash);
-
-  // TODO: add salt (name or birthday)
+  // Will be a Buffer, see https://nodejs.org/docs/latest-v16.x/api/crypto.html#cryptoscryptpassword-salt-keylen-options-callback
+  // We could also just do:
+  // const seedBytes = scryptSync(phrase, birthday, 32);
+  const seedBytes = (await scrypt(phrase, birthday, 32)) as Buffer;
 
   if (seedBytes.length !== SOLANA_SEED_SIZE_BYTES) {
     log(`seedBytes was ${seedBytes.length} in size, truncting`);
