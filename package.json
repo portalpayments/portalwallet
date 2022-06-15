@@ -9,9 +9,11 @@
   "author": "Mike MacCana <mike.maccana@gmail.com>",
   "license": "UNLICENSED",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "@solana/web3.js": "^1.44.0"
+    "@solana/web3.js": "^1.44.0",
+    "bcrypt": "^5.0.1"
   }
 }
