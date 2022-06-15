@@ -4,10 +4,7 @@
 
 // https://solana-labs.github.io/solana-web3.js/
 
-// import { randomBytes } from "node:crypto";
-// import { privateToPublic } from "ethereumjs-util";
 import * as solanaWeb3 from "@solana/web3.js";
-import * as crypto from "crypto";
 import * as bcrypt from "bcrypt";
 
 const log = console.log.bind(console);
@@ -18,6 +15,8 @@ const print = (object: unknown) => {
 
 const SOLANA_CLUSTER = "devnet";
 
+// Generate a keypair from a 32 byte seed.
+// https://solana-labs.github.io/solana-web3.js/classes/Keypair.html#fromSeed
 const SOLANA_SEED_SIZE_BYTES = 32;
 
 const phrase = `Say your prayers, little one
@@ -29,25 +28,22 @@ Keep you free from sin
 Till the Sandman he comes
 `;
 
-const convertPhraseToSeed = async (phrase: string): Promise<Uint8Array> => {
-  // bitaddress.org / ninjawallet (really oldand lots of polyfills)
-  // var seedString = Crypto.SHA256(key, { asBytes: true });
+const birthday = "19810321";
 
-  // https://keybase.io/warp/warp_1.0.9_SHA256_a2067491ab582bde779f4505055807c2479354633a2216b22cf1e92d1a6e4a87.html / warpwallet
+const convertPhraseToSeed = async (
+  phrase: string
+  // birthday: string
+): Promise<Uint8Array> => {
+  // const seedHash = await bcrypt.hash(phrase, birthday);
+  const seedHash = await bcrypt.hash(phrase, 10);
 
-  // const seedHashInHex = crypto
-  //   .createHash("sha256")
-  //   .update(phrase)
-  //   .digest("hex");
-
-  // Crypto.createHmac( 'sha256', buffer)
-  // const seedHashInHex = crypto.createHmac("sha256", phrase);
-  const salt = await bcrypt.genSalt(10);
-  const seedHashInHex = await bcrypt.hash(phrase, salt);
+  log(`seedHash is`, seedHash);
 
   // From https://nodejs.org/api/buffer.html#buffer_buffer
   // 'The Buffer class is a subclass of JavaScript's Uint8Array class'
-  const seedBytes = Buffer.from(seedHashInHex);
+  const seedBytes = Buffer.from(seedHash);
+
+  // TODO: add salt (name or birthday)
 
   if (seedBytes.length !== SOLANA_SEED_SIZE_BYTES) {
     log(`seedBytes was ${seedBytes.length} in size, truncting`);
@@ -57,7 +53,7 @@ const convertPhraseToSeed = async (phrase: string): Promise<Uint8Array> => {
 };
 
 const seedToWallet = (seed: Uint8Array) => {
-  // The keypair is the wallet!
+  // The keypair is the (parent) wallet!
   // See https://github.com/solana-labs/solana/blob/master/web3.js/examples/get_account_info.js
   const wallet = solanaWeb3.Keypair.fromSeed(seed);
 
@@ -88,30 +84,30 @@ const putSolIntoWallet = async (
   try {
     log(`Making seed`);
     const seed = await convertPhraseToSeed(phrase);
-    log(`Making wallet...`);
-    const wallet = await seedToWallet(seed);
-    log(
-      `Wallet:`,
-      print({
-        public: wallet.publicKey.toString(),
-        private: wallet.secretKey.toString(),
-      })
-    );
-    log(`Connecting to Solana devnet`);
-    const connection = new solanaWeb3.Connection(
-      solanaWeb3.clusterApiUrl(SOLANA_CLUSTER),
-      "confirmed"
-    );
-    // const Solana = new solanaWeb3.Connection(
-    //   "YOUR_QUICKNODE_HTTP_PROVIDER__HERE"
+    log(`Making wallet with seed...`, seed);
+    // const wallet = await seedToWallet(seed);
+    // log(
+    //   `Wallet:`,
+    //   print({
+    //     public: wallet.publicKey.toString(),
+    //     private: wallet.secretKey.toString(),
+    //   })
     // );
-    log(`Latest epoch:`);
-    const epochInfo = await connection.getEpochInfo();
-    log(print(epochInfo));
-    log(`Putting Sol into wallet`);
-    await putSolIntoWallet(connection, wallet.publicKey);
-    let account = await connection.getAccountInfo(wallet.publicKey);
-    log("Account:", print(account));
+    // log(`Connecting to Solana devnet`);
+    // const connection = new solanaWeb3.Connection(
+    //   solanaWeb3.clusterApiUrl(SOLANA_CLUSTER),
+    //   "confirmed"
+    // );
+    // // const Solana = new solanaWeb3.Connection(
+    // //   "YOUR_QUICKNODE_HTTP_PROVIDER__HERE"
+    // // );
+    // log(`Latest epoch:`);
+    // const epochInfo = await connection.getEpochInfo();
+    // log(print(epochInfo));
+    // log(`Putting Sol into wallet`);
+    // await putSolIntoWallet(connection, wallet.publicKey);
+    // let account = await connection.getAccountInfo(wallet.publicKey);
+    // log("Account:", print(account));
   } catch (thrownObject) {
     const error = thrownObject as Error;
     log(error.message);
