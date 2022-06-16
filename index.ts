@@ -24,19 +24,18 @@ Keep you free from sin
 Till the Sandman he comes
 `;
 
-const birthday = "19810321";
+// TODO: use a less crappy salt
+const salt = "19810321";
 
 const convertPhraseToSeed = async (
   phrase: string,
-  birthday: string
+  salt: string
 ): Promise<Uint8Array> => {
   // Use scrypt
   // See https://crypto.stackexchange.com/questions/24514/deterministically-generate-a-rsa-public-private-key-pair-from-a-passphrase-with
 
   // Will be a Buffer, see https://nodejs.org/docs/latest-v16.x/api/crypto.html#cryptoscryptpassword-salt-keylen-options-callback
-  // We could also just do:
-  // const seedBytes = scryptSync(phrase, birthday, 32);
-  const seedBytes = (await scrypt(phrase, birthday, 32)) as Buffer;
+  const seedBytes = (await scrypt(phrase, salt, 32)) as Buffer;
 
   if (seedBytes.length !== SOLANA_SEED_SIZE_BYTES) {
     log(`seedBytes was ${seedBytes.length} in size, truncting`);
@@ -57,6 +56,7 @@ const putSolIntoWallet = async (
   connection: solanaWeb3.Connection,
   publicKey: solanaWeb3.PublicKey
 ) => {
+  log(`Putting Sol into wallet`, publicKey);
   // Generate a new wallet keypair and airdrop SOL
   var airdropSignature = await connection.requestAirdrop(
     publicKey,
@@ -76,11 +76,12 @@ const putSolIntoWallet = async (
 (async () => {
   try {
     log(`Making seed`);
-    const seed = await convertPhraseToSeed(phrase, birthday);
+    const seed = await convertPhraseToSeed(phrase, salt);
     log(`Making wallet with seed...`, seed);
     const wallet = await seedToWallet(seed);
+    log(`Wallet`, wallet);
     log(
-      `Wallet:`,
+      `Wallet keys:`,
       print({
         public: wallet.publicKey.toString(),
         private: wallet.secretKey.toString(),
@@ -94,10 +95,12 @@ const putSolIntoWallet = async (
     log(`Latest epoch:`);
     const epochInfo = await connection.getEpochInfo();
     log(print(epochInfo));
-    log(`Putting Sol into wallet`);
     await putSolIntoWallet(connection, wallet.publicKey);
     let account = await connection.getAccountInfo(wallet.publicKey);
     log("Account:", print(account));
+    log(
+      `Visit https://explorer.solana.com/address/${wallet.publicKey.toString()}?cluster=devnet`
+    );
   } catch (thrownObject) {
     const error = thrownObject as Error;
     log(error.message);
