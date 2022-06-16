@@ -51,9 +51,6 @@ export const connect = async (): Promise<solanaWeb3.Connection> => {
     solanaWeb3.clusterApiUrl(SOLANA_CLUSTER),
     "confirmed"
   );
-  log(`Latest epoch:`);
-  const epochInfo = await connection.getEpochInfo();
-  log(print(epochInfo));
   return connection;
 };
 
