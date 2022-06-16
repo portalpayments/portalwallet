@@ -2,20 +2,12 @@
 
 // https://solana-labs.github.io/solana-web3.js/
 
+// Note we can't make a nemonic, as that's the seed phrase
+// From nemonic -> master HD keypair -> child HD keypairs
+
 import * as solanaWeb3 from "@solana/web3.js";
-import { promisify } from "util";
-
-// Convert `fs.readFile()` into a function that takes the
-// same parameters but returns a promise.
-import { scrypt as scryptCallback, scryptSync } from "crypto";
-
-const scrypt = promisify(scryptCallback);
-
-const log = console.log.bind(console);
-
-const print = (object: unknown) => {
-  return JSON.stringify(object, null, 2);
-};
+import * as bip39 from "bip39";
+import { log, scrypt, print } from "./lib/utils";
 
 const SOLANA_CLUSTER = "devnet";
 
