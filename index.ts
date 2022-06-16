@@ -26,37 +26,46 @@ Till the Sandman he comes
 
 const birthday = "19810321";
 
+const password = "swag";
+
 const convertPhraseToSeed = async (
   phrase: string,
   birthday: string
-): Promise<Uint8Array> => {
+): Promise<Buffer> => {
+  log(`Making seed...`);
   // Use scrypt
   // See https://crypto.stackexchange.com/questions/24514/deterministically-generate-a-rsa-public-private-key-pair-from-a-passphrase-with
 
   // Will be a Buffer, see https://nodejs.org/docs/latest-v16.x/api/crypto.html#cryptoscryptpassword-salt-keylen-options-callback
-  // We could also just do:
-  // const seedBytes = scryptSync(phrase, birthday, 32);
-  const seedBytes = (await scrypt(phrase, birthday, 32)) as Buffer;
+  let seedBytes = (await scrypt(phrase, birthday, 32)) as Buffer;
 
-  if (seedBytes.length !== SOLANA_SEED_SIZE_BYTES) {
-    log(`seedBytes was ${seedBytes.length} in size, truncting`);
-    return seedBytes.subarray(0, SOLANA_SEED_SIZE_BYTES);
-  }
   return seedBytes;
 };
 
-const seedToWallet = (seed: Uint8Array) => {
+const seedToWallet = async (entropy: Buffer, password: string) => {
+  log(`Making wallet with seed...`, entropy.toString());
+  log(`A`);
+  const mnemonic = bip39.entropyToMnemonic(entropy.toString("hex"));
   // The keypair is the (parent) wallet!
   // See https://github.com/solana-labs/solana/blob/master/web3.js/examples/get_account_info.js
-  const wallet = solanaWeb3.Keypair.fromSeed(seed);
+  log(`mnemonic`, mnemonic);
+  log(`B`);
+  const seed = await bip39.mnemonicToSeed(mnemonic, password);
 
-  return wallet;
+  // TODO: what is bip44
+  log(`making keypair from seed`);
+  const keypair = solanaWeb3.Keypair.fromSeed(
+    seed.subarray(0, SOLANA_SEED_SIZE_BYTES)
+  );
+  log(`D`);
+  return keypair;
 };
 
 const putSolIntoWallet = async (
   connection: solanaWeb3.Connection,
   publicKey: solanaWeb3.PublicKey
 ) => {
+  log(`Putting Sol into wallet`);
   // Generate a new wallet keypair and airdrop SOL
   var airdropSignature = await connection.requestAirdrop(
     publicKey,
@@ -75,10 +84,8 @@ const putSolIntoWallet = async (
 
 (async () => {
   try {
-    log(`Making seed`);
     const seed = await convertPhraseToSeed(phrase, birthday);
-    log(`Making wallet with seed...`, seed);
-    const wallet = await seedToWallet(seed);
+    const wallet = await seedToWallet(seed, password);
     log(
       `Wallet:`,
       print({
@@ -94,7 +101,6 @@ const putSolIntoWallet = async (
     log(`Latest epoch:`);
     const epochInfo = await connection.getEpochInfo();
     log(print(epochInfo));
-    log(`Putting Sol into wallet`);
     await putSolIntoWallet(connection, wallet.publicKey);
     let account = await connection.getAccountInfo(wallet.publicKey);
     log("Account:", print(account));
