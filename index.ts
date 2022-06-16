@@ -104,6 +104,9 @@ const putSolIntoWallet = async (
     await putSolIntoWallet(connection, wallet.publicKey);
     let account = await connection.getAccountInfo(wallet.publicKey);
     log("Account:", print(account));
+    log(
+      `Visit https://explorer.solana.com/address/${wallet.publicKey.toString()}?cluster=devnet`
+    );
   } catch (thrownObject) {
     const error = thrownObject as Error;
     log(error.message);
