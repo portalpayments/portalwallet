@@ -1,7 +1,5 @@
 #!/usr/bin/env ts-node
 
-// https://solana-labs.github.io/solana-web3.js/
-
 import { log } from "./lib/utils";
 import {
   convertPhraseToSeed,
@@ -10,9 +8,6 @@ import {
   getAccountInfo,
   putSolIntoWallet,
 } from "./lib/vmwallet";
-
-// Note we can't make a nemonic, as that's the seed phrase
-// From nemonic -> master HD keypair -> child HD keypairs
 
 const phrase = `Say your prayers, little one
 Don't forget, my son

@@ -4,8 +4,8 @@ import { log, scrypt, print } from "./utils";
 
 const SOLANA_CLUSTER = "devnet";
 
-// Generate a keypair from a 32 byte seed.
-// https://solana-labs.github.io/solana-web3.js/classes/Keypair.html#fromSeed
+// From https://solana-labs.github.io/solana-web3.js/classes/Keypair.html#fromSeed
+// 'Generate a keypair from a 32 byte seed.'
 const SOLANA_SEED_SIZE_BYTES = 32;
 
 export const convertPhraseToSeed = async (
