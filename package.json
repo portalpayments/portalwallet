@@ -1,12 +1,12 @@
 {
   "name": "vmwallet",
   "version": "1.0.0",
-  "description": "",
+  "description": "A user friendly wallet",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node index.ts"
   },
-  "author": "Mike MacCana <mike.maccana@gmail.com>",
+  "author": "Mike MacCana <mike.maccana@gmail.com> and Vahah Hatami <vahah.hatami@gmail.com>",
   "license": "UNLICENSED",
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
