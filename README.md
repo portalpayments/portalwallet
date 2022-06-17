@@ -1,6 +1,11 @@
 # vmwallet
 
-Vaheh and Mike wallet.
+## A very different wallet
+
+- No 12 word restore phrases to remember
+- Send and recieve money with real-world verified wallets
+- Display your NFTs on the big screen
+  - Support for Apple
 
 A friendly and straightforward web3 wallet.
 
