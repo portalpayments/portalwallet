@@ -5,7 +5,7 @@ import {
   convertPhraseToSeed,
   seedToWallet,
   connect,
-  getAccountInfo,
+  getAccountBalance,
   putSolIntoWallet,
 } from "./lib/vmwallet";
 
@@ -27,11 +27,11 @@ const password = "swag";
     const seed = await convertPhraseToSeed(phrase, birthday);
     const wallet = await seedToWallet(seed, password);
     const connection = await connect();
-    await getAccountInfo(connection, wallet.publicKey);
+    const balanceBefore = await getAccountBalance(connection, wallet.publicKey);
     await putSolIntoWallet(connection, wallet.publicKey);
-    await getAccountInfo(connection, wallet.publicKey);
+    const balanceAfter = await getAccountBalance(connection, wallet.publicKey);
     log(
-      `Visit https://explorer.solana.com/address/${wallet.publicKey.toString()}?cluster=devnet`
+      `balanceBefore ${balanceBefore}, ${balanceAfter}, Visit https://explorer.solana.com/address/${wallet.publicKey.toString()}?cluster=devnet`
     );
   } catch (thrownObject) {
     const error = thrownObject as Error;

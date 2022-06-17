@@ -54,7 +54,7 @@ export const connect = async (): Promise<solanaWeb3.Connection> => {
   return connection;
 };
 
-export const getAccountInfo = async (
+export const getAccountBalance = async (
   connection: solanaWeb3.Connection,
   publicKey: solanaWeb3.PublicKey
 ) => {
@@ -63,6 +63,7 @@ export const getAccountInfo = async (
     throw new Error(`Could not find account '${publicKey}'`);
   }
   log("💰 Account balance:", account.lamports);
+  return account.lamports;
 };
 
 export const putSolIntoWallet = async (
