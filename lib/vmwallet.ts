@@ -1,4 +1,10 @@
-import * as solanaWeb3 from "@solana/web3.js";
+import {
+  clusterApiUrl,
+  Connection,
+  Keypair,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+} from "@solana/web3.js";
 import * as bip39 from "bip39";
 import { log, scrypt, print } from "./utils";
 
@@ -32,9 +38,7 @@ export const seedToWallet = async (entropy: Buffer, password: string) => {
 
   // TODO: what is bip44
   log(`making keypair from seed`);
-  const keypair = solanaWeb3.Keypair.fromSeed(
-    seed.subarray(0, SOLANA_SEED_SIZE_BYTES)
-  );
+  const keypair = Keypair.fromSeed(seed.subarray(0, SOLANA_SEED_SIZE_BYTES));
   log(
     `Wallet:`,
     print({
@@ -45,18 +49,15 @@ export const seedToWallet = async (entropy: Buffer, password: string) => {
   return keypair;
 };
 
-export const connect = async (): Promise<solanaWeb3.Connection> => {
+export const connect = async (): Promise<Connection> => {
   log(`⚡ Connecting to Solana devnet`);
-  const connection = new solanaWeb3.Connection(
-    solanaWeb3.clusterApiUrl(SOLANA_CLUSTER),
-    "confirmed"
-  );
+  const connection = new Connection(clusterApiUrl(SOLANA_CLUSTER), "confirmed");
   return connection;
 };
 
 export const getAccountBalance = async (
-  connection: solanaWeb3.Connection,
-  publicKey: solanaWeb3.PublicKey
+  connection: Connection,
+  publicKey: PublicKey
 ) => {
   let account = await connection.getAccountInfo(publicKey);
   if (!account) {
@@ -67,14 +68,14 @@ export const getAccountBalance = async (
 };
 
 export const putSolIntoWallet = async (
-  connection: solanaWeb3.Connection,
-  publicKey: solanaWeb3.PublicKey
+  connection: Connection,
+  publicKey: PublicKey
 ) => {
   log(`💸 Putting Sol into wallet`);
   // Generate a new wallet keypair and airdrop SOL
   var airdropSignature = await connection.requestAirdrop(
     publicKey,
-    solanaWeb3.LAMPORTS_PER_SOL
+    LAMPORTS_PER_SOL
   );
 
   const latestBlockHash = await connection.getLatestBlockhash();
