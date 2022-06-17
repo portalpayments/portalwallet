@@ -86,3 +86,26 @@ export const putSolIntoWallet = async (
     signature: airdropSignature,
   });
 };
+
+export const makeFullWalletWithTokens = async (
+  phrase: string,
+  fullName: string,
+  password: string
+) => {
+  try {
+    const seed = await convertPhraseToSeed(phrase, fullName);
+    const wallet = await seedToWallet(seed, password);
+    const connection = await connect();
+    const balanceBefore = await getAccountBalance(connection, wallet.publicKey);
+    await putSolIntoWallet(connection, wallet.publicKey);
+    const balanceAfter = await getAccountBalance(connection, wallet.publicKey);
+    log(
+      `balanceBefore ${balanceBefore}, ${balanceAfter}, Visit https://explorer.solana.com/address/${wallet.publicKey.toString()}?cluster=devnet`
+    );
+    return balanceAfter;
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    log(error.message);
+    throw error;
+  }
+};
