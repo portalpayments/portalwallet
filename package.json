@@ -4,12 +4,16 @@
   "description": "A user friendly wallet",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node index.ts"
+    "start": "ts-node index.ts",
+    "test": "jest"
   },
   "author": "Mike MacCana <mike.maccana@gmail.com> and Vahah Hatami <vahah.hatami@gmail.com>",
   "license": "UNLICENSED",
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/jest": "^28.1.1",
+    "jest": "^28.1.1",
+    "ts-jest": "^28.0.5",
     "typescript": "^4.7.3"
   },
   "dependencies": {
