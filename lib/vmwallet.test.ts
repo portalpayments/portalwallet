@@ -20,6 +20,10 @@ describe(`restoration`, () => {
   });
 });
 
-// describe(`restoration`, () => {
-//   test(`wallets can be restored using their seed phrases`, () => {});
-// });
+describe(`restoration`, () => {
+  test(`wallets can be restored using their seed phrases`, async () => {
+    const difference = laterBalance - initialBalance;
+    const expectedDifference = laterBalance - 1 * LAMPORTS_PER_SOL;
+    expect(difference).toEqual(expectedDifference);
+  });
+});

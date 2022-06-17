@@ -22,7 +22,11 @@ const birthday = "19810321";
 
 const password = "swag";
 
-(async () => {
+const makeFullWalletWithTokens = async (
+  phrase: string,
+  birthday: string,
+  password: string
+) => {
   try {
     const seed = await convertPhraseToSeed(phrase, birthday);
     const wallet = await seedToWallet(seed, password);
@@ -36,5 +40,10 @@ const password = "swag";
   } catch (thrownObject) {
     const error = thrownObject as Error;
     log(error.message);
+    throw error;
   }
+};
+
+(async () => {
+  await makeFullWalletWithTokens(phrase, birthday, password);
 })();
