@@ -13,3 +13,6 @@ A friendly and straightforward web3 wallet.
 
 - https://solanacookbook.com/references/keypairs-and-wallets.html#how-to-generate-a-new-keypair
 - https://solana-labs.github.io/solana-web3.js/
+- https://solana-labs.github.io/wallet-adapter/example/
+  https://solanacookbook.com/references/keypairs-and-wallets.html#how-to-generate-a-new-keypair
+- https://buildspace.so/
