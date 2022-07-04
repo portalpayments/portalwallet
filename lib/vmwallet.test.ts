@@ -1,7 +1,13 @@
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { cleanPhrase } from "./phrase-cleaning";
 import { SECONDS } from "./utils";
-import { makeFullWalletWithTokens } from "./vmwallet";
+import {
+  connect,
+  convertPhraseToSeed,
+  getAccountBalance,
+  putSolIntoWallet,
+  seedToWallet,
+} from "./vmwallet";
 
 // Put these at the top to avoid indentation issues
 const dirtyPhrase = `Say your prayers, little one
@@ -28,23 +34,38 @@ describe(`restoration`, () => {
 });
 
 describe(`restoration`, () => {
-  // skip because not running right now due to 429 in dev
-  test.skip(
+  test(
     `wallets can be restored using their seed phrases`,
     async () => {
-      const initialBalance = await makeFullWalletWithTokens(
-        dirtyPhrase,
-        fullName,
-        password
+      const phrase = `Say your prayers, little one
+Don't forget, my son
+To include everyone
+
+I tuck you in, warm within
+Keep you free from sin
+Till the Sandman he comes
+`;
+
+      const fullName = "19810321";
+
+      const password = "swag";
+
+      const seed = await convertPhraseToSeed(phrase, fullName);
+      const wallet = await seedToWallet(seed, password);
+      const connection = await connect();
+      const balanceBefore = await getAccountBalance(
+        connection,
+        wallet.publicKey
       );
-      const laterBalance = await makeFullWalletWithTokens(
-        dirtyPhrase,
-        fullName,
-        password
+      const deposit = 1 * LAMPORTS_PER_SOL;
+      await putSolIntoWallet(connection, wallet.publicKey, deposit);
+      const balanceAfter = await getAccountBalance(
+        connection,
+        wallet.publicKey
       );
-      const difference = laterBalance - initialBalance;
-      const expectedDifference = laterBalance - 1 * LAMPORTS_PER_SOL;
-      expect(difference).toEqual(expectedDifference);
+
+      const difference = balanceAfter - balanceBefore;
+      expect(difference).toEqual(deposit);
     },
     30 * SECONDS
   );
