@@ -37,20 +37,11 @@ describe(`restoration`, () => {
   test(
     `wallets can be restored using their seed phrases`,
     async () => {
-      const phrase = `Say your prayers, little one
-Don't forget, my son
-To include everyone
-
-I tuck you in, warm within
-Keep you free from sin
-Till the Sandman he comes
-`;
-
       const fullName = "19810321";
 
       const password = "swag";
 
-      const seed = await convertPhraseToSeed(phrase, fullName);
+      const seed = await convertPhraseToSeed(dirtyPhrase, fullName);
       const wallet = await seedToWallet(seed, password);
       const connection = await connect();
       const balanceBefore = await getAccountBalance(
