@@ -16,3 +16,4 @@ A friendly and straightforward web3 wallet.
 - https://solana-labs.github.io/wallet-adapter/example/
   https://solanacookbook.com/references/keypairs-and-wallets.html#how-to-generate-a-new-keypair
 - https://buildspace.so/
+- https://crypto.stackexchange.com/questions/11269/can-keys-from-bitcoins-hierarchical-deterministic-wallets-be-correlated-reduci
