@@ -6,7 +6,7 @@ import {
   convertPhraseToSeed,
   getAccountBalance,
   putSolIntoWallet,
-  seedToWallet,
+  seedToKeypair,
 } from "./vmwallet";
 
 // Put these at the top to avoid indentation issues
@@ -42,17 +42,17 @@ describe(`restoration`, () => {
       const password = "swag";
 
       const seed = await convertPhraseToSeed(dirtyPhrase, fullName);
-      const wallet = await seedToWallet(seed, password);
+      const keypair = await seedToKeypair(seed, password);
       const connection = await connect();
       const balanceBefore = await getAccountBalance(
         connection,
-        wallet.publicKey
+        keypair.publicKey
       );
       const deposit = 1 * LAMPORTS_PER_SOL;
-      await putSolIntoWallet(connection, wallet.publicKey, deposit);
+      await putSolIntoWallet(connection, keypair.publicKey, deposit);
       const balanceAfter = await getAccountBalance(
         connection,
-        wallet.publicKey
+        keypair.publicKey
       );
 
       const difference = balanceAfter - balanceBefore;

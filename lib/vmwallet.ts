@@ -22,8 +22,8 @@ export const convertPhraseToSeed = async (
   return seedBytes;
 };
 
-export const seedToWallet = async (entropy: Buffer, password: string) => {
-  log(`👛 Making wallet with seed...`, entropy.toString());
+export const seedToKeypair = async (entropy: Buffer, password: string) => {
+  log(`👛 Making keypair with seed...`, entropy.toString());
   const mnemonic = bip39.entropyToMnemonic(entropy.toString("hex"));
   // The keypair is the (parent) wallet!
   // See https://github.com/solana-labs/solana/blob/master/web3.js/examples/get_account_info.js
