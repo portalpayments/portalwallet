@@ -6,14 +6,7 @@ import {
 } from "@solana/web3.js";
 import * as bip39 from "bip39";
 import { log, scrypt, print } from "./utils";
-import { derivePath } from "ed25519-hd-key";
-import {
-  PURPOSE,
-  SOLANA_COIN_TYPE,
-  EXTERNAL_CHAIN,
-  URLS,
-  SOLANA_SEED_SIZE_BYTES,
-} from "./constants";
+import { URLS, SOLANA_SEED_SIZE_BYTES } from "./constants";
 
 export const convertPhraseToSeed = async (
   phrase: string,
@@ -50,9 +43,7 @@ export const seedToWallet = async (entropy: Buffer, password: string) => {
   return keypair;
 };
 
-export const connect = async (
-  networkName = "genesysGoDevNet"
-): Promise<Connection> => {
+export const connect = async (networkName = "devNet"): Promise<Connection> => {
   log(`⚡ Connecting to ${networkName}`);
   const connection = new Connection(URLS[networkName], "confirmed");
   return connection;
