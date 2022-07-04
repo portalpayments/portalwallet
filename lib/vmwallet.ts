@@ -1,5 +1,4 @@
 import {
-  clusterApiUrl,
   Connection,
   Keypair,
   LAMPORTS_PER_SOL,
@@ -7,12 +6,14 @@ import {
 } from "@solana/web3.js";
 import * as bip39 from "bip39";
 import { log, scrypt, print } from "./utils";
-
-const SOLANA_CLUSTER = "devnet";
-
-// From https://solana-labs.github.io/solana-web3.js/classes/Keypair.html#fromSeed
-// 'Generate a keypair from a 32 byte seed.'
-const SOLANA_SEED_SIZE_BYTES = 32;
+import { derivePath } from "ed25519-hd-key";
+import {
+  PURPOSE,
+  SOLANA_COIN_TYPE,
+  EXTERNAL_CHAIN,
+  URLS,
+  SOLANA_SEED_SIZE_BYTES,
+} from "./constants";
 
 export const convertPhraseToSeed = async (
   phrase: string,
@@ -49,9 +50,11 @@ export const seedToWallet = async (entropy: Buffer, password: string) => {
   return keypair;
 };
 
-export const connect = async (): Promise<Connection> => {
-  log(`⚡ Connecting to Solana devnet`);
-  const connection = new Connection(clusterApiUrl(SOLANA_CLUSTER), "confirmed");
+export const connect = async (
+  networkName = "genesysGoDevNet"
+): Promise<Connection> => {
+  log(`⚡ Connecting to ${networkName}`);
+  const connection = new Connection(URLS[networkName], "confirmed");
   return connection;
 };
 
