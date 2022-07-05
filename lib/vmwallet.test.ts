@@ -48,21 +48,12 @@ describe(`restoration`, () => {
     async () => {
       const fullName = "Joe Cottoneye 2";
       const password = `where did you come from ${new Date().toString()}`;
-      // TODO
-      // If I change any details for the wallet creation the test doesn't work
-      // I suspect it's not actually making the wallet
-      // It maybe made a wallet in the past and is reconnecting to it now
-
       const seed = await convertPhraseToSeed(expectedCleanedPhrase, fullName);
       const keypair = await seedToKeypair(seed, password);
 
-      // Generate a new wallet keypair and airdrop SOL
-      var airdropSignature = await connection.requestAirdrop(
-        keypair.publicKey,
-        LAMPORTS_PER_SOL
-      );
-
-      await connection.confirmTransaction(airdropSignature);
+      // IMPORTANT: if we don't deposit any Sol the wallet won't exist
+      const deposit = 1 * LAMPORTS_PER_SOL;
+      await putSolIntoWallet(connection, keypair.publicKey, deposit);
 
       const accountBalance = await getAccountBalance(
         connection,
