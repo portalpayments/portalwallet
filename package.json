@@ -18,7 +18,7 @@
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "@solana/web3.js": "^1.44.0",
+    "@solana/web3.js": "^1.47.3",
     "bcrypt": "^5.0.1",
     "bip39": "^3.0.4",
     "ed25519-hd-key": "^1.2.0",
