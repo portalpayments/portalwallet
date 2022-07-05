@@ -46,16 +46,15 @@ describe(`restoration`, () => {
   test(
     `wallets can be created`,
     async () => {
-      const fullName = "Joe Cottoneye";
+      const fullName = "Joe Cottoneye 2";
       const password = "where did you come from";
       // TODO
       // If I change any details for the wallet creation the test doesn't work
       // I suspect it's not actually making the wallet
       // It maybe made a wallet in the past and is reconnecting to it now
 
-      const seed = await convertPhraseToSeed(dirtyPhrase, fullName);
+      const seed = await convertPhraseToSeed(expectedCleanedPhrase, fullName);
       const keypair = await seedToKeypair(seed, password);
-      // await getAccountBalance(connection, keypair.publicKey);
 
       // Generate a new wallet keypair and airdrop SOL
       var airdropSignature = await connection.requestAirdrop(
@@ -63,14 +62,13 @@ describe(`restoration`, () => {
         LAMPORTS_PER_SOL
       );
 
-      //wait for airdrop confirmation
       await connection.confirmTransaction(airdropSignature);
 
-      // get account info
-      // account data is bytecode that needs to be deserialized
-      // serialization and deserialization is program specific
-      let account = await connection.getAccountInfo(keypair.publicKey);
-      console.log(account);
+      const accountBalance = await getAccountBalance(
+        connection,
+        keypair.publicKey
+      );
+      console.log(accountBalance);
     },
     30 * SECONDS
   );
