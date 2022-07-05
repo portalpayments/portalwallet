@@ -7,7 +7,7 @@ export const URLS: Record<string, string> = {
   testNet: clusterApiUrl("testnet"),
   // https://www.quicknode.com/endpoints/49328
   quickNodeDevNet:
-    "wss://red-aged-dream.solana-devnet.quiknode.pro/cb0472330c14ad913e8a4430c70c182570f96047/",
+    "https://red-aged-dream.solana-devnet.quiknode.pro/cb0472330c14ad913e8a4430c70c182570f96047/",
   // https://shdw.genesysgo.com/genesysgo/the-genesysgo-rpc-network
   // The SSC DAO network handles both https and wss connections. It provides unlimited data, global DNS load balancing for the lowest latency possible, backed by 300+ bare metal servers in 9 countries across 3 different continents. Additionally, the SSC DAO network has the full ledger history back to the genesis block.
   genesysGoMain: "https://ssc-dao.genesysgo.net/",
