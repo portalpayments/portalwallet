@@ -47,7 +47,7 @@ describe(`restoration`, () => {
     `wallets can be created`,
     async () => {
       const fullName = "Joe Cottoneye 2";
-      const password = "where did you come from";
+      const password = `where did you come from ${new Date().toString()}`;
       // TODO
       // If I change any details for the wallet creation the test doesn't work
       // I suspect it's not actually making the wallet
