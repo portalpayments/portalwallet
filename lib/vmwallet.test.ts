@@ -1,4 +1,9 @@
-import { Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import {
+  clusterApiUrl,
+  Connection,
+  Keypair,
+  LAMPORTS_PER_SOL,
+} from "@solana/web3.js";
 import { cleanPhrase } from "./phrase-cleaning";
 import { SECONDS } from "./utils";
 import {
@@ -34,19 +39,39 @@ describe(`restoration`, () => {
   beforeAll(async () => {
     connection = await connect();
   });
+
+  afterAll(async () => {
+    // TODO: close connection?
+  });
   test(
     `wallets can be created`,
     async () => {
       const fullName = "19810321";
-      const password = "swag";
+      const password = "swag2";
       // TODO
       // If I change any details for the wallet creation the test doesn't work
       // I suspect it's not actually making the wallet
       // It maybe made a wallet in the past and is reconnecting to it now
 
-      const seed = await convertPhraseToSeed(dirtyPhrase, fullName);
-      const keypair = await seedToKeypair(seed, password);
-      await getAccountBalance(connection, keypair.publicKey);
+      // const seed = await convertPhraseToSeed(dirtyPhrase, fullName);
+      // const keypair = await seedToKeypair(seed, password);
+      // await getAccountBalance(connection, keypair.publicKey);
+
+      // Generate a new wallet keypair and airdrop SOL
+      var wallet = Keypair.generate();
+      var airdropSignature = await connection.requestAirdrop(
+        wallet.publicKey,
+        LAMPORTS_PER_SOL
+      );
+
+      //wait for airdrop confirmation
+      await connection.confirmTransaction(airdropSignature);
+
+      // get account info
+      // account data is bytecode that needs to be deserialized
+      // serialization and deserialization is program specific
+      let account = await connection.getAccountInfo(wallet.publicKey);
+      console.log(account);
     },
     30 * SECONDS
   );
