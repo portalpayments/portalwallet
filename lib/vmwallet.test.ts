@@ -44,7 +44,7 @@ describe(`restoration`, () => {
   let connection: Connection;
   let keypair: Keypair;
   beforeAll(async () => {
-    connection = await connect();
+    connection = await connect("quickNodeDevNet");
   });
 
   afterAll(async () => {
@@ -64,28 +64,28 @@ describe(`restoration`, () => {
         connection,
         keypair.publicKey
       );
-      console.log(accountBalance);
+      expect(accountBalance).toEqual(deposit);
     },
     30 * SECONDS
   );
 
-  test(
-    `wallets can be restored using their seed phrases`,
-    async () => {
-      const balanceBefore = await getAccountBalance(
-        connection,
-        keypair.publicKey
-      );
-      const deposit = 1 * LAMPORTS_PER_SOL;
-      await putSolIntoWallet(connection, keypair.publicKey, deposit);
-      const balanceAfter = await getAccountBalance(
-        connection,
-        keypair.publicKey
-      );
+  // test(
+  //   `wallets can be restored using their seed phrases`,
+  //   async () => {
+  //     const balanceBefore = await getAccountBalance(
+  //       connection,
+  //       keypair.publicKey
+  //     );
+  //     const deposit = 1 * LAMPORTS_PER_SOL;
+  //     await putSolIntoWallet(connection, keypair.publicKey, deposit);
+  //     const balanceAfter = await getAccountBalance(
+  //       connection,
+  //       keypair.publicKey
+  //     );
 
-      const difference = balanceAfter - balanceBefore;
-      expect(difference).toEqual(deposit);
-    },
-    30 * SECONDS
-  );
+  //     const difference = balanceAfter - balanceBefore;
+  //     expect(difference).toEqual(deposit);
+  //   },
+  //   30 * SECONDS
+  // );
 });
