@@ -41,6 +41,11 @@ describe(`restoration`, () => {
 
       const password = "swag";
 
+      // TODO
+      // If I change any details for the wallet creation the test doesn't work
+      // I suspect it's not actually making the wallet
+      // It maybe made a wallet in the past and is reconnecting to it now
+
       const seed = await convertPhraseToSeed(dirtyPhrase, fullName);
       const keypair = await seedToKeypair(seed, password);
       const connection = await connect();
