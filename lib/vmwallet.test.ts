@@ -1,5 +1,6 @@
 import { Connection, Keypair } from "@solana/web3.js";
 import { cleanPhrase } from "./phrase-cleaning";
+import { log } from "./utils";
 import {
   connect,
   convertPhraseToSeed,
@@ -10,6 +11,12 @@ import {
 
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
+
+// Quiet utils.log() during tests
+jest.mock("./utils", () => ({
+  ...jest.requireActual("./utils"),
+  log: jest.fn(),
+}));
 
 // Put these at the top to avoid indentation issues
 const dirtyPhrase = `Say your prayers, little one
@@ -35,7 +42,6 @@ const DEPOSIT = 1_000_000;
 describe(`restoration`, () => {
   test(`seed phrases are normalised for punctuation`, () => {
     const cleaned = cleanPhrase(dirtyPhrase);
-
     expect(cleaned).toEqual(expectedCleanedPhrase);
   });
 });
