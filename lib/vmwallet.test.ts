@@ -1,11 +1,5 @@
-import {
-  clusterApiUrl,
-  Connection,
-  Keypair,
-  LAMPORTS_PER_SOL,
-} from "@solana/web3.js";
+import { Connection, Keypair } from "@solana/web3.js";
 import { cleanPhrase } from "./phrase-cleaning";
-import { SECONDS } from "./utils";
 import {
   connect,
   convertPhraseToSeed,
