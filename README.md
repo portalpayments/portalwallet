@@ -1,13 +1,21 @@
 # vmwallet
 
-## A very different wallet
+## A crypto wallet for regular people
 
-- No 12 word restore phrases to remember
-- Send and recieve money with real-world verified wallets
-- Display your NFTs on the big screen
-  - Support for Apple
+## Development
 
-A friendly and straightforward web3 wallet.
+Install [a local validator](https://solanacookbook.com/references/local-development.html#starting-a-local-validator):
+
+```
+sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
+export PATH="~/.local/share/solana/install/active_release/bin:$PATH"
+```
+
+Then run:
+
+```
+solana-test-validator
+```
 
 ## References
 
@@ -17,50 +25,3 @@ A friendly and straightforward web3 wallet.
   https://solanacookbook.com/references/keypairs-and-wallets.html#how-to-generate-a-new-keypair
 - https://buildspace.so/
 - https://crypto.stackexchange.com/questions/11269/can-keys-from-bitcoins-hierarchical-deterministic-wallets-be-correlated-reduci
-
-## UI notes
-
-Make Verification part of signup
-
-"Lets everyone know they're sending to the right person."
-
-check jumio onboariding flow
-
-merge our flow with onboarding flow
-
-NFTs on home vs stable [ ]
-
-send money
-
-Balance - 5USD
-
-Shop - exchange.art
-
-Claim your first NFT
-
----
-
-Mike - how can we dynamically expose identity? As a version 2 feature.
-
-Import contact list matching phone number to
-
-Send/Recieve/Contact
-/ Shop
-/ NFTs
-/ Alerts
-
-## Personas
-
-Differnt USPs
-
-Focus on Jane and Merchant for now
-
-## Solutions
-
-Invite non-verified users to sign up.
-
-## Fetcj
-
-losing access to your access
-sending money to wrong address
-unstable crypto fluctiuations

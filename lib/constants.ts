@@ -3,14 +3,14 @@ import { clusterApiUrl } from "@solana/web3.js";
 export const URLS: Record<string, string> = {
   // From https://solanacookbook.com/references/local-development.html#connecting-to-environments
   localhost: "http://127.0.0.1:8899",
-  // https://solanacookbook.com/references/local-development.html#starting-a-local-validator
+  // From https://solanacookbook.com/references/local-development.html#starting-a-local-validator
   devNet: clusterApiUrl("devnet"),
   mainNetBeta: clusterApiUrl("mainnet-beta"),
   testNet: clusterApiUrl("testnet"),
-  // https://www.quicknode.com/endpoints/49328
+  // From https://www.quicknode.com/endpoints/49328
   quickNodeDevNet:
     "https://red-aged-dream.solana-devnet.quiknode.pro/cb0472330c14ad913e8a4430c70c182570f96047/",
-  // https://shdw.genesysgo.com/genesysgo/the-genesysgo-rpc-network
+  // From https://shdw.genesysgo.com/genesysgo/the-genesysgo-rpc-network
   // The SSC DAO network handles both https and wss connections. It provides unlimited data, global DNS load balancing for the lowest latency possible, backed by 300+ bare metal servers in 9 countries across 3 different continents. Additionally, the SSC DAO network has the full ledger history back to the genesis block.
   genesysGoMain: "https://ssc-dao.genesysgo.net/",
   genesysGoDevNet: "https://devnet.genesysgo.net/",
