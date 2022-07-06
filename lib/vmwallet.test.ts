@@ -6,7 +6,8 @@ import {
   convertPhraseToSeed,
   getAccountBalance,
   putSolIntoWallet,
-  seedToKeypair,
+  seedToKeypairs,
+  SimpleKeypair,
 } from "./vmwallet";
 
 const firstName = `Joe`;
@@ -48,7 +49,7 @@ describe(`restoration`, () => {
 
 describe(`restoration`, () => {
   let connection: Connection;
-  let keypair: Keypair;
+  let keypairs: Array<SimpleKeypair>;
   beforeAll(async () => {
     connection = await connect("localhost");
   });
@@ -58,25 +59,30 @@ describe(`restoration`, () => {
   });
   test(`wallets can be created`, async () => {
     const seed = await convertPhraseToSeed(expectedCleanedPhrase, fullName);
-    keypair = await seedToKeypair(seed, password);
+    keypairs = await seedToKeypairs(seed, password);
 
     // IMPORTANT: if we don't deposit any Sol the wallet won't exist
-    await putSolIntoWallet(connection, keypair.publicKey, DEPOSIT);
+    const firstWallet = keypairs[0];
+    await putSolIntoWallet(connection, firstWallet.publicKey, DEPOSIT);
 
     const accountBalance = await getAccountBalance(
       connection,
-      keypair.publicKey
+      firstWallet.publicKey
     );
     expect(accountBalance).toEqual(DEPOSIT);
   });
 
   test(`wallets can be restored using their seed phrases`, async () => {
+    const firstWallet = keypairs[0];
     const balanceBefore = await getAccountBalance(
       connection,
-      keypair.publicKey
+      firstWallet.publicKey
     );
-    await putSolIntoWallet(connection, keypair.publicKey, DEPOSIT);
-    const balanceAfter = await getAccountBalance(connection, keypair.publicKey);
+    await putSolIntoWallet(connection, firstWallet.publicKey, DEPOSIT);
+    const balanceAfter = await getAccountBalance(
+      connection,
+      firstWallet.publicKey
+    );
 
     const difference = balanceAfter - balanceBefore;
     expect(difference).toEqual(DEPOSIT);
