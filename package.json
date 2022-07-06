@@ -1,14 +1,14 @@
 {
   "name": "vmwallet",
   "version": "1.0.0",
-  "description": "A user friendly wallet",
+  "description": "A crypto wallet for regular people",
   "main": "index.js",
   "scripts": {
     "start": "ts-node index.ts",
     "test": "jest",
     "integration-test": "jest lib/vmwallet.integration.test.ts  --testPathIgnorePatterns=''"
   },
-  "author": "Mike MacCana <mike.maccana@gmail.com> and Vahah Hatami <vahah.hatami@gmail.com>",
+  "author": "Mike MacCana <mike.maccana@gmail.com> and Vahah Hatami <vaheh.hatami@gmail.com>",
   "license": "UNLICENSED",
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

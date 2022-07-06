@@ -50,7 +50,7 @@ describe(`sleep`, () => {
   it(`sleeps for the time specified`, async () => {
     await sleep(100);
     // Entire test should run in 100ms plus some leeway
-  }, 120);
+  }, 150);
 });
 
 describe(`asyncMap`, () => {
