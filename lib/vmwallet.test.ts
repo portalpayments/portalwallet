@@ -32,6 +32,8 @@ const expectedCleanedPhrase = `say your prayers little one dont forget my son to
 const fullName = `${firstName} ${lastName}`;
 const password = `${new Date().toString()}`;
 
+const NETWORK_CAN_BE_SLOW = 30 * SECONDS;
+
 describe(`restoration`, () => {
   test(`seed phrases are normalised for punctuation`, () => {
     const cleaned = cleanPhrase(dirtyPhrase);
@@ -44,7 +46,7 @@ describe(`restoration`, () => {
   let connection: Connection;
   let keypair: Keypair;
   beforeAll(async () => {
-    connection = await connect("quickNodeDevNet");
+    connection = await connect("localhost");
   });
 
   afterAll(async () => {
@@ -66,26 +68,26 @@ describe(`restoration`, () => {
       );
       expect(accountBalance).toEqual(deposit);
     },
-    30 * SECONDS
+    NETWORK_CAN_BE_SLOW
   );
 
-  // test(
-  //   `wallets can be restored using their seed phrases`,
-  //   async () => {
-  //     const balanceBefore = await getAccountBalance(
-  //       connection,
-  //       keypair.publicKey
-  //     );
-  //     const deposit = 1 * LAMPORTS_PER_SOL;
-  //     await putSolIntoWallet(connection, keypair.publicKey, deposit);
-  //     const balanceAfter = await getAccountBalance(
-  //       connection,
-  //       keypair.publicKey
-  //     );
+  test(
+    `wallets can be restored using their seed phrases`,
+    async () => {
+      const balanceBefore = await getAccountBalance(
+        connection,
+        keypair.publicKey
+      );
+      const deposit = 1 * LAMPORTS_PER_SOL;
+      await putSolIntoWallet(connection, keypair.publicKey, deposit);
+      const balanceAfter = await getAccountBalance(
+        connection,
+        keypair.publicKey
+      );
 
-  //     const difference = balanceAfter - balanceBefore;
-  //     expect(difference).toEqual(deposit);
-  //   },
-  //   30 * SECONDS
-  // );
+      const difference = balanceAfter - balanceBefore;
+      expect(difference).toEqual(deposit);
+    },
+    NETWORK_CAN_BE_SLOW
+  );
 });
