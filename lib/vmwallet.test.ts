@@ -32,9 +32,11 @@ const expectedCleanedPhrase = `say your prayers little one dont forget my son to
 const fullName = `${firstName} ${lastName}`;
 const password = `${new Date().toString()}`;
 
-// TODO: reducing this seems to make wallets not visible
-// but too many lamports may hit airdrop limit
-const DEPOSIT = 1 * LAMPORTS_PER_SOL;
+// TODO: reducing this to 1_000 makes wallets not visible
+// which seems to be the rent requirement -
+// see https://docs.solana.com/developing/programming-model/accounts#rent
+// but too many lamports may hit airdrop limit for some test networks.
+const DEPOSIT = 1_000_000;
 
 describe(`restoration`, () => {
   test(`seed phrases are normalised for punctuation`, () => {
