@@ -1,6 +1,4 @@
 import { Connection, Keypair } from "@solana/web3.js";
-import { cleanPhrase } from "./phrase-cleaning";
-import { log } from "./utils";
 import {
   connect,
   convertPhraseToSeed,
@@ -13,9 +11,9 @@ import {
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
 
-// Quiet utils.log() during tests
-jest.mock("./utils", () => ({
-  ...jest.requireActual("./utils"),
+// Quiet functions.log() during tests
+jest.mock("./functions", () => ({
+  ...jest.requireActual("./functions"),
   log: jest.fn(),
 }));
 
@@ -39,13 +37,6 @@ const password = `${new Date().toString()}`;
 // see https://docs.solana.com/developing/programming-model/accounts#rent
 // but too many lamports may hit airdrop limit for some test networks.
 const DEPOSIT = 1_000_000;
-
-describe(`restoration`, () => {
-  test(`seed phrases are normalised for punctuation`, () => {
-    const cleaned = cleanPhrase(dirtyPhrase);
-    expect(cleaned).toEqual(expectedCleanedPhrase);
-  });
-});
 
 describe(`restoration`, () => {
   let connection: Connection;

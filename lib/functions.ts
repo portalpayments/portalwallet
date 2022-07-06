@@ -1,16 +1,10 @@
-// TODO: fix any, there should be a better way of handling this
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export const runInSequence = (
-  array: Array<any>,
-  asyncFunc: (item: any) => Promise<any>
-): Promise<any> => {
-  return array.reduce(async (previous, current) => {
-    const accumulator: Array<any> = await previous;
-    const result = await asyncFunc(current);
-    return accumulator.concat(result);
-  }, Promise.resolve([]));
-};
-/* eslint-enable @typescript-eslint/no-explicit-any */
+import { promisify } from "util";
+
+import { scrypt as scryptCallback } from "crypto";
+
+// Convert `scrypt()` into a function that takes the
+// same parameters but returns a promise.
+export const scrypt = promisify(scryptCallback);
 
 // TODO: can be replaced with https://developer.mozilla.org/en-US/docs/Web/API/structuredClone
 // once we upgrade to node 18 and later (we could also use a polyfill if we wanted)
@@ -104,3 +98,5 @@ export function hasOwnProperty<X extends {}, Y extends PropertyKey>(
   // eslint-disable-next-line no-prototype-builtins
   return object.hasOwnProperty(property);
 }
+
+export const log = console.log.bind(console);

@@ -30,3 +30,9 @@ export const EXTERNAL_CHAIN = 0;
 // From https://solana-labs.github.io/solana-web3.js/classes/Keypair.html#fromSeed
 // 'Generate a keypair from a 32 byte seed.'
 export const SOLANA_SEED_SIZE_BYTES = 32;
+
+export const SECOND = 1000;
+export const SECONDS = SECOND;
+
+export const MINUTE = 60 * SECONDS;
+export const MINUTES = MINUTE;

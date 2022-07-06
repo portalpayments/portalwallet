@@ -1,5 +1,4 @@
 import {
-  runInSequence,
   deepClone,
   asyncMap,
   sleep,
@@ -14,7 +13,7 @@ import {
   decodeFromBase64,
   adjustYear,
 } from "./functions";
-import { SECOND, SECONDS } from "./utils";
+import { SECOND, SECONDS } from "./constants";
 
 describe(`deepClone`, () => {
   it(`Deep clones object`, () => {
@@ -63,23 +62,6 @@ describe(`asyncMap`, () => {
     expect(result).toEqual(["Finished 1", "Finished 2", "Finished 3"]);
     // Each item takes 100, 200 and 300ms
     // So restricting this test to 300ms plus some leeway
-  }, 320);
-});
-
-describe(`runInSequence`, () => {
-  const doubleNumber = async (aNumber: number) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        return resolve(aNumber * 2);
-      }, 100);
-    });
-  };
-
-  it(`runs the async function over every item in the array`, async () => {
-    const array = [1, 2, 3];
-    const result = await runInSequence(array, doubleNumber);
-    expect(result).toEqual([2, 4, 6]);
-    // 3 * 100ms plus some leeway
   }, 320);
 });
 

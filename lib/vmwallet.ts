@@ -5,7 +5,8 @@ import {
   PublicKey,
 } from "@solana/web3.js";
 import * as bip39 from "bip39";
-import { log, scrypt, print } from "./utils";
+import { log } from "./functions";
+import { scrypt } from "./functions";
 import { SOLANA_SEED_SIZE_BYTES, URLS } from "./constants";
 import { derivePath } from "ed25519-hd-key";
 
