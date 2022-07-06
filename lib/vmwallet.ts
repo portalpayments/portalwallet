@@ -43,7 +43,7 @@ export const seedToKeypair = async (entropy: Buffer, password: string) => {
   return keypair;
 };
 
-export const connect = async (networkName = "devNet"): Promise<Connection> => {
+export const connect = async (networkName: string): Promise<Connection> => {
   log(`⚡ Connecting to ${networkName}`);
   const connection = new Connection(URLS[networkName], "confirmed");
   return connection;
