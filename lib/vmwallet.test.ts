@@ -32,7 +32,9 @@ const expectedCleanedPhrase = `say your prayers little one dont forget my son to
 const fullName = `${firstName} ${lastName}`;
 const password = `${new Date().toString()}`;
 
-const NETWORK_CAN_BE_SLOW = 30 * SECONDS;
+// TODO: reducing this seems to make wallets not visible
+// but too many lamports may hit airdrop limit
+const DEPOSIT = 1 * LAMPORTS_PER_SOL;
 
 describe(`restoration`, () => {
   test(`seed phrases are normalised for punctuation`, () => {
@@ -52,42 +54,29 @@ describe(`restoration`, () => {
   afterAll(async () => {
     // TODO: close connection?
   });
-  test(
-    `wallets can be created`,
-    async () => {
-      const seed = await convertPhraseToSeed(expectedCleanedPhrase, fullName);
-      keypair = await seedToKeypair(seed, password);
+  test(`wallets can be created`, async () => {
+    const seed = await convertPhraseToSeed(expectedCleanedPhrase, fullName);
+    keypair = await seedToKeypair(seed, password);
 
-      // IMPORTANT: if we don't deposit any Sol the wallet won't exist
-      const deposit = 1 * LAMPORTS_PER_SOL;
-      await putSolIntoWallet(connection, keypair.publicKey, deposit);
+    // IMPORTANT: if we don't deposit any Sol the wallet won't exist
+    await putSolIntoWallet(connection, keypair.publicKey, DEPOSIT);
 
-      const accountBalance = await getAccountBalance(
-        connection,
-        keypair.publicKey
-      );
-      expect(accountBalance).toEqual(deposit);
-    },
-    NETWORK_CAN_BE_SLOW
-  );
+    const accountBalance = await getAccountBalance(
+      connection,
+      keypair.publicKey
+    );
+    expect(accountBalance).toEqual(DEPOSIT);
+  });
 
-  test(
-    `wallets can be restored using their seed phrases`,
-    async () => {
-      const balanceBefore = await getAccountBalance(
-        connection,
-        keypair.publicKey
-      );
-      const deposit = 1 * LAMPORTS_PER_SOL;
-      await putSolIntoWallet(connection, keypair.publicKey, deposit);
-      const balanceAfter = await getAccountBalance(
-        connection,
-        keypair.publicKey
-      );
+  test(`wallets can be restored using their seed phrases`, async () => {
+    const balanceBefore = await getAccountBalance(
+      connection,
+      keypair.publicKey
+    );
+    await putSolIntoWallet(connection, keypair.publicKey, DEPOSIT);
+    const balanceAfter = await getAccountBalance(connection, keypair.publicKey);
 
-      const difference = balanceAfter - balanceBefore;
-      expect(difference).toEqual(deposit);
-    },
-    NETWORK_CAN_BE_SLOW
-  );
+    const difference = balanceAfter - balanceBefore;
+    expect(difference).toEqual(DEPOSIT);
+  });
 });
