@@ -4,8 +4,8 @@ Some basic coding guidelines to look for when reviewing code.
 
 These are focused on keeping us moving quickly:
 
-- Moving quickly makes customers happy.
-- Moving quickly help keep engineers motivated, as they can focus on building things rather wrestling with a giant code base to build things.
+- Releasing quickly keeps customers (and investors) happy.
+- Moving quickly helps keep engineers motivated, as engineers can focus on building things rather wrestling with a giant code base.
 
 ## Code is written more than it is read
 
@@ -15,6 +15,8 @@ These are focused on keeping us moving quickly:
   - Abrvntns sk to rd (if tht doesn't make any sense, it says 'abbreviations suck to read')
   - If we're searching for 'wallet', then 'wlt' won't up and abbeviations are invariably used inconsistently.
   - Let the compiler worry about saving characters.
+
+ - A PR should be focused on how well the reviewer can understand the code, without any further input from the author except the code. This means others won't have to rely on the author to work on that code, and the author can move onto whatever the next thing is.
 
 ## Favour readability and simplicity over speed
 
