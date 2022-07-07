@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       # Install Solana
-      - run: curl -sSfL https://release.solana.com/stable/install
+      - run: sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
       - run: export PATH="~/.local/share/solana/install/active_release/bin:$PATH"
       - run: solana-test-validator &
       # Run tests
