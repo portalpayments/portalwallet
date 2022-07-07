@@ -2,6 +2,8 @@
 
 ## A crypto wallet for regular people
 
+![example workflow](https://github.com/mikemaccana/vmwallet/actions/workflows/tests/badge.svg)
+
 ## Development
 
 Install [a local validator](https://solanacookbook.com/references/local-development.html#starting-a-local-validator):
