@@ -32,9 +32,9 @@ describe("Twitter verification", () => {
 });
 
 describe(`Twitter name to wallet look up`, () => {
-  test(`Finds @joemmikemaccanaccann's wallet`, async () => {
+  test(`Finds @mikemaccana's wallet`, async () => {
     const connection = new Connection(URLS.mainNetBeta);
     const registry = await getTwitterRegistry(connection, "mikemaccana");
-    expect(registry.owner).toEqual(MIKES_WALLET);
+    expect(registry.owner.toString()).toEqual(MIKES_WALLET);
   });
 });
