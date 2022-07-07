@@ -20,6 +20,7 @@
     "typescript": "^4.7.3"
   },
   "dependencies": {
+    "@bonfida/spl-name-service": "^0.1.40",
     "@solana/web3.js": "^1.47.3",
     "bcrypt": "^5.0.1",
     "bip39": "^3.0.4",
