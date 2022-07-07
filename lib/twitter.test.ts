@@ -1,3 +1,6 @@
+import { getTwitterRegistry } from "@bonfida/spl-name-service";
+import { Connection, clusterApiUrl } from "@solana/web3.js";
+import { URLS } from "./constants";
 import { getHandleAndRegistryKeyForWallet } from "./twitter";
 // Shaq is one of the only people I know
 // with a verified Twitter handle and a Solana wallet.
@@ -25,5 +28,13 @@ describe("Twitter verification", () => {
       MIKES_WALLET
     );
     expect(handle).toEqual("mikemaccana");
+  });
+});
+
+describe(`Twitter name to wallet look up`, () => {
+  test(`Finds @joemmikemaccanaccann's wallet`, async () => {
+    const connection = new Connection(URLS.mainNetBeta);
+    const registry = await getTwitterRegistry(connection, "mikemaccana");
+    expect(registry.owner).toEqual(MIKES_WALLET);
   });
 });
