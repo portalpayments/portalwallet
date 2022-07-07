@@ -24,8 +24,9 @@ jobs:
       # Install Solana
       - run: sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
       - run: export PATH="~/.local/share/solana/install/active_release/bin:$PATH"
-      - run: solana-test-validator &
+      - run: .local/share/solana/install/active_release/bin/solana-test-validator &
       # Run tests
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test
+      - run: npm integration-test
