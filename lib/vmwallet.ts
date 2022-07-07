@@ -105,20 +105,27 @@ export const putSolIntoWallet = async (
 };
 
 // https://developers.circle.com/docs/usdc-on-testnet#usdc-on-solana-testnet
-const USDC_SOLANA_SPL_TOKEN_ON_DEVNET = '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU'
+const USDC_SOLANA_SPL_TOKEN_ON_DEVNET =
+  "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
 
-export const putTokenIntoWallet = async(connection: Connection, from: Keypair, to: Keypair, amount: number) {
+export const putTokenIntoWallet = async (
+  connection: Connection,
+  from: Keypair,
+  to: Keypair,
+  amount: number
+) => {
   // Add token transfer instructions to transaction
-  const transaction = new Transaction().add(createTransferInstruction(
-    from.publicKey, 
-    to.publicKey, 
-    new PublicKey(USDC_SOLANA_SPL_TOKEN_ON_DEVNET), 
-    amount,
-    [], 
-    TOKEN_PROGRAM_ID
-  ))
-  
+  const transaction = new Transaction().add(
+    createTransferInstruction(
+      from.publicKey,
+      to.publicKey,
+      new PublicKey(USDC_SOLANA_SPL_TOKEN_ON_DEVNET),
+      amount,
+      [],
+      TOKEN_PROGRAM_ID
+    )
+  );
+
   // Sign transaction, broadcast, and confirm
   await sendAndConfirmTransaction(connection, transaction, [from]);
-    
-}
+};
