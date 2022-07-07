@@ -6,6 +6,8 @@
 
 ## Development
 
+See [coding guidelines](CODING_GUIDELINES.md).
+
 Install [a local validator](https://solanacookbook.com/references/local-development.html#starting-a-local-validator):
 
 ```
