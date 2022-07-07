@@ -2,7 +2,7 @@
 
 ## A crypto wallet for regular people
 
-![Build status](https://github.com/mikemaccana/vmwallet/actions/workflows/tests.yml/badge.svg)
+![Build status](https://github.com/mikemaccana/vmwallet/actions/workflows/tests.yaml/badge.svg)
 
 ## Development
 
