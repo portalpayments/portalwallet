@@ -3,12 +3,16 @@ import {
   Keypair,
   LAMPORTS_PER_SOL,
   PublicKey,
+  sendAndConfirmTransaction,
+  Transaction,
+  Signer,
 } from "@solana/web3.js";
 import * as bip39 from "bip39";
 import { log } from "./functions";
 import { scrypt } from "./functions";
 import { SOLANA_SEED_SIZE_BYTES, URLS } from "./constants";
 import { derivePath } from "ed25519-hd-key";
+import { createTransferInstruction, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 // TODO:
 // https://developers.circle.com/docs/usdc-on-testnet
@@ -99,3 +103,22 @@ export const putSolIntoWallet = async (
     signature: airdropSignature,
   });
 };
+
+// https://developers.circle.com/docs/usdc-on-testnet#usdc-on-solana-testnet
+const USDC_SOLANA_SPL_TOKEN_ON_DEVNET = '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU'
+
+export const putTokenIntoWallet = async(connection: Connection, from: Keypair, to: Keypair, amount: number) {
+  // Add token transfer instructions to transaction
+  const transaction = new Transaction().add(createTransferInstruction(
+    from.publicKey, 
+    to.publicKey, 
+    new PublicKey(USDC_SOLANA_SPL_TOKEN_ON_DEVNET), 
+    amount,
+    [], 
+    TOKEN_PROGRAM_ID
+  ))
+  
+  // Sign transaction, broadcast, and confirm
+  await sendAndConfirmTransaction(connection, transaction, [from]);
+    
+}
