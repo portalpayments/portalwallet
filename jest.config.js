@@ -5,6 +5,4 @@ module.exports = {
   // Oddly this doesn't detect any open handles, but it does stop the message.
   // TODO: fix when we can be bothered.
   detectOpenHandles: true,
-  // Ignore integration tests by default
-  testPathIgnorePatterns: [".integration.test.(ts|tsx|js)"],
 };

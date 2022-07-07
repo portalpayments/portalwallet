@@ -10,6 +10,8 @@ import { scrypt } from "./functions";
 import { SOLANA_SEED_SIZE_BYTES, URLS } from "./constants";
 import { derivePath } from "ed25519-hd-key";
 
+// TODO:
+// https://developers.circle.com/docs/usdc-on-testnet
 export interface SimpleKeypair {
   path: string;
   publicKey: PublicKey;
