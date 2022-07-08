@@ -36,4 +36,4 @@ We use prettier with the default rules.
 
 ## Use async/await. 
 
-No .then() or callbacks. If you need to use a callback function, use `promisify` then expose the promisified version from `functions.ts`
+No .then() or callbacks. This allows us to read code more easily as the flow always passes to the next line. If you need to use a callback function, use `promisify` then expose the promisified version from `functions.ts`
