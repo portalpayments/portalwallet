@@ -8,6 +8,14 @@
 
 See [coding guidelines](CODING_GUIDELINES.md).
 
+You'll need a `.env` file with:
+
+```
+TWITTER_API_KEY_BEARER_TOKEN=very long string
+```
+
+Ask Mike for a copt of this file (not checked into GitHub for security reasons).
+
 Install [a local validator](https://solanacookbook.com/references/local-development.html#starting-a-local-validator):
 
 ```
