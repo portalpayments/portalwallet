@@ -60,3 +60,12 @@ export const checkIsWalletVerifiedViaTwitter = async (wallet: string) => {
   }
   return checkIsVerified(handle);
 };
+
+export const closeConnection = async () => {
+  if (!_twitterClient) {
+    return;
+  }
+  // TODO: close socket when issue below is resolved
+  // See https://github.com/PLhery/node-twitter-api-v2/issues/326
+  return;
+};

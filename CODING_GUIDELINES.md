@@ -18,6 +18,14 @@ These are focused on keeping us moving quickly:
 
 Give things good names. `getBanana()` will obviously return a `banana`. `checkIfBanana()` will return a boolean about whether something is a banana.
 
+## Use links for issues when working around an issue
+
+That way the next person know if/when it's fixed:
+
+```
+# TODO: https://github.com/PLhery/node-twitter-api-v2/issues/326
+```
+
 ## Favour readability and simplicity over speed
 
 - Unless speed becomes an issue - which it probably won't.

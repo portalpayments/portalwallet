@@ -5,6 +5,7 @@ import {
   getHandleForWallet,
   checkIsVerified,
   checkIsWalletVerifiedViaTwitter,
+  closeConnection,
 } from "./twitter";
 // Shaq is one of the only people I know
 // with a verified Twitter handle and a Solana wallet.
@@ -29,6 +30,10 @@ describe("Wallet to Twitter mapping", () => {
 });
 
 describe(`Twitter verification`, () => {
+  afterAll(() => {
+    closeConnection();
+  });
+
   test(`Says @mikemaccana's is not verified`, async () => {
     expect(await checkIsVerified("mikemaccana")).toBeFalsy();
   });
@@ -47,6 +52,9 @@ describe(`Twitter name to wallet look up`, () => {
 });
 
 describe(`Wallet => Twitter verification`, () => {
+  afterAll(() => {
+    closeConnection();
+  });
   test(`Mike isn't verified`, async () => {
     expect(await checkIsWalletVerifiedViaTwitter(MIKES_WALLET)).toBeFalsy();
   });
