@@ -1,7 +1,7 @@
 import { getTwitterRegistry } from "@bonfida/spl-name-service";
 import { Connection, clusterApiUrl } from "@solana/web3.js";
 import { URLS } from "./constants";
-import { getHandleAndRegistryKeyForWallet } from "./twitter";
+import { getHandleAndRegistryKeyForWallet, isVerified } from "./twitter";
 // Shaq is one of the only people I know
 // with a verified Twitter handle and a Solana wallet.
 const SHAQS_WALLET = "gacMrsrxNisAhCfgsUAVbwmTC3w9nJB6NychLAnTQFv";
@@ -28,6 +28,16 @@ describe("Twitter verification", () => {
       MIKES_WALLET
     );
     expect(handle).toEqual("mikemaccana");
+  });
+});
+
+describe(`Twitter verification`, () => {
+  test(`Says @mikemaccana's is not verified`, async () => {
+    expect(await isVerified("mikemaccana")).toBeFalsy();
+  });
+
+  test(`Says @joemccann's is verified`, async () => {
+    expect(await isVerified("joemccann")).toBeTruthy();
   });
 });
 
