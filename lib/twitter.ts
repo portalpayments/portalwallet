@@ -1,4 +1,4 @@
-import { PublicKey, clusterApiUrl, Connection } from "@solana/web3.js";
+import { PublicKey, Connection } from "@solana/web3.js";
 import { getHandleAndRegistryKey } from "@bonfida/spl-name-service";
 import { URLS } from "./constants";
 import { TwitterApi, TwitterApiReadOnly } from "twitter-api-v2";
@@ -44,7 +44,6 @@ export const checkIsVerified = async (handle: string) => {
     }
     // Tell typescript it's a readonly app
     _twitterClient = new TwitterApi(bearerToken).readOnly;
-    log(`🐦 Made new Twitter API client`);
   }
 
   // Play with the built in methods
