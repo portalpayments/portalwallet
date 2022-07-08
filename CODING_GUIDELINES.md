@@ -26,6 +26,10 @@ Give things good names. `getBanana()` will obviously return a `banana`. `checkIf
 
 Name things, rather than putting in odd wallet or program strings or numbers in the code. This helps the other person know what the value means.
 
+## Remove code, rather than comment it out
+
+It's just noise, nobody else will understand why it's commented out, and we can always get it back from git if we need to.
+
 ## Refactor on first paste
 
 Having a single implementation of each function lets us refactor easily.
