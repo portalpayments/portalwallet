@@ -20,7 +20,7 @@ These are focused on keeping us moving quickly:
 
 ## Favour readability and simplicity over speed
 
-- Which it probably won't.
+- Unless speed becomes an issue - which it probably won't.
 
 ## Name values, instead of including magic numbers or strings.
 
