@@ -3,7 +3,6 @@ import { getHandleAndRegistryKey } from "@bonfida/spl-name-service";
 import { URLS } from "./constants";
 import { TwitterApi, TwitterApiReadOnly } from "twitter-api-v2";
 import dotenv from "dotenv";
-import { log, stringify } from "./functions";
 
 dotenv.config();
 
@@ -67,5 +66,5 @@ export const closeConnection = async () => {
   }
   // TODO: close socket when issue below is resolved
   // See https://github.com/PLhery/node-twitter-api-v2/issues/326
-  return;
+  _twitterClient.return;
 };
