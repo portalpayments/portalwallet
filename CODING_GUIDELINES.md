@@ -34,6 +34,6 @@ Having a single implementation of each function lets us refactor easily.
 
 We use prettier with the default rules.
 
-## No .then() or callbacks.
+## Use async/await. 
 
-We use async/await. Use `promisify()` if you need to wrap an inbuilt function, use `promisify` then expose the promisified version from `functions.ts`
+No .then() or callbacks. If you need to use a callback function, use `promisify` then expose the promisified version from `functions.ts`
