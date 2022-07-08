@@ -4,8 +4,8 @@ Some basic coding guidelines to look for when reviewing code.
 
 These are focused on keeping us moving quickly:
 
-- Moving quickly makes customers happy.
-- Moving quickly help keep engineers motivated, as they can focus on building things rather wrestling with a giant code base to build things.
+- Releasing quickly keeps customers (and investors) happy.
+- Moving quickly helps keep engineers motivated, as engineers can focus on building things rather wrestling with a giant code base.
 
 ## Code is written more than it is read
 
@@ -16,9 +16,11 @@ These are focused on keeping us moving quickly:
   - If we're searching for 'wallet', then 'wlt' won't up and abbeviations are invariably used inconsistently.
   - Let the compiler worry about saving characters.
 
+ - A PR should be focused on how well the reviewer can understand the code, without any further input from the author except the code. This means others won't have to rely on the author to work on that code, and the author can move onto whatever the next thing is.
+
 ## Favour readability and simplicity over speed
 
-- Which it probably won't.
+- Unless speed becomes an issue - which it probably won't.
 
 ## Name values, instead of including magic numbers or strings.
 
@@ -32,6 +34,6 @@ Having a single implementation of each function lets us refactor easily.
 
 We use prettier with the default rules.
 
-## No .then() or callbacks.
+## Use async/await. 
 
-We use async/await. Use `promisify()` if you need to wrap an inbuilt function, s
+No .then() or callbacks. This allows us to read code more easily as the flow always passes to the next line. If you need to use a callback function, use `promisify` then expose the promisified version from `functions.ts`
