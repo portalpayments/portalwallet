@@ -16,15 +16,15 @@ const MIKES_WALLET = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
 
 describe("Wallet to Twitter mapping", () => {
   test(`Says Shaq's wallet hasn't been set up for reverse Twitter`, async () => {
-    expect(getHandleForWallet(SHAQS_WALLET)).toBeNull();
+    expect(await getHandleForWallet(SHAQS_WALLET)).toBeNull();
   });
 
   test(`Says Joe McCann's wallet hasn't been set up for reverse Twitter`, async () => {
-    expect(getHandleForWallet(JOE_MACCANNS_WALLET)).toBeNull();
+    expect(await getHandleForWallet(JOE_MACCANNS_WALLET)).toBeNull();
   });
 
   test(`Shows mapping to MIke's Twitter account`, async () => {
-    expect(getHandleForWallet(MIKES_WALLET)).toEqual("mikemaccana");
+    expect(await getHandleForWallet(MIKES_WALLET)).toEqual("mikemaccana");
   });
 });
 
