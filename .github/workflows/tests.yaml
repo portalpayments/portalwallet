@@ -15,12 +15,16 @@ jobs:
       matrix:
         node-version: [16.x]
 
+    env:
+      TWITTER_API_KEY_BEARER_TOKEN: ${{ secrets.TWITTER_API_KEY_BEARER_TOKEN }}
+
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+
       # Install Solana
       - run: sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
       - run: export PATH="~/.local/share/solana/install/active_release/bin:$PATH"

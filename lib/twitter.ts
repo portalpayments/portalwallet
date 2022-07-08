@@ -36,8 +36,6 @@ export const getHandleForWallet = async (wallet: string) => {
 export const checkIsVerified = async (handle: string) => {
   // Instantiate with desired auth type (here's Bearer v2 auth)
   if (!_twitterClient) {
-    const envVars = Object.keys(process.env).sort();
-    log(stringify(envVars));
     let bearerToken = process.env.TWITTER_API_KEY_BEARER_TOKEN || null;
     if (!bearerToken) {
       throw new Error(
