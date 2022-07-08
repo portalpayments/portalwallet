@@ -10,7 +10,11 @@ import {
 import * as bip39 from "bip39";
 import { log } from "./functions";
 import { scrypt } from "./functions";
-import { SOLANA_SEED_SIZE_BYTES, URLS } from "./constants";
+import {
+  SOLANA_SEED_SIZE_BYTES,
+  URLS,
+  USDC_SOLANA_SPL_TOKEN_ON_DEVNET,
+} from "./constants";
 import { derivePath } from "ed25519-hd-key";
 import { createTransferInstruction, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
@@ -104,28 +108,26 @@ export const putSolIntoWallet = async (
   });
 };
 
-// https://developers.circle.com/docs/usdc-on-testnet#usdc-on-solana-testnet
-const USDC_SOLANA_SPL_TOKEN_ON_DEVNET =
-  "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
-
 export const putTokenIntoWallet = async (
   connection: Connection,
-  from: Keypair,
-  to: Keypair,
+  source: Keypair,
+  destination: Keypair,
   amount: number
 ) => {
   // Add token transfer instructions to transaction
+  const owner = new PublicKey(USDC_SOLANA_SPL_TOKEN_ON_DEVNET);
+  const multisigners: Array<Signer> = [];
   const transaction = new Transaction().add(
     createTransferInstruction(
-      from.publicKey,
-      to.publicKey,
-      new PublicKey(USDC_SOLANA_SPL_TOKEN_ON_DEVNET),
+      source.publicKey,
+      destination.publicKey,
+      owner,
       amount,
-      [],
+      multisigners,
       TOKEN_PROGRAM_ID
     )
   );
 
   // Sign transaction, broadcast, and confirm
-  await sendAndConfirmTransaction(connection, transaction, [from]);
+  await sendAndConfirmTransaction(connection, transaction, [source]);
 };

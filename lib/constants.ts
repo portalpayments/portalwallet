@@ -27,6 +27,10 @@ export const SOLANA_COIN_TYPE = 501;
 // Constant 0 is used for external chain and constant 1 for internal chain (also known as change addresses). External chain is used for addresses that are meant to be visible outside of the wallet (e.g. for receiving payments).
 export const EXTERNAL_CHAIN = 0;
 
+// https://developers.circle.com/docs/usdc-on-testnet#usdc-on-solana-testnet
+export const USDC_SOLANA_SPL_TOKEN_ON_DEVNET =
+  "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
+
 // From https://solana-labs.github.io/solana-web3.js/classes/Keypair.html#fromSeed
 // 'Generate a keypair from a 32 byte seed.'
 export const SOLANA_SEED_SIZE_BYTES = 32;

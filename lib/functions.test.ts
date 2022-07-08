@@ -2,7 +2,7 @@ import {
   deepClone,
   asyncMap,
   sleep,
-  print,
+  stringify,
   nonNullable,
   makePromise,
   withTimeout,
@@ -41,7 +41,7 @@ describe(`deepClone`, () => {
 
 describe(`print`, () => {
   it(`formats objects nicely`, () => {
-    const result = print({ location: { city: "London" } });
+    const result = stringify({ location: { city: "London" } });
     expect(result).toMatchSnapshot();
   });
 });

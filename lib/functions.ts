@@ -50,7 +50,7 @@ export const sleep = async (timeInMs: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, timeInMs));
 };
 
-export const print = (object: Record<string, unknown>): string => {
+export const stringify = (object: Record<string, unknown>): string => {
   return JSON.stringify(object, null, 2);
 };
 
