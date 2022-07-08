@@ -23,7 +23,8 @@ Give things good names. `getBanana()` will obviously return a `banana`. `checkIf
 That way the next person know if/when it's fixed:
 
 ```
-# TODO: https://github.com/PLhery/node-twitter-api-v2/issues/326
+# TODO: add code to close sockets
+# See https://github.com/PLhery/node-twitter-api-v2/issues/326
 ```
 
 ## Favour readability and simplicity over speed
@@ -48,4 +49,4 @@ We use prettier with the default rules.
 
 ## No .then() or callbacks.
 
-We use async/await. Use `promisify()` if you need to wrap an inbuilt function.
+We use `async`/`await`. Use `promisify()` if you need to wrap a callback function.
