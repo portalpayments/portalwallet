@@ -36,4 +36,4 @@ We use prettier with the default rules.
 
 ## No .then() or callbacks.
 
-We use async/await. Use `promisify()` if you need to wrap an inbuilt function, s
+We use async/await. Use `promisify()` if you need to wrap an inbuilt function.
