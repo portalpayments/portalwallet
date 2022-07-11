@@ -1,12 +1,12 @@
 import { getTwitterRegistry } from "@bonfida/spl-name-service";
-import { Connection, clusterApiUrl } from "@solana/web3.js";
+import { Connection } from "@solana/web3.js";
 import { URLS } from "./constants";
 import {
   getHandleForWallet,
   checkIsVerified,
   checkIsWalletVerifiedViaTwitter,
   closeConnection,
-} from "./twitter";
+} from "./sns-twitter";
 // Shaq is one of the only people I know
 // with a verified Twitter handle and a Solana wallet.
 const SHAQS_WALLET = "gacMrsrxNisAhCfgsUAVbwmTC3w9nJB6NychLAnTQFv";

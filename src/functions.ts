@@ -50,9 +50,8 @@ export const sleep = async (timeInMs: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, timeInMs));
 };
 
-export const stringify = (
-  object: Record<string, unknown> | Array<unknown>
-): string => {
+// 'any' is OK - JSON.stringify itself uses 'any'
+export const stringify = (object: any): string => {
   return JSON.stringify(object, null, 2);
 };
 

@@ -18,14 +18,6 @@ import {
 import { derivePath } from "ed25519-hd-key";
 import { createTransferInstruction, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
-// TODO:
-// https://developers.circle.com/docs/usdc-on-testnet
-export interface SimpleKeypair {
-  path: string;
-  publicKey: PublicKey;
-  secretKey: Uint8Array;
-}
-
 export const convertPhraseToSeed = async (
   phrase: string,
   birthday: string
@@ -54,18 +46,14 @@ export const seedToKeypairs = async (entropy: Buffer, password: string) => {
 
   log(`making keypairs from seed`);
 
-  const keyPairs: Array<SimpleKeypair> = [];
+  const keyPairs: Array<Keypair> = [];
 
   for (let walletIndex = 0; walletIndex < 10; walletIndex++) {
     const path = `m/44'/501'/${walletIndex}'/0'`;
     const keypair = Keypair.fromSeed(
       derivePath(path, seed.toString("hex")).key
     );
-    keyPairs.push({
-      path,
-      publicKey: keypair.publicKey,
-      secretKey: keypair.secretKey,
-    });
+    keyPairs.push(keypair);
     log(`${path} => ${keypair.publicKey.toBase58()}`);
   }
   return keyPairs;
@@ -108,7 +96,7 @@ export const putSolIntoWallet = async (
   });
 };
 
-export const putTokenIntoWallet = async (
+export const sendUSDCTokens = async (
   connection: Connection,
   source: Keypair,
   destination: Keypair,

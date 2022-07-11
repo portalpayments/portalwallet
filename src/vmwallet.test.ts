@@ -4,9 +4,12 @@ import {
   convertPhraseToSeed,
   getAccountBalance,
   putSolIntoWallet,
+  sendUSDCTokens,
   seedToKeypairs,
-  SimpleKeypair,
 } from "./vmwallet";
+
+import { log, stringify } from "./functions";
+import { expectedCleanedPhrase } from "./__mocks__/mocks";
 
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
@@ -16,18 +19,6 @@ jest.mock("./functions", () => ({
   ...jest.requireActual("./functions"),
   log: jest.fn(),
 }));
-
-// Put these at the top to avoid indentation issues
-const dirtyPhrase = `Say your prayers, little one
-Don't forget, my son
-To include everyone
-
-I tuck you in, warm within
-Keep you free from sin
-Till the Sandman he comes
-`;
-
-const expectedCleanedPhrase = `say your prayers little one dont forget my son to include everyone i tuck you in warm within keep you free from sin till the sandman he comes`;
 
 const fullName = `${firstName} ${lastName}`;
 const password = `${new Date().toString()}`;
@@ -40,7 +31,7 @@ const DEPOSIT = 1_000_000;
 
 describe(`restoration`, () => {
   let connection: Connection;
-  let keypairs: Array<SimpleKeypair>;
+  let keypairs: Array<Keypair>;
   beforeAll(async () => {
     connection = await connect("localhost");
   });
@@ -78,4 +69,38 @@ describe(`restoration`, () => {
     const difference = balanceAfter - balanceBefore;
     expect(difference).toEqual(DEPOSIT);
   });
+
+  // test(`We can add 69 USDC`, async () => {
+  //   const firstWallet = keypairs[0];
+  //   const secondWallet = keypairs[1];
+
+  //   let firstWalletBefore = await connection.getAccountInfo(
+  //     secondWallet.publicKey
+  //   );
+
+  //   let secondWalletBefore = await connection.getAccountInfo(
+  //     secondWallet.publicKey
+  //   );
+
+  //   log("firstWalletBefore", stringify(firstWalletBefore));
+  //   log("secondWalletBefore", stringify(secondWalletBefore));
+
+  //   // TODO: can we airdrop USDC into devnet wallet1
+  //   // THEN send the USDC to wallet 2?
+  //   // TODO - where does the USCD come from
+  //   await sendUSDCTokens(connection, firstWallet, secondWallet, 69);
+
+  //   let firstWalletAfter = await connection.getAccountInfo(
+  //     secondWallet.publicKey
+  //   );
+
+  //   let secondWalletAfter = await connection.getAccountInfo(
+  //     secondWallet.publicKey
+  //   );
+
+  //   log("firstWalletAfter", stringify(firstWalletAfter));
+  //   log("secondWalletAfter", stringify(secondWalletAfter));
+
+  //   expect({}).toEqual({});
+  // });
 });

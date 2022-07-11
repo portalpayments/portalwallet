@@ -66,5 +66,5 @@ export const closeConnection = async () => {
   }
   // TODO: close socket when issue below is resolved
   // See https://github.com/PLhery/node-twitter-api-v2/issues/326
-  _twitterClient.return;
+  return;
 };
