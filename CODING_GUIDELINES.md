@@ -31,6 +31,10 @@ That way the next person know if/when it's fixed:
 
 - Unless speed becomes an issue - which it probably won't.
 
+## Use pure functions
+
+It's much easier to read, test and refactor code that always has the same output for the same input. Use scope and closures for state rather than creating custom classes.
+
 ## Name values, instead of including magic numbers or strings.
 
 Name things, rather than putting in odd wallet or program strings or numbers in the code. This helps the other person know what the value means.
