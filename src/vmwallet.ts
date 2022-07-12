@@ -23,6 +23,7 @@ import {
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import { TokenListProvider } from "@solana/spl-token-registry";
+import { getABetterErrorMessage } from "./errors";
 
 export const convertPhraseToSeed = async (
   phrase: string,
@@ -148,12 +149,21 @@ export const createNewToken = async (
   // The one account that can mint tokens for this token (this account does not hold the balance)
   mintAuthority: PublicKey
 ) => {
-  const mintAddress = await createMint(
-    connection,
-    feePayer,
-    mintAuthority,
-    null, // Don't both with a freeze address
-    2 // 2 decimals since we're simulating USDC
-  );
-  return mintAddress;
+  try {
+    const mintAddress = await createMint(
+      connection,
+      feePayer,
+      mintAuthority,
+      null, // Don't both with a freeze address
+      2 // 2 decimals since we're simulating USDC
+    );
+    return mintAddress;
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    const fullErrorMessage = getABetterErrorMessage(error.message);
+    if (fullErrorMessage) {
+      throw new Error(fullErrorMessage);
+    }
+    throw error;
+  }
 };

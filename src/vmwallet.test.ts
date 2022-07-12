@@ -13,6 +13,7 @@ import {
 import { log, stringify } from "./functions";
 import { expectedCleanedPhrase } from "./__mocks__/mocks";
 import { getMint } from "@solana/spl-token";
+import { getABetterErrorMessage } from "./errors";
 
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
@@ -32,6 +33,7 @@ const password = `${new Date().toString()}`;
 // but too many lamports may hit airdrop limit for some test networks.
 const DEPOSIT = 1_000_000;
 // Likewise 1_000_000 isn't enough to make a new token
+const NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN = 1_000_000;
 const ENOUGH_TO_MAKE_A_NEW_TOKEN = 1_000_000_000;
 
 describe(`restoration`, () => {
@@ -73,6 +75,26 @@ describe(`restoration`, () => {
 
     const difference = balanceAfter - balanceBefore;
     expect(difference).toEqual(DEPOSIT);
+  });
+
+  test(`custom program error`, () => {
+    const errorMessage = getABetterErrorMessage(
+      "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x1"
+    );
+    expect(errorMessage).toEqual("Insufficient funds");
+  });
+
+  test(`produces a good error when not enough funds to make a new token`, async () => {
+    const testUSDCAuthority = new Keypair();
+    await putSolIntoWallet(
+      connection,
+      testUSDCAuthority.publicKey,
+      NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN
+    );
+
+    expect(
+      createNewToken(connection, testUSDCAuthority, testUSDCAuthority.publicKey)
+    ).rejects.toThrow("Insufficient funds");
   });
 
   test(`createNewToken makes new tokens`, async () => {
