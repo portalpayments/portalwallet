@@ -51,6 +51,10 @@ Having a single implementation of each function lets us refactor easily.
 
 We use prettier with the default rules.
 
-## No .then() or callbacks.
+## No `.then()` or callbacks.
 
 We use `async`/`await`. Use `promisify()` if you need to wrap a callback function.
+
+## Just `throw new Error()`
+
+JS lets you throw objects, strings and other things that aren't errors. Just throw Errors.
