@@ -1,4 +1,4 @@
-import { Connection, Keypair } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import {
   connect,
   convertPhraseToSeed,
@@ -6,10 +6,13 @@ import {
   putSolIntoWallet,
   sendUSDCTokens,
   seedToKeypairs,
+  createNewToken,
+  checkAccountExists,
 } from "./vmwallet";
 
 import { log, stringify } from "./functions";
 import { expectedCleanedPhrase } from "./__mocks__/mocks";
+import { getMint } from "@solana/spl-token";
 
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
@@ -28,6 +31,8 @@ const password = `${new Date().toString()}`;
 // see https://docs.solana.com/developing/programming-model/accounts#rent
 // but too many lamports may hit airdrop limit for some test networks.
 const DEPOSIT = 1_000_000;
+// Likewise 1_000_000 isn't enough to make a new token
+const ENOUGH_TO_MAKE_A_NEW_TOKEN = 1_000_000_000;
 
 describe(`restoration`, () => {
   let connection: Connection;
@@ -68,5 +73,34 @@ describe(`restoration`, () => {
 
     const difference = balanceAfter - balanceBefore;
     expect(difference).toEqual(DEPOSIT);
+  });
+
+  test(`createNewToken makes new tokens`, async () => {
+    const testUSDCAuthority = new Keypair();
+    await putSolIntoWallet(
+      connection,
+      testUSDCAuthority.publicKey,
+      ENOUGH_TO_MAKE_A_NEW_TOKEN
+    );
+
+    const mintAddress = await createNewToken(
+      connection,
+      testUSDCAuthority,
+      testUSDCAuthority.publicKey
+    );
+    const doesExist = await checkAccountExists(connection, mintAddress);
+    expect(doesExist).toBeTruthy();
+    let mintAccount = await getMint(connection, mintAddress);
+
+    expect(mintAccount).toEqual({
+      // TODO: expect.any(String) and expect.any(PublicKey)
+      // don't work
+      address: expect.anything(),
+      decimals: 2,
+      freezeAuthority: null,
+      isInitialized: true,
+      mintAuthority: testUSDCAuthority.publicKey,
+      supply: expect.any(BigInt),
+    });
   });
 });

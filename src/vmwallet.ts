@@ -6,17 +6,23 @@ import {
   sendAndConfirmTransaction,
   Transaction,
   Signer,
+  TransactionInstruction,
 } from "@solana/web3.js";
 import * as bip39 from "bip39";
-import { log } from "./functions";
-import { scrypt } from "./functions";
+import { log, scrypt } from "./functions";
 import {
   SOLANA_SEED_SIZE_BYTES,
   URLS,
   USDC_SOLANA_SPL_TOKEN_ON_DEVNET,
 } from "./constants";
 import { derivePath } from "ed25519-hd-key";
-import { createTransferInstruction, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import {
+  createMint,
+  createTransferInstruction,
+  getOrCreateAssociatedTokenAccount,
+  TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
+import { TokenListProvider } from "@solana/spl-token-registry";
 
 export const convertPhraseToSeed = async (
   phrase: string,
@@ -65,16 +71,28 @@ export const connect = async (networkName: string): Promise<Connection> => {
   return connection;
 };
 
+// See https://github.com/Bonfida/bonfida-utils/blob/main/js
+export const checkAccountExists = async (
+  connection: Connection,
+  publicKey: PublicKey
+): Promise<boolean> => {
+  const accountInfo = await connection.getAccountInfo(publicKey);
+  if (!accountInfo) {
+    return false;
+  }
+  return true;
+};
+
 export const getAccountBalance = async (
   connection: Connection,
   publicKey: PublicKey
 ) => {
-  let account = await connection.getAccountInfo(publicKey);
-  if (!account) {
+  let accountInfo = await connection.getAccountInfo(publicKey);
+  if (!accountInfo) {
     throw new Error(`Could not find account '${publicKey}'`);
   }
-  log("💰 Account balance:", account.lamports);
-  return account.lamports;
+  log("💰 Account balance:", accountInfo.lamports);
+  return accountInfo.lamports;
 };
 
 export const putSolIntoWallet = async (
@@ -118,4 +136,24 @@ export const sendUSDCTokens = async (
 
   // Sign transaction, broadcast, and confirm
   await sendAndConfirmTransaction(connection, transaction, [source]);
+};
+
+// See https://solanacookbook.com/references/token.html#how-to-create-a-new-token
+// Creating tokens is done by creating what is called a "mint account". This mint account is later used to mint tokens to a token account and create the initial supply.
+
+export const createNewToken = async (
+  connection: Connection,
+  // The fee payer used to create the mint
+  feePayer: Keypair,
+  // The one account that can mint tokens for this token (this account does not hold the balance)
+  mintAuthority: PublicKey
+) => {
+  const mintAddress = await createMint(
+    connection,
+    feePayer,
+    mintAuthority,
+    null, // Don't both with a freeze address
+    2 // 2 decimals since we're simulating USDC
+  );
+  return mintAddress;
 };
