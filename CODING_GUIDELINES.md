@@ -58,3 +58,14 @@ We use `async`/`await`. Use `promisify()` if you need to wrap a callback functio
 ## Just `throw new Error()`
 
 JS lets you throw objects, strings and other things that aren't errors. Just throw Errors.
+
+Our code assumes thrown objects will be errors, ie:
+
+```typescript
+try {
+  ...
+} catch (thrownObject) {
+  const error = thrownObject as Error
+  ...
+}
+```
