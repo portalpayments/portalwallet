@@ -8,12 +8,14 @@ import {
   seedToKeypairs,
   createNewToken,
   checkAccountExists,
+  getOrCreateAssociatedTokenAddress,
 } from "./vmwallet";
 
 import { log, stringify } from "./functions";
 import { expectedCleanedPhrase } from "./__mocks__/mocks";
 import { getMint } from "@solana/spl-token";
 import { getABetterErrorMessage } from "./errors";
+import { SECONDS } from "./constants";
 
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
@@ -96,33 +98,57 @@ describe(`restoration`, () => {
       createNewToken(connection, testUSDCAuthority, testUSDCAuthority.publicKey)
     ).rejects.toThrow("Insufficient funds");
   });
+});
 
-  test(`createNewToken makes new tokens`, async () => {
-    const testUSDCAuthority = new Keypair();
-    await putSolIntoWallet(
-      connection,
-      testUSDCAuthority.publicKey,
-      ENOUGH_TO_MAKE_A_NEW_TOKEN
-    );
+describe("minting", () => {
+  let connection: Connection;
+  let testUSDCAuthority: Keypair;
+  let tokenMintAccount: PublicKey;
+  beforeAll(async () => {
+    connection = await connect("localhost");
+  });
+  test(
+    `createNewToken makes new tokens`,
+    async () => {
+      testUSDCAuthority = new Keypair();
+      await putSolIntoWallet(
+        connection,
+        testUSDCAuthority.publicKey,
+        ENOUGH_TO_MAKE_A_NEW_TOKEN
+      );
 
-    const mintAddress = await createNewToken(
+      tokenMintAccount = await createNewToken(
+        connection,
+        testUSDCAuthority,
+        testUSDCAuthority.publicKey
+      );
+      const doesExist = await checkAccountExists(connection, tokenMintAccount);
+      expect(doesExist).toBeTruthy();
+      let mintAccount = await getMint(connection, tokenMintAccount);
+
+      expect(mintAccount).toEqual({
+        // TODO: expect.any(String) and expect.any(PublicKey)
+        // don't work
+        address: expect.anything(),
+        decimals: 2,
+        freezeAuthority: null,
+        isInitialized: true,
+        mintAuthority: testUSDCAuthority.publicKey,
+        supply: expect.any(BigInt),
+      });
+    },
+    30 * SECONDS
+  );
+
+  test(`getOrCreateAssociatedTokenAddress for a test wallet`, async () => {
+    const wallet = new Keypair();
+    const associatedTokenAddress = await getOrCreateAssociatedTokenAddress(
       connection,
+      tokenMintAccount,
       testUSDCAuthority,
-      testUSDCAuthority.publicKey
+      tokenMintAccount,
+      wallet.publicKey
     );
-    const doesExist = await checkAccountExists(connection, mintAddress);
-    expect(doesExist).toBeTruthy();
-    let mintAccount = await getMint(connection, mintAddress);
-
-    expect(mintAccount).toEqual({
-      // TODO: expect.any(String) and expect.any(PublicKey)
-      // don't work
-      address: expect.anything(),
-      decimals: 2,
-      freezeAuthority: null,
-      isInitialized: true,
-      mintAuthority: testUSDCAuthority.publicKey,
-      supply: expect.any(BigInt),
-    });
+    expect(associatedTokenAddress).toBeInstanceOf(PublicKey);
   });
 });

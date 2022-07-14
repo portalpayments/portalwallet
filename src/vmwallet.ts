@@ -17,8 +17,10 @@ import {
 } from "./constants";
 import { derivePath } from "ed25519-hd-key";
 import {
+  createAssociatedTokenAccount,
   createMint,
   createTransferInstruction,
+  getAssociatedTokenAddress,
   getOrCreateAssociatedTokenAccount,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
@@ -166,4 +168,33 @@ export const createNewToken = async (
     }
     throw error;
   }
+};
+
+// Get or create the associated token account for the specified `wallet`
+// The associated token account will hold this particular token.
+export const getOrCreateAssociatedTokenAddress = async (
+  connection: Connection,
+  tokenMintAccount: PublicKey,
+  signer: Keypair,
+  token: PublicKey,
+  wallet: PublicKey
+): Promise<PublicKey> => {
+  const associatedTokenAddress = await getAssociatedTokenAddress(
+    tokenMintAccount,
+    wallet,
+    false
+  );
+
+  const isExistingAddress = await checkAccountExists(
+    connection,
+    associatedTokenAddress
+  );
+
+  if (isExistingAddress) {
+    return associatedTokenAddress;
+  }
+
+  await createAssociatedTokenAccount(connection, signer, token, wallet);
+
+  return associatedTokenAddress;
 };
