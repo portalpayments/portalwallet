@@ -5,21 +5,13 @@ import {
   convertPhraseToSeed,
   getAccountBalance,
   putSolIntoWallet,
-  sendUSDCTokens,
   seedToKeypairs,
-  createMintAccount,
   checkAccountExists,
-  createTokenAccount,
-  mintTokens,
 } from "./vmwallet";
 
-import { deepClone, log, stringify } from "./functions";
+import { createMintAccount, createTokenAccount, mintTokens } from "./tokens";
 import { expectedCleanedPhrase } from "./__mocks__/mocks";
-import {
-  createAssociatedTokenAccountInstruction,
-  getAccount,
-  getMint,
-} from "@solana/spl-token";
+import { getAccount, getMint } from "@solana/spl-token";
 import { getABetterErrorMessage } from "./errors";
 import { SECONDS, USD_DECIMALS } from "./constants";
 
@@ -231,4 +223,15 @@ describe("minting", () => {
       },
     });
   });
+
+  // test(`Can send tokens to our test user`, async () => {
+  //   const testUser = new Keypair();
+  //   const x = sendUSDCTokens(connection, tokenAccount, testUser, 69);
+
+  //   const accountBalance = await getAccountBalance(
+  //     connection,
+  //     testUser.publicKey
+  //   );
+  //   expect(accountBalance).toEqual(DEPOSIT);
+  // });
 });
