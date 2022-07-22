@@ -33,7 +33,7 @@ That way the next person know if/when it's fixed:
 
 ## Use pure functions
 
-It's much easier to read, test and refactor code that always has the same output for the same input. Use scope and closures for state rather than creating custom classes.
+It's much easier to read, test and refactor code that always has the same output for the same input. Use scope and closures for state rather than creating custom classes. In React, use hooks. 
 
 ## Name values, instead of including magic numbers or strings.
 
