@@ -127,9 +127,7 @@ describe("minting", () => {
       let mintAccount = await getMint(connection, tokenMintAccount);
 
       expect(mintAccount).toEqual({
-        // TODO: expect.any(String) and expect.any(PublicKey)
-        // don't work
-        address: expect.anything(),
+        address: expect.any(PublicKey),
         decimals: 2,
         freezeAuthority: null,
         isInitialized: true,
