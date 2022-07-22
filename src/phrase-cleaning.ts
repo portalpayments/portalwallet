@@ -4,7 +4,7 @@ const SINGLE_SPACE = " ";
 const NON_ALPHA_NUMERIC = /[\n,']+/g;
 const NOTHING = "";
 
-// We could also use 'bs58' but have  to convert string to bytes first
+// We could also use 'bs58' but have to convert string to bytes first
 export const cleanPhrase = (phrase: string) => {
   return phrase
     .toLowerCase()

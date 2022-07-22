@@ -12,7 +12,7 @@ These are focused on keeping us moving quickly:
 - You're writing code to be be read, understood, and changed by your colleagues.
 
 - Use real names for things. No abbreviations.
-  - Abrvntns sk to rd (if that doesn't make any sense, it says 'abbreviations suck to read')
+  - Abrvntns sk to rd (if tht doesn't make any sense, it says 'abbreviations suck to read')
   - If we're searching for 'wallet', then 'wlt' won't up and abbeviations are invariably used inconsistently.
   - Let the compiler worry about saving characters.
 
