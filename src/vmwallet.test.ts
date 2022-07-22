@@ -6,9 +6,9 @@ import {
   putSolIntoWallet,
   sendUSDCTokens,
   seedToKeypairs,
-  createNewToken,
+  createMintAccount,
   checkAccountExists,
-  getTokenAccount,
+  createTokenAccount,
 } from "./vmwallet";
 
 import { deepClone, log, stringify } from "./functions";
@@ -99,7 +99,11 @@ describe(`restoration`, () => {
     );
 
     expect(
-      createNewToken(connection, testUSDCAuthority, testUSDCAuthority.publicKey)
+      createMintAccount(
+        connection,
+        testUSDCAuthority,
+        testUSDCAuthority.publicKey
+      )
     ).rejects.toThrow("Insufficient funds");
   });
 });
@@ -121,7 +125,7 @@ describe("minting", () => {
         ENOUGH_TO_MAKE_A_NEW_TOKEN
       );
 
-      mintAccount = await createNewToken(
+      mintAccount = await createMintAccount(
         connection,
         testUSDCAuthority,
         testUSDCAuthority.publicKey
@@ -147,23 +151,22 @@ describe("minting", () => {
   );
 
   test(`getOrCreateAssociatedTokenAddress makes a token account`, async () => {
-    const tokenAccountPublicKey = await getTokenAccount(
+    const tokenAccount = await createTokenAccount(
       connection,
       mintAccount,
       testUSDCAuthority,
-      mintAccount,
       testUSDCAuthority.publicKey
     );
 
-    expect(tokenAccountPublicKey).toBeInstanceOf(PublicKey);
+    expect(tokenAccount.address).toBeInstanceOf(PublicKey);
 
     const tokenAccountInformation = await getAccount(
       connection,
-      tokenAccountPublicKey
+      tokenAccount.address
     );
 
     expect(tokenAccountInformation).toEqual({
-      address: tokenAccountPublicKey,
+      address: tokenAccount.address,
       amount: expect.any(BigInt),
       closeAuthority: null,
       delegate: null,
@@ -177,7 +180,7 @@ describe("minting", () => {
     });
 
     let tokenAmount = await connection.getTokenAccountBalance(
-      tokenAccountPublicKey
+      tokenAccount.address
     );
     expect(tokenAmount).toEqual({
       context: {

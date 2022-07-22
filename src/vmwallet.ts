@@ -24,6 +24,7 @@ import {
   getAssociatedTokenAddress,
   getOrCreateAssociatedTokenAccount,
   TOKEN_PROGRAM_ID,
+  Account,
 } from "@solana/spl-token";
 import { TokenListProvider } from "@solana/spl-token-registry";
 import { getABetterErrorMessage } from "./errors";
@@ -143,9 +144,10 @@ export const sendUSDCTokens = async (
 };
 
 // See https://solanacookbook.com/references/token.html#how-to-create-a-new-token
-// Creating tokens is done by creating what is called a "mint account". This mint account is later used to mint tokens to a token account and create the initial supply.
+// MUCH BETTER DOCS: https://github.com/jacobcreech/Token-Creator
 
-export const createNewToken = async (
+// Mint accounts hold information about the token such as how many decimals the token has and who can mint new tokens, and is  is later used to mint tokens to a token account and create the initial supply.
+export const createMintAccount = async (
   connection: Connection,
   // The fee payer used to create the mint
   feePayer: Keypair,
@@ -173,29 +175,26 @@ export const createNewToken = async (
 
 // Get or create the associated token account for the specified `owner`
 // The associated token account will hold this particular token.
-export const getTokenAccount = async (
+export const createTokenAccount = async (
   connection: Connection,
   tokenMintAccount: PublicKey,
   signer: Keypair,
-  token: PublicKey,
   owner: PublicKey
-): Promise<PublicKey> => {
-  const associatedTokenAddress = await getAssociatedTokenAddress(
+): Promise<Account> => {
+  const associatedTokenAddress = await getOrCreateAssociatedTokenAccount(
+    connection,
+    signer,
     tokenMintAccount,
     owner,
     false
   );
 
-  const isExistingAddress = await checkAccountExists(
-    connection,
-    associatedTokenAddress
-  );
-
-  if (isExistingAddress) {
-    return associatedTokenAddress;
-  }
-
-  await createAssociatedTokenAccount(connection, signer, token, owner);
-
   return associatedTokenAddress;
+};
+
+let x = {
+  name: "A test token",
+  symbol: "TEST",
+  description: "Fully for testing purposes only",
+  image: "https://token-creator-lac.vercel.app/token_image.png",
 };
