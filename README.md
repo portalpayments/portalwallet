@@ -4,6 +4,13 @@
 
 ![Build status](https://github.com/mikemaccana/vmwallet/actions/workflows/tests.yaml/badge.svg)
 
+## Minting
+
+Each mint has two accounts - the docs at https://solanacookbook.com/references/token.html#how-to-get-a-token-mint use a couple of terms, so to clarify:
+
+1. Mint account - mints tokens
+2. Token account - holds tokens. Usually made via Associated Token Accounts.
+
 ## Development
 
 See [coding guidelines](CODING_GUIDELINES.md).
