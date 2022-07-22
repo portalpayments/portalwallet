@@ -108,7 +108,7 @@ describe("minting", () => {
     connection = await connect("localhost");
   });
   test(
-    `createNewToken makes new tokens`,
+    `createNewToken makes a token mint account and new tokens`,
     async () => {
       testUSDCAuthority = new Keypair();
       await putSolIntoWallet(
@@ -122,8 +122,12 @@ describe("minting", () => {
         testUSDCAuthority,
         testUSDCAuthority.publicKey
       );
-      const doesExist = await checkAccountExists(connection, tokenMintAccount);
-      expect(doesExist).toBeTruthy();
+      const doesMintAccountExist = await checkAccountExists(
+        connection,
+        tokenMintAccount
+      );
+      expect(doesMintAccountExist).toBeTruthy();
+
       let mintAccount = await getMint(connection, tokenMintAccount);
 
       expect(mintAccount).toEqual({
