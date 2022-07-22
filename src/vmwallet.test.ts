@@ -1,4 +1,5 @@
 import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
+import { Account } from "@solana/spl-token";
 import {
   connect,
   convertPhraseToSeed,
@@ -9,6 +10,7 @@ import {
   createMintAccount,
   checkAccountExists,
   createTokenAccount,
+  mintTokens,
 } from "./vmwallet";
 
 import { deepClone, log, stringify } from "./functions";
@@ -112,6 +114,7 @@ describe("minting", () => {
   let connection: Connection;
   let testUSDCAuthority: Keypair;
   let mintAccount: PublicKey;
+  let tokenAccount: Account;
   beforeAll(async () => {
     connection = await connect("localhost");
   });
@@ -151,7 +154,7 @@ describe("minting", () => {
   );
 
   test(`getOrCreateAssociatedTokenAddress makes a token account`, async () => {
-    const tokenAccount = await createTokenAccount(
+    tokenAccount = await createTokenAccount(
       connection,
       mintAccount,
       testUSDCAuthority,
@@ -182,15 +185,49 @@ describe("minting", () => {
     let tokenAmount = await connection.getTokenAccountBalance(
       tokenAccount.address
     );
+
+    const NO_TOKENS_MINTED_YET = 0;
     expect(tokenAmount).toEqual({
       context: {
         slot: expect.any(Number),
       },
       value: {
-        amount: "0",
+        amount: String(NO_TOKENS_MINTED_YET),
         decimals: USD_DECIMALS,
-        uiAmount: 0,
-        uiAmountString: "0",
+        uiAmount: NO_TOKENS_MINTED_YET,
+        uiAmountString: String(NO_TOKENS_MINTED_YET),
+      },
+    });
+  });
+
+  test(`Can mint tokens`, async () => {
+    const MINT_AMOUNT = 420;
+    const MINT_AMOUNT_UI = 4.2;
+
+    const transactionHash = await mintTokens(
+      connection,
+      testUSDCAuthority,
+      mintAccount,
+      tokenAccount.address,
+      testUSDCAuthority.publicKey,
+      MINT_AMOUNT
+    );
+
+    expect(transactionHash).toEqual(expect.any(String));
+
+    let tokenAmount = await connection.getTokenAccountBalance(
+      tokenAccount.address
+    );
+
+    expect(tokenAmount).toEqual({
+      context: {
+        slot: expect.any(Number),
+      },
+      value: {
+        amount: String(MINT_AMOUNT),
+        decimals: USD_DECIMALS,
+        uiAmount: MINT_AMOUNT_UI,
+        uiAmountString: String(MINT_AMOUNT_UI),
       },
     });
   });

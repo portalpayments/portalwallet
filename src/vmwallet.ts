@@ -25,6 +25,8 @@ import {
   getOrCreateAssociatedTokenAccount,
   TOKEN_PROGRAM_ID,
   Account,
+  createMintToInstruction,
+  mintToChecked,
 } from "@solana/spl-token";
 import { TokenListProvider } from "@solana/spl-token-registry";
 import { getABetterErrorMessage } from "./errors";
@@ -192,9 +194,22 @@ export const createTokenAccount = async (
   return associatedTokenAddress;
 };
 
-let x = {
-  name: "A test token",
-  symbol: "TEST",
-  description: "Fully for testing purposes only",
-  image: "https://token-creator-lac.vercel.app/token_image.png",
+export const mintTokens = async (
+  connection: Connection,
+  feePayer: Keypair,
+  mintAccountPublicKey: PublicKey,
+  tokenAccountPublicKey: PublicKey,
+  mintAuthorityPublicKey: PublicKey,
+  amount: number
+) => {
+  let transactionHash = await mintToChecked(
+    connection, // connection
+    feePayer, // fee payer
+    mintAccountPublicKey, // mint
+    tokenAccountPublicKey, // receiver (sholud be a token account)
+    mintAuthorityPublicKey, // mint authority
+    amount,
+    USD_DECIMALS
+  );
+  return transactionHash;
 };
