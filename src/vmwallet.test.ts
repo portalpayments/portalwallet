@@ -19,7 +19,7 @@ import {
   getMint,
 } from "@solana/spl-token";
 import { getABetterErrorMessage } from "./errors";
-import { SECONDS } from "./constants";
+import { SECONDS, USD_DECIMALS } from "./constants";
 
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
@@ -136,7 +136,7 @@ describe("minting", () => {
 
       expect(mintInformation).toEqual({
         address: expect.any(PublicKey),
-        decimals: 2,
+        decimals: USD_DECIMALS,
         freezeAuthority: null,
         isInitialized: true,
         mintAuthority: testUSDCAuthority.publicKey,
@@ -174,6 +174,21 @@ describe("minting", () => {
       mint: mintAccount,
       owner: testUSDCAuthority.publicKey,
       rentExemptReserve: null,
+    });
+
+    let tokenAmount = await connection.getTokenAccountBalance(
+      tokenAccountPublicKey
+    );
+    expect(tokenAmount).toEqual({
+      context: {
+        slot: expect.any(Number),
+      },
+      value: {
+        amount: "0",
+        decimals: USD_DECIMALS,
+        uiAmount: 0,
+        uiAmountString: "0",
+      },
     });
   });
 });
