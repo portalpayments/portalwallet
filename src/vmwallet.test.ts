@@ -142,7 +142,7 @@ describe("minting", () => {
     30 * SECONDS
   );
 
-  test(`getOrCreateAssociatedTokenAddress for a test wallet`, async () => {
+  test(`getOrCreateAssociatedTokenAddress makes a token account`, async () => {
     const wallet = new Keypair();
     const tokenAccountPublicKey = await getOrCreateAssociatedTokenAddress(
       connection,
@@ -159,16 +159,16 @@ describe("minting", () => {
     );
 
     expect(tokenAccountInformation).toEqual({
-      address: expect.any(PublicKey),
+      address: tokenAccountPublicKey,
       amount: expect.any(BigInt),
       closeAuthority: null,
       delegate: null,
       delegatedAmount: expect.any(BigInt),
       isFrozen: false,
       isInitialized: true,
-      isNative: false,
-      mint: expect.any(PublicKey),
-      owner: expect.any(PublicKey),
+      isNative: false, // It's an SPL token, not Sol.
+      mint: mintAccount,
+      owner: expect.any(PublicKey), // Owner of the account
       rentExemptReserve: null,
     });
   });
