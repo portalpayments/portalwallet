@@ -16,6 +16,8 @@ export const URLS: Record<string, string> = {
   genesysGoDevNet: "https://devnet.genesysgo.net/",
 };
 
+export const USD_DECIMALS = 2;
+
 // BIP44
 // From https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#purpose
 export const PURPOSE = 44;

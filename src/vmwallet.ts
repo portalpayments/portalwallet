@@ -14,6 +14,7 @@ import {
   SOLANA_SEED_SIZE_BYTES,
   URLS,
   USDC_SOLANA_SPL_TOKEN_ON_DEVNET,
+  USD_DECIMALS,
 } from "./constants";
 import { derivePath } from "ed25519-hd-key";
 import {
@@ -157,7 +158,7 @@ export const createNewToken = async (
       feePayer,
       mintAuthority,
       null, // Don't both with a freeze address
-      2 // 2 decimals since we're simulating USDC
+      USD_DECIMALS
     );
     return mintAddress;
   } catch (thrownObject) {
