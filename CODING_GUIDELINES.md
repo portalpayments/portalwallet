@@ -66,7 +66,7 @@ export const scrypt = promisify(scryptCallback);
 
 ## Use the SECONDS / MINUTES etc constants for times
 
-These are much more readable than `30000` or `30_000` would be.
+`30 * SECONDS` for example, is more readable than `30000` or `30_000` would be.
 
 ```typescript
 test(
