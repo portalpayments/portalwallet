@@ -11,9 +11,9 @@ import {
   getOrCreateAssociatedTokenAddress,
 } from "./vmwallet";
 
-import { log, stringify } from "./functions";
+import { deepClone, log, stringify } from "./functions";
 import { expectedCleanedPhrase } from "./__mocks__/mocks";
-import { getMint } from "@solana/spl-token";
+import { getAccount, getMint } from "@solana/spl-token";
 import { getABetterErrorMessage } from "./errors";
 import { SECONDS } from "./constants";
 
@@ -144,13 +144,32 @@ describe("minting", () => {
 
   test(`getOrCreateAssociatedTokenAddress for a test wallet`, async () => {
     const wallet = new Keypair();
-    const associatedTokenAddress = await getOrCreateAssociatedTokenAddress(
+    const tokenAccountPublicKey = await getOrCreateAssociatedTokenAddress(
       connection,
       mintAccount,
       testUSDCAuthority,
       mintAccount,
       wallet.publicKey
     );
-    expect(associatedTokenAddress).toBeInstanceOf(PublicKey);
+    expect(tokenAccountPublicKey).toBeInstanceOf(PublicKey);
+
+    const tokenAccountInformation = await getAccount(
+      connection,
+      tokenAccountPublicKey
+    );
+
+    expect(tokenAccountInformation).toEqual({
+      address: expect.any(PublicKey),
+      amount: expect.any(BigInt),
+      closeAuthority: null,
+      delegate: null,
+      delegatedAmount: expect.any(BigInt),
+      isFrozen: false,
+      isInitialized: true,
+      isNative: false,
+      mint: expect.any(PublicKey),
+      owner: expect.any(PublicKey),
+      rentExemptReserve: null,
+    });
   });
 });
