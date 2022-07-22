@@ -1,4 +1,4 @@
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import {
   connect,
   convertPhraseToSeed,
@@ -13,7 +13,11 @@ import {
 
 import { deepClone, log, stringify } from "./functions";
 import { expectedCleanedPhrase } from "./__mocks__/mocks";
-import { getAccount, getMint } from "@solana/spl-token";
+import {
+  createAssociatedTokenAccountInstruction,
+  getAccount,
+  getMint,
+} from "@solana/spl-token";
 import { getABetterErrorMessage } from "./errors";
 import { SECONDS } from "./constants";
 
@@ -143,14 +147,14 @@ describe("minting", () => {
   );
 
   test(`getOrCreateAssociatedTokenAddress makes a token account`, async () => {
-    const owningWallet = new Keypair();
     const tokenAccountPublicKey = await getTokenAccount(
       connection,
       mintAccount,
       testUSDCAuthority,
       mintAccount,
-      owningWallet.publicKey
+      testUSDCAuthority.publicKey
     );
+
     expect(tokenAccountPublicKey).toBeInstanceOf(PublicKey);
 
     const tokenAccountInformation = await getAccount(
@@ -168,7 +172,7 @@ describe("minting", () => {
       isInitialized: true,
       isNative: false, // It's an SPL token, not Sol.
       mint: mintAccount,
-      owner: owningWallet.publicKey,
+      owner: testUSDCAuthority.publicKey,
       rentExemptReserve: null,
     });
   });
