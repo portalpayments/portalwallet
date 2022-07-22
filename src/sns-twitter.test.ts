@@ -29,7 +29,8 @@ describe("Wallet to Twitter mapping", () => {
   });
 });
 
-// Skip to ignore TLS errors,
+// Skip to ignore TLS errors
+// https://github.com/PLhery/node-twitter-api-v2/issues/326
 describe.skip(`Twitter verification`, () => {
   afterAll(() => {
     closeConnection();
@@ -56,7 +57,7 @@ describe(`Wallet => Twitter verification`, () => {
   afterAll(() => {
     closeConnection();
   });
-  // Skip to ignore Twitter TLS error
+  // See link above re: TLS error
   test.skip(`Mike isn't verified`, async () => {
     expect(await checkIsWalletVerifiedViaTwitter(MIKES_WALLET)).toBeFalsy();
   });
