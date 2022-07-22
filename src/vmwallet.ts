@@ -171,18 +171,18 @@ export const createNewToken = async (
   }
 };
 
-// Get or create the associated token account for the specified `wallet`
+// Get or create the associated token account for the specified `owner`
 // The associated token account will hold this particular token.
-export const getOrCreateAssociatedTokenAddress = async (
+export const getTokenAccount = async (
   connection: Connection,
   tokenMintAccount: PublicKey,
   signer: Keypair,
   token: PublicKey,
-  wallet: PublicKey
+  owner: PublicKey
 ): Promise<PublicKey> => {
   const associatedTokenAddress = await getAssociatedTokenAddress(
     tokenMintAccount,
-    wallet,
+    owner,
     false
   );
 
@@ -195,7 +195,7 @@ export const getOrCreateAssociatedTokenAddress = async (
     return associatedTokenAddress;
   }
 
-  await createAssociatedTokenAccount(connection, signer, token, wallet);
+  await createAssociatedTokenAccount(connection, signer, token, owner);
 
   return associatedTokenAddress;
 };

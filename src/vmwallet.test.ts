@@ -8,7 +8,7 @@ import {
   seedToKeypairs,
   createNewToken,
   checkAccountExists,
-  getOrCreateAssociatedTokenAddress,
+  getTokenAccount,
 } from "./vmwallet";
 
 import { deepClone, log, stringify } from "./functions";
@@ -143,13 +143,13 @@ describe("minting", () => {
   );
 
   test(`getOrCreateAssociatedTokenAddress makes a token account`, async () => {
-    const wallet = new Keypair();
-    const tokenAccountPublicKey = await getOrCreateAssociatedTokenAddress(
+    const owningWallet = new Keypair();
+    const tokenAccountPublicKey = await getTokenAccount(
       connection,
       mintAccount,
       testUSDCAuthority,
       mintAccount,
-      wallet.publicKey
+      owningWallet.publicKey
     );
     expect(tokenAccountPublicKey).toBeInstanceOf(PublicKey);
 
@@ -168,7 +168,7 @@ describe("minting", () => {
       isInitialized: true,
       isNative: false, // It's an SPL token, not Sol.
       mint: mintAccount,
-      owner: expect.any(PublicKey), // Owner of the account
+      owner: owningWallet.publicKey,
       rentExemptReserve: null,
     });
   });
