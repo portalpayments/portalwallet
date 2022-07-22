@@ -103,12 +103,12 @@ describe(`restoration`, () => {
 describe("minting", () => {
   let connection: Connection;
   let testUSDCAuthority: Keypair;
-  let tokenMintAccount: PublicKey;
+  let mintAccount: PublicKey;
   beforeAll(async () => {
     connection = await connect("localhost");
   });
   test(
-    `createNewToken makes a token mint account and new tokens`,
+    `createNewToken makes a mint account and new tokens`,
     async () => {
       testUSDCAuthority = new Keypair();
       await putSolIntoWallet(
@@ -117,20 +117,20 @@ describe("minting", () => {
         ENOUGH_TO_MAKE_A_NEW_TOKEN
       );
 
-      tokenMintAccount = await createNewToken(
+      mintAccount = await createNewToken(
         connection,
         testUSDCAuthority,
         testUSDCAuthority.publicKey
       );
       const doesMintAccountExist = await checkAccountExists(
         connection,
-        tokenMintAccount
+        mintAccount
       );
       expect(doesMintAccountExist).toBeTruthy();
 
-      let mintAccount = await getMint(connection, tokenMintAccount);
+      let mintInformation = await getMint(connection, mintAccount);
 
-      expect(mintAccount).toEqual({
+      expect(mintInformation).toEqual({
         address: expect.any(PublicKey),
         decimals: 2,
         freezeAuthority: null,
@@ -146,9 +146,9 @@ describe("minting", () => {
     const wallet = new Keypair();
     const associatedTokenAddress = await getOrCreateAssociatedTokenAddress(
       connection,
-      tokenMintAccount,
+      mintAccount,
       testUSDCAuthority,
-      tokenMintAccount,
+      mintAccount,
       wallet.publicKey
     );
     expect(associatedTokenAddress).toBeInstanceOf(PublicKey);
