@@ -12,11 +12,11 @@ These are focused on keeping us moving quickly:
 - You're writing code to be be read, understood, and changed by your colleagues.
 
 - Use real names for things. No abbreviations.
-  - Abrvntns sk to rd (if tht doesn't make any sense, it says 'abbreviations suck to read')
-  - If we're searching for 'wallet', then 'wlt' won't up and abbeviations are invariably used inconsistently.
-  - Let the compiler worry about saving characters.
+  - Abrvntns sk to rd (if that doesn't make any sense, it says 'abbreviations suck to read')
+  - If we're searching for 'wallet', then 'wlt' won't up and abbeviations are invariably used inconsistently. It's entirely possible we'll have 'wallet', 'w', 'wlt' and 'wllt' at the same time. Maybe referring to slightly different things.
+  - Let the compiler worry about saving characters. Humans are the expensive part - readable names saves them time.
 
-Give things good names. `getBanana()` will obviously return a `banana`. `checkIfBanana()` will return a boolean about whether something is a banana.
+Give things good names. `getBanana()` will obviously return a `banana`. `checkIsBanana()` will return a boolean about whether something is a banana. `isBanana` is a boolean. `bananaById` is an Object of bananas sorted by ID.
 
 ## Use links for issues when working around an issue
 
@@ -33,7 +33,7 @@ That way the next person know if/when it's fixed:
 
 ## Use pure functions
 
-It's much easier to read, test and refactor code that always has the same output for the same input. Use scope and closures for state rather than creating custom classes. In React, use hooks. 
+It's much easier to read, test and refactor code that always has the same output for the same input. Use scope and closures for state rather than creating custom classes. In React, use hooks.
 
 ## Name values, instead of including magic numbers or strings.
 
@@ -55,14 +55,16 @@ We use prettier with the default rules.
 
 ## No `.then()` or callbacks.
 
-We use `async`/`await`. Use `promisify()` if you need to wrap a callback function. This means we can catch errors using `try {} catch() {}`
+We use `async`/`await`. This means we can catch errors using `try {} catch() {}`
 
-Since using `promisify()` is boilerplate code, hide it away in `functions.js`:
+Use `promisify()` if you need to wrap a callback function. Since using `promisify()` is boilerplate code, hide it away in `functions.js`:
 
 ```typescript
 import { scrypt as scryptCallback } from "crypto";
 export const scrypt = promisify(scryptCallback);
 ```
+
+This way we can jump `import { script } from './functions'` and have a working `scrypt` we can use with `async/await`
 
 ## Use the SECONDS / MINUTES etc constants for times
 
