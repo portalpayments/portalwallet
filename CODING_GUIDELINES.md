@@ -51,9 +51,32 @@ Having a single implementation of each function lets us refactor easily.
 
 We use prettier with the default rules.
 
+# JS specific guidelines
+
 ## No `.then()` or callbacks.
 
-We use `async`/`await`. Use `promisify()` if you need to wrap a callback function.
+We use `async`/`await`. Use `promisify()` if you need to wrap a callback function. This means we can catch errors using `try {} catch() {}`
+
+Since using `promisify()` is boilerplate code, hide it away in `functions.js`:
+
+```typescript
+import { scrypt as scryptCallback } from "crypto";
+export const scrypt = promisify(scryptCallback);
+```
+
+## Use the SECONDS / MINUTES etc constants for times
+
+These are much more readable than `30000` or `30_000` would be.
+
+```typescript
+test(
+  `thing that will take 30 seconds`,
+  () => {
+    //
+  },
+  30 * SECONDS
+);
+```
 
 ## Just `throw new Error()`
 
@@ -64,6 +87,9 @@ Our code assumes thrown objects will be errors, ie:
 ```typescript
 try {
   ...
+  if ( badness ) {
+    throw new Error(`oh no!`)
+  }
 } catch (thrownObject) {
   const error = thrownObject as Error
   ...
