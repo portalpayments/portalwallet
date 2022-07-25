@@ -18,7 +18,15 @@ export const URLS: Record<string, string> = {
 
 export const USD_DECIMALS = 2;
 
-export const USD = 100;
+// TODO: reducing this to 1_000 makes wallets not visible
+// which seems to be the rent requirement -
+// see https://docs.solana.com/developing/programming-model/accounts#rent
+// but too many lamports may hit airdrop limit for some test networks.
+export const DEPOSIT = 1_000_000;
+// Likewise 1_000_000 isn't enough to make a new token
+export const NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN = 1_000_000;
+
+export const USD = Number(`1e${USD_DECIMALS}`);
 
 // BIP44
 // From https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#purpose
