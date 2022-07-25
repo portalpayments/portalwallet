@@ -18,6 +18,8 @@ export const URLS: Record<string, string> = {
 
 export const USD_DECIMALS = 2;
 
+export const USD = 100;
+
 // BIP44
 // From https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#purpose
 export const PURPOSE = 44;

@@ -1,25 +1,8 @@
-import {
-  Connection,
-  Keypair,
-  LAMPORTS_PER_SOL,
-  PublicKey,
-  sendAndConfirmTransaction,
-  Transaction,
-  Signer,
-  TransactionInstruction,
-} from "@solana/web3.js";
+import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import * as bip39 from "bip39";
 import { log, scrypt } from "./functions";
-import {
-  SOLANA_SEED_SIZE_BYTES,
-  URLS,
-  USDC_SOLANA_SPL_TOKEN_ON_DEVNET,
-  USD_DECIMALS,
-} from "./constants";
+import { SOLANA_SEED_SIZE_BYTES, URLS } from "./constants";
 import { derivePath } from "ed25519-hd-key";
-
-import { TokenListProvider } from "@solana/spl-token-registry";
-import { getABetterErrorMessage } from "./errors";
 
 export const convertPhraseToSeed = async (
   phrase: string,

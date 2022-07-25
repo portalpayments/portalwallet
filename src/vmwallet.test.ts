@@ -6,14 +6,11 @@ import {
   getAccountBalance,
   putSolIntoWallet,
   seedToKeypairs,
-  checkAccountExists,
 } from "./vmwallet";
 
-import { createMintAccount, createTokenAccount, mintTokens } from "./tokens";
+import { createMintAccount } from "./tokens";
 import { expectedCleanedPhrase } from "./__mocks__/mocks";
-import { getAccount, getMint } from "@solana/spl-token";
 import { getABetterErrorMessage } from "./errors";
-import { SECONDS, USD_DECIMALS } from "./constants";
 
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
