@@ -52,12 +52,12 @@ export const createMintAccount = async (
 export const createTokenAccount = async (
   connection: Connection,
   tokenMintAccount: PublicKey,
-  signer: Keypair,
+  payer: Keypair,
   owner: PublicKey
 ): Promise<Account> => {
   const associatedTokenAddress = await getOrCreateAssociatedTokenAccount(
     connection,
-    signer,
+    payer,
     tokenMintAccount,
     owner,
     false
@@ -68,7 +68,7 @@ export const createTokenAccount = async (
 
 export const mintTokens = async (
   connection: Connection,
-  feePayer: Keypair,
+  payer: Keypair,
   mintAccountPublicKey: PublicKey,
   tokenAccountPublicKey: PublicKey,
   mintAuthorityPublicKey: PublicKey,
@@ -76,7 +76,7 @@ export const mintTokens = async (
 ) => {
   let transactionHash = await mintToChecked(
     connection, // connection
-    feePayer, // fee payer
+    payer, // fee payer
     mintAccountPublicKey, // mint
     tokenAccountPublicKey, // receiver (sholud be a token account)
     mintAuthorityPublicKey, // mint authority
