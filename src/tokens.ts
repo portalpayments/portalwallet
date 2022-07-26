@@ -20,14 +20,14 @@ export const createMintAccount = async (
   mintAuthority: PublicKey
 ) => {
   try {
-    const mintAddress = await createMint(
+    const mintAccountPublicKey = await createMint(
       connection,
       feePayer,
       mintAuthority,
       null, // Don't both with a freeze address
       USD_DECIMALS
     );
-    return mintAddress;
+    return mintAccountPublicKey;
   } catch (thrownObject) {
     const error = thrownObject as Error;
     const fullErrorMessage = getABetterErrorMessage(error.message);

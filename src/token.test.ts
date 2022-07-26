@@ -15,7 +15,7 @@ jest.mock("./functions", () => ({
 describe("minting", () => {
   let connection: Connection;
   let testUSDCAuthority: Keypair;
-  let mintAccount: PublicKey;
+  let mintAccountPublicKey: PublicKey;
   let tokenAccount: Account;
   beforeAll(async () => {
     connection = await connect("localhost");
@@ -30,18 +30,18 @@ describe("minting", () => {
         ENOUGH_TO_MAKE_A_NEW_TOKEN
       );
 
-      mintAccount = await createMintAccount(
+      mintAccountPublicKey = await createMintAccount(
         connection,
         testUSDCAuthority,
         testUSDCAuthority.publicKey
       );
       const doesMintAccountExist = await checkAccountExists(
         connection,
-        mintAccount
+        mintAccountPublicKey
       );
       expect(doesMintAccountExist).toBeTruthy();
 
-      let mintInformation = await getMint(connection, mintAccount);
+      let mintInformation = await getMint(connection, mintAccountPublicKey);
 
       expect(mintInformation).toEqual({
         address: expect.any(PublicKey),
@@ -58,7 +58,7 @@ describe("minting", () => {
   test(`getOrCreateAssociatedTokenAddress makes a token account`, async () => {
     tokenAccount = await createTokenAccount(
       connection,
-      mintAccount,
+      mintAccountPublicKey,
       testUSDCAuthority,
       testUSDCAuthority.publicKey
     );
@@ -79,7 +79,7 @@ describe("minting", () => {
       isFrozen: false,
       isInitialized: true,
       isNative: false, // It's an SPL token, not Sol.
-      mint: mintAccount,
+      mint: mintAccountPublicKey,
       owner: testUSDCAuthority.publicKey,
       rentExemptReserve: null,
     });
@@ -109,7 +109,7 @@ describe("minting", () => {
     const transactionHash = await mintTokens(
       connection,
       testUSDCAuthority,
-      mintAccount,
+      mintAccountPublicKey,
       tokenAccount.address,
       testUSDCAuthority.publicKey,
       MINT_AMOUNT
