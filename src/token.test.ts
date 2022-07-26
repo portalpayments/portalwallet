@@ -1,5 +1,3 @@
-// See https://spl.solana.com/token
-
 import {
   getMint,
   getAccount,
@@ -67,7 +65,8 @@ describe("minting", () => {
         freezeAuthority: null,
         isInitialized: true,
         mintAuthority: testUSDCAuthority.publicKey,
-        supply: expect.any(BigInt),
+        // Tokens when initially created by spl-token have no supply
+        supply: 0n,
       });
     },
     30 * SECONDS

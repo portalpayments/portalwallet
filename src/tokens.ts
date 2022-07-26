@@ -1,4 +1,5 @@
-// See https://solanacookbook.com/references/token.html#how-to-create-a-new-token
+// Best docs https://spl.solana.com/token#example-creating-your-own-fungible-token
+// OK docs: https://solanacookbook.com/references/token.html#how-to-create-a-new-token
 // MUCH BETTER explanation, but with older code samples: https://github.com/jacobcreech/Token-Creator
 
 import {
@@ -23,14 +24,14 @@ import { log } from "./functions";
 export const createMintAccount = async (
   connection: Connection,
   // The fee payer used to create the mint
-  feePayer: Keypair,
+  payer: Keypair,
   // The one account that can mint tokens for this token (this account does not hold the balance)
   mintAuthority: PublicKey
 ) => {
   try {
     const mintAccountPublicKey = await createMint(
       connection,
-      feePayer,
+      payer,
       mintAuthority,
       null, // Don't both with a freeze address
       USD_DECIMALS

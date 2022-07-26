@@ -1,7 +1,7 @@
 // Defaults from https://aka.ms/tsconfig
 {
   "compilerOptions": {
-    "target": "es2016",
+    "target": "es2020",
     "module": "commonjs",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
