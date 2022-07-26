@@ -11,6 +11,7 @@ import {
 import { createMintAccount } from "./tokens";
 import { expectedCleanedPhrase } from "./__mocks__/mocks";
 import { getABetterErrorMessage } from "./errors";
+import { DEPOSIT, NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN } from "./constants";
 
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
@@ -23,14 +24,6 @@ jest.mock("./functions", () => ({
 
 const fullName = `${firstName} ${lastName}`;
 const password = `${new Date().toString()}`;
-
-// TODO: reducing this to 1_000 makes wallets not visible
-// which seems to be the rent requirement -
-// see https://docs.solana.com/developing/programming-model/accounts#rent
-// but too many lamports may hit airdrop limit for some test networks.
-const DEPOSIT = 1_000_000;
-// Likewise 1_000_000 isn't enough to make a new token
-const NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN = 1_000_000;
 
 describe(`restoration`, () => {
   let connection: Connection;
