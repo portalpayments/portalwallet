@@ -1,8 +1,26 @@
-import { getMint, getAccount, Account } from "@solana/spl-token";
+// See https://spl.solana.com/token
+
+import {
+  getMint,
+  getAccount,
+  Account,
+  getOrCreateAssociatedTokenAccount,
+} from "@solana/spl-token";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
-import { USD_DECIMALS, SECONDS } from "./constants";
-import { createMintAccount, createTokenAccount, mintTokens } from "./tokens";
-import { connect, putSolIntoWallet, checkAccountExists } from "./vmwallet";
+import { USD_DECIMALS, SECONDS, DEPOSIT } from "./constants";
+import { log } from "./functions";
+import {
+  createMintAccount,
+  createTokenAccount,
+  mintTokens,
+  makeTokenAccount,
+} from "./tokens";
+import {
+  connect,
+  putSolIntoWallet,
+  checkAccountExists,
+  getAccountBalance,
+} from "./vmwallet";
 
 const ENOUGH_TO_MAKE_A_NEW_TOKEN = 1_000_000_000;
 
@@ -134,14 +152,39 @@ describe("minting", () => {
     });
   });
 
-  // test(`Can send tokens to our test user`, async () => {
-  //   const testUser = new Keypair();
-  //   const x = sendUSDCTokens(connection, tokenAccount, testUser, 69);
+  test(`Can make a token account for our test user`, async () => {
+    const recipient = new Keypair();
+    await putSolIntoWallet(connection, recipient.publicKey, 1_000_000_000);
 
-  //   const accountBalance = await getAccountBalance(
-  //     connection,
-  //     testUser.publicKey
-  //   );
-  //   expect(accountBalance).toEqual(DEPOSIT);
-  // });
+    const balanceOfPayerBeforeMakingRecipientTokenAccount =
+      await connection.getBalance(testUSDCAuthority.publicKey);
+
+    const recipientTokenAccount = await makeTokenAccount(
+      connection,
+      testUSDCAuthority,
+      mintAccountPublicKey,
+      recipient
+    );
+
+    log(`Made associated token account`, recipientTokenAccount);
+
+    expect(recipientTokenAccount).toBeTruthy();
+
+    const balanceOfPayerAfterMakingRecipientTokenAccount =
+      await connection.getBalance(testUSDCAuthority.publicKey);
+
+    log(
+      `Balance of token account`,
+      balanceOfPayerBeforeMakingRecipientTokenAccount,
+      balanceOfPayerAfterMakingRecipientTokenAccount
+    );
+
+    const costOfMakingBobsTokenAccount =
+      balanceOfPayerBeforeMakingRecipientTokenAccount -
+      balanceOfPayerAfterMakingRecipientTokenAccount;
+
+    const EXPECTED_COST_TO_MAKE_ACCOUNT = 2_044_280;
+
+    expect(costOfMakingBobsTokenAccount).toEqual(EXPECTED_COST_TO_MAKE_ACCOUNT);
+  });
 });

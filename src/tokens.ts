@@ -1,15 +1,23 @@
 // See https://solanacookbook.com/references/token.html#how-to-create-a-new-token
 // MUCH BETTER explanation, but with older code samples: https://github.com/jacobcreech/Token-Creator
 
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  sendAndConfirmTransaction,
+  Transaction,
+} from "@solana/web3.js";
 import {
   createMint,
   getOrCreateAssociatedTokenAccount,
   Account,
   mintToChecked,
+  createTransferInstruction,
 } from "@solana/spl-token";
 import { USD_DECIMALS } from "./constants";
 import { getABetterErrorMessage } from "./errors";
+import { log } from "./functions";
 
 // Mint accounts hold information about the token such as how many decimals the token has and who can mint new tokens, and is  is later used to mint tokens to a token account and create the initial supply.
 export const createMintAccount = async (
@@ -75,4 +83,21 @@ export const mintTokens = async (
     USD_DECIMALS
   );
   return transactionHash;
+};
+
+export const makeTokenAccount = async (
+  connection: Connection,
+  payer: Keypair,
+  mintAccountPublicKey: PublicKey,
+  recipient: Keypair
+) => {
+  // Create Bob's token account
+  const recipientTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    payer,
+    mintAccountPublicKey,
+    recipient.publicKey,
+    false
+  );
+  return recipientTokenAccount;
 };
