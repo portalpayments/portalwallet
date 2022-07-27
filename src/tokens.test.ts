@@ -3,15 +3,18 @@ import {
   getAccount,
   Account,
   getOrCreateAssociatedTokenAccount,
+  transfer,
 } from "@solana/spl-token";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { USD_DECIMALS, SECONDS, DEPOSIT } from "./constants";
+import { getABetterErrorMessage } from "./errors";
 import { log } from "./functions";
 import {
   createMintAccount,
   createTokenAccount,
   mintTokens,
   makeTokenAccount,
+  sendUSDC,
 } from "./tokens";
 import {
   connect,
@@ -33,7 +36,9 @@ describe("minting", () => {
   let testUSDCAuthority: Keypair;
   let mintAccountPublicKey: PublicKey;
   const alice = new Keypair();
+  const bob = new Keypair();
   let alicesTokenAccount: Account;
+  let bobsTokenAccount: Account;
   beforeAll(async () => {
     connection = await connect("localhost");
   });
@@ -153,23 +158,22 @@ describe("minting", () => {
     });
   });
 
-  test(`Can make a token account for our test user`, async () => {
-    const recipient = new Keypair();
-    await putSolIntoWallet(connection, recipient.publicKey, 1_000_000_000);
+  test(`Can make a token account for bob`, async () => {
+    await putSolIntoWallet(connection, bob.publicKey, 1_000_000_000);
 
     const balanceOfPayerBeforeMakingRecipientTokenAccount =
       await connection.getBalance(testUSDCAuthority.publicKey);
 
-    const recipientTokenAccount = await makeTokenAccount(
+    bobsTokenAccount = await makeTokenAccount(
       connection,
       testUSDCAuthority,
       mintAccountPublicKey,
-      recipient
+      bob
     );
 
-    log(`Made associated token account`, recipientTokenAccount);
+    log(`Made associated token account for Bob`, bobsTokenAccount);
 
-    expect(recipientTokenAccount).toBeTruthy();
+    expect(bobsTokenAccount).toBeTruthy();
 
     const balanceOfPayerAfterMakingRecipientTokenAccount =
       await connection.getBalance(testUSDCAuthority.publicKey);
@@ -187,5 +191,24 @@ describe("minting", () => {
     const EXPECTED_COST_TO_MAKE_ACCOUNT = 2_044_280;
 
     expect(costOfMakingBobsTokenAccount).toEqual(EXPECTED_COST_TO_MAKE_ACCOUNT);
+  });
+
+  test(`Can send token from Alice's token account to Bob's token account`, async () => {
+    // Alice needs some money to make Bob's token account
+    await putSolIntoWallet(
+      connection,
+      alice.publicKey,
+      ENOUGH_TO_MAKE_A_NEW_TOKEN
+    );
+
+    const signature = await sendUSDC(
+      connection,
+      alice,
+      alicesTokenAccount,
+      bobsTokenAccount,
+      50
+    );
+
+    expect(signature);
   });
 });

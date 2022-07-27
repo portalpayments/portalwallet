@@ -15,6 +15,7 @@ import {
   Account,
   mintToChecked,
   createTransferInstruction,
+  transfer,
 } from "@solana/spl-token";
 import { USD_DECIMALS } from "./constants";
 import { getABetterErrorMessage } from "./errors";
@@ -100,4 +101,33 @@ export const makeTokenAccount = async (
     false
   );
   return recipientTokenAccount;
+};
+
+export const sendUSDC = async (
+  connection: Connection,
+  sender: Keypair,
+  senderTokenAccount: Account,
+  recipientTokenAccount: Account,
+  amount: number
+) => {
+  try {
+    const signature = await transfer(
+      connection,
+      sender,
+      senderTokenAccount.address,
+      recipientTokenAccount.address,
+      sender.publicKey,
+      amount,
+      []
+    );
+
+    return signature;
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    const fullErrorMessage = getABetterErrorMessage(error.message);
+    if (fullErrorMessage) {
+      throw new Error(fullErrorMessage);
+    }
+    throw error;
+  }
 };
