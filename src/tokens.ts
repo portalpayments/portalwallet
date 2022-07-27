@@ -47,18 +47,17 @@ export const createMintAccount = async (
   }
 };
 
-// Get or create the associated token account for the specified `owner`
-// The associated token account will hold this particular token.
+// Get or create the associated token account for the specified `owner`, ie a user that will hold this token
 export const createTokenAccount = async (
   connection: Connection,
-  tokenMintAccount: PublicKey,
+  mintAccountPublicKey: PublicKey,
   payer: Keypair,
   owner: PublicKey
 ): Promise<Account> => {
   const associatedTokenAddress = await getOrCreateAssociatedTokenAccount(
     connection,
     payer,
-    tokenMintAccount,
+    mintAccountPublicKey,
     owner,
     false
   );
