@@ -37,7 +37,7 @@ It's much easier to read, test and refactor code that always has the same output
 
 ## Name values, instead of including magic numbers or strings.
 
-Name things, rather than putting in odd wallet or program strings or numbers in the code. This helps the other person know what the value means.
+Name things, rather than putting in [magic numbers](<https://en.wikipedia.org/wiki/Magic_number_(programming)#Unnamed_numerical_constants>) or magic strings (like unnamed wallet pubkeys) in the code. This helps the other person know what the value means.
 
 ## Remove code, rather than comment it out
 
