@@ -14,9 +14,24 @@
     <div class="feature collectibles">collectibles</div>
   </div>
   <nav>
-    <button class="transfer" on:click={() => navigate(0)}>icon</button>
-    <button class="contacts" on:click={() => navigate(1)}>icon</button>
-    <button class="collectibles" on:click={() => navigate(2)}>icon</button>
+    <button
+      class="transfer"
+      type="button"
+      title="transfer"
+      on:click={() => navigate(0)}
+    />
+    <button
+      class="contacts"
+      type="button"
+      title="contacts"
+      on:click={() => navigate(1)}
+    />
+    <button
+      class="collectibles"
+      type="button"
+      title="collectibles"
+      on:click={() => navigate(2)}
+    />
   </nav>
 </div>
 
@@ -27,8 +42,16 @@
   }
   * {
     display: grid;
+    color: black;
     background-color: white;
     box-sizing: border-box;
+  }
+
+  button:focus,
+  button:focus-visible,
+  button:hover {
+    outline: none;
+    border-color: transparent;
   }
 
   /* The entire wallet, contains the sliding main area plus the nav bar */
@@ -37,12 +60,7 @@
     height: var(--wallet-height);
     overflow: hidden;
     grid-auto-flow: row;
-    grid-template-rows: 1fr 48px;
-  }
-
-  .increment-count {
-    width: 20px;
-    height: 20px;
+    grid-template-rows: 1fr 72px;
   }
 
   /* The sliding area with each of our features (wider than our actual app)*/
@@ -59,16 +77,30 @@
   }
   nav {
     width: var(--wallet-width);
-    grid-auto-flow: row;
     grid-auto-flow: column;
+    /* gap: 24px; */
+    /* Bunch the buttons up together in the center */
+    grid-auto-columns: min-content;
+    justify-content: center;
   }
 
   nav button {
-    width: 20px;
-    color: black;
+    color: red;
+    background-size: cover;
+    width: 48px;
+    height: 48px;
+    margin: 12px;
   }
 
   nav .transfer {
-    background-image: url("assets/transfer.svg");
+    background-image: url("../assets/transfer.svg");
+  }
+
+  nav .contacts {
+    background-image: url("../assets/contacts.svg");
+  }
+
+  nav .collectibles {
+    background-image: url("../assets/collectibles.svg");
   }
 </style>
