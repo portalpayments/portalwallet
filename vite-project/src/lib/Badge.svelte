@@ -1,14 +1,21 @@
 <script lang="ts">
 </script>
 
-<div class="badge">badge text</div>
+<div class="badge"><slot /></div>
 
 <style>
   .badge {
-    display: grid;
+    display: inline-grid;
     align-items: center;
+    width: fit-content;
+    padding: 4px 12px;
     text-transform: uppercase;
-    font-size: 10px;
+    color: #4d4d4d;
+    background-color: #f1ee9e;
+    height: min-content;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 12px;
     font-weight: 600;
   }
 </style>

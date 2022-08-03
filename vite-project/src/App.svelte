@@ -81,11 +81,12 @@
   }
 
   .feature {
-    background-color: #999;
+    background-color: white;
   }
   nav {
     width: var(--wallet-width);
     grid-auto-flow: column;
+    border-top: 1px solid grey;
     /* gap: 24px; */
     /* Bunch the buttons up together in the center */
     grid-auto-columns: min-content;
