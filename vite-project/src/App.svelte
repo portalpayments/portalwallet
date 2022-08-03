@@ -1,6 +1,7 @@
 <script lang="ts">
   import Badge from "./lib/Badge.svelte";
   import Heading from "./lib/Heading.svelte";
+  import Balance from "./lib/Balance.svelte";
   const log = console.log;
   let currentFeature: number = 0;
   const navigate = (newFeature) => {
@@ -17,6 +18,7 @@
       <div class="feature transfer">
         transfer
         <Heading>Spending activity</Heading>
+        <Balance />
         <Heading>Transactions</Heading>
         <Badge>swag</Badge>
       </div>
