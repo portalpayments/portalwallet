@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Badge from "./lib/Badge.svelte";
+  import Heading from "./lib/Heading.svelte";
   const log = console.log;
   let currentFeature: number = 0;
   const navigate = (newFeature) => {
@@ -12,9 +14,14 @@
 
   <div class="wallet">
     <div class="features">
-      <div class="feature transfer">transfer</div>
-      <div class="feature contacts">contacts</div>
-      <div class="feature collectibles">collectibles</div>
+      <div class="feature transfer">
+        transfer
+        <Heading>Spending activity</Heading>
+        <Heading>Transactions</Heading>
+        <Badge>swag</Badge>
+      </div>
+      <!-- <div class="feature contacts">contacts</div>
+      <div class="feature collectibles">collectibles</div> -->
     </div>
     <nav>
       <button
@@ -51,6 +58,10 @@
     box-sizing: border-box;
   }
 
+  h1 {
+    font-size: 12px;
+  }
+
   button:focus,
   button:focus-visible,
   button:hover {
@@ -65,15 +76,6 @@
     overflow: hidden;
     grid-auto-flow: row;
     grid-template-rows: 1fr 72px;
-  }
-
-  /* The sliding area with each of our features (wider than our actual app)*/
-  .features {
-    background-color: #ccc;
-    width: calc(3 * var(--wallet-width));
-    grid-auto-flow: column;
-    gap: 12px;
-    padding: 12px;
   }
 
   .feature {
