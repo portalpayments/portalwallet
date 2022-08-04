@@ -2,6 +2,7 @@
   import Badge from "./lib/Badge.svelte";
   import Heading from "./lib/Heading.svelte";
   import Balance from "./lib/Balance.svelte";
+  import Transactions from "./lib/Transactions.svelte";
   const log = console.log;
   let currentFeature: number = 0;
   const navigate = (newFeature) => {
@@ -16,11 +17,12 @@
   <div class="wallet">
     <div class="features">
       <div class="feature transfer">
-        transfer
+        (transfer screen)
         <Heading>Spending activity</Heading>
         <Balance major="2900" minor="27" />
         <Heading>Transactions</Heading>
-        <Badge>swag</Badge>
+        <Transactions />
+        <Badge>Badge</Badge>
       </div>
       <!-- <div class="feature contacts">contacts</div>
       <div class="feature collectibles">collectibles</div> -->
