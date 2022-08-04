@@ -15,8 +15,11 @@
 </div>
 
 <style>
+  :root {
+    --usdc-blue: #2775c9;
+  }
   .balance {
-    color: #2775c9;
+    color: var(--usdc-blue);
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: max-content;
