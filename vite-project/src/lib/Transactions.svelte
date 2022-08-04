@@ -1,30 +1,17 @@
-<script>
-  import avatarImageUrl from "../assets/avatar.png";
+<script type="ts">
   console.log("Hello from transactions component");
 
-  let transactions = [
-    {
-      image: avatarImageUrl,
-      name: "John O'Hara",
-      isPositive: true,
-      amountMajor: 400,
-      amountMinor: 0,
-    },
-    {
-      image: avatarImageUrl,
-      name: "ProteinLand",
-      isPositive: false,
-      amountMajor: 3,
-      amountMinor: 50,
-    },
-    {
-      image: avatarImageUrl,
-      name: "Jane Taylor",
-      isPositive: false,
-      amountMajor: 21,
-      amountMinor: 25,
-    },
-  ];
+  interface Transaction {
+    image: string;
+    name: string;
+    isPositive: boolean;
+    amountMajor: number;
+    amountMinor: number;
+  }
+
+  // Promise<Array<Transactions>>
+
+  export let transactions: Array<Transaction>;
 </script>
 
 <div class="transactions">
@@ -32,7 +19,8 @@
     <div class="transaction">
       <img src={transaction.image} alt="" />
       <div class="name">{transaction.name}</div>
-      <div class="amount">
+      <div class="amount {transaction.isPositive ? 'positive' : ''}">
+        {transaction.isPositive ? "+" : ""}
         {transaction.amountMajor}.{transaction.amountMinor}
       </div>
     </div>
@@ -40,11 +28,13 @@
 </div>
 
 <style>
+  :root {
+    --bright-green: #33b275;
+  }
   .transactions {
     display: grid;
     grid-auto-flow: row;
-    border: 1px solid red;
-    gap: 12px;
+    gap: 0;
     padding: 0 12px;
   }
 
@@ -62,5 +52,10 @@
 
   .amount {
     text-align: right;
+    font-weight: 600;
+  }
+
+  .positive {
+    color: var(--bright-green);
   }
 </style>

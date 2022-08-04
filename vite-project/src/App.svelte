@@ -3,12 +3,38 @@
   import Heading from "./lib/Heading.svelte";
   import Balance from "./lib/Balance.svelte";
   import Transactions from "./lib/Transactions.svelte";
+
+  import avatarImageUrl from "./assets/avatar.png";
   const log = console.log;
   let currentFeature: number = 0;
   const navigate = (newFeature) => {
     log(`Changing currentFeature to ${newFeature}`);
     currentFeature += newFeature;
   };
+
+  const transactions = [
+    {
+      image: avatarImageUrl,
+      name: "John O'Hara",
+      isPositive: true,
+      amountMajor: 400,
+      amountMinor: 0,
+    },
+    {
+      image: avatarImageUrl,
+      name: "ProteinLand",
+      isPositive: false,
+      amountMajor: 3,
+      amountMinor: 50,
+    },
+    {
+      image: avatarImageUrl,
+      name: "Jane Taylor",
+      isPositive: false,
+      amountMajor: 21,
+      amountMinor: 25,
+    },
+  ];
 </script>
 
 <main>
@@ -21,7 +47,7 @@
         <Heading>Spending activity</Heading>
         <Balance major="2900" minor="27" />
         <Heading>Transactions</Heading>
-        <Transactions />
+        <Transactions {transactions} />
         <Badge>Badge</Badge>
       </div>
       <!-- <div class="feature contacts">contacts</div>
