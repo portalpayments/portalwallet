@@ -18,8 +18,9 @@
       <img src={transaction.image} alt="wallet avatar" />
       <div class="name">{transaction.name}</div>
       <div class="amount {transaction.isPositive ? 'positive' : ''}">
-        {transaction.isPositive ? "+" : ""}
-        {transaction.amountMajor}.{transaction.amountMinor}
+        {transaction.isPositive
+          ? "+"
+          : ""}{transaction.amountMajor}.{transaction.amountMinor}
       </div>
     </div>
   {/each}
