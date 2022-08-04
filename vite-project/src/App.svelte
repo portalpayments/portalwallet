@@ -18,7 +18,7 @@
       <div class="feature transfer">
         transfer
         <Heading>Spending activity</Heading>
-        <Balance />
+        <Balance major="2900" minor="27" />
         <Heading>Transactions</Heading>
         <Badge>swag</Badge>
       </div>
