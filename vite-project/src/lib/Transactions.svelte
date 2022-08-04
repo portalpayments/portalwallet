@@ -9,15 +9,13 @@
     amountMinor: number;
   }
 
-  // Promise<Array<Transactions>>
-
   export let transactions: Array<Transaction>;
 </script>
 
 <div class="transactions">
-  {#each transactions as transaction, index}
+  {#each transactions as transaction}
     <div class="transaction">
-      <img src={transaction.image} alt="" />
+      <img src={transaction.image} alt="wallet avatar" />
       <div class="name">{transaction.name}</div>
       <div class="amount {transaction.isPositive ? 'positive' : ''}">
         {transaction.isPositive ? "+" : ""}
@@ -34,7 +32,6 @@
   .transactions {
     display: grid;
     grid-auto-flow: row;
-    gap: 0;
     padding: 0 12px;
   }
 
