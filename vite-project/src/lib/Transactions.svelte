@@ -51,6 +51,16 @@
   .transaction {
     display: grid;
     grid-auto-flow: column;
+    grid-template-columns: 42px 1fr 64px;
     align-items: center;
+    gap: 4px;
+  }
+
+  .name {
+    text-align: left;
+  }
+
+  .amount {
+    text-align: right;
   }
 </style>
