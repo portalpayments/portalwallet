@@ -1,78 +1,34 @@
 <script lang="ts">
-  import Badge from "./lib/Badge.svelte";
-  import Heading from "./lib/Heading.svelte";
-  import Balance from "./lib/Balance.svelte";
-  import Transactions from "./lib/Transactions.svelte";
+  import HomeScreen from "./lib/HomePage/HomePage.svelte";
+  import TopToolbar from "./lib/TopToolbar/TopToolbar.svelte";
+  import Navbar from "./lib/Navbar/Navbar.svelte";
 
-  import avatarImageUrl from "./assets/avatar.png";
   const log = console.log;
   let currentFeature: number = 0;
   const navigate = (newFeature) => {
     log(`Changing currentFeature to ${newFeature}`);
-    currentFeature += newFeature;
+    currentFeature = newFeature;
   };
 
-  const transactions = [
-    {
-      image: avatarImageUrl,
-      name: "John O'Hara",
-      isPositive: true,
-      amountMajor: 400,
-      amountMinor: 0,
-    },
-    {
-      image: avatarImageUrl,
-      name: "ProteinLand",
-      isPositive: false,
-      amountMajor: 3,
-      amountMinor: 50,
-    },
-    {
-      image: avatarImageUrl,
-      name: "Jane Taylor",
-      isPositive: false,
-      amountMajor: 21,
-      amountMinor: 25,
-    },
-  ];
+  const testUser = { name: "Chris Austin", verified: true };
 </script>
 
 <main>
-  <h1>Demo Svelte frontend</h1>
-
   <div class="wallet">
+    <TopToolbar {...testUser} />
     <div class="features">
-      <div class="feature transfer">
-        (transfer screen)
-        <Heading>Spending activity</Heading>
-        <Balance major="2900" minor="27" />
-        <Heading>Transactions</Heading>
-        <Transactions {transactions} />
-        <Badge>Badge</Badge>
-      </div>
-      <!-- <div class="feature contacts">contacts</div>
-      <div class="feature collectibles">collectibles</div> -->
+      {#if currentFeature == 0}
+        <div class="feature transfer">
+          <HomeScreen />
+        </div>
+      {:else if currentFeature == 1}
+        <div>do sth else</div>
+      {:else if currentFeature == 2}
+        <div>do 3rd else</div>
+      {/if}
     </div>
-    <nav>
-      <button
-        class="transfer"
-        type="button"
-        title="transfer"
-        on:click={() => navigate(0)}
-      />
-      <button
-        class="contacts"
-        type="button"
-        title="contacts"
-        on:click={() => navigate(1)}
-      />
-      <button
-        class="collectibles"
-        type="button"
-        title="collectibles"
-        on:click={() => navigate(2)}
-      />
-    </nav>
+
+    <Navbar bind:currentFeature />
   </div>
 </main>
 
@@ -88,10 +44,6 @@
     box-sizing: border-box;
   }
 
-  h1 {
-    font-size: 12px;
-  }
-
   button:focus,
   button:focus-visible,
   button:hover {
@@ -105,39 +57,9 @@
     height: var(--wallet-height);
     overflow: hidden;
     grid-auto-flow: row;
-    grid-template-rows: 1fr 72px;
+    grid-template-rows: 80px 1fr 72px;
   }
-
   .feature {
     background-color: white;
-  }
-  nav {
-    width: var(--wallet-width);
-    grid-auto-flow: column;
-    border-top: 1px solid grey;
-    /* gap: 24px; */
-    /* Bunch the buttons up together in the center */
-    grid-auto-columns: min-content;
-    justify-content: center;
-  }
-
-  nav button {
-    color: red;
-    background-size: cover;
-    width: 48px;
-    height: 48px;
-    margin: 12px;
-  }
-
-  nav .transfer {
-    background-image: url("./assets/transfer.svg");
-  }
-
-  nav .contacts {
-    background-image: url("./assets/contacts.svg");
-  }
-
-  nav .collectibles {
-    background-image: url("./assets/collectibles.svg");
   }
 </style>

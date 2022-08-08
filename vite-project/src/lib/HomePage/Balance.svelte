@@ -1,6 +1,6 @@
 <script lang="ts">
-  import imgUrl from "../assets/usdc.svg";
-  import { formatNumber } from "./utils";
+  import imgUrl from "../../assets/usdc.svg";
+  import { formatNumber } from "../utils";
 
   // TODO: dynamic URL for symbol
   // export let symbol: number;
