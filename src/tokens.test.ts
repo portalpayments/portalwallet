@@ -4,11 +4,13 @@ import {
   Account,
   getOrCreateAssociatedTokenAccount,
   transfer,
+  AccountLayout,
+  TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { USD_DECIMALS, SECONDS, DEPOSIT } from "./constants";
 import { getABetterErrorMessage } from "./errors";
-import { log } from "./functions";
+import { log, stringify, deepClone } from "./functions";
 import {
   createMintAccount,
   createTokenAccount,
@@ -25,11 +27,25 @@ import {
 
 const ENOUGH_TO_MAKE_A_NEW_TOKEN = 1_000_000_000;
 
+const AMOUNT_OF_USDC_TO_SEND = 50;
+
 // Quiet functions.log() during tests
 jest.mock("./functions", () => ({
   ...jest.requireActual("./functions"),
   log: jest.fn(),
 }));
+
+import BN from "bn.js";
+
+interface ItemWithBN {
+  _bn: string | number | BN | Buffer | Uint8Array | number[];
+}
+
+const itemWithBNToPublicKey = (item: ItemWithBN) => {
+  const bigNumber = new BN(item._bn, 16);
+  const decoded = { _bn: bigNumber };
+  return new PublicKey(decoded);
+};
 
 describe("minting", () => {
   let connection: Connection;
@@ -41,6 +57,10 @@ describe("minting", () => {
   let bobsTokenAccount: Account;
   beforeAll(async () => {
     connection = await connect("localhost");
+  });
+
+  afterAll(async () => {
+    // Close connection?
   });
   test(
     `createNewToken makes a mint account and new tokens`,
@@ -171,7 +191,9 @@ describe("minting", () => {
       bob
     );
 
-    log(`Made associated token account for Bob`, bobsTokenAccount);
+    log(
+      `🆕 Made associated token account for Bob at address ${bobsTokenAccount.address}`
+    );
 
     expect(bobsTokenAccount).toBeTruthy();
 
@@ -206,9 +228,67 @@ describe("minting", () => {
       alice,
       alicesTokenAccount,
       bobsTokenAccount,
-      50
+      AMOUNT_OF_USDC_TO_SEND
     );
 
     expect(signature);
+  });
+
+  test(`Can find Bob's USDC account from his regular account`, async () => {
+    let parsedTokenAccountsByOwner =
+      await connection.getParsedTokenAccountsByOwner(bob.publicKey, {
+        mint: mintAccountPublicKey,
+      });
+
+    const firstAccount = parsedTokenAccountsByOwner.value[0];
+
+    expect(firstAccount).toEqual({
+      // Bob's first (and only) USDC account
+      account: {
+        data: {
+          parsed: {
+            info: {
+              isNative: false,
+              // This is a USDC account
+              mint: mintAccountPublicKey.toString(),
+              // It is owned by Bob
+              owner: bob.publicKey.toString(),
+              state: "initialized",
+              tokenAmount: {
+                // Bob has recievd the fifty cents
+                amount: String(AMOUNT_OF_USDC_TO_SEND),
+                decimals: 2,
+                uiAmount: AMOUNT_OF_USDC_TO_SEND / 100,
+                uiAmountString: String(AMOUNT_OF_USDC_TO_SEND / 100),
+              },
+            },
+            type: "account",
+          },
+          program: "spl-token",
+          space: 165,
+        },
+        executable: false,
+        lamports: 2039280,
+        // The SPL token program
+        owner: TOKEN_PROGRAM_ID,
+        rentEpoch: 0,
+      },
+      // Tested above
+      pubkey: bobsTokenAccount.address,
+    });
+  });
+
+  test(`Get all Bob's token accounts`, async () => {
+    const tokenAccounts = await connection.getTokenAccountsByOwner(
+      bob.publicKey,
+      {
+        programId: TOKEN_PROGRAM_ID,
+      }
+    );
+
+    const tokenAccount = tokenAccounts.value[0];
+    const rawAccount = AccountLayout.decode(tokenAccount.account.data);
+    expect(rawAccount.mint).toEqual(mintAccountPublicKey);
+    expect(rawAccount.amount).toEqual(50n);
   });
 });
