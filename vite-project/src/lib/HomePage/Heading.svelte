@@ -5,6 +5,8 @@
 
 <style>
   .heading {
+    text-align: left;
+    padding: 0 12px;
     display: grid;
     align-items: center;
     text-transform: uppercase;
