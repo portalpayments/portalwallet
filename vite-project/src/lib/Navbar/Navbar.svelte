@@ -50,9 +50,12 @@
     margin: 0;
     width: 32px;
     height: 32px;
+    /* Position background right in the middle of the button */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    /* Let's animate the button fade */
+    transition: all 200ms ease-in-out;
   }
 
   nav button:not(.active) {
