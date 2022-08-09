@@ -11,78 +11,66 @@
     log(`Changing currentFeature to ${newFeature}`);
     currentFeature = newFeature;
   };
+  const pages = [
+    {
+      name: "transfer",
+    },
+    {
+      name: "contacts",
+    },
+    {
+      name: "collectibles",
+    },
+  ];
 </script>
 
 <nav>
-  <button
-    class="transfer"
-    type="button"
-    title="transfer"
-    on:click={() => navigate(0)}
-    >{#if currentFeature == 0}<img
-        src={transferIconActive}
-        alt="transfers page"
-      />
-    {:else}
-      <img src={transferIcon} alt="go to transfers page" />
-    {/if}
-  </button>
-  <button
-    class="contacts"
-    type="button"
-    title="contacts"
-    on:click={() => navigate(1)}
-    >{#if currentFeature == 1}<img
-        src={contactsIconActive}
-        alt="contacts page"
-      />
-    {:else}
-      <img src={contactsIcon} alt="go to contacts page" />
-    {/if}</button
-  >
-  <button
-    class="collectibles"
-    type="button"
-    title="collectibles"
-    on:click={() => navigate(2)}
-    >{#if currentFeature == 2}<img
-        src={collectiblesIconActive}
-        alt="collctibles page"
-      />
-    {:else}
-      <img src={collectiblesIcon} alt="go to collctibles page" />
-    {/if}</button
-  >
+  {#each pages as page, index}
+    <button
+      class="{page.name} {currentFeature === index ? 'active' : ''}"
+      type="button"
+      title={page.name}
+      on:click={() => navigate(index)}
+    />
+  {/each}
 </nav>
 
 <style>
   nav {
-    width: 150px;
-    height: 50px;
-    margin: auto;
+    height: 48px;
+    justify-self: center;
     display: grid;
     grid-auto-flow: column;
     border: 1.5px solid #f3f3f3;
     border-radius: 29px;
-    /* gap: 24px; */
     /* Bunch the buttons up together in the center */
     grid-auto-columns: min-content;
-    gap: 15px;
+    gap: 16px;
+    padding: 0 16px;
     justify-content: center;
     align-items: center;
   }
 
   nav button {
-    background-size: cover;
+    padding: 0;
+    margin: 0;
     width: 32px;
     height: 32px;
-  }
-
-  nav img {
     background-size: contain;
     background-repeat: no-repeat;
-    width: 24px;
-    height: 24px;
+    background-position: center;
+  }
+
+  nav button.transfer {
+    background-image: url("/src/assets/transfer.svg");
+  }
+
+  nav button.contacts {
+    background-image: url("/src/assets/contacts.svg");
+  }
+
+  nav button.collectibles {
+    background-image: url("/src/assets/collectibles.svg");
   }
 
   * {
