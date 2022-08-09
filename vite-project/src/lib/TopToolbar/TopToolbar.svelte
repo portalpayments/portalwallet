@@ -17,8 +17,6 @@
   <button style="justify-self: end; background: none; padding: 0;">
     <img src={NotifiactionBell} alt="Notifiactions" class="bellIcon" />
   </button>
-
-  <!-- <h1 style="justify-self: end;">B</h1> -->
 </div>
 
 <style>
