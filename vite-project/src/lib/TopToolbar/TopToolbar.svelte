@@ -15,7 +15,7 @@
     </button>
   </div>
   <button style="justify-self: end; background: none; padding: 0;">
-    <img src={NotifiactionBell} alt="Notifiactions" class="bellIcon" />
+    <img src={NotifiactionBell} alt="Notifications" class="bellIcon" />
   </button>
 </div>
 
