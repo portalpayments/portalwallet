@@ -56,7 +56,7 @@
   }
 
   nav button:not(.active) {
-    opacity: 0.5;
+    opacity: 0.3;
   }
 
   nav button.transfer {
