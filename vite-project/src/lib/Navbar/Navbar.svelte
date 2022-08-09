@@ -1,17 +1,11 @@
 <script lang="ts">
-  import transferIcon from "../../assets/transfer.svg";
-  import transferIconActive from "../../assets/transferActive.svg";
-  import contactsIcon from "../../assets/contacts.svg";
-  import contactsIconActive from "../../assets/contactsActive.svg";
-  import collectiblesIcon from "../../assets/collectibles.svg";
-  import collectiblesIconActive from "../../assets/collectiblesActive.svg";
   const log = console.log;
   export let currentFeature: number = 0;
   const navigate = (newFeature) => {
     log(`Changing currentFeature to ${newFeature}`);
     currentFeature = newFeature;
   };
-  const pages = [
+  const features = [
     {
       name: "transfer",
     },
@@ -25,11 +19,11 @@
 </script>
 
 <nav>
-  {#each pages as page, index}
+  {#each features as feature, index}
     <button
-      class="{page.name} {currentFeature === index ? 'active' : ''}"
+      class="{feature.name} {currentFeature === index ? 'active' : ''}"
       type="button"
-      title={page.name}
+      title={feature.name}
       on:click={() => navigate(index)}
     />
   {/each}
@@ -61,16 +55,20 @@
     background-position: center;
   }
 
+  nav button:not(.active) {
+    opacity: 0.5;
+  }
+
   nav button.transfer {
-    background-image: url("/src/assets/transfer.svg");
+    background-image: url("/src/assets/transferActive.svg");
   }
 
   nav button.contacts {
-    background-image: url("/src/assets/contacts.svg");
+    background-image: url("/src/assets/contactsActive.svg");
   }
 
   nav button.collectibles {
-    background-image: url("/src/assets/collectibles.svg");
+    background-image: url("/src/assets/collectiblesActive.svg");
   }
 
   * {
