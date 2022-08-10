@@ -17,9 +17,16 @@ import {
   createTransferInstruction,
   transfer,
 } from "@solana/spl-token";
+import {
+  bundlrStorage,
+  keypairIdentity,
+  Metaplex,
+} from "@metaplex-foundation/js";
+
 import { USD_DECIMALS } from "./constants";
 import { getABetterErrorMessage } from "./errors";
 import { log } from "./functions";
+import { amount } from "@metaplex-foundation/js";
 
 // Mint accounts hold information about the token such as how many decimals the token has and who can mint new tokens, and is  is later used to mint tokens to a token account and create the initial supply.
 export const createMintAccount = async (

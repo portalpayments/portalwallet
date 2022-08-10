@@ -45,7 +45,9 @@ export const seedToKeypairs = async (entropy: Buffer, password: string) => {
   return keyPairs;
 };
 
-export const connect = async (networkName: string): Promise<Connection> => {
+export const connect = async (
+  networkName: keyof typeof URLS
+): Promise<Connection> => {
   log(`⚡ Connecting to ${networkName}`);
   const connection = new Connection(URLS[networkName], "confirmed");
   return connection;

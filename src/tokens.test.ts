@@ -35,18 +35,6 @@ jest.mock("./functions", () => ({
   log: jest.fn(),
 }));
 
-import BN from "bn.js";
-
-interface ItemWithBN {
-  _bn: string | number | BN | Buffer | Uint8Array | number[];
-}
-
-const itemWithBNToPublicKey = (item: ItemWithBN) => {
-  const bigNumber = new BN(item._bn, 16);
-  const decoded = { _bn: bigNumber };
-  return new PublicKey(decoded);
-};
-
 describe("minting", () => {
   let connection: Connection;
   let testUSDCAuthority: Keypair;
@@ -272,7 +260,7 @@ describe("minting", () => {
         lamports: 2039280,
         // The SPL token program
         owner: TOKEN_PROGRAM_ID,
-        rentEpoch: 0,
+        rentEpoch: expect.any(Number),
       },
       // Tested above
       pubkey: bobsTokenAccount.address,

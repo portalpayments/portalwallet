@@ -1,6 +1,6 @@
 import { clusterApiUrl } from "@solana/web3.js";
 
-export const URLS: Record<string, string> = {
+export const URLS = {
   // From https://solanacookbook.com/references/local-development.html#connecting-to-environments
   localhost: "http://127.0.0.1:8899",
   // From https://solanacookbook.com/references/local-development.html#starting-a-local-validator

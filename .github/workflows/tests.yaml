@@ -17,6 +17,9 @@ jobs:
 
     env:
       TWITTER_API_KEY_BEARER_TOKEN: ${{ secrets.TWITTER_API_KEY_BEARER_TOKEN }}
+      # Metaplex program location is not a secret so don't
+      # worry about including it in this file
+      METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS: "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 
     steps:
       - uses: actions/checkout@v3
@@ -28,7 +31,8 @@ jobs:
       # Install Solana
       - run: sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
       - run: export PATH="~/.local/share/solana/install/active_release/bin:$PATH"
-      - run: ~/.local/share/solana/install/active_release/bin/solana-test-validator &
+      # Run Solana validator with Metaplex program
+      - run: ~/.local/share/solana/install/active_release/bin/solana-test-validator --bpf-program ${METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS} metaplex_token_metadata_program.so --reset &
       # Run tests
       - run: npm ci
       - run: npm run build --if-present
