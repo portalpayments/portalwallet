@@ -235,6 +235,7 @@ describe("minting", () => {
   });
 
   test(`Can find Bob's USDC account from his regular account`, async () => {
+    // See https://solana.stackexchange.com/questions/1685/how-do-i-prevent-open-handles-issues-when-using-the-solana-connection-object
     let parsedTokenAccountsByOwner =
       await connection.getParsedTokenAccountsByOwner(bob.publicKey, {
         mint: mintAccountPublicKey,
@@ -279,6 +280,7 @@ describe("minting", () => {
   });
 
   test(`Get all Bob's token accounts`, async () => {
+    // See https://solana.stackexchange.com/questions/1685/how-do-i-prevent-open-handles-issues-when-using-the-solana-connection-object
     const tokenAccounts = await connection.getTokenAccountsByOwner(
       bob.publicKey,
       {
