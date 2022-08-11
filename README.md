@@ -21,7 +21,7 @@ solana program dump -u m ${METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS} metaplex_tok
 
 Each mint has a single accounts - the docs at https://solanacookbook.com/references/token.html#how-to-get-a-token-mint.
 
-New tokens are issued directly into users Associated Token Accounts. Eg. a some USDC is minted directly into Joe User's USDC wallet.
+New tokens are issued directly into users Associated Token Accounts. For example: some USDC is minted directly into Joe User's USDC wallet.
 
 ```
 Keypairs
