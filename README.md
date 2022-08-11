@@ -42,7 +42,11 @@ See [coding guidelines](CODING_GUIDELINES.md).
 You'll need an `.env` file with:
 
 ```
-TWITTER_API_KEY_BEAyt of this file (not checked into GitHub for security reasons).
+TWITTER_API_KEY_BEARER_TOKEN=somebearertoken
+
+```
+
+Ask your colleagues for a copy of this file (not checked into GitHub for security reasons).
 
 Install [a local validator](https://solanacookbook.com/references/local-development.html#starting-a-local-validator):
 
@@ -69,4 +73,7 @@ solana-test-validator --bpf-program ${METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS} m
   https://solanacookbook.com/references/keypairs-and-wallets.html#how-to-generate-a-new-keypair
 - https://buildspace.so/
 - https://crypto.stackexchange.com/questions/11269/can-keys-from-bitcoins-hierarchical-deterministic-wallets-be-correlated-reduci
+
+```
+
 ```
