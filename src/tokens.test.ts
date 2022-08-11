@@ -123,6 +123,7 @@ describe("minting", () => {
     const NO_TOKENS_MINTED_YET = 0;
     expect(tokenAmount).toEqual({
       context: {
+        apiVersion: expect.any(String),
         slot: expect.any(Number),
       },
       value: {
@@ -155,6 +156,7 @@ describe("minting", () => {
 
     expect(alicesTokens).toEqual({
       context: {
+        apiVersion: expect.any(String),
         slot: expect.any(Number),
       },
       value: {
