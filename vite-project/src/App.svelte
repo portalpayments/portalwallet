@@ -27,9 +27,8 @@
         <div>do 3rd else</div>
       {/if}
     </div>
-
-    <Navbar bind:currentFeature />
   </div>
+  <Navbar bind:currentFeature />
 </main>
 
 <style>
@@ -53,11 +52,13 @@
 
   /* The entire wallet, contains the sliding main area plus the nav bar */
   .wallet {
-    width: var(--wallet-width);
-    height: var(--wallet-height);
+    min-width: var(--wallet-width);
+    max-width: var(--wallet-width);
+    min-height: var(--wallet-height);
+    max-height: var(--wallet-height);
     overflow: hidden;
     grid-auto-flow: row;
-    grid-template-rows: 80px 1fr 72px;
+    grid-template-rows: 80px 1fr;
   }
   .feature {
     background-color: white;

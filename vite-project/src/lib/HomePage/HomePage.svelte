@@ -1,10 +1,10 @@
 <script lang="ts">
   import Badge from "./Badge.svelte";
-  import Heading from "./Heading.svelte";
+  import TransactionsHeading from "./TransactionsHeading.svelte";
   import Balance from "./Balance.svelte";
   import Transactions from "./Transactions.svelte";
-
   import avatarImageUrl from "../../assets/avatar.png";
+  import MoneyUtils from "./moneyUtils.svelte";
 
   const transactions = [
     {
@@ -28,14 +28,21 @@
       amountMajor: 21,
       amountMinor: 25,
     },
+    {
+      image: avatarImageUrl,
+      name: "Jane Taylor",
+      isPositive: false,
+      amountMajor: 21,
+      amountMinor: 25,
+    },
   ];
 </script>
 
-<Heading>balance</Heading>
 <Balance major="2900" minor="27" />
-<Heading>Transactions</Heading>
+<MoneyUtils />
+<TransactionsHeading />
 <Transactions {transactions} />
-<Badge>Badge</Badge>
+<!-- <Badge>Badge</Badge> -->
 
 <!-- <div class="feature contacts">contacts</div>
       <div class="feature collectibles">collectibles</div> -->

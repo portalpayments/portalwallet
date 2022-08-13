@@ -34,14 +34,19 @@
     display: grid;
     grid-auto-flow: row;
     padding: 0 12px;
+    gap: 6px;
+    height: auto;
+    max-height: 300px;
+    overflow: hidden;
   }
 
   .transaction {
     display: grid;
+    color: #4d4d4d;
     grid-auto-flow: column;
     grid-template-columns: 42px 1fr 64px;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
   }
 
   .name {

@@ -8,13 +8,22 @@
   export let minor: string;
 </script>
 
-<div class="balance">
-  <img class="symbol" alt="USDC logo" src={imgUrl} />
-  <div class="major">{formatNumber(major, true)}</div>
-  <div class="minor">.{formatNumber(minor, false)}</div>
-</div>
+<dic class="balanceCard">
+  <div class="balance">
+    <img class="symbol" alt="USDC logo" src={imgUrl} />
+    <div class="major">{formatNumber(major, true)}</div>
+    <div class="minor">.{formatNumber(minor, false)}</div>
+  </div>
+</dic>
 
 <style>
+  .balanceCard {
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-rows: 1fr;
+    align-items: center;
+    justify-content: center;
+  }
   :root {
     --usdc-blue: #2775c9;
   }
@@ -30,6 +39,7 @@
 
   .symbol {
     width: 36px;
+
     /* Slight hack to make the $ in USDC be the baseline, rather than the brackets */
     transform: translateY(3px);
   }
@@ -37,12 +47,13 @@
   .major {
     font-size: 36px;
     line-height: 36px;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .minor {
-    font-size: 24px;
+    font-size: 20px;
     line-height: 24px;
+    font-weight: 500;
     transform: translateY(-1px);
   }
 </style>
