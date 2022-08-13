@@ -36,6 +36,8 @@
       amountMinor: 25,
     },
   ];
+
+  let currentFeature: number | string = "";
 </script>
 
 <Balance major="2900" minor="27" />

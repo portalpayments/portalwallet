@@ -1,11 +1,12 @@
 <script lang="ts">
+  import { Link } from "svelte-navigator";
   const log = console.log;
   const addMoney = () => {
-    log(`adding money`);
+    window.location.assign("/addMoneyToAccount");
   };
 
   const transferMoney = () => {
-    log("transferring money");
+    window.location.assign("/transferMoney");
   };
 </script>
 

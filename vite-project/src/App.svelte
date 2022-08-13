@@ -2,6 +2,7 @@
   import HomeScreen from "./lib/HomePage/HomePage.svelte";
   import TopToolbar from "./lib/TopToolbar/TopToolbar.svelte";
   import Navbar from "./lib/Navbar/Navbar.svelte";
+  import { Router, Route, Link } from "svelte-navigator";
 
   const log = console.log;
   let currentFeature: number = 0;
@@ -13,23 +14,33 @@
   const testUser = { name: "Chris Austin", verified: true };
 </script>
 
-<main>
-  <div class="wallet">
-    <TopToolbar {...testUser} />
-    <div class="features">
-      {#if currentFeature == 0}
-        <div class="feature transfer">
-          <HomeScreen />
+<Router>
+  <main>
+    <Route path="addMoneyToAccount"
+      ><div class="wallet">adding money to account here</div></Route
+    >
+    <Route path="transferMoney"
+      ><div class="wallet">Transfering money</div></Route
+    >
+    <Route path="/">
+      <div class="wallet">
+        <TopToolbar {...testUser} />
+        <div class="features">
+          <div class="feature transfer">
+            {#if currentFeature == 0}
+              <HomeScreen />
+            {:else if currentFeature == 1}
+              <div>do sth else</div>
+            {:else if currentFeature == 2}
+              <div>do 3rd else</div>
+            {/if}
+          </div>
         </div>
-      {:else if currentFeature == 1}
-        <div>do sth else</div>
-      {:else if currentFeature == 2}
-        <div>do 3rd else</div>
-      {/if}
-    </div>
-  </div>
-  <Navbar bind:currentFeature />
-</main>
+      </div>
+      <Navbar bind:currentFeature />
+    </Route>
+  </main>
+</Router>
 
 <style>
   :root {

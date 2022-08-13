@@ -20,6 +20,7 @@
     "vite": "^3.0.0"
   },
   "dependencies": {
-    "normalize.css": "^8.0.1"
+    "normalize.css": "^8.0.1",
+    "svelte-navigator": "^3.1.6"
   }
 }
