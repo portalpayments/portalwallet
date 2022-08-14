@@ -2,14 +2,10 @@
   import HomeScreen from "./lib/HomePage/HomePage.svelte";
   import TopToolbar from "./lib/TopToolbar/TopToolbar.svelte";
   import Navbar from "./lib/Navbar/Navbar.svelte";
+  import { Circle } from "svelte-loading-spinners";
   import { Router, Route, Link } from "svelte-navigator";
 
-  const log = console.log;
   let currentFeature: number = 0;
-  const navigate = (newFeature) => {
-    log(`Changing currentFeature to ${newFeature}`);
-    currentFeature = newFeature;
-  };
 
   const testUser = { name: "Chris Austin", verified: true };
 </script>
@@ -21,6 +17,13 @@
     >
     <Route path="transferMoney"
       ><div class="wallet">Transfering money</div></Route
+    >
+
+    <Route path="transactions"
+      ><div class="wallet">
+        Here go transactions
+        <Circle color="#33b275" />
+      </div></Route
     >
     <Route path="/">
       <div class="wallet">

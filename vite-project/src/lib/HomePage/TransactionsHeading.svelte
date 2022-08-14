@@ -1,10 +1,11 @@
 <script lang="ts">
+  import { Link } from "svelte-navigator";
 </script>
 
 <div class="heading">
   <div>transactions</div>
 
-  <button>See all</button>
+  <Link to="/transactions">See all</Link>
 </div>
 
 <style>
@@ -20,7 +21,8 @@
     font-weight: 600;
     color: #7d7d7d;
   }
-  .heading button {
+
+  .heading > :global(a) {
     text-align: right;
     justify-self: end;
     padding: 0;
@@ -29,7 +31,10 @@
     background-color: transparent;
     color: #419cfd;
     font-weight: 600;
+    text-transform: none;
+    font-size: 0.9rem;
   }
+
   .heading button:hover {
     color: #64acfa;
   }

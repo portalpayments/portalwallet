@@ -4,8 +4,8 @@
 
 <div class="MoneyUtilButtons">
   <!-- <button on:click={() => addMoney()}>add money</button> -->
-  <Link class="Link" to="/addMoneyToAccount">add money</Link>
-  <Link to="/transferMoney">transfer money</Link>
+  <Link class="link" to="/addMoneyToAccount">add money</Link>
+  <Link class="link" to="/transferMoney">transfer money</Link>
   <!-- <button on:click={() => transferMoney()}>transfer</button> -->
 </div>
 
@@ -19,7 +19,7 @@
     align-items: center;
   }
 
-  .Link > :global(a) {
+  .link > :global(a) {
     text-decoration: none;
   }
   :global(a) {
@@ -31,7 +31,7 @@
     font-size: 0.97rem;
   }
 
-  :global(a):link {
+  :global(a) {
     text-decoration: none;
   }
   :global(a):visited {

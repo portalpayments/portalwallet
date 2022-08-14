@@ -14,6 +14,7 @@
     "@tsconfig/svelte": "^3.0.0",
     "svelte": "^3.49.0",
     "svelte-check": "^2.8.0",
+    "svelte-loading-spinners": "^0.1.7",
     "svelte-preprocess": "^4.10.7",
     "tslib": "^2.4.0",
     "typescript": "^4.6.4",
