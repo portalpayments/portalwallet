@@ -35,10 +35,10 @@
     font-size: 0.9rem;
   }
 
-  .heading button:hover {
+  .heading :global(a):hover {
     color: #64acfa;
   }
-  .heading button:active {
+  .heading :global(a):active {
     color: #4998ed;
   }
 </style>

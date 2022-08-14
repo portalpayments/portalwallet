@@ -2,6 +2,8 @@
   import HomeScreen from "./lib/HomePage/HomePage.svelte";
   import TopToolbar from "./lib/TopToolbar/TopToolbar.svelte";
   import Navbar from "./lib/Navbar/Navbar.svelte";
+  import Collectibles from "./lib/Collectibles/Collectibles.svelte";
+  import ContactsPage from "./lib/Contacts/ContactsPage.svelte";
   import { Circle } from "svelte-loading-spinners";
   import { Router, Route, Link } from "svelte-navigator";
 
@@ -20,22 +22,19 @@
     >
 
     <Route path="transactions"
-      ><div class="wallet">
-        Here go transactions
-        <Circle color="#33b275" />
-      </div></Route
+      ><div class="wallet">Here go transactions</div></Route
     >
     <Route path="/">
       <div class="wallet">
         <TopToolbar {...testUser} />
         <div class="features">
-          <div class="feature transfer">
+          <div class="feature">
             {#if currentFeature == 0}
               <HomeScreen />
             {:else if currentFeature == 1}
-              <div>do sth else</div>
+              <ContactsPage />
             {:else if currentFeature == 2}
-              <div>do 3rd else</div>
+              <Collectibles />
             {/if}
           </div>
         </div>

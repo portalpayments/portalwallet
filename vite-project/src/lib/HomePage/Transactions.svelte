@@ -1,6 +1,4 @@
 <script type="ts">
-  console.log("Hello from transactions component");
-
   interface Transaction {
     image: string;
     name: string;
