@@ -4,6 +4,7 @@
   import Navbar from "./lib/Navbar/Navbar.svelte";
   import Collectibles from "./lib/Collectibles/Collectibles.svelte";
   import ContactsPage from "./lib/Contacts/ContactsPage.svelte";
+  import TransferPage from "./lib/Transfer/TransferPage.svelte";
   import { Circle } from "svelte-loading-spinners";
   import { Router, Route, Link } from "svelte-navigator";
 
@@ -17,9 +18,7 @@
     <Route path="addMoneyToAccount"
       ><div class="wallet">adding money to account here</div></Route
     >
-    <Route path="transferMoney"
-      ><div class="wallet">Transfering money</div></Route
-    >
+    <Route path="transferMoney"><TransferPage /></Route>
 
     <Route path="transactions"
       ><div class="wallet">Here go transactions</div></Route
