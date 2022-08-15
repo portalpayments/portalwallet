@@ -57,7 +57,13 @@
     box-sizing: border-box;
   }
 
-  /* The entire wallet, contains the sliding main area plus the nav bar */
+  /* The entire wallet, contains the header-and-features plus the nav bar */
+  main {
+    /* Required to absolutely position navbar at bottom 
+    relative to this element */
+    position: relative;
+  }
+
   .header-and-features {
     min-width: var(--wallet-width);
     max-width: var(--wallet-width);

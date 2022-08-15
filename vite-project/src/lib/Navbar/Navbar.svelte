@@ -43,10 +43,10 @@
     padding: 0 16px;
     justify-content: center;
     align-items: center;
-    /* Not sure if this is the best way to do this - TODO - Mike Please review. Trying to position the navbar over the wallet content*/
-    position: relative;
-    bottom: 40px;
-    z-index: 90;
+    /* Position the navbar over the features at the bottom on header-and-features*/
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
   }
 
   nav button {
