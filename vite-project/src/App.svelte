@@ -28,11 +28,11 @@
         <TopToolbar {...testUser} />
         <div class="features">
           <div class="feature">
-            {#if currentFeature == 0}
+            {#if currentFeature === 0}
               <HomeScreen />
-            {:else if currentFeature == 1}
+            {:else if currentFeature === 1}
               <ContactsPage />
-            {:else if currentFeature == 2}
+            {:else if currentFeature === 2}
               <Collectibles />
             {/if}
           </div>
