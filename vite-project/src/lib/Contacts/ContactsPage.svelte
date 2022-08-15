@@ -60,9 +60,7 @@
     display: grid;
     grid-auto-flow: row;
     grid-template-rows: min-content;
-    padding: 0 12px;
     height: auto;
-    overflow: scroll;
     gap: 40px;
   }
 </style>

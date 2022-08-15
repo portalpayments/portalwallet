@@ -10,7 +10,7 @@
 <style>
   .heading {
     text-align: left;
-    padding: 0 0px;
+    padding: 0 12px;
     display: grid;
     grid-auto-flow: column;
     grid-template-columns: 1fr 190px;
