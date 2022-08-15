@@ -16,15 +16,17 @@
 <Router>
   <main>
     <Route path="addMoneyToAccount"
-      ><div class="wallet">adding money to account here</div></Route
+      ><div class="header-and-features">
+        adding money to account here
+      </div></Route
     >
     <Route path="transferMoney"><TransferPage /></Route>
 
     <Route path="transactions"
-      ><div class="wallet">Here go transactions</div></Route
+      ><div class="header-and-features">Here go transactions</div></Route
     >
     <Route path="/">
-      <div class="wallet">
+      <div class="header-and-features">
         <TopToolbar {...testUser} />
         <div class="features">
           <div class="feature">
@@ -56,7 +58,7 @@
   }
 
   /* The entire wallet, contains the sliding main area plus the nav bar */
-  .wallet {
+  .header-and-features {
     min-width: var(--wallet-width);
     max-width: var(--wallet-width);
     min-height: var(--wallet-height);
