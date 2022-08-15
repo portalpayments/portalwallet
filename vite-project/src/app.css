@@ -42,3 +42,10 @@ button {
   border: 1px solid transparent;
   cursor: pointer;
 }
+
+button:focus,
+button:focus-visible,
+button:hover {
+  outline: none;
+  border-color: transparent;
+}

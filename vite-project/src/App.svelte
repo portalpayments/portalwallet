@@ -55,13 +55,6 @@
     box-sizing: border-box;
   }
 
-  button:focus,
-  button:focus-visible,
-  button:hover {
-    outline: none;
-    border-color: transparent;
-  }
-
   /* The entire wallet, contains the sliding main area plus the nav bar */
   .wallet {
     min-width: var(--wallet-width);
