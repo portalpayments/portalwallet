@@ -56,7 +56,6 @@
   .ContactsPage {
     display: grid;
     grid-auto-flow: row;
-    /* MM: I just eyeballed this we should probably calculate it properly */
-    grid-template-rows: 64px 472px;
+    grid-template-rows: 64px 1fr;
   }
 </style>
