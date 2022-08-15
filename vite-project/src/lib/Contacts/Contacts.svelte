@@ -22,7 +22,7 @@
     grid-auto-flow: row;
     grid-template-rows: min-content;
     grid-auto-rows: 70px;
-    padding: 0 12px;
+    padding: 0 0 0 12px;
     gap: 0px;
     height: auto;
     overflow: scroll;
