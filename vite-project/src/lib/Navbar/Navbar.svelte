@@ -19,18 +19,29 @@
 </script>
 
 <nav>
-  {#each features as feature, index}
-    <button
-      class="{feature.name} {currentFeature === index ? 'active' : ''}"
-      type="button"
-      title={feature.name}
-      on:click={() => navigate(index)}
-    />
-  {/each}
+  <buttongroup>
+    {#each features as feature, index}
+      <button
+        class="{feature.name} {currentFeature === index ? 'active' : ''}"
+        type="button"
+        title={feature.name}
+        on:click={() => navigate(index)}
+      />
+    {/each}
+  </buttongroup>
 </nav>
 
 <style>
   nav {
+    width: 100%;
+    padding: 8px 0;
+    background: transparent;
+    /* Position the navbar over the features at the bottom on header-and-features*/
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
+  }
+  buttongroup {
     height: 48px;
     justify-self: center;
     display: grid;
@@ -43,13 +54,9 @@
     padding: 0 16px;
     justify-content: center;
     align-items: center;
-    /* Position the navbar over the features at the bottom on header-and-features*/
-    position: absolute;
-    bottom: 0;
-    z-index: 1;
   }
 
-  nav button {
+  buttongroup button {
     padding: 0;
     margin: 0;
     width: 32px;
@@ -62,19 +69,19 @@
     transition: all 200ms ease-in-out;
   }
 
-  nav button:not(.active) {
+  buttongroup button:not(.active) {
     opacity: 0.3;
   }
 
-  nav button.transfer {
+  buttongroup button.transfer {
     background-image: url("/src/assets/transferActive.svg");
   }
 
-  nav button.contacts {
+  buttongroup button.contacts {
     background-image: url("/src/assets/contactsActive.svg");
   }
 
-  nav button.collectibles {
+  buttongroup button.collectibles {
     background-image: url("/src/assets/collectiblesActive.svg");
   }
 
