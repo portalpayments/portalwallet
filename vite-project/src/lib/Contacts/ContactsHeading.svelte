@@ -18,7 +18,6 @@
     font-size: 1.2rem;
     font-weight: 600;
     color: #4d4d4d;
-    position: fixed;
   }
 
   .heading button {

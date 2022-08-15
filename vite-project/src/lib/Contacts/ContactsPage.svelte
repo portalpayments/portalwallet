@@ -48,19 +48,15 @@
 </script>
 
 <div class="ContactsPage">
-  <div>
-    <ContactsHeading />
-  </div>
+  <ContactsHeading />
   <Contacts {contacts} />
 </div>
 
-<!-- TODO fix the scroll on overflown contacts. Not working now.  -->
 <style>
   .ContactsPage {
     display: grid;
     grid-auto-flow: row;
-    grid-template-rows: min-content;
-    height: auto;
-    gap: 40px;
+    /* MM: I just eyeballed this we should probably calculate it properly */
+    grid-template-rows: 64px 472px;
   }
 </style>
