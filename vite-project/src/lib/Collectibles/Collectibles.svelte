@@ -6,20 +6,19 @@
 
 <!-- TODO create a dynamic way of listing NFTs, by looping over an array of owned NFTs -->
 
-<div class="grid-parent-container">
+<div class="nfts">
   <img src={beepleMockNFT} alt="beeple\'s Spaceman on a new planet" />
   <img src={baycMockNFT} alt="BAYC NFT" />
   <img src={beepleMockNFT2} alt="beeple\'s human poduction machine" />
 </div>
 
 <style>
-  .grid-parent-container {
+  .nfts {
     display: grid;
-    column-gap: 10px;
-    row-gap: 10px;
-    justify-content: center;
-    grid-template-columns: 45% 45%;
-    grid-template-rows: 33% 33% 33%;
+    padding: 12px;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 165px;
   }
   img {
     width: 100%;
