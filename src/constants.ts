@@ -1,4 +1,4 @@
-import { clusterApiUrl } from "@solana/web3.js";
+import { clusterApiUrl, LAMPORTS_PER_SOL } from "@solana/web3.js";
 
 export const URLS = {
   // From https://solanacookbook.com/references/local-development.html#connecting-to-environments
@@ -17,6 +17,8 @@ export const URLS = {
 };
 
 export const USD_DECIMALS = 2;
+
+export const SOL = LAMPORTS_PER_SOL;
 
 // TODO: reducing this to 1_000 makes wallets not visible
 // which seems to be the rent requirement -
