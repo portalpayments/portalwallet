@@ -34,12 +34,14 @@ export const getMetaplex = (
   return metaplex;
 };
 
-export const mintIdentityToken = async (metaplex: Metaplex) => {
+export const mintIdentityToken = async (
+  metaplex: Metaplex,
+  name: string,
+  metadata: Record<string, any>
+) => {
   const metaplexNFTs = metaplex.nfts();
   const uploadResponse: UploadMetadataResult = await metaplexNFTs
-    .uploadMetadata({
-      name: "First NFT",
-    })
+    .uploadMetadata(metadata)
     .run();
 
   log(process.version);
@@ -56,10 +58,12 @@ export const mintIdentityToken = async (metaplex: Metaplex) => {
   const createOutput = await metaplexNFTs
     .create({
       uri: uploadResponse.uri, // "https://arweave.net/123",
-      name: "My NFT",
+      name,
       sellerFeeBasisPoints: 500, // 500 represents 5.00%.
     })
     .run();
 
   log(stringify(createOutput)); // .nft.mint.toBase58());
+
+  return createOutput;
 };
