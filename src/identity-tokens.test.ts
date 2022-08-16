@@ -2,7 +2,7 @@ import { Metaplex } from "@metaplex-foundation/js";
 import { getMetaplex, mintIdentityToken } from "./identity-tokens";
 import { clusterApiUrl, Connection, Keypair } from "@solana/web3.js";
 import { connect, putSolIntoWallet } from "./vmwallet";
-import { log, stringify } from "./functions";
+import { deepClone, log, stringify } from "./functions";
 import { URLS } from "./constants";
 import { BN } from "bn.js";
 
@@ -32,17 +32,23 @@ describe(`identity tokens`, () => {
     const name = "My NFT";
     const createOutput = await mintIdentityToken(metaplex, name, metadata);
 
-    const zero = new BN(0, 10);
-    const one = new BN(1, 10);
+    const zero = "00";
+    const one = "01";
+
+    // Lets us compare to BigNumbers (bn.js) easily
+    const clonedOutput = deepClone(createOutput);
 
     // Created fresh, but will be referenced a few times in our output
-    const mintAddress = createOutput.mintAddress;
-    const masterEditionAddress = createOutput.masterEditionAddress;
-    const metadataAddress = createOutput.metadataAddress;
-    const tokenAddress = createOutput.tokenAddress;
-    const updateAuthorityAddress = createOutput.nft.updateAuthorityAddress;
+    //
+    // From https://github.com/metaplex-foundation/js#create
+    // metaplexNFTs.create will take care of creating the mint account, the associated token account, the metadata PDA and the original edition PDA (a.k.a. the master edition) for you.
+    const mintAddress = clonedOutput.mintAddress;
+    const masterEditionAddress = clonedOutput.masterEditionAddress;
+    const metadataAddress = clonedOutput.metadataAddress;
+    const tokenAddress = clonedOutput.tokenAddress;
+    const updateAuthorityAddress = clonedOutput.nft.updateAuthorityAddress;
 
-    expect(createOutput).toEqual({
+    expect(clonedOutput).toEqual({
       response: {
         signature: expect.any(String),
         confirmResponse: {
@@ -73,7 +79,7 @@ describe(`identity tokens`, () => {
         editionNonce: expect.any(Number),
         creators: [
           {
-            address: testIdentityTokenIssuer.publicKey,
+            address: testIdentityTokenIssuer.publicKey.toString(),
             verified: true,
             share: 100,
           },
@@ -110,7 +116,7 @@ describe(`identity tokens`, () => {
           address: tokenAddress,
           isAssociatedToken: true,
           mintAddress: mintAddress,
-          ownerAddress: testIdentityTokenIssuer.publicKey,
+          ownerAddress: testIdentityTokenIssuer.publicKey.toString(),
           amount: {
             basisPoints: one,
             currency: {

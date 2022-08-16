@@ -63,7 +63,5 @@ export const mintIdentityToken = async (
     })
     .run();
 
-  log(stringify(createOutput)); // .nft.mint.toBase58());
-
   return createOutput;
 };
