@@ -1,6 +1,6 @@
 import { Metaplex } from "@metaplex-foundation/js";
 import { getMetaplex, mintIdentityToken } from "./identity-tokens";
-import { clusterApiUrl, Connection, Keypair } from "@solana/web3.js";
+import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { connect, putSolIntoWallet } from "./vmwallet";
 import { deepClone, log, stringify } from "./functions";
 import { URLS } from "./constants";
@@ -10,6 +10,7 @@ describe(`identity tokens`, () => {
   let metaplex: Metaplex;
   let connection: Connection;
   let testIdentityTokenIssuer = new Keypair();
+  let mintAddress: PublicKey | null = null;
 
   beforeAll(async () => {
     connection = await connect("localhost");
@@ -39,6 +40,8 @@ describe(`identity tokens`, () => {
     const zero = "00";
     const one = "01";
 
+    mintAddress = createOutput.mintAddress;
+
     // Lets us compare to BigNumbers (bn.js) easily
     const clonedOutput = deepClone(createOutput);
 
@@ -46,7 +49,7 @@ describe(`identity tokens`, () => {
     //
     // From https://github.com/metaplex-foundation/js#create
     // metaplexNFTs.create will take care of creating the mint account, the associated token account, the metadata PDA and the original edition PDA (a.k.a. the master edition) for you.
-    const mintAddress = clonedOutput.mintAddress;
+    const mintAddressString = clonedOutput.mintAddress;
     const masterEditionAddress = clonedOutput.masterEditionAddress;
     const metadataAddress = clonedOutput.metadataAddress;
     const tokenAddress = clonedOutput.tokenAddress;
@@ -64,7 +67,7 @@ describe(`identity tokens`, () => {
           },
         },
       },
-      mintAddress,
+      mintAddress: mintAddressString,
       metadataAddress,
       masterEditionAddress,
       tokenAddress,
@@ -92,11 +95,11 @@ describe(`identity tokens`, () => {
         collection: null,
         collectionDetails: null,
         uses: null,
-        address: mintAddress,
+        address: mintAddressString,
         metadataAddress: metadataAddress,
         mint: {
           model: "mint",
-          address: mintAddress,
+          address: mintAddressString,
           mintAuthorityAddress: masterEditionAddress,
           freezeAuthorityAddress: masterEditionAddress,
           decimals: 0,
@@ -119,7 +122,7 @@ describe(`identity tokens`, () => {
           model: "token",
           address: tokenAddress,
           isAssociatedToken: true,
-          mintAddress: mintAddress,
+          mintAddress: mintAddressString,
           ownerAddress: testIdentityTokenIssuer.publicKey.toString(),
           amount: {
             basisPoints: one,
@@ -150,6 +153,22 @@ describe(`identity tokens`, () => {
         },
       },
     });
+  });
+
+  test(`We can retrieve the NFT we just minted`, async () => {
+    const metaplex = await getMetaplex(connection, testIdentityTokenIssuer);
+    log(metaplex);
+    if (!mintAddress) {
+      throw new Error(`Couldn't get a mint address`);
+    }
+    const nft = await metaplex.nfts().findByMint({ mintAddress }).run();
+
+    log(stringify(nft));
+
+    // MetaplexError: Unexpected Account
+    // >> Source: SDK
+    // >> Problem: The account at the provided address [DVJjhbMCqVJbBy5Dw189jaQhJzUFpsDdBEjTzL3EEja6] is not of the expected type [MintAccount].
+    // >> Solution: Ensure the provided address is correct and that it holds an account of type [MintAccount].
   });
 
   // test(`We can get the associated token account for Portal Identity Token for alice's wallet`, () => {
