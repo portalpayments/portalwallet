@@ -37,9 +37,6 @@ describe(`identity tokens`, () => {
       metadata
     );
 
-    const zero = new BN([0, 0, 0]);
-    const one = new BN([1, 0, 0]);
-
     mintAddress = createOutput.mintAddress;
 
     // Lets us compare to BigNumbers (bn.js) easily
@@ -54,7 +51,10 @@ describe(`identity tokens`, () => {
     const tokenAddress = createOutput.tokenAddress;
     const updateAuthorityAddress = createOutput.nft.updateAuthorityAddress;
 
-    // log(basisPoints.)
+    // Make zero and one work
+    const one = new BN(1);
+    const zero = new BN(0);
+    log(`>>> basisPoints`, createOutput.nft.mint.supply.basisPoints);
 
     expect(createOutput).toEqual({
       response: {
@@ -105,7 +105,7 @@ describe(`identity tokens`, () => {
           freezeAuthorityAddress: expect.any(PublicKey), //masterEditionAddressPDA,
           decimals: 0,
           supply: {
-            basisPoints: expect.any(BN), // one,
+            basisPoints: one,
             currency: {
               symbol: "Token",
               decimals: 0,
@@ -126,7 +126,7 @@ describe(`identity tokens`, () => {
           mintAddress: mintAddress,
           ownerAddress: testIdentityTokenIssuer.publicKey,
           amount: {
-            basisPoints: expect.any(BN), // one,
+            basisPoints: one,
             currency: {
               symbol: "Token",
               decimals: 0,
@@ -136,7 +136,7 @@ describe(`identity tokens`, () => {
           closeAuthorityAddress: null,
           delegateAddress: null,
           delegateAmount: {
-            basisPoints: expect.any(BN), // zero,
+            basisPoints: zero,
             currency: {
               symbol: "Token",
               decimals: 0,
