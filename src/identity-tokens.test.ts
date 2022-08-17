@@ -13,7 +13,6 @@ describe(`identity tokens`, () => {
 
   beforeAll(async () => {
     connection = await connect("localhost");
-    metaplex = getMetaplex(connection, testIdentityTokenIssuer);
     await putSolIntoWallet(
       connection,
       testIdentityTokenIssuer.publicKey,
@@ -27,10 +26,15 @@ describe(`identity tokens`, () => {
 
   test(`we can mint an identity token`, async () => {
     const metadata = {
-      name: "First NFT",
+      firstName: "First NFT",
     };
     const name = "My NFT";
-    const createOutput = await mintIdentityToken(metaplex, name, metadata);
+    const createOutput = await mintIdentityToken(
+      connection,
+      testIdentityTokenIssuer,
+      name,
+      metadata
+    );
 
     const zero = "00";
     const one = "01";
