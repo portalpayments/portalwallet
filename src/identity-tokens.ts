@@ -14,15 +14,6 @@ import {
 import { Connection, Keypair } from "@solana/web3.js";
 import { log, stringify } from "./functions";
 
-// Workaround for https://github.com/metaplex-foundation/js/issues/227
-interface UploadMetadataResult {
-  uri: string;
-  metadata: {
-    name: string;
-  };
-  assetUris: Array<string>;
-}
-
 export const getMetaplex = (
   connection: Connection,
   identityTokenIssuer: Keypair
@@ -42,9 +33,7 @@ export const mintIdentityToken = async (
 ) => {
   const metaplex = getMetaplex(connection, identityTokenIssuer);
   const metaplexNFTs = metaplex.nfts();
-  const uploadResponse: UploadMetadataResult = await metaplexNFTs
-    .uploadMetadata(metadata)
-    .run();
+  const uploadResponse = await metaplexNFTs.uploadMetadata(metadata).run();
 
   log(process.version);
   log(stringify(uploadResponse));
