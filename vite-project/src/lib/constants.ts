@@ -1,5 +1,6 @@
-export enum Priority {
-  info,
-  important,
-  warning,
+export enum LabelColor {
+  Grey = "grey",
+  Green = "green",
+  Yellow = "yellow",
+  Red = "red",
 }

@@ -1,17 +1,27 @@
 <script lang="ts">
-  import type { Priority } from "../constants";
-  export let priority: Priority;
+  import type { LabelColor } from "../constants";
+  export let color: LabelColor;
 </script>
 
 <!-- See https://svelte.dev/tutorial/slots -->
-<div class="badge {priority}"><slot /></div>
+<div class="badge {color}"><slot /></div>
 
 <style>
+  :root {
+    --green: hsl(98, 39%, 56%);
+    --green-background: hsl(97, 78%, 95%);
+    --grey: hsl(0, 0%, 30%);
+    --grey-background: hsl(0, 0%, 69%);
+    --yellow: hsl(59, 45%, 28%);
+    --yellow-background: hsl(58, 43%, 68%);
+    --red: hsl(346, 100%, 69%);
+    --red-background: #b4969d;
+  }
   .badge {
     display: inline-grid;
     align-items: center;
     width: fit-content;
-    padding: 4px 12px;
+    padding: 2px 12px;
     text-transform: uppercase;
 
     height: min-content;
@@ -21,18 +31,23 @@
     font-weight: 600;
   }
 
-  .info {
-    color: white;
-    background-color: hsl(0, 0%, 40%);
+  .grey {
+    color: var(--grey);
+    background-color: var(--grey-background);
   }
 
-  .important {
-    color: #4d4d4d;
-    background-color: hsl(58, 75%, 78%);
+  .green {
+    color: var(--green);
+    background-color: var(--green-background);
   }
 
-  .warning {
-    color: white;
-    background-color: hsl(351, 65%, 33%);
+  .yellow {
+    color: var(--yellow);
+    background-color: var(--yellow-background);
+  }
+
+  .red {
+    color: var(--red);
+    background-color: var(--red-background);
   }
 </style>

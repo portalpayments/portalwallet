@@ -1,10 +1,10 @@
 <script lang="ts">
   import Label from "../Shared/Label.svelte";
-  import { Priority } from "../constants";
+  import { LabelColor } from "../constants";
   interface Contact {
     image: string;
     name: string;
-    isVerified: boolean;
+    isAnonymous: boolean;
     isNew: boolean;
     isPending: boolean;
   }
@@ -15,16 +15,23 @@
   {#each contacts as contact}
     <div class="contact">
       <img src={contact.image} alt="wallet avatar" />
-      <div class="name">{contact.name}</div>
-      {#if !contact.isVerified}
-        <Label priority={Priority.info}>Anonymouse</Label>
-      {/if}
-      {#if !contact.isNew}
-        <Label priority={Priority.info}>New</Label>
-      {/if}
-      {#if !contact.isPending}
-        <Label priority={Priority.info}>Pending verification</Label>
-      {/if}
+
+      <div class="name-and-labels">
+        <div class="name">{contact.name}</div>
+        {#if contact.isAnonymous || contact.isNew || contact.isPending}
+          <div class="labels">
+            {#if contact.isNew}
+              <Label color={LabelColor.Green}>New</Label>
+            {/if}
+            {#if contact.isAnonymous}
+              <Label color={LabelColor.Grey}>Anonymous</Label>
+            {/if}
+            {#if contact.isPending}
+              <Label color={LabelColor.Yellow}>Pending</Label>
+            {/if}
+          </div>
+        {/if}
+      </div>
     </div>
   {/each}
 </div>
@@ -38,6 +45,11 @@
     gap: 0px;
     height: auto;
     overflow-y: scroll;
+  }
+
+  .name-and-labels {
+    display: grid;
+    grid-auto-flow: row;
   }
 
   .contact {
@@ -54,6 +66,13 @@
 
   .name {
     text-align: left;
+  }
+
+  .labels {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: left;
+    gap: 3px;
   }
 
   img {

@@ -13,7 +13,7 @@
     {
       image: ewan,
       name: "Ewan O'Mally",
-      isVerified: true,
+      isAnonymous: false,
       isNew: true,
       isPending: false,
     },
@@ -21,7 +21,7 @@
     {
       image: john,
       name: "John O'Hara",
-      isVerified: true,
+      isAnonymous: false,
       isNew: false,
       isPending: false,
     },
@@ -29,7 +29,7 @@
     {
       image: proteinLand,
       name: "ProteinLand",
-      isVerified: true,
+      isAnonymous: false,
       isNew: false,
       isPending: false,
     },
@@ -37,14 +37,14 @@
     {
       image: anonymousImageUrl,
       name: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
-      isVerified: false,
+      isAnonymous: true,
       isNew: false,
       isPending: true,
     },
     {
       image: jane,
       name: "Jane Taylor",
-      isVerified: false,
+      isAnonymous: false,
       isNew: false,
       isPending: false,
     },
