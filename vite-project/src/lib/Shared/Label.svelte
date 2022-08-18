@@ -12,8 +12,8 @@
     --green-background: hsl(97, 78%, 95%);
     --grey: hsl(0, 0%, 30%);
     --grey-background: hsl(0, 0%, 69%);
-    --yellow: hsl(59, 45%, 28%);
-    --yellow-background: hsl(58, 43%, 68%);
+    --yellow: hsl(59deg 24% 45%);
+    --yellow-background: hsl(58deg 66% 81%);
     --red: hsl(346, 100%, 69%);
     --red-background: #b4969d;
   }
