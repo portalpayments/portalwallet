@@ -4,7 +4,8 @@
   "description": "A crypto wallet for regular people",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start-validator": "./start-validator.bash"
   },
   "author": "Mike MacCana <mike.maccana@gmail.com> and Vahah Hatami <vaheh.hatami@gmail.com>",
   "license": "UNLICENSED",
