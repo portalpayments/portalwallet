@@ -4,7 +4,7 @@ import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { connect, putSolIntoWallet } from "./vmwallet";
 import { deepClone, log, stringify } from "./functions";
 import { URLS } from "./constants";
-import { BN } from "bn.js";
+import { BN as BigNumber } from "bn.js";
 
 describe(`identity tokens`, () => {
   let metaplex: Metaplex;
@@ -52,8 +52,8 @@ describe(`identity tokens`, () => {
     const updateAuthorityAddress = createOutput.nft.updateAuthorityAddress;
 
     // Make zero and one work
-    const one = new BN(1);
-    const zero = new BN(0);
+    const one = new BigNumber(1);
+    const zero = new BigNumber(0);
     log(`>>> basisPoints`, createOutput.nft.mint.supply.basisPoints);
 
     expect(createOutput).toEqual({
@@ -151,10 +151,10 @@ describe(`identity tokens`, () => {
           address: masterEditionAddress,
           // TODO: this is zero, but in a lsightly different form
           // from new BigNum(0). Actually check value.
-          supply: expect.any(BN),
+          supply: expect.any(BigNumber),
           // TODO: this is zero, but in a lsightly different form
           // from new BigNum(0). Actually check value.
-          maxSupply: expect.any(BN),
+          maxSupply: expect.any(BigNumber),
         },
       },
     });
@@ -174,7 +174,7 @@ describe(`identity tokens`, () => {
 
     expect(nft).toEqual({
       model: "nft",
-      updateAuthorityAddress: expect.any(String),
+      updateAuthorityAddress: expect.any(PublicKey),
       json: null,
       jsonLoaded: true,
       name: "My NFT",
@@ -187,7 +187,7 @@ describe(`identity tokens`, () => {
       editionNonce: expect.any(Number),
       creators: [
         {
-          address: expect.any(String),
+          address: expect.any(PublicKey),
           verified: true,
           share: 100,
         },
@@ -196,8 +196,8 @@ describe(`identity tokens`, () => {
       collection: null,
       collectionDetails: null,
       uses: null,
-      address: expect.any(String),
-      metadataAddress: "Cvfs373n8f3WtQ4XUk7WBsgvC9it6WBGEWDVz6rR52av",
+      address: expect.any(PublicKey),
+      metadataAddress: expect.any(PublicKey),
       mint: {
         model: "mint",
         address: nftAddress,
@@ -222,7 +222,7 @@ describe(`identity tokens`, () => {
       edition: {
         model: "nftEdition",
         isOriginal: true,
-        address: mintAuthorityAddress,
+        address: expect.any(Pda),
         supply: "00",
         maxSupply: "00",
       },
