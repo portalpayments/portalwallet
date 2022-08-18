@@ -44,10 +44,7 @@
 <MoneyUtils />
 <TransactionsHeading />
 <Transactions {transactions} />
-<!-- <Badge>Badge</Badge> -->
 
-<!-- <div class="feature contacts">contacts</div>
-      <div class="feature collectibles">collectibles</div> -->
 <style>
   h1 {
     font-size: 12px;
