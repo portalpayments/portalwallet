@@ -205,7 +205,8 @@ describe(`identity tokens`, () => {
         freezeAuthorityAddress: mintAuthorityAddress,
         decimals: 0,
         supply: {
-          basisPoints: "01",
+          // one
+          basisPoints: expect.any(BigNumber),
           currency: {
             symbol: "Token",
             decimals: 0,
@@ -223,8 +224,9 @@ describe(`identity tokens`, () => {
         model: "nftEdition",
         isOriginal: true,
         address: expect.any(Pda),
-        supply: "00",
-        maxSupply: "00",
+        // Both zero
+        supply: expect.any(BigNumber),
+        maxSupply: expect.any(BigNumber),
       },
     });
   });
