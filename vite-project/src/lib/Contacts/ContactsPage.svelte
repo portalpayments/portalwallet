@@ -6,11 +6,11 @@
   import proteinLand from "../../assets/ProfilePics/proteinland.svg";
   import john from "../../assets/ProfilePics/john.png";
   import jane from "../../assets/ProfilePics/jane.png";
-  import anonymousImageUrl from "../../assets/ProfilePics/anonymous.svg";
 
   const contacts = [
     // A new and verified person
     {
+      address: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       image: ewan,
       name: "Ewan O'Mally",
       isAnonymous: false,
@@ -19,6 +19,7 @@
     },
     // A verified person
     {
+      address: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
       image: john,
       name: "John O'Hara",
       isAnonymous: false,
@@ -27,6 +28,7 @@
     },
     // A verified business we've done transactions with before
     {
+      address: "cccccccccccccccccccccccccccccccccccccccccccc",
       image: proteinLand,
       name: "ProteinLand",
       isAnonymous: false,
@@ -35,13 +37,15 @@
     },
     // An anonymous wallet pending verification
     {
-      image: anonymousImageUrl,
-      name: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+      address: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+      image: null,
+      name: null,
       isAnonymous: true,
       isNew: false,
       isPending: true,
     },
     {
+      address: "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
       image: jane,
       name: "Jane Taylor",
       isAnonymous: false,

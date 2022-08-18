@@ -1,9 +1,12 @@
 <script lang="ts">
   import Label from "../Shared/Label.svelte";
   import { LabelColor } from "../constants";
+  import { truncateWallet } from "../utils";
+  import anonymousImageUrl from "../../assets/ProfilePics/anonymous.svg";
   interface Contact {
-    image: string;
-    name: string;
+    address: string;
+    image: string | null;
+    name: string | null;
     isAnonymous: boolean;
     isNew: boolean;
     isPending: boolean;
@@ -14,10 +17,16 @@
 <div class="contacts">
   {#each contacts as contact}
     <div class="contact">
-      <img src={contact.image} alt="wallet avatar" />
+      <img src={contact.image || anonymousImageUrl} alt="wallet avatar" />
 
       <div class="name-and-labels">
-        <div class="name">{contact.name}</div>
+        <div class="name">
+          {#if contact.name}
+            {contact.name}
+          {:else}
+            {truncateWallet(contact.address)}
+          {/if}
+        </div>
         {#if contact.isAnonymous || contact.isNew || contact.isPending}
           <div class="labels">
             {#if contact.isNew}
