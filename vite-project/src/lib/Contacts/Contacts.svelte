@@ -1,8 +1,12 @@
 <script lang="ts">
-  import ContactsHeading from "./ContactsHeading.svelte";
+  import Label from "../Shared/Label.svelte";
+  import { Priority } from "../constants";
   interface Contact {
     image: string;
     name: string;
+    isVerified: boolean;
+    isNew: boolean;
+    isPending: boolean;
   }
   export let contacts: Array<Contact>;
 </script>
@@ -12,6 +16,15 @@
     <div class="contact">
       <img src={contact.image} alt="wallet avatar" />
       <div class="name">{contact.name}</div>
+      {#if !contact.isVerified}
+        <Label priority={Priority.info}>Anonymouse</Label>
+      {/if}
+      {#if !contact.isNew}
+        <Label priority={Priority.info}>New</Label>
+      {/if}
+      {#if !contact.isPending}
+        <Label priority={Priority.info}>Pending verification</Label>
+      {/if}
     </div>
   {/each}
 </div>
@@ -41,5 +54,9 @@
 
   .name {
     text-align: left;
+  }
+
+  img {
+    width: 100%;
   }
 </style>
