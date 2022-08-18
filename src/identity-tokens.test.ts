@@ -54,7 +54,6 @@ describe(`identity tokens`, () => {
     // Make zero and one work
     const one = new BigNumber(1);
     const zero = new BigNumber(0);
-    log(`>>> basisPoints`, createOutput.nft.mint.supply.basisPoints);
 
     expect(createOutput).toEqual({
       response: {
@@ -162,7 +161,6 @@ describe(`identity tokens`, () => {
 
   test(`We can retrieve the NFT we just minted`, async () => {
     const metaplex = await getMetaplex(connection, testIdentityTokenIssuer);
-    log(metaplex);
     if (!mintAddress) {
       throw new Error(`Couldn't get a mint address`);
     }

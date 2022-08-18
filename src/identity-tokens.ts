@@ -35,9 +35,6 @@ export const mintIdentityToken = async (
   const metaplexNFTs = metaplex.nfts();
   const uploadResponse = await metaplexNFTs.uploadMetadata(metadata).run();
 
-  log(process.version);
-  log(stringify(uploadResponse));
-
   expect(uploadResponse.uri);
 
   // https://github.com/metaplex-foundation/js#create
