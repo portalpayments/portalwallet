@@ -13,7 +13,7 @@
       name: "contacts",
     },
     {
-      name: "collectibles",
+      name: "collectables",
     },
   ];
 </script>
@@ -81,8 +81,8 @@
     background-image: url("/src/assets/contactsActive.svg");
   }
 
-  buttongroup button.collectibles {
-    background-image: url("/src/assets/collectiblesActive.svg");
+  buttongroup button.collectables {
+    background-image: url("/src/assets/collectablesActive.svg");
   }
 
   * {

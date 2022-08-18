@@ -4,9 +4,9 @@
   import Transactions from "./Transactions.svelte";
   import MoneyUtils from "./moneyUtils.svelte";
 
-  import proteinLand from "../../assets/proteinland.svg";
-  import john from "../../assets/john.png";
-  import jane from "../../assets/jane.png";
+  import proteinLand from "../../assets/ProfilePics/proteinland.svg";
+  import john from "../../assets/ProfilePics/john.png";
+  import jane from "../../assets/ProfilePics/jane.png";
 
   const transactions = [
     {

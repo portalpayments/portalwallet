@@ -1,7 +1,7 @@
 <script>
-  import beepleMockNFT from "../../assets/beepleMockNFT.jpg";
-  import beepleMockNFT2 from "../../assets/beepleMockNFT2.jpg";
-  import baycMockNFT from "../../assets/baycMockNFT.jpg";
+  import beepleMockNFT from "../../assets/Collectables/beepleMockNFT.jpg";
+  import beepleMockNFT2 from "../../assets/Collectables/beepleMockNFT2.jpg";
+  import baycMockNFT from "../../assets/Collectables/baycMockNFT.jpg";
 </script>
 
 <!-- TODO create a dynamic way of listing NFTs, by looping over an array of owned NFTs -->

@@ -2,11 +2,11 @@
   import Contacts from "./Contacts.svelte";
   import ContactsHeading from "./ContactsHeading.svelte";
 
-  import ewan from "../../assets/ewan.png";
-  import proteinLand from "../../assets/proteinland.svg";
-  import john from "../../assets/john.png";
-  import jane from "../../assets/jane.png";
-  import anonymousImageUrl from "../../assets/anonymous.svg";
+  import ewan from "../../assets/ProfilePics/ewan.png";
+  import proteinLand from "../../assets/ProfilePics/proteinland.svg";
+  import john from "../../assets/ProfilePics/john.png";
+  import jane from "../../assets/ProfilePics/jane.png";
+  import anonymousImageUrl from "../../assets/ProfilePics/anonymous.svg";
 
   const contacts = [
     // A new and verified person
