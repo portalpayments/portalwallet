@@ -149,8 +149,12 @@ describe(`identity tokens`, () => {
           model: "nftEdition",
           isOriginal: true,
           address: masterEditionAddress,
-          supply: expect.any(BN), // zero,
-          maxSupply: expect.any(BN), // zero,
+          // TODO: this is zero, but in a lsightly different form
+          // from new BigNum(0). Actually check value.
+          supply: expect.any(BN),
+          // TODO: this is zero, but in a lsightly different form
+          // from new BigNum(0). Actually check value.
+          maxSupply: expect.any(BN),
         },
       },
     });
@@ -164,67 +168,65 @@ describe(`identity tokens`, () => {
     }
     const nft = await metaplex.nfts().findByMint({ mintAddress }).run();
 
-    log(stringify(nft));
+    const updateAuthorityAddress = nft.updateAuthorityAddress;
+    const mintAuthorityAddress = nft.mint.mintAuthorityAddress;
+    const nftAddress = nft.address;
 
-    // expect(nft).toEqual({
-    //   model: "nft",
-    //   updateAuthorityAddress: "J6TiqyGetsRjUXo7MQA8LuKgi9ipEUt3e3gj7W5mQiFQ",
-    //   json: null,
-    //   jsonLoaded: true,
-    //   name: "My NFT",
-    //   symbol: "",
-    //   uri: "https://mockstorage.example.com/Wd3tqHDmjBvCsKJzLC0n",
-    //   isMutable: true,
-    //   primarySaleHappened: false,
-    //   sellerFeeBasisPoints: 500,
-    //   editionNonce: 253,
-    //   creators: [
-    //     {
-    //       address: "J6TiqyGetsRjUXo7MQA8LuKgi9ipEUt3e3gj7W5mQiFQ",
-    //       verified: true,
-    //       share: 100,
-    //     },
-    //   ],
-    //   tokenStandard: 0,
-    //   collection: null,
-    //   collectionDetails: null,
-    //   uses: null,
-    //   address: "2ZS4QLcB6D3CUxSBhXcRDUUC562uyJp6zZt8YuEKeUPp",
-    //   metadataAddress: "Cvfs373n8f3WtQ4XUk7WBsgvC9it6WBGEWDVz6rR52av",
-    //   mint: {
-    //     model: "mint",
-    //     address: "2ZS4QLcB6D3CUxSBhXcRDUUC562uyJp6zZt8YuEKeUPp",
-    //     mintAuthorityAddress: "FpbqrbAktTtQtGFnQy3CqK75qKZMp6vcYFfwr2tB9947",
-    //     freezeAuthorityAddress: "FpbqrbAktTtQtGFnQy3CqK75qKZMp6vcYFfwr2tB9947",
-    //     decimals: 0,
-    //     supply: {
-    //       basisPoints: "01",
-    //       currency: {
-    //         symbol: "Token",
-    //         decimals: 0,
-    //         namespace: "spl-token",
-    //       },
-    //     },
-    //     isWrappedSol: false,
-    //     currency: {
-    //       symbol: "Token",
-    //       decimals: 0,
-    //       namespace: "spl-token",
-    //     },
-    //   },
-    //   edition: {
-    //     model: "nftEdition",
-    //     isOriginal: true,
-    //     address: "FpbqrbAktTtQtGFnQy3CqK75qKZMp6vcYFfwr2tB9947",
-    //     supply: "00",
-    //     maxSupply: "00",
-    //   },
-    // });
-
-    // MetaplexError: Unexpected Account
-    // >> Source: SDK
-    // >> Problem: The account at the provided address [DVJjhbMCqVJbBy5Dw189jaQhJzUFpsDdBEjTzL3EEja6] is not of the expected type [MintAccount].
-    // >> Solution: Ensure the provided address is correct and that it holds an account of type [MintAccount].
+    expect(nft).toEqual({
+      model: "nft",
+      updateAuthorityAddress: expect.any(String),
+      json: null,
+      jsonLoaded: true,
+      name: "My NFT",
+      symbol: "",
+      // TODO: like https://mockstorage.example.com/ew211zOcizEL1IKjaY2N
+      uri: expect.any(String),
+      isMutable: true,
+      primarySaleHappened: false,
+      sellerFeeBasisPoints: 500,
+      editionNonce: expect.any(Number),
+      creators: [
+        {
+          address: expect.any(String),
+          verified: true,
+          share: 100,
+        },
+      ],
+      tokenStandard: 0,
+      collection: null,
+      collectionDetails: null,
+      uses: null,
+      address: expect.any(String),
+      metadataAddress: "Cvfs373n8f3WtQ4XUk7WBsgvC9it6WBGEWDVz6rR52av",
+      mint: {
+        model: "mint",
+        address: nftAddress,
+        mintAuthorityAddress,
+        freezeAuthorityAddress: mintAuthorityAddress,
+        decimals: 0,
+        supply: {
+          basisPoints: "01",
+          currency: {
+            symbol: "Token",
+            decimals: 0,
+            namespace: "spl-token",
+          },
+        },
+        isWrappedSol: false,
+        currency: {
+          symbol: "Token",
+          decimals: 0,
+          namespace: "spl-token",
+        },
+      },
+      edition: {
+        model: "nftEdition",
+        isOriginal: true,
+        address: mintAuthorityAddress,
+        supply: "00",
+        maxSupply: "00",
+      },
+    });
   });
 
   // test(`We can get the associated token account for Portal Identity Token for alice's wallet`, () => {
