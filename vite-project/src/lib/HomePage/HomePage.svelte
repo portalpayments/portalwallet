@@ -4,11 +4,9 @@
   import Transactions from "./Transactions.svelte";
   import MoneyUtils from "./moneyUtils.svelte";
 
-  import ewan from "../../assets/ewan.png";
   import proteinLand from "../../assets/proteinland.svg";
   import john from "../../assets/john.png";
   import jane from "../../assets/jane.png";
-  import anonymousImageUrl from "../../assets/anonymous.svg";
 
   const transactions = [
     {
@@ -40,8 +38,6 @@
       amountMinor: 25,
     },
   ];
-
-  let currentFeature: number | string = "";
 </script>
 
 <Balance major="2900" minor="27" />
@@ -50,7 +46,4 @@
 <Transactions {transactions} />
 
 <style>
-  h1 {
-    font-size: 12px;
-  }
 </style>
