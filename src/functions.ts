@@ -1,5 +1,7 @@
 import { promisify } from "util";
 
+export { inspect } from "util";
+
 import { scrypt as scryptCallback } from "crypto";
 
 // Convert `scrypt()` into a function that takes the

@@ -145,4 +145,15 @@ describe(`mainnet integration tests`, () => {
       },
     ]);
   });
+
+  test(`We can get Mike's SOL balance`, async () => {
+    if (!mainNetConnection) {
+      throw new Error(`Couldn't get a connection, can't continue`);
+    }
+    const accountBalance = await getAccountBalance(
+      mainNetConnection,
+      new PublicKey(MIKES_ACTUAL_PUBLIC_KEY)
+    );
+    expect(accountBalance).toEqual(expect.any(Number));
+  });
 });
