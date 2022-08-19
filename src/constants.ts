@@ -1,4 +1,8 @@
-import { clusterApiUrl, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { clusterApiUrl, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+
+// From https://www.circle.com/en/usdc/developers
+export const USDC_MAINNET_MINT_ACCOUNT =
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
 export const URLS = {
   // From https://solanacookbook.com/references/local-development.html#connecting-to-environments

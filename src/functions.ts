@@ -1,6 +1,6 @@
 import { promisify } from "util";
 
-export { inspect } from "util";
+import { inspect as originalInspect } from "util";
 
 import { scrypt as scryptCallback } from "crypto";
 
@@ -103,3 +103,7 @@ export function hasOwnProperty<X extends {}, Y extends PropertyKey>(
 }
 
 export const log = console.log.bind(console);
+
+export const inspect = (object: any) => {
+  return originalInspect(object, true, null, true);
+};

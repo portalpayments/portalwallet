@@ -1,5 +1,5 @@
 import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
-import { Account } from "@solana/spl-token";
+import { Account, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import {
   connect,
   convertPhraseToSeed,
@@ -11,18 +11,23 @@ import {
 import { createMintAccount } from "./tokens";
 import { expectedCleanedPhrase } from "./__mocks__/mocks";
 import { getABetterErrorMessage } from "./errors";
-import { DEPOSIT, NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN } from "./constants";
+import {
+  DEPOSIT,
+  NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN,
+  USDC_MAINNET_MINT_ACCOUNT,
+} from "./constants";
 import { getAllNftsFromAWallet } from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
+import { log, inspect, stringify } from "./functions";
 
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
 
 // Quiet functions.log() during tests
-jest.mock("./functions", () => ({
-  ...jest.requireActual("./functions"),
-  log: jest.fn(),
-}));
+// jest.mock("./functions", () => ({
+//   ...jest.requireActual("./functions"),
+//   log: jest.fn(),
+// }));
 
 const fullName = `${firstName} ${lastName}`;
 const password = `${new Date().toString()}`;
@@ -97,6 +102,7 @@ describe(`mainnet integration tests`, () => {
   let mainNetConnection: Connection | null = null;
   const MIKES_ACTUAL_PUBLIC_KEY =
     "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
+  const mikePublicKey = new PublicKey(MIKES_ACTUAL_PUBLIC_KEY);
   const mikeWallet = new PublicKey(MIKES_ACTUAL_PUBLIC_KEY);
 
   beforeAll(async () => {
@@ -152,8 +158,56 @@ describe(`mainnet integration tests`, () => {
     }
     const accountBalance = await getAccountBalance(
       mainNetConnection,
-      new PublicKey(MIKES_ACTUAL_PUBLIC_KEY)
+      mikePublicKey
     );
     expect(accountBalance).toEqual(expect.any(Number));
+  });
+
+  test(`We can get Mike's USDC balance`, async () => {
+    if (!mainNetConnection) {
+      throw new Error(`Couldn't get a connection, can't continue`);
+    }
+
+    let parsedTokenAccountsByOwner =
+      await mainNetConnection.getParsedTokenAccountsByOwner(mikePublicKey, {
+        mint: new PublicKey(USDC_MAINNET_MINT_ACCOUNT),
+      });
+
+    expect(parsedTokenAccountsByOwner).toEqual({
+      context: {
+        apiVersion: expect.any(String),
+        slot: expect.any(Number),
+      },
+      value: [
+        {
+          account: {
+            data: {
+              parsed: {
+                info: {
+                  isNative: false,
+                  mint: USDC_MAINNET_MINT_ACCOUNT,
+                  owner: MIKES_ACTUAL_PUBLIC_KEY,
+                  state: "initialized",
+                  tokenAmount: {
+                    amount: expect.any(String),
+                    decimals: 6,
+                    uiAmount: expect.any(Number),
+                    uiAmountString: expect.any(String),
+                  },
+                },
+                type: "account",
+              },
+              program: "spl-token",
+              space: 165,
+            },
+            executable: false,
+            lamports: 2039280,
+            owner: TOKEN_PROGRAM_ID,
+            rentEpoch: 339,
+          },
+          pubkey: new PublicKey("Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc"),
+        },
+      ],
+    });
   });
 });
