@@ -11,7 +11,8 @@ import {
   keypairIdentity,
   mockStorage,
 } from "@metaplex-foundation/js";
-import { Connection, Keypair } from "@solana/web3.js";
+import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
+import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { log, stringify } from "./functions";
 
 export const getMetaplex = (
@@ -54,4 +55,55 @@ export const mintIdentityToken = async (
     .run();
 
   return createOutput;
+};
+
+// From https://raw.githubusercontent.com/serpentacademy/Get-all-NFTS-from-Solana-Wallet-Get-Owner-of-NFT/master/getAllNftsFromAWallet.ts
+export const getAllNftsFromAWallet = async (
+  connection: Connection,
+  address: PublicKey
+) => {
+  // https://metaplex-foundation.github.io/metaplex-program-library/docs/token-metadata/index.html
+  const nftsMetadata = await Metadata.fromAccountAddress(connection, address);
+
+  log(nftsMetadata);
+
+  /*
+  {
+     MetadataData {
+    key: 4,
+    updateAuthority: '9SuDMwgmCFP8CEmBELScujDd9dqVZxBkA15VCV1nFkT4',
+    mint: 'ANf44K4fLaD4heoKvTXzAfQorktH6XVKpGmwy9CQu2Xs',
+    data: MetadataDataData {
+      name: 'Lion Punk King',
+      symbol: 'NFTPro',
+      uri: 'https://www.arweave.net/5H1NMgzOvyAZWGzBgLFx27z-tYSInjimYbAC9bIWKLM?ext=json',
+      sellerFeeBasisPoints: 700,
+      creators: [Array]
+    },
+    primarySaleHappened: 0,
+    isMutable: 1,
+    editionNonce: 255,
+    tokenStandard: undefined,
+    collection: undefined,
+    uses: undefined
+  },
+  MetadataData {
+    key: 4,
+    updateAuthority: '9SuDMwgmCFP8CEmBELScujDd9dqVZxBkA15VCV1nFkT4',
+    mint: '2ofgix8pr8eALYrxzQ31UAWyi9XU9sCJBJZdJub49ZwR',
+    data: MetadataDataData {
+      name: 'Ape Bird Punk GOD',
+      symbol: 'NFTPro',
+      uri: 'https://www.arweave.net/vPDq-tNr91seOWrXNNU0RJ1O9rAxZWOrN50gYyevCoA?ext=json',
+      sellerFeeBasisPoints: 700,
+      creators: [Array]
+    },
+    primarySaleHappened: 0,
+    isMutable: 1,
+    editionNonce: 255,
+    tokenStandard: undefined,
+    collection: undefined,
+    uses: undefined
+  }
+  */
 };

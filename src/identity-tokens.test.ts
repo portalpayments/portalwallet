@@ -1,5 +1,9 @@
 import { Metaplex, Pda } from "@metaplex-foundation/js";
-import { getMetaplex, mintIdentityToken } from "./identity-tokens";
+import {
+  getAllNftsFromAWallet,
+  getMetaplex,
+  mintIdentityToken,
+} from "./identity-tokens";
 import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { connect, putSolIntoWallet } from "./vmwallet";
 import { deepClone, log, stringify } from "./functions";
@@ -227,6 +231,14 @@ describe(`identity tokens`, () => {
         maxSupply: expect.any(BigNumber),
       },
     });
+  });
+
+  test(`We can get NFTs from Mike's real-mainnet wallet`, async () => {
+    const mainNetConnection = await connect("mainNetBeta");
+    const mikeWallet = new PublicKey(
+      "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"
+    );
+    const NFTs = await getAllNftsFromAWallet(mainNetConnection, mikeWallet);
   });
 
   // test(`We can get the associated token account for Portal Identity Token for alice's wallet`, () => {
