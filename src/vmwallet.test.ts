@@ -12,6 +12,8 @@ import { createMintAccount } from "./tokens";
 import { expectedCleanedPhrase } from "./__mocks__/mocks";
 import { getABetterErrorMessage } from "./errors";
 import { DEPOSIT, NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN } from "./constants";
+import { getAllNftsFromAWallet } from "./identity-tokens";
+import { Pda } from "@metaplex-foundation/js";
 
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
@@ -88,5 +90,59 @@ describe(`restoration`, () => {
         testUSDCAuthority.publicKey
       )
     ).rejects.toThrow("Insufficient funds");
+  });
+});
+
+describe(`mainnet integration tests`, () => {
+  let mainNetConnection: Connection | null = null;
+  const MIKES_ACTUAL_PUBLIC_KEY =
+    "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
+  const mikeWallet = new PublicKey(MIKES_ACTUAL_PUBLIC_KEY);
+
+  beforeAll(async () => {
+    mainNetConnection = await connect("mainNetBeta");
+  });
+
+  test(`We can get NFTs from Mike's real-mainnet wallet`, async () => {
+    if (!mainNetConnection) {
+      throw new Error(`Couldn't get a connection, can't continue`);
+    }
+    const NFTs = await getAllNftsFromAWallet(mainNetConnection, mikeWallet);
+    const NFTaddress = new PublicKey(
+      "8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk"
+    );
+    const artist = new PublicKey(
+      "9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX"
+    );
+    expect(NFTs).toEqual([
+      {
+        model: "metadata",
+        // https://solscan.io/token/8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk
+        address: new Pda("2TQ464nFCwPs45wYsXXYpkhY7wgUyEVzpecWp1RBMeDU", 255),
+        mintAddress: NFTaddress,
+        updateAuthorityAddress: artist,
+        json: null,
+        jsonLoaded: false,
+        name: "Agiza",
+        symbol: "",
+        // JSON containing the NFT
+        uri: "https://arweave.net/buMXtKDU0stCY8fM8qyENwLlTgqpXyypdojPQ3mWWhU",
+        isMutable: true,
+        primarySaleHappened: true,
+        sellerFeeBasisPoints: 1000,
+        editionNonce: 254,
+        creators: [
+          {
+            address: artist,
+            verified: true,
+            share: 100,
+          },
+        ],
+        tokenStandard: 0,
+        collection: null,
+        collectionDetails: null,
+        uses: null,
+      },
+    ]);
   });
 });
