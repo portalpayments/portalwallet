@@ -238,7 +238,36 @@ describe(`identity tokens`, () => {
     const mikeWallet = new PublicKey(
       "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"
     );
+
     const NFTs = await getAllNftsFromAWallet(mainNetConnection, mikeWallet);
+    expect(NFTs).toEqual([
+      {
+        model: "metadata",
+        address: "2TQ464nFCwPs45wYsXXYpkhY7wgUyEVzpecWp1RBMeDU",
+        mintAddress: "8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk",
+        updateAuthorityAddress: "9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX",
+        json: null,
+        jsonLoaded: false,
+        name: "Agiza",
+        symbol: "",
+        uri: "https://arweave.net/buMXtKDU0stCY8fM8qyENwLlTgqpXyypdojPQ3mWWhU",
+        isMutable: true,
+        primarySaleHappened: true,
+        sellerFeeBasisPoints: 1000,
+        editionNonce: 254,
+        creators: [
+          {
+            address: "9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX",
+            verified: true,
+            share: 100,
+          },
+        ],
+        tokenStandard: 0,
+        collection: null,
+        collectionDetails: null,
+        uses: null,
+      },
+    ]);
   });
 
   // test(`We can get the associated token account for Portal Identity Token for alice's wallet`, () => {
