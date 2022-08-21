@@ -2,7 +2,7 @@
   import HomeScreen from "./lib/HomePage/HomePage.svelte";
   import TopToolbar from "./lib/TopToolbar/TopToolbar.svelte";
   import Navbar from "./lib/Navbar/Navbar.svelte";
-  import Collectables from "./lib/Collectables/Collectables.svelte";
+  import Collectables from "./lib/Collectibles/Collectibles.svelte";
   import ContactsPage from "./lib/Contacts/ContactsPage.svelte";
   import TransferPage from "./lib/Transfer/TransferPage.svelte";
   import { Circle } from "svelte-loading-spinners";
