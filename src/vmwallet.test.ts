@@ -4,7 +4,7 @@ import {
   connect,
   convertPhraseToSeed,
   getAccountBalance,
-  getKeypairfromString,
+  getKeypairFromString,
   getUSDCAccounts,
   putSolIntoWallet,
   seedToKeypairs,
@@ -20,8 +20,6 @@ import {
 } from "./constants";
 import { getAllNftsFromAWallet } from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
-import { log, inspect, stringify } from "./functions";
-import bs58 from "bs58";
 import * as dotenv from "dotenv";
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
@@ -113,7 +111,7 @@ describe(`mainnet integration tests`, () => {
   }
   // From https://yihau.github.io/solana-web3-demo/tour/create-keypair.html
 
-  const keyPair = getKeypairfromString(privateKeyFromEnvFile);
+  const keyPair = getKeypairFromString(privateKeyFromEnvFile);
   const actualPublicKey = keyPair.publicKey;
   const mikePublicKey = new PublicKey(actualPublicKey);
   const mikeWallet = new PublicKey(actualPublicKey);

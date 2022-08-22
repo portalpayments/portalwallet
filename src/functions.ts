@@ -1,12 +1,4 @@
-import { promisify } from "util";
-
-import { inspect as originalInspect } from "util";
-
-import { scrypt as scryptCallback } from "crypto";
-
-// Convert `scrypt()` into a function that takes the
-// same parameters but returns a promise.
-export const scrypt = promisify(scryptCallback);
+// Generic JavaScript functions for browser and node
 
 // TODO: can be replaced with https://developer.mozilla.org/en-US/docs/Web/API/structuredClone
 // once we upgrade to node 18 and later (we could also use a polyfill if we wanted)
@@ -103,7 +95,3 @@ export function hasOwnProperty<X extends {}, Y extends PropertyKey>(
 }
 
 export const log = console.log.bind(console);
-
-export const inspect = (object: any) => {
-  return originalInspect(object, true, null, true);
-};

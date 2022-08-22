@@ -45,7 +45,7 @@ It's just noise, nobody else will understand why it's commented out, and we can 
 
 ## Refactor on first paste
 
-Having a single implementation of each function lets us refactor easily.
+Having a single implementation of each function lets us refactor and fix bugs easily.
 
 ## Let tools worry about linting and let's talk about building things.
 
