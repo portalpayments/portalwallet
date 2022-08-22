@@ -1,28 +1,63 @@
 <script lang="ts">
   import TransferHeading from "./TransferHeading.svelte";
   import TransferButtons from "./TransferButons.svelte";
-  import TransferButons from "./TransferButons.svelte";
+  import LoaderModal from "../UI/LoaderModal.svelte";
+
   let walletAddress: string = "";
   let amount: number;
-  let verified = false;
+  let name = "";
+  let isAnonymous: boolean;
+  let isPending: boolean;
+  let isNew: boolean;
+  let addressFetched: boolean = false;
+  let submit = false;
+  let loader = false;
+
+  const handleKeyupWalletAddress = () => {
+    submit = false;
+    if (walletAddress == "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM") {
+      loader = true;
+      setTimeout(() => {
+        loader = false;
+        addressFetched = true;
+        isAnonymous = true;
+      }, 7000);
+    }
+    if (walletAddress == "7FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM") {
+      loader = true;
+      setTimeout(() => {
+        loader = false;
+        addressFetched = true;
+        isAnonymous = false;
+      }, 7000);
+    }
+  };
 </script>
 
 <div class="wallet">
   <div>
-    <TransferHeading />
+    <TransferHeading {isAnonymous} {addressFetched} />
   </div>
 
   <div class="detailsContainer">
     <div class="Input">
-      <input bind:value={walletAddress} type="text" required />
+      <input
+        bind:value={walletAddress}
+        type="text"
+        required
+        on:keyup|preventDefault={handleKeyupWalletAddress}
+      />
       <span class="floating-label">wallet address</span>
     </div>
     <div class="Input">
-      <input bind:value={amount} type="text" required />
+      <input class="usdc-amount" bind:value={amount} type="text" required />
       <span class="floating-label">amount</span>
     </div>
   </div>
-  <TransferButons isVerified={false} />
+  {#if loader}
+    <LoaderModal />
+  {/if}
+  <TransferButtons isVerified={false} />
 </div>
 
 <style>
@@ -50,12 +85,20 @@
   }
   input {
     border-radius: 9px;
-    padding: 8px 0px 0px 10px;
+    padding: 10px 0px 0px 10px;
     border: 1px solid rgba(217, 217, 217, 0.3);
     background-color: rgba(217, 217, 217, 0.3);
     font-size: 14px;
     width: 200px;
     height: 35px;
+    font-size: 1.1rem;
+    color: #4d4d4d;
+    font-weight: 600;
+  }
+  .usdc-amount {
+    background: url("../../assets/usdc.svg") no-repeat scroll 175px 10px;
+    background-size: 26px;
+    background-color: rgba(217, 217, 217, 0.3);
   }
   input:focus {
     outline: none !important;
@@ -64,7 +107,7 @@
   }
   input:focus ~ .floating-label,
   input:not(:focus):valid ~ .floating-label {
-    top: 1px;
+    top: -1px;
     font-size: 0.7rem;
     opacity: 1;
   }

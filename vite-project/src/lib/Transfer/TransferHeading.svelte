@@ -5,11 +5,11 @@
   import UnverifiedTag from "../Shared/Label.svelte";
   import Checkmark from "../../assets/Checkmark.svg";
 
-  let name = "John O'Mally";
-  let isAnonymous = true;
+  let name = "John O'mally";
+  export let isAnonymous: boolean = true;
   let isPending = false;
   let isNew = true;
-  let addressFetched = true;
+  export let addressFetched: boolean = false;
   let warningUnverfiedAccount =
     "This address is unverified. We highly suggest you send money only to verified addresses, because the transfer cannot be undone. You can click below to request verification. We will notify you once the address is verified.";
 </script>
@@ -22,7 +22,11 @@
     <div class="verification-status">
       <div class="verified-header">
         {#if isAnonymous}
-          <img src={AnonymousSvg} class="profilePic" />
+          <img
+            src={AnonymousSvg}
+            class="profilePic"
+            alt="Address is not verified"
+          />
           <div>
             <UnverifiedTag color="grey" size="large">UNVERIFIED</UnverifiedTag>
             {#if isPending}
@@ -30,7 +34,7 @@
             {/if}
           </div>
         {:else}
-          <img src={JohnPng} class="profilePic" />
+          <img src={JohnPng} class="profilePic" alt="Address is verified" />
 
           <div>
             <div>

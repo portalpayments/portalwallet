@@ -5,7 +5,6 @@
   import Collectables from "./lib/Collectibles/Collectibles.svelte";
   import ContactsPage from "./lib/Contacts/ContactsPage.svelte";
   import TransferPage from "./lib/Transfer/TransferPage.svelte";
-  import { Circle } from "svelte-loading-spinners";
   import { Router, Route, Link } from "svelte-navigator";
 
   let currentFeature: number = 0;
