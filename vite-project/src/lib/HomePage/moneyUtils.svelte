@@ -3,10 +3,8 @@
 </script>
 
 <div class="MoneyUtilButtons">
-  <!-- <button on:click={() => addMoney()}>add money</button> -->
   <Link class="link" to="/addMoneyToAccount">add money</Link>
   <Link class="link" to="/transferMoney">transfer money</Link>
-  <!-- <button on:click={() => transferMoney()}>transfer</button> -->
 </div>
 
 <style>
