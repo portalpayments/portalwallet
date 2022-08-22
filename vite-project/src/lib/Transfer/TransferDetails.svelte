@@ -1,14 +1,16 @@
 <script lang="ts">
   import TransferHeading from "./TransferHeading.svelte";
-
-  import TansferHeading from "./TransferHeading.svelte";
+  import TransferButtons from "./TransferButons.svelte";
+  import TransferButons from "./TransferButons.svelte";
   let walletAddress: string = "";
   let amount: number;
   let verified = false;
 </script>
 
 <div class="wallet">
-  <TransferHeading />
+  <div>
+    <TransferHeading />
+  </div>
 
   <div class="detailsContainer">
     <div class="Input">
@@ -20,6 +22,7 @@
       <span class="floating-label">amount</span>
     </div>
   </div>
+  <TransferButons isVerified={false} />
 </div>
 
 <style>
@@ -29,14 +32,20 @@
     min-height: var(--wallet-height);
     max-height: var(--wallet-height);
     display: grid;
+    grid-auto-flow: row;
     justify-content: center;
     align-items: center;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 100%;
+    gap: 30p;
   }
   .detailsContainer {
     display: grid;
     grid-auto-flow: row;
     grid-template-rows: 1fr;
-    width: 80%;
+    justify-content: center;
+    align-self: center;
+    width: 100%;
     gap: 15px;
   }
   input {

@@ -5,7 +5,7 @@
 <div class="MoneyUtilButtons">
   <!-- <button on:click={() => addMoney()}>add money</button> -->
   <Link class="link" to="/addMoneyToAccount">add money</Link>
-  <Link class="link" to="/transferMoney">transfer money</Link>
+  <Link class="link" to="/transferMoney">transfer</Link>
   <!-- <button on:click={() => transferMoney()}>transfer</button> -->
 </div>
 
@@ -13,7 +13,7 @@
   .MoneyUtilButtons {
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 43% 43%;
+    grid-template-columns: 40% 40%;
     gap: 6px;
     justify-content: center;
     align-items: center;
@@ -28,7 +28,7 @@
     background-color: #419cfd33;
     padding: 7px 0px;
     border-radius: 8px;
-    font-size: 0.97rem;
+    font-size: 1.1rem;
   }
 
   :global(a) {
