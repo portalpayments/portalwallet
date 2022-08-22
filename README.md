@@ -12,7 +12,7 @@ You'll need an `.env` file with:
 
 ```
 TWITTER_API_KEY_BEARER_TOKEN=somebearertoken
-
+PRIVATE_KEY=someprivatekeyextractedfromphantom
 ```
 
 Ask your colleagues for a copy of this file (not checked into GitHub for security reasons).
@@ -68,6 +68,7 @@ Keypairs
 
 ## References
 
+- https://yihau.github.io/solana-web3-demo/tour/create-keypair.html
 - https://solanacookbook.com/references/keypairs-and-wallets.html#how-to-generate-a-new-keypair
 - https://solana-labs.github.io/solana-web3.js/
 - https://solana-labs.github.io/wallet-adapter/example/

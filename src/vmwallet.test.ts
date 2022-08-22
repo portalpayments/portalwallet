@@ -19,15 +19,18 @@ import {
 import { getAllNftsFromAWallet } from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
 import { log, inspect, stringify } from "./functions";
-
+import bs58 from "bs58";
+import * as dotenv from "dotenv";
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
 
+dotenv.config();
+
 // Quiet functions.log() during tests
-// jest.mock("./functions", () => ({
-//   ...jest.requireActual("./functions"),
-//   log: jest.fn(),
-// }));
+jest.mock("./functions", () => ({
+  ...jest.requireActual("./functions"),
+  log: jest.fn(),
+}));
 
 const fullName = `${firstName} ${lastName}`;
 const password = `${new Date().toString()}`;
@@ -100,10 +103,18 @@ describe(`restoration`, () => {
 
 describe(`mainnet integration tests`, () => {
   let mainNetConnection: Connection | null = null;
-  const MIKES_ACTUAL_PUBLIC_KEY =
-    "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
-  const mikePublicKey = new PublicKey(MIKES_ACTUAL_PUBLIC_KEY);
-  const mikeWallet = new PublicKey(MIKES_ACTUAL_PUBLIC_KEY);
+  const privateKeyFromEnvFile = process.env.PRIVATE_KEY;
+  if (!privateKeyFromEnvFile) {
+    throw new Error(
+      "Please add PRIVATE_KEY to your env file with a private key extracted from Phantom etc."
+    );
+  }
+  // From https://yihau.github.io/solana-web3-demo/tour/create-keypair.html
+
+  const keyPair = Keypair.fromSecretKey(bs58.decode(privateKeyFromEnvFile));
+  const actualPublicKey = keyPair.publicKey;
+  const mikePublicKey = new PublicKey(actualPublicKey);
+  const mikeWallet = new PublicKey(actualPublicKey);
 
   beforeAll(async () => {
     mainNetConnection = await connect("mainNetBeta");
@@ -186,7 +197,7 @@ describe(`mainnet integration tests`, () => {
                 info: {
                   isNative: false,
                   mint: USDC_MAINNET_MINT_ACCOUNT,
-                  owner: MIKES_ACTUAL_PUBLIC_KEY,
+                  owner: actualPublicKey.toString(),
                   state: "initialized",
                   tokenAmount: {
                     amount: expect.any(String),
@@ -203,7 +214,7 @@ describe(`mainnet integration tests`, () => {
             executable: false,
             lamports: 2039280,
             owner: TOKEN_PROGRAM_ID,
-            rentEpoch: 339,
+            rentEpoch: expect.any(Number),
           },
           pubkey: new PublicKey("Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc"),
         },
