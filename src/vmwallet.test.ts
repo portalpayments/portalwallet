@@ -4,6 +4,8 @@ import {
   connect,
   convertPhraseToSeed,
   getAccountBalance,
+  getKeypairfromString,
+  getUSDCAccounts,
   putSolIntoWallet,
   seedToKeypairs,
 } from "./vmwallet";
@@ -111,7 +113,7 @@ describe(`mainnet integration tests`, () => {
   }
   // From https://yihau.github.io/solana-web3-demo/tour/create-keypair.html
 
-  const keyPair = Keypair.fromSecretKey(bs58.decode(privateKeyFromEnvFile));
+  const keyPair = getKeypairfromString(privateKeyFromEnvFile);
   const actualPublicKey = keyPair.publicKey;
   const mikePublicKey = new PublicKey(actualPublicKey);
   const mikeWallet = new PublicKey(actualPublicKey);
@@ -179,46 +181,37 @@ describe(`mainnet integration tests`, () => {
       throw new Error(`Couldn't get a connection, can't continue`);
     }
 
-    let parsedTokenAccountsByOwner =
-      await mainNetConnection.getParsedTokenAccountsByOwner(mikePublicKey, {
-        mint: new PublicKey(USDC_MAINNET_MINT_ACCOUNT),
-      });
+    let usdcAccounts = await getUSDCAccounts(mainNetConnection, mikePublicKey);
 
-    expect(parsedTokenAccountsByOwner).toEqual({
-      context: {
-        apiVersion: expect.any(String),
-        slot: expect.any(Number),
-      },
-      value: [
-        {
-          account: {
-            data: {
-              parsed: {
-                info: {
-                  isNative: false,
-                  mint: USDC_MAINNET_MINT_ACCOUNT,
-                  owner: actualPublicKey.toString(),
-                  state: "initialized",
-                  tokenAmount: {
-                    amount: expect.any(String),
-                    decimals: 6,
-                    uiAmount: expect.any(Number),
-                    uiAmountString: expect.any(String),
-                  },
+    expect(usdcAccounts).toEqual([
+      {
+        account: {
+          data: {
+            parsed: {
+              info: {
+                isNative: false,
+                mint: USDC_MAINNET_MINT_ACCOUNT,
+                owner: actualPublicKey.toString(),
+                state: "initialized",
+                tokenAmount: {
+                  amount: expect.any(String),
+                  decimals: 6,
+                  uiAmount: expect.any(Number),
+                  uiAmountString: expect.any(String),
                 },
-                type: "account",
               },
-              program: "spl-token",
-              space: 165,
+              type: "account",
             },
-            executable: false,
-            lamports: 2039280,
-            owner: TOKEN_PROGRAM_ID,
-            rentEpoch: expect.any(Number),
+            program: "spl-token",
+            space: 165,
           },
-          pubkey: new PublicKey("Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc"),
+          executable: false,
+          lamports: 2039280,
+          owner: TOKEN_PROGRAM_ID,
+          rentEpoch: expect.any(Number),
         },
-      ],
-    });
+        pubkey: new PublicKey("Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc"),
+      },
+    ]);
   });
 });

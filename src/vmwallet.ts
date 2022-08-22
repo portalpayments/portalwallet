@@ -1,8 +1,13 @@
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import * as bip39 from "bip39";
 import { log, scrypt } from "./functions";
-import { SOLANA_SEED_SIZE_BYTES, URLS } from "./constants";
+import {
+  SOLANA_SEED_SIZE_BYTES,
+  URLS,
+  USDC_MAINNET_MINT_ACCOUNT,
+} from "./constants";
 import { derivePath } from "ed25519-hd-key";
+import bs58 from "bs58";
 
 export const convertPhraseToSeed = async (
   phrase: string,
@@ -20,6 +25,22 @@ export const convertPhraseToSeed = async (
   )) as Buffer;
 
   return seedBytes;
+};
+
+export const getKeypairfromString = (privateKeyString: string) => {
+  return Keypair.fromSecretKey(bs58.decode(privateKeyString));
+};
+
+export const getUSDCAccounts = async (
+  connection: Connection,
+  publicKey: PublicKey,
+  usdcMintAccount = USDC_MAINNET_MINT_ACCOUNT
+) => {
+  let parsedTokenAccountsByOwner =
+    await connection.getParsedTokenAccountsByOwner(publicKey, {
+      mint: new PublicKey(usdcMintAccount),
+    });
+  return parsedTokenAccountsByOwner.value;
 };
 
 export const seedToKeypairs = async (entropy: Buffer, password: string) => {
