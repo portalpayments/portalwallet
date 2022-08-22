@@ -76,6 +76,3 @@
 <MoneyUtils />
 <TransactionsHeading />
 <Transactions {transactions} />
-
-<style>
-</style>
