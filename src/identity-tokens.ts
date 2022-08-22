@@ -9,53 +9,58 @@
 import {
   Metaplex,
   keypairIdentity,
-  mockStorage,
+  // mockStorage,
 } from "@metaplex-foundation/js";
-import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
-import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
-import { log, stringify } from "./functions";
+// import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
+import {
+  // clusterApiUrl,
+  Connection,
+  Keypair,
+  PublicKey,
+} from "@solana/web3.js";
+// import { log, stringify } from "./functions";
 
-export const getMetaplex = (
-  connection: Connection,
-  identityTokenIssuer: Keypair
-) => {
-  const metaplex = Metaplex.make(connection)
-    .use(keypairIdentity(identityTokenIssuer))
-    // TODO: change storage provider
-    .use(mockStorage());
-  return metaplex;
-};
+// export const getMetaplex = (
+//   connection: Connection,
+//   identityTokenIssuer: Keypair
+// ) => {
+//   const metaplex = Metaplex.make(connection)
+//     .use(keypairIdentity(identityTokenIssuer))
+//     // TODO: change storage provider
+//     .use(mockStorage());
+//   return metaplex;
+// };
 
-export const mintIdentityToken = async (
-  connection: Connection,
-  identityTokenIssuer: Keypair,
-  name: string,
-  metadata: Record<string, any>
-) => {
-  const metaplex = getMetaplex(connection, identityTokenIssuer);
-  const metaplexNFTs = metaplex.nfts();
-  const uploadResponse = await metaplexNFTs.uploadMetadata(metadata).run();
+// export const mintIdentityToken = async (
+//   connection: Connection,
+//   identityTokenIssuer: Keypair,
+//   name: string,
+//   metadata: Record<string, any>
+// ) => {
+//   const metaplex = getMetaplex(connection, identityTokenIssuer);
+//   const metaplexNFTs = metaplex.nfts();
+//   const uploadResponse = await metaplexNFTs.uploadMetadata(metadata).run();
 
-  expect(uploadResponse.uri);
+//   expect(uploadResponse.uri);
 
-  // https://github.com/metaplex-foundation/js#create
-  // Full parameters at https://github.com/metaplex-foundation/js/blob/main/packages/js/src/plugins/nftModule/createNft.ts#L64
+//   // https://github.com/metaplex-foundation/js#create
+//   // Full parameters at https://github.com/metaplex-foundation/js/blob/main/packages/js/src/plugins/nftModule/createNft.ts#L64
 
-  // From https://github.com/metaplex-foundation/js#create
-  // This will take care of creating the mint account, the associated token account, the metadata PDA and the original edition PDA (a.k.a. the master edition) for you.
+//   // From https://github.com/metaplex-foundation/js#create
+//   // This will take care of creating the mint account, the associated token account, the metadata PDA and the original edition PDA (a.k.a. the master edition) for you.
 
-  // See https://github.com/metaplex-foundation/js-examples/blob/main/getting-started-expressjs/createNFT.cjs too
+//   // See https://github.com/metaplex-foundation/js-examples/blob/main/getting-started-expressjs/createNFT.cjs too
 
-  const createOutput = await metaplexNFTs
-    .create({
-      uri: uploadResponse.uri, // "https://arweave.net/123",
-      name,
-      sellerFeeBasisPoints: 500, // 500 represents 5.00%.
-    })
-    .run();
+//   const createOutput = await metaplexNFTs
+//     .create({
+//       uri: uploadResponse.uri, // "https://arweave.net/123",
+//       name,
+//       sellerFeeBasisPoints: 500, // 500 represents 5.00%.
+//     })
+//     .run();
 
-  return createOutput;
-};
+//   return createOutput;
+// };
 
 // From https://solana.stackexchange.com/questions/137/how-do-i-get-all-nfts-for-a-given-wallet
 export const getAllNftsFromAWallet = async (
@@ -68,12 +73,12 @@ export const getAllNftsFromAWallet = async (
   metaplex.use(keypairIdentity(keypair));
 
   const owner = new PublicKey(address);
-  const allNFTs = await metaplex
+  const findNftsByOwnerOutput = await metaplex
     .nfts()
     .findAllByOwner({
       owner,
     })
     .run();
 
-  return allNFTs;
+  return findNftsByOwnerOutput; // .map(() => {});
 };

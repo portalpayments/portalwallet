@@ -8,6 +8,22 @@
 
 See [coding guidelines](CODING_GUIDELINES.md).
 
+## For browser work
+
+### Start the development server
+
+`npm run dev`
+
+Then in your browser DevTools console run:
+
+```
+localStorage.setItem("PORTAL_PRIVATE_KEY", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678")
+```
+
+Get your private key from **Phantom** -> ⚙️ -> **Export Private Key**
+
+## For tests
+
 You'll need an `.env` file with:
 
 ```

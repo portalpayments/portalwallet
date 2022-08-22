@@ -7,10 +7,33 @@
   import TransferPage from "./lib/Transfer/TransferPage.svelte";
   import { Circle } from "svelte-loading-spinners";
   import { Router, Route, Link } from "svelte-navigator";
+  import type { Connection, Keypair } from "@solana/web3.js";
+  import { getPrivateKey } from "./lib/utils";
+  import { getKeypairFromString, connect } from "../../src/vmwallet";
+  import { log } from "../../src/functions";
 
   let currentFeature: number = 0;
 
-  const testUser = { name: "Chris Austin", verified: true };
+  let connection: null | Connection = null;
+  let keyPair: null | Keypair = null;
+
+  interface User {
+    name: string;
+    verified: boolean;
+  }
+
+  let testUser: null | User = null;
+  (async () => {
+    connection = await connect("mainNetBeta");
+
+    log(`🔌Connected`);
+    const privateKey = getPrivateKey();
+    log(`🔑Got private key: ${"*".repeat(privateKey.length)}`);
+    keyPair = await getKeypairFromString(privateKey);
+
+    // TODO: get these values from the portal Identity Token
+    testUser = { name: "Chris Austin", verified: true };
+  })();
 </script>
 
 <Router>
@@ -31,11 +54,11 @@
         <div class="features">
           <div class="feature">
             {#if currentFeature === 0}
-              <HomeScreen />
+              <HomeScreen {connection} {keyPair} />
             {:else if currentFeature === 1}
               <ContactsPage />
             {:else if currentFeature === 2}
-              <Collectables />
+              <Collectables {connection} {keyPair} />
             {/if}
           </div>
         </div>

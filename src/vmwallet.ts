@@ -31,7 +31,13 @@ import bs58 from "bs58";
 // };
 
 export const getKeypairFromString = (privateKeyString: string) => {
-  return Keypair.fromSecretKey(bs58.decode(privateKeyString));
+  let decodedPrivateKey: Buffer;
+  try {
+    decodedPrivateKey = bs58.decode(privateKeyString);
+  } catch (throwObject) {
+    throw new Error("Invalid private key! See README.md");
+  }
+  return Keypair.fromSecretKey(decodedPrivateKey);
 };
 
 export const getUSDCAccounts = async (

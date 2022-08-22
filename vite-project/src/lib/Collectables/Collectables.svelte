@@ -1,22 +1,38 @@
-<script>
-  import beepleMockNFT from "../../assets/Collectables/beepleMockNFT.jpg";
-  import beepleMockNFT2 from "../../assets/Collectables/beepleMockNFT2.jpg";
-  import baycMockNFT from "../../assets/Collectables/baycMockNFT.jpg";
+<script type="ts">
+  import { log, stringify } from "../../../../src/functions";
+  import { getAllNftsFromAWallet } from "../../../../src/identity-tokens";
+  import { httpGet } from "../utils";
+  import { asyncMap } from "../../../../src/functions";
 
-  const collectables = [
-    {
-      image: beepleMockNFT,
-      description: "beeple's Spaceman on a new planet",
-    },
-    {
-      image: baycMockNFT,
-      description: "BAYC NFT",
-    },
-    {
-      image: beepleMockNFT2,
-      description: "beeple's human production machine",
-    },
-  ];
+  log(`Collectables page loading...`);
+
+  import { connect, getKeypairFromString } from "../../../../src/vmwallet";
+
+  import { Metaplex } from "@metaplex-foundation/js";
+  console.log(Metaplex);
+  import type { Connection, Keypair } from "@solana/web3.js";
+
+  export let connection: Connection;
+  export let keyPair: Keypair;
+
+  let collectables: Array<any> = [];
+
+  (async () => {
+    log(`Connected`);
+    const allNftsFromAWallet = await getAllNftsFromAWallet(
+      connection,
+      keyPair.publicKey
+    );
+    collectables = await asyncMap(allNftsFromAWallet, async (nft) => {
+      const data = await httpGet(nft.uri);
+      return {
+        name: data.name,
+        description: data.description,
+        image: data.image,
+      };
+    });
+    log("collectables", stringify(collectables));
+  })();
 </script>
 
 <div class="nfts">

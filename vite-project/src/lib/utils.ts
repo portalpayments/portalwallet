@@ -7,6 +7,17 @@ const numberFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 0,
 });
 
+export const getPrivateKey = () => {
+  return localStorage.getItem("PORTAL_PRIVATE_KEY");
+};
+
+export const httpGet = async (uri: string) => {
+  const response = await fetch(uri, {
+    method: "GET",
+  });
+  return response.json();
+};
+
 export const formatNumber = (
   number: number | string,
   isMajorUnits: boolean
@@ -16,6 +27,13 @@ export const formatNumber = (
     return asNumber;
   }
   return numberFormatter.format(asNumber);
+};
+
+export const formatUSDCBalanceString = (balanceString: string) => {
+  const parts = balanceString.split(".");
+  const major = parts[0];
+  const minor = parts[1].slice(0, 2);
+  return [major, minor];
 };
 
 export const truncateWallet = (wallet: string): string => {
