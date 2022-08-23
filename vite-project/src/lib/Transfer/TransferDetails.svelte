@@ -5,11 +5,14 @@
 
   let walletAddress: string = "";
   let amount: number;
-  let name = "";
-  let isAnonymous: boolean;
-  let isPending: boolean;
-  let isNew: boolean;
-  let addressFetched: boolean = false;
+  let fetchedAddressDetails = {
+    addressFetched: false,
+    name: "",
+    isAnonymous: false,
+    isPending: false,
+    isNew: false,
+  };
+
   let showGasFee: boolean = false;
   let submit = false;
   let loader = false;
@@ -20,21 +23,23 @@
       loader = true;
       setTimeout(() => {
         loader = false;
-        addressFetched = true;
-        isAnonymous = true;
+        fetchedAddressDetails.addressFetched = true;
+        fetchedAddressDetails.isAnonymous = true;
       }, 7000);
     }
     if (walletAddress == "7FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM") {
       loader = true;
       setTimeout(() => {
         loader = false;
-        addressFetched = true;
-        isAnonymous = false;
+        fetchedAddressDetails.addressFetched = true;
+        fetchedAddressDetails.isNew = true;
+        fetchedAddressDetails.name = "John O'Mally";
+        fetchedAddressDetails.isAnonymous = false;
       }, 7000);
     }
     if (walletAddress == "") {
-      addressFetched = false;
-      isAnonymous = false;
+      fetchedAddressDetails.addressFetched = false;
+      fetchedAddressDetails.isAnonymous = false;
     }
   };
 
@@ -50,7 +55,7 @@
 
 <div class="wallet">
   <div>
-    <TransferHeading {isAnonymous} {addressFetched} />
+    <TransferHeading {...fetchedAddressDetails} />
   </div>
 
   <div class="detailsContainer">
@@ -79,7 +84,7 @@
   {#if loader}
     <LoaderModal />
   {/if}
-  <TransferButtons {isAnonymous} />
+  <TransferButtons isAnonymous={fetchedAddressDetails.isAnonymous} />
 </div>
 
 <style>
