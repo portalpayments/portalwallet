@@ -13,6 +13,8 @@
     isNew: false,
   };
 
+  let sendButtonDisabled: boolean = true;
+
   let showGasFee: boolean = false;
   let submit = false;
   let loader = false;
@@ -35,6 +37,7 @@
         fetchedAddressDetails.isNew = true;
         fetchedAddressDetails.name = "John O'Mally";
         fetchedAddressDetails.isAnonymous = false;
+        sendButtonDisabled = false;
       }, 7000);
     }
     if (walletAddress == "") {
@@ -42,6 +45,26 @@
       fetchedAddressDetails.isAnonymous = false;
     }
   };
+
+  function debounce(cb, interval, immediate = null) {
+    var timeout;
+
+    return function () {
+      var context = this,
+        args = arguments;
+      var later = function () {
+        timeout = null;
+        if (!immediate) cb.apply(context, args);
+      };
+
+      var callNow = immediate && !timeout;
+
+      clearTimeout(timeout);
+      timeout = setTimeout(later, interval);
+
+      if (callNow) cb.apply(context, args);
+    };
+  }
 
   const handleKeyupAmount = () => {
     submit = false;
@@ -64,7 +87,7 @@
         bind:value={walletAddress}
         type="text"
         required
-        on:keyup|preventDefault={handleKeyupWalletAddress}
+        on:keyup|preventDefault={debounce(handleKeyupWalletAddress, 2000)}
       />
       <span class="floating-label">wallet address</span>
     </div>
@@ -74,7 +97,7 @@
         bind:value={amount}
         type="text"
         required
-        on:keyup|preventDefault={handleKeyupAmount}
+        on:keyup|preventDefault={debounce(handleKeyupAmount, 1000)}
       />
       <span class="floating-label">amount</span>
       {#if showGasFee}
@@ -84,7 +107,10 @@
   {#if loader}
     <LoaderModal />
   {/if}
-  <TransferButtons isAnonymous={fetchedAddressDetails.isAnonymous} />
+  <TransferButtons
+    isAnonymous={fetchedAddressDetails.isAnonymous}
+    {sendButtonDisabled}
+  />
 </div>
 
 <style>
