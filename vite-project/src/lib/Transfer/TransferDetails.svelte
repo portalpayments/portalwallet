@@ -33,6 +33,7 @@
     }
     if (walletAddress == "") {
       addressFetched = false;
+      isAnonymous = false;
     }
   };
 </script>
@@ -60,7 +61,7 @@
   {#if loader}
     <LoaderModal />
   {/if}
-  <TransferButtons isVerified={false} />
+  <TransferButtons {isAnonymous} />
 </div>
 
 <style>

@@ -1,13 +1,17 @@
 <script lang="ts">
-  export let isVerified: boolean = true;
+  export let isAnonymous: boolean = false;
+
+  export let requestVerificationClicked: boolean = false;
+  export let sendAnywayClicked: boolean = false;
+  export let sendClicked: boolean = false;
 </script>
 
 <div class="buttonContainer">
-  {#if !isVerified}
+  {#if !isAnonymous}
+    <button class="send">Send</button>
+  {:else}
     <button class="request-verification">Request verification</button>
     <button class="send-anyway">Send anyway</button>
-  {:else}
-    <button class="send">Send</button>
   {/if}
 </div>
 
