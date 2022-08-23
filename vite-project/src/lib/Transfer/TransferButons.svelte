@@ -1,10 +1,10 @@
 <script lang="ts">
-  export let isAnonymous: boolean = false;
+  export let isAnonymous = false;
 
-  export let requestVerificationClicked: boolean = false;
-  export let sendAnywayClicked: boolean = false;
-  export let sendClicked: boolean = false;
-  export let sendButtonDisabled: boolean = true;
+  export let requestVerificationClicked = false;
+  export let sendAnywayClicked = false;
+  export let sendClicked = false;
+  export let sendButtonDisabled = true;
 
   const sendToVerifiedAddress = () => {
     console.log("send was clicked");
@@ -22,7 +22,7 @@
 <div class="buttonContainer">
   {#if !isAnonymous}
     <button
-      class="send"
+      class={sendButtonDisabled ? "disabled" : "send"}
       on:click={sendToVerifiedAddress}
       disabled={sendButtonDisabled}>Send</button
     >
@@ -51,6 +51,10 @@
     color: #fff;
     font-weight: 600;
     font-size: 1.1rem;
+  }
+
+  .disabled {
+    background-color: #63a6ee;
   }
 
   .request-verification {

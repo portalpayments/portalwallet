@@ -7,10 +7,10 @@
   import { LabelColor } from "../constants";
 
   export let name = "John O'Mally";
-  export let isAnonymous: boolean = true;
+  export let isAnonymous = true;
   export let isPending = false;
   export let isNew = false;
-  export let addressFetched: boolean = false;
+  export let addressFetched = false;
   let warningUnverfiedAccount =
     "This address is unverified. We highly suggest you send money only to verified addresses, because the transfer cannot be undone. You can click below to request verification. We will notify you once the address is verified.";
 </script>
