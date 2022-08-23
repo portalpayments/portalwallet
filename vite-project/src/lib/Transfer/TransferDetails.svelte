@@ -54,7 +54,7 @@
   </div>
 
   <div class="detailsContainer">
-    <div class="Input">
+    <div class="walletaddressContainer">
       <input
         bind:value={walletAddress}
         type="text"
@@ -63,7 +63,7 @@
       />
       <span class="floating-label">wallet address</span>
     </div>
-    <div class="amount">
+    <div class="amountContainer">
       <input
         class="usdc-amount"
         bind:value={amount}
@@ -142,7 +142,10 @@
     transition: 0.2s ease all;
     font-size: 0.9rem;
   }
-  .amount {
+  .walletaddressContainer {
+    position: relative;
+  }
+  .amountContainer {
     position: relative;
     display: grid;
   }
