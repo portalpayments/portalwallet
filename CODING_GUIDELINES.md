@@ -53,6 +53,12 @@ We use prettier with the default rules.
 
 # JS specific guidelines
 
+## Use `null` to indicate absense of a value
+
+There's a difference between `score` of `0` (the score is zero) and `score` of `null` (we don't know the score). `null` is a way to state explicitly that a value is missing.
+
+Using `null` is better than `undefined` as any unset variable, or missing key has the variable `undefined` - let's keep `undefined` for bugs!
+
 ## No `.then()` or callbacks.
 
 We use `async`/`await`. This means we can catch errors using `try {} catch() {}`
@@ -74,7 +80,9 @@ This way we can jump `import { script } from './functions'` and have a working `
 test(
   `thing that will take 30 seconds`,
   () => {
-    //
+    // code
+    // goes
+    // here
   },
   30 * SECONDS
 );
@@ -97,3 +105,7 @@ try {
   ...
 }
 ```
+
+# CSS Guidelines
+
+**Just use CSS grid**. There's no point bothering with margin hacks, overflow, clear: both etc. Just use grid.
