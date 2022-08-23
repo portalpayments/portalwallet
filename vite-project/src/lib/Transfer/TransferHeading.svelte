@@ -4,6 +4,7 @@
   import JohnPng from "../../assets/ProfilePics/john.png";
   import UnverifiedTag from "../Shared/Label.svelte";
   import Checkmark from "../../assets/Checkmark.svg";
+  import { LabelColor } from "../constants";
 
   export let name = "John O'Mally";
   export let isAnonymous: boolean = true;
@@ -28,9 +29,11 @@
             alt="Address is not verified"
           />
           <div>
-            <UnverifiedTag color="grey" size="large">UNVERIFIED</UnverifiedTag>
+            <UnverifiedTag color={LabelColor.Grey} size="large"
+              >UNVERIFIED</UnverifiedTag
+            >
             {#if isPending}
-              <UnverifiedTag color="yellow">Pending</UnverifiedTag>
+              <UnverifiedTag color={LabelColor.Yellow}>Pending</UnverifiedTag>
             {/if}
           </div>
         {:else}
@@ -46,7 +49,7 @@
             </div>
             {#if isNew}
               <div class="recipient-transaction-history">
-                <UnverifiedTag color="yellow">New</UnverifiedTag>
+                <UnverifiedTag color={LabelColor.Yellow}>New</UnverifiedTag>
               </div>
             {/if}
           </div>
