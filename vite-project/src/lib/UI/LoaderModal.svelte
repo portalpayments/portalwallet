@@ -11,7 +11,7 @@
     position: fixed;
     z-index: 500;
     background-color: #fff;
-    width: 50%;
+    width: 40%;
     justify-self: center;
     display: grid;
     justify-content: center;

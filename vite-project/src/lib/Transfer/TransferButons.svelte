@@ -1,21 +1,42 @@
-<script lang="ts">
+<script type="ts">
   export let isAnonymous = false;
-
   export let requestVerificationClicked = false;
   export let sendAnywayClicked = false;
   export let sendClicked = false;
   export let sendButtonDisabled = true;
 
+  export let destinationWalletAddress: string | null;
+  export let transferAmount: number | null;
+
   const sendToVerifiedAddress = () => {
-    console.log("send was clicked");
+    sendClicked = true;
+    console.log(
+      "wallet Address: " +
+        destinationWalletAddress +
+        " and amount is " +
+        transferAmount
+    );
   };
 
   const sendToUnverifiedAddress = () => {
     console.log("send anyway was clicked");
+    console.log(
+      "wallet Address: " +
+        destinationWalletAddress +
+        " and amount is " +
+        transferAmount
+    );
   };
 
   const requestVerification = () => {
     console.log("request verification was clicked");
+    console.log(
+      "wallet Address: " +
+        destinationWalletAddress +
+        " wants to send you " +
+        transferAmount +
+        " money"
+    );
   };
 </script>
 
@@ -27,10 +48,10 @@
       disabled={sendButtonDisabled}>Send</button
     >
   {:else}
-    <button on:click={sendToUnverifiedAddress} class="request-verification"
+    <button on:click={requestVerification} class="request-verification"
       >Request verification</button
     >
-    <button on:click={requestVerification} class="send-anyway"
+    <button on:click={sendToUnverifiedAddress} class="send-anyway"
       >Send anyway</button
     >
   {/if}

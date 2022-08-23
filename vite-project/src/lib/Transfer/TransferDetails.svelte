@@ -1,4 +1,4 @@
-<script lang="ts">
+<script type="ts">
   import TransferHeading from "./TransferHeading.svelte";
   import TransferButtons from "./TransferButons.svelte";
   import LoaderModal from "../UI/LoaderModal.svelte";
@@ -19,6 +19,12 @@
   let submit = false;
   let loader = false;
 
+  let requestVerificationClicked = false;
+  let sendAnywayClicked = false;
+  let sendClicked = false;
+
+  let destinationWalletAddress;
+  let transferAmount;
   const handleKeyupWalletAddress = () => {
     submit = false;
 
@@ -28,6 +34,7 @@
         loader = false;
         fetchedAddressDetails.addressFetched = true;
         fetchedAddressDetails.isAnonymous = true;
+        destinationWalletAddress = walletAddress;
       }, 7000);
     }
     if (walletAddress == "7FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM") {
@@ -39,11 +46,13 @@
         fetchedAddressDetails.name = "John O'Mally";
         fetchedAddressDetails.isAnonymous = false;
         sendButtonDisabled = false;
+        destinationWalletAddress = walletAddress;
       }, 7000);
     }
     if (walletAddress == "") {
       fetchedAddressDetails.addressFetched = false;
       fetchedAddressDetails.isAnonymous = false;
+      sendButtonDisabled = true;
     }
   };
 
@@ -71,8 +80,10 @@
     submit = false;
     if (amount > 0) {
       showGasFee = true;
+      transferAmount = amount;
     } else {
       showGasFee = false;
+      transferAmount = null;
     }
   };
 </script>
@@ -111,7 +122,15 @@
   <TransferButtons
     isAnonymous={fetchedAddressDetails.isAnonymous}
     {sendButtonDisabled}
+    {destinationWalletAddress}
+    {transferAmount}
+    bind:sendClicked
+    bind:requestVerificationClicked
+    bind:sendAnywayClicked
   />
+  {#if sendClicked}
+    <div>send Clicked</div>
+  {/if}
 </div>
 
 <style>
