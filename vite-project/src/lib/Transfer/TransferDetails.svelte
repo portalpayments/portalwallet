@@ -31,6 +31,9 @@
         isAnonymous = false;
       }, 7000);
     }
+    if (walletAddress == "") {
+      addressFetched = false;
+    }
   };
 </script>
 
@@ -72,7 +75,6 @@
     align-items: center;
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 100%;
-    gap: 30p;
   }
   .detailsContainer {
     display: grid;

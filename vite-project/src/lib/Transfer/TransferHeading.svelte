@@ -5,7 +5,7 @@
   import UnverifiedTag from "../Shared/Label.svelte";
   import Checkmark from "../../assets/Checkmark.svg";
 
-  let name = "John O'mally";
+  let name = "John O'Mally";
   export let isAnonymous: boolean = true;
   let isPending = false;
   let isNew = true;
@@ -108,7 +108,7 @@
   }
   .recipient-transaction-history {
     justify-self: start;
-    /* This is weird, when I do align self start, it acts as align self end */
+    /* This is weird, when I do align-self start, it acts as align self end */
     align-self: end;
     font-size: 1rem;
   }
