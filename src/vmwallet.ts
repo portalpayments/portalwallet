@@ -1,19 +1,13 @@
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 
 import { log } from "./functions";
-import { scrypt } from "./node-functions";
-import {
-  SOLANA_SEED_SIZE_BYTES,
-  URLS,
-  USDC_MAINNET_MINT_ACCOUNT,
-} from "./constants";
-import { derivePath } from "ed25519-hd-key";
-import bs58 from "bs58";
+import { URLS, USDC_MAINNET_MINT_ACCOUNT } from "./constants";
+import base58 from "bs58";
 
 export const getKeypairFromString = (privateKeyString: string) => {
   let decodedPrivateKey: Buffer;
   try {
-    decodedPrivateKey = bs58.decode(privateKeyString);
+    decodedPrivateKey = base58.decode(privateKeyString);
   } catch (throwObject) {
     throw new Error("Invalid private key! See README.md");
   }
