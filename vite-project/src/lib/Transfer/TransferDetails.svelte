@@ -13,14 +13,15 @@
     isNew: false,
   };
 
-  let sendButtonDisabled: boolean = true;
+  let sendButtonDisabled = true;
 
-  let showGasFee: boolean = false;
+  let showGasFee = false;
   let submit = false;
   let loader = false;
 
   const handleKeyupWalletAddress = () => {
     submit = false;
+
     if (walletAddress == "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM") {
       loader = true;
       setTimeout(() => {
