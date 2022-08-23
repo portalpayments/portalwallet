@@ -10,6 +10,7 @@
   let isPending: boolean;
   let isNew: boolean;
   let addressFetched: boolean = false;
+  let showGasFee: boolean = false;
   let submit = false;
   let loader = false;
 
@@ -36,6 +37,15 @@
       isAnonymous = false;
     }
   };
+
+  const handleKeyupAmount = () => {
+    submit = false;
+    if (amount > 0) {
+      showGasFee = true;
+    } else {
+      showGasFee = false;
+    }
+  };
 </script>
 
 <div class="wallet">
@@ -53,9 +63,17 @@
       />
       <span class="floating-label">wallet address</span>
     </div>
-    <div class="Input">
-      <input class="usdc-amount" bind:value={amount} type="text" required />
+    <div class="amount">
+      <input
+        class="usdc-amount"
+        bind:value={amount}
+        type="text"
+        required
+        on:keyup|preventDefault={handleKeyupAmount}
+      />
       <span class="floating-label">amount</span>
+      {#if showGasFee}
+        <span class="gasfee"> fee: 0.00025</span>{/if}
     </div>
   </div>
   {#if loader}
@@ -124,7 +142,15 @@
     transition: 0.2s ease all;
     font-size: 0.9rem;
   }
-  .Input {
+  .amount {
     position: relative;
+    display: grid;
+  }
+  .gasfee {
+    font-size: 0.65rem;
+    color: #4d4d4d;
+    justify-self: end;
+    font-weight: 600;
+    padding: 3px 4px 0px 0px;
   }
 </style>
