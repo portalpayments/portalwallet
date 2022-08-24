@@ -22,6 +22,7 @@
     color: #7d7d7d;
   }
 
+  /* global is needed for 'a' element under .heading */
   .heading > :global(a) {
     text-align: right;
     justify-self: end;

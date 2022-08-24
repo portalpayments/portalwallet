@@ -128,7 +128,9 @@
     padding: 10px;
     width: 10%;
   }
-  .back-button > :global(a) {
+
+  /* global is needed for 'a' element under Link */
+  .back-button :global(a) {
     text-decoration: none;
     padding: 7px 0px;
     background-color: transparent;

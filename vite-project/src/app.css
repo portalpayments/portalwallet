@@ -22,9 +22,11 @@
   --mid-grey: #999;
 }
 
-a {
-}
-a:hover {
+a,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
 }
 
 body {

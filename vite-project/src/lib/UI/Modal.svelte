@@ -50,6 +50,7 @@
     font-size: 1rem;
   }
 
+  /* global needed for 'a' element under Link */
   .closeButton > :global(a) {
     background-color: transparent;
     font-weight: 600;
