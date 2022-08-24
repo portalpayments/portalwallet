@@ -7,7 +7,7 @@ import {
 import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { connect, putSolIntoWallet } from "./vmwallet";
 import { deepClone, log, stringify } from "./functions";
-import { URLS } from "./constants";
+import { IDENTITY_TOKEN_NAME, URLS } from "./constants";
 import { BN as BigNumber } from "bn.js";
 
 describe(`identity tokens`, () => {
@@ -31,9 +31,19 @@ describe(`identity tokens`, () => {
 
   test(`we can mint an identity token`, async () => {
     const metadata = {
-      firstName: "First NFT",
+      version: 1,
+      // In future this can be removed, however right now Solana
+      // token standard doesn't support non-transferrable tokens
+      // So check that that token wasn't issued against another wallet and transferred
+      issuedAgainst: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+      claims: {
+        type: "individual",
+        givenName: "Micheal-Sean",
+        familyName: "MacCana",
+        imageUrl: "//src/assets/verifiedImage.png",
+      },
     };
-    const name = "My NFT";
+    const name = IDENTITY_TOKEN_NAME;
     const createOutput = await mintIdentityToken(
       connection,
       testIdentityTokenIssuer,
@@ -50,7 +60,6 @@ describe(`identity tokens`, () => {
     // From https://github.com/metaplex-foundation/js#create
     // metaplexNFTs.create will take care of creating the mint account, the associated token account, the metadata PDA and the original edition PDA (a.k.a. the master edition) for you.
     const masterEditionAddress = createOutput.masterEditionAddress;
-    const masterEditionAddressPDA = new Pda(masterEditionAddress, 255);
     const metadataAddress = createOutput.metadataAddress;
     const tokenAddress = createOutput.tokenAddress;
     const updateAuthorityAddress = createOutput.nft.updateAuthorityAddress;
@@ -82,7 +91,7 @@ describe(`identity tokens`, () => {
         jsonLoaded: true,
         name,
         symbol: "",
-        // https://mockstorage.example.com/..
+        // https://mockstorage.example.com/...
         uri: expect.any(String),
         isMutable: true,
         primarySaleHappened: false,
@@ -170,7 +179,6 @@ describe(`identity tokens`, () => {
     }
     const nft = await metaplex.nfts().findByMint({ mintAddress }).run();
 
-    const updateAuthorityAddress = nft.updateAuthorityAddress;
     const mintAuthorityAddress = nft.mint.mintAuthorityAddress;
     const nftAddress = nft.address;
 
@@ -179,9 +187,9 @@ describe(`identity tokens`, () => {
       updateAuthorityAddress: expect.any(PublicKey),
       json: null,
       jsonLoaded: true,
-      name: "My NFT",
+      name: IDENTITY_TOKEN_NAME,
       symbol: "",
-      // TODO: like https://mockstorage.example.com/ew211zOcizEL1IKjaY2N
+      // Eg https://mockstorage.example.com/ew211zOcizEL1IKjaY2N
       uri: expect.any(String),
       isMutable: true,
       primarySaleHappened: false,
@@ -232,6 +240,10 @@ describe(`identity tokens`, () => {
       },
     });
   });
+
+  // test(`We can transfer the NFT we just made`, async () => {
+  //   //..
+  // });
 
   // test(`We can get the associated token account for Portal Identity Token for alice's wallet`, () => {
   //   //

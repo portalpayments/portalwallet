@@ -1,5 +1,7 @@
 import { clusterApiUrl, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
+export const IDENTITY_TOKEN_NAME = "Portal Identity Token";
+
 // From https://www.circle.com/en/usdc/developers
 export const USDC_MAINNET_MINT_ACCOUNT =
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
