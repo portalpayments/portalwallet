@@ -24,14 +24,12 @@
 
   const updateBalance = async () => {
     if (!updatedConnection) {
-      log(`connection isn't ready`);
       return;
     }
     if (!updatedKeypair) {
-      log(`keypair isn't ready`);
       return;
     }
-    log(`Keypair or connection have changed, updating balance`);
+    log(`🔢 Keypair or connection have changed, updating balance`);
 
     usdcAccounts = await getUSDCAccounts(
       updatedConnection,
@@ -56,7 +54,6 @@
 
   connection.subscribe((newValue) => {
     if (newValue) {
-      log(`🔌Connected!`);
       updatedConnection = newValue;
       updateBalance();
     }
@@ -64,7 +61,6 @@
 
   keyPair.subscribe((newValue) => {
     if (newValue) {
-      log(`🔑Got keys.`);
       updatedKeypair = newValue;
       updateBalance();
     }

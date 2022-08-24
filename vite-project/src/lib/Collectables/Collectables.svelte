@@ -1,30 +1,31 @@
 <script type="ts">
-  import { log, stringify } from "../../../../src/functions";
+  import { log, stringify, asyncMap } from "../../../../src/functions";
   import { getAllNftsFromAWallet } from "../../../../src/identity-tokens";
   import { httpGet } from "../utils";
-  import { asyncMap } from "../../../../src/functions";
+  import type { Collectable } from "../types";
 
-  log(`Collectables page loading...`);
+  import { connection, keyPair } from "../stores";
 
   import { Metaplex } from "@metaplex-foundation/js";
-  console.log(Metaplex);
+
   import type { Connection, Keypair } from "@solana/web3.js";
 
-  export let connection: Connection;
-  export let keyPair: Keypair;
-
-  interface Collectable {
-    name: string;
-    description: string;
-    image: string;
-  }
+  let updatedConnection: Connection;
+  let updatedKeypair: Keypair;
 
   let collectables: Array<Collectable> = [];
 
-  (async () => {
+  const updateCollectables = async () => {
+    if (!updatedConnection) {
+      return;
+    }
+    if (!updatedKeypair) {
+      return;
+    }
+    log(`🖼️ Keypair or connection have changed, updating collectables`);
     const allNftsFromAWallet = await getAllNftsFromAWallet(
-      connection,
-      keyPair.publicKey
+      updatedConnection,
+      updatedKeypair.publicKey
     );
     collectables = (await asyncMap(allNftsFromAWallet, async (nft) => {
       const data = await httpGet(nft.uri);
@@ -35,7 +36,21 @@
       };
     })) as Array<Collectable>;
     log("collectables", stringify(collectables));
-  })();
+  };
+
+  connection.subscribe((newValue) => {
+    if (newValue) {
+      updatedConnection = newValue;
+      updateCollectables();
+    }
+  });
+
+  keyPair.subscribe((newValue) => {
+    if (newValue) {
+      updatedKeypair = newValue;
+      updateCollectables();
+    }
+  });
 </script>
 
 <div class="nfts">

@@ -5,8 +5,7 @@
   import Collectables from "./lib/Collectables/Collectables.svelte";
   import ContactsPage from "./lib/Contacts/ContactsPage.svelte";
   import TransferPage from "./lib/Transfer/TransferPage.svelte";
-  import { Circle } from "svelte-loading-spinners";
-  import { Router, Route, Link } from "svelte-navigator";
+  import { Router, Route } from "svelte-navigator";
   import { getPrivateKey } from "./lib/utils";
   import { getKeypairFromString, connect } from "../../src/vmwallet";
   import { log } from "../../src/functions";
@@ -71,7 +70,7 @@
             {:else if currentFeature === 1}
               <ContactsPage />
             {:else if currentFeature === 2}
-              <Collectables {connection} {keyPair} />
+              <Collectables />
             {/if}
           </div>
         </div>
