@@ -4,6 +4,7 @@
   import LoaderModal from "../UI/LoaderModal.svelte";
   import Modal from "../UI/Modal.svelte";
   import RequestVerifcation from "./RequestVerifcation.svelte";
+  import TransactionCompleted from "./TransactionCompleted.svelte";
 
   let walletAddress: string = "";
   let amount: number;
@@ -132,11 +133,27 @@
     bind:sendAnywayClicked
   />
   {#if sendClicked}
-    <Modal buttonType="transfer"><div>send was clicked</div></Modal>
+    <Modal buttonType="transfer">
+      <TransactionCompleted
+        {destinationWalletAddress}
+        {transferAmount}
+        verifiedAddress={true}
+        name={fetchedAddressDetails.name}
+      />
+    </Modal>
   {/if}
 
   {#if sendAnywayClicked}
-    <Modal buttonType="transfer"><div>send Anyway was clicked</div></Modal>
+    <Modal buttonType="transfer"
+      ><div>
+        <TransactionCompleted
+          {destinationWalletAddress}
+          {transferAmount}
+          verifiedAddress={false}
+          name={fetchedAddressDetails.name}
+        />
+      </div></Modal
+    >
   {/if}
 
   {#if requestVerificationClicked}

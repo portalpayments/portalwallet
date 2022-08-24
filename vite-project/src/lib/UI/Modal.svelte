@@ -35,6 +35,7 @@
     background-color: #fff;
     width: 250px;
     min-height: 225px;
+    max-height: 250px;
     justify-self: center;
     display: grid;
     padding: 5px 0px 30px 0px;
@@ -65,7 +66,7 @@
     grid-auto-flow: row;
     grid-template-rows: 20px 1fr;
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 5px;
   }
   .infocard {
     display: block;

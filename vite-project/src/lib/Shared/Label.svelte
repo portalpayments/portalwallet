@@ -47,6 +47,12 @@
     border-radius: 6px;
     padding: 3px 5px;
   }
+  .medium {
+    font-size: 0.95rem;
+    line-height: 17px;
+    border-radius: 6px;
+    padding: 3px 5px;
+  }
   .yellow {
     color: var(--yellow);
     background-color: var(--yellow-background);
