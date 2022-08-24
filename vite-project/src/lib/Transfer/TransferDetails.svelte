@@ -6,6 +6,9 @@
   import RequestVerification from "./RequestVerification.svelte";
   import TransactionCompleted from "./TransactionCompleted.svelte";
 
+  import { SECONDS, SECOND } from "../../../../src/constants";
+  import { sleep } from "../../../../src/functions";
+
   let walletAddress: string = "";
   let amount: number;
   let fetchedAddressDetails = {
@@ -20,47 +23,51 @@
 
   let showGasFee = false;
 
-  let loader = false;
+  let isLoading = false;
 
-  let requestVerificationClicked = false;
-  let sendAnywayClicked = false;
-  let sendClicked = false;
+  let isRequestingVerification = false;
+  let isSendingAnyway = false;
+  let isSending = false;
 
   let destinationWalletAddress: string | null;
   let transferAmount: number | null;
 
-  const handleKeyupWalletAddress = () => {
-    if (walletAddress == "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM") {
-      loader = true;
-      setTimeout(() => {
-        loader = false;
-        fetchedAddressDetails.addressFetched = true;
-        fetchedAddressDetails.isAnonymous = true;
-        destinationWalletAddress = walletAddress;
-      }, 7000);
+  const ANONYMOUS_WALLET_ADDRESS =
+    "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
+  const VERIFIED_WALLET_ADDRESS =
+    "7FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
+
+  const handleKeyupWalletAddress = async () => {
+    if (walletAddress === ANONYMOUS_WALLET_ADDRESS) {
+      isLoading = true;
+      await sleep(7 * SECONDS);
+      isLoading = false;
+      fetchedAddressDetails.addressFetched = true;
+      fetchedAddressDetails.isAnonymous = true;
+      destinationWalletAddress = walletAddress;
     }
-    if (walletAddress == "7FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM") {
-      loader = true;
-      setTimeout(() => {
-        loader = false;
-        fetchedAddressDetails.addressFetched = true;
-        fetchedAddressDetails.isNew = true;
-        fetchedAddressDetails.name = "John O'Mally";
-        fetchedAddressDetails.isAnonymous = false;
-        sendButtonDisabled = false;
-        destinationWalletAddress = walletAddress;
-      }, 7000);
+    if (walletAddress === VERIFIED_WALLET_ADDRESS) {
+      isLoading = true;
+      await sleep(7 * SECONDS);
+      isLoading = false;
+      fetchedAddressDetails.addressFetched = true;
+      fetchedAddressDetails.isNew = true;
+      fetchedAddressDetails.name = "John O'Mally";
+      fetchedAddressDetails.isAnonymous = false;
+      sendButtonDisabled = false;
+      destinationWalletAddress = walletAddress;
     }
-    if (walletAddress == "") {
+    if (walletAddress === "") {
       fetchedAddressDetails.addressFetched = false;
       fetchedAddressDetails.isAnonymous = false;
       sendButtonDisabled = true;
-      requestVerificationClicked = false;
-      sendAnywayClicked = false;
-      sendClicked = false;
+      isRequestingVerification = false;
+      isSendingAnyway = false;
+      isSending = false;
     }
   };
 
+  // From https://...
   function debounce(cb, interval, immediate = null) {
     var timeout;
 
@@ -103,7 +110,10 @@
         bind:value={walletAddress}
         type="text"
         required
-        on:keyup|preventDefault={debounce(handleKeyupWalletAddress, 2000)}
+        on:keyup|preventDefault={debounce(
+          handleKeyupWalletAddress,
+          2 * SECONDS
+        )}
       />
       <span class="floating-label">wallet address</span>
     </div>
@@ -113,14 +123,14 @@
         bind:value={amount}
         type="text"
         required
-        on:keyup|preventDefault={debounce(handleKeyupAmount, 1000)}
+        on:keyup|preventDefault={debounce(handleKeyupAmount, 1 * SECOND)}
       />
       <span class="floating-label">amount</span>
       {#if showGasFee}
         <span class="gasfee"> fee: 0.00025</span>{/if}
     </div>
   </div>
-  {#if loader}
+  {#if isLoading}
     <LoaderModal />
   {/if}
   <TransferButtons
@@ -128,11 +138,11 @@
     {sendButtonDisabled}
     {destinationWalletAddress}
     {transferAmount}
-    bind:sendClicked
-    bind:requestVerificationClicked
-    bind:sendAnywayClicked
+    bind:sendClicked={isSending}
+    bind:requestVerificationClicked={isRequestingVerification}
+    bind:sendAnywayClicked={isSendingAnyway}
   />
-  {#if sendClicked}
+  {#if isSending}
     <Modal buttonType="transfer">
       <TransactionCompleted
         {destinationWalletAddress}
@@ -143,7 +153,7 @@
     </Modal>
   {/if}
 
-  {#if sendAnywayClicked}
+  {#if isSendingAnyway}
     <Modal buttonType="transfer"
       ><div>
         <TransactionCompleted
@@ -156,10 +166,12 @@
     >
   {/if}
 
-  {#if requestVerificationClicked}
+  {#if isRequestingVerification}
     <Modal buttonType="requestVerification"
       ><div>
-        <RequestVerifcation
+        <!-- TODO emailAddress is missing -->
+        <RequestVerification
+          emailAddress="user@example.com"
           {destinationWalletAddress}
           {transferAmount}
           bind:isPending={fetchedAddressDetails.isPending}
