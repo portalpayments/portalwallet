@@ -3,7 +3,7 @@
   import TransferButtons from "./TransferButons.svelte";
   import LoaderModal from "../UI/LoaderModal.svelte";
   import Modal from "../UI/Modal.svelte";
-  import RequestVerifcation from "./RequestVerifcation.svelte";
+  import RequestVerifcation from "./RequestVerification.svelte";
   import TransactionCompleted from "./TransactionCompleted.svelte";
 
   let walletAddress: string = "";
