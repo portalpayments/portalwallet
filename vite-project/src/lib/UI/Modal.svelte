@@ -19,9 +19,9 @@
   <div class="modalContents">
     <div class="closeButton">
       {#if buttonType == "transfer"}
-        <Link to="/" on:click={clicked}>x</Link>
+        <Link to="/" on:click={clicked}>×</Link>
       {:else if buttonType == "requestVerification"}
-        <button on:click={clicked}>x</button>
+        <button on:click={clicked}>×</button>
       {/if}
     </div>
     <div class="infocard"><slot /></div>
