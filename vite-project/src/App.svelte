@@ -48,7 +48,8 @@
     <Route path="transactions"
       ><div class="header-and-features">Here go transactions</div></Route
     >
-    <Route path="/">
+    <!-- primary=false to avoid a focus warning from the Svelte router -->
+    <Route path="/" primary={false}>
       <div class="header-and-features">
         <TopToolbar {...testUser} />
         <div class="features">
