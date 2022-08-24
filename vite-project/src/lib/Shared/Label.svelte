@@ -1,17 +1,18 @@
 <script lang="ts">
   import type { LabelColor } from "../constants";
   export let color: LabelColor;
+  export let size: String;
 </script>
 
 <!-- See https://svelte.dev/tutorial/slots -->
-<div class="badge {color}"><slot /></div>
+<div class="badge {color} {size}"><slot /></div>
 
 <style>
   :root {
     --green: hsl(98, 39%, 56%);
     --green-background: hsl(97, 78%, 95%);
     --grey: hsl(0, 0%, 30%);
-    --grey-background: hsl(0, 0%, 69%);
+    --grey-background: hsl(0, 0%, 79%);
     --yellow: hsl(59deg 24% 45%);
     --yellow-background: hsl(58deg 66% 81%);
     --red: hsl(346, 100%, 69%);
@@ -40,7 +41,18 @@
     color: var(--green);
     background-color: var(--green-background);
   }
-
+  .large {
+    font-size: 1.2rem;
+    line-height: 25px;
+    border-radius: 6px;
+    padding: 3px 5px;
+  }
+  .medium {
+    font-size: 0.95rem;
+    line-height: 17px;
+    border-radius: 6px;
+    padding: 3px 5px;
+  }
   .yellow {
     color: var(--yellow);
     background-color: var(--yellow-background);
