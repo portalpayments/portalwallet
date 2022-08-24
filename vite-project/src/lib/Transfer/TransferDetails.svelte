@@ -3,6 +3,7 @@
   import TransferButtons from "./TransferButons.svelte";
   import LoaderModal from "../UI/LoaderModal.svelte";
   import Modal from "../UI/Modal.svelte";
+  import RequestVerifcation from "./RequestVerifcation.svelte";
 
   let walletAddress: string = "";
   let amount: number;
@@ -17,18 +18,17 @@
   let sendButtonDisabled = true;
 
   let showGasFee = false;
-  let submit = false;
+
   let loader = false;
 
   let requestVerificationClicked = false;
   let sendAnywayClicked = false;
   let sendClicked = false;
 
-  let destinationWalletAddress;
-  let transferAmount;
-  const handleKeyupWalletAddress = () => {
-    submit = false;
+  let destinationWalletAddress: string | null;
+  let transferAmount: number | null;
 
+  const handleKeyupWalletAddress = () => {
     if (walletAddress == "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM") {
       loader = true;
       setTimeout(() => {
@@ -54,6 +54,9 @@
       fetchedAddressDetails.addressFetched = false;
       fetchedAddressDetails.isAnonymous = false;
       sendButtonDisabled = true;
+      requestVerificationClicked = false;
+      sendAnywayClicked = false;
+      sendClicked = false;
     }
   };
 
@@ -78,7 +81,6 @@
   }
 
   const handleKeyupAmount = () => {
-    submit = false;
     if (amount > 0) {
       showGasFee = true;
       transferAmount = amount;
@@ -139,7 +141,13 @@
 
   {#if requestVerificationClicked}
     <Modal buttonType="requestVerification"
-      ><div>Requestverification was clicked</div></Modal
+      ><div>
+        <RequestVerifcation
+          {destinationWalletAddress}
+          {transferAmount}
+          bind:isPending={fetchedAddressDetails.isPending}
+        />
+      </div></Modal
     >
   {/if}
 </div>

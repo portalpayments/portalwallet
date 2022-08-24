@@ -29,15 +29,7 @@
     sendAnywayClicked = true;
   };
 
-  const requestVerification = () => {
-    console.log("request verification was clicked");
-    console.log(
-      "wallet Address: " +
-        destinationWalletAddress +
-        " wants to send you " +
-        transferAmount +
-        " money"
-    );
+  const requestVerificationModal = () => {
     requestVerificationClicked = true;
   };
 </script>
@@ -50,9 +42,10 @@
       disabled={sendButtonDisabled}>Send</button
     >
   {:else}
-    <button on:click={requestVerification} class="request-verification"
+    <button on:click={requestVerificationModal} class="request-verification"
       >Request verification</button
     >
+
     <button on:click={sendToUnverifiedAddress} class="send-anyway"
       >Send anyway</button
     >

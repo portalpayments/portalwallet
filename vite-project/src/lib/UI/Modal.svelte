@@ -1,6 +1,5 @@
 <script type="ts">
   import Backdrop from "./Backdrop.svelte";
-  import { Circle } from "svelte-loading-spinners";
   import { Link } from "svelte-navigator";
   let show = true;
   export let buttonType: string;
@@ -34,10 +33,11 @@
     position: fixed;
     z-index: 500;
     background-color: #fff;
-    width: 200px;
+    width: 250px;
+    min-height: 225px;
     justify-self: center;
     display: grid;
-    padding: 5px 0px 15px 0px;
+    padding: 5px 0px 30px 0px;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
     border-radius: 7px;
@@ -48,10 +48,17 @@
     justify-self: end;
     font-size: 1rem;
   }
+
+  .closeButton > :global(a) {
+    background-color: transparent;
+    font-weight: 600;
+    color: #9d9d9d;
+    padding-right: 5px;
+  }
   button {
     background-color: transparent;
     font-weight: 600;
-    color: #4d4d4d;
+    color: #9d9d9d;
   }
   .modalContents {
     display: grid;
@@ -62,8 +69,8 @@
   }
   .infocard {
     display: block;
-    width: 90%;
-    height: 100px;
+    width: 85%;
+    height: auto;
     align-self: center;
     justify-self: center;
   }
