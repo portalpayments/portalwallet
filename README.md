@@ -71,8 +71,8 @@ Each mint has a single accounts - the docs at https://solanacookbook.com/referen
 New tokens are issued directly into users Associated Token Accounts. For example: some USDC is minted directly into Joe User's USDC wallet.
 
 ```
-Keypairs
-  Wallets
+HD keypair
+  HD Wallet 1 (keypair generated from HD keypairs)
     Native Token Account
     USDC Account 1
       USDC
@@ -80,6 +80,11 @@ Keypairs
       USDC
     Other Account
       Other token
+  HD Wallet 2 (keypair generated from HD keypairs)
+    Native Token Account
+    USDC Account 1
+      USDC
+
 ```
 
 ## References
