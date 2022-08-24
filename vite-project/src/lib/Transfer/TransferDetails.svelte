@@ -1,6 +1,6 @@
 <script type="ts">
   import TransferHeading from "./TransferHeading.svelte";
-  import TransferButtons from "./TransferButons.svelte";
+  import TransferButtons from "./TransferButtons.svelte";
   import LoaderModal from "../UI/LoaderModal.svelte";
   import Modal from "../UI/Modal.svelte";
   import RequestVerification from "./RequestVerification.svelte";
