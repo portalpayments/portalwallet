@@ -12,10 +12,21 @@
   import { getKeypairFromString, connect } from "../../src/vmwallet";
   import { log } from "../../src/functions";
 
-  let currentFeature: number = 0;
+  import { connection, keyPair } from "./lib/stores";
 
-  let connection: null | Connection = null;
-  let keyPair: null | Keypair = null;
+  connection.subscribe((newValue) => {
+    if (newValue) {
+      log(`🔌Connected!`);
+    }
+  });
+
+  keyPair.subscribe((newValue) => {
+    if (newValue) {
+      log(`🔑Got keys.`);
+    }
+  });
+
+  let currentFeature: number = 0;
 
   interface User {
     name: string;
@@ -24,12 +35,14 @@
 
   let testUser: null | User = null;
   (async () => {
-    connection = await connect("mainNetBeta");
+    // Connect to Solana
+    const newConnection = await connect("mainNetBeta");
+    connection.set(newConnection);
 
-    log(`🔌Connected`);
+    // Get our Private Key from LocalStorage
     const privateKey = getPrivateKey();
-    log(`🔑Got private key: ${"*".repeat(privateKey.length)}`);
-    keyPair = await getKeypairFromString(privateKey);
+    const newKeyPair = await getKeypairFromString(privateKey);
+    keyPair.set(newKeyPair);
 
     // TODO: get these values from the portal Identity Token
     testUser = { name: "Chris Austin", verified: true };

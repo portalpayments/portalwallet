@@ -18,23 +18,13 @@
 
   import { formatUSDCBalanceString } from "../utils";
 
-  export let connection: Connection;
-  export let keyPair: Keypair;
-
-  // Explicitly mark these values as reactive as they depend on other data
-  // being updated (they're derived from usdcAccounts)
-  let major: string | null;
-  $: major = null;
-  let minor: string | null;
-  $: minor = null;
-  $: usdcAccounts = [];
-  $: usdcAccount = null;
-
-  (async () => {
+  const updateBalance = async () => {
     if (!keyPair) {
       log(`Keypair is blank!`, keyPair);
       return;
     }
+    log(`Balance has updated`);
+
     usdcAccounts = await getUSDCAccounts(connection, keyPair.publicKey);
 
     const JUST_ONE_SUPPORTED_USDC_ACCOUNT_FOR_NOW = 0;
@@ -43,7 +33,19 @@
     const balanceString =
       usdcAccount.account.data.parsed.info.tokenAmount.uiAmountString;
     [major, minor] = formatUSDCBalanceString(balanceString);
-  })();
+  };
+
+  export let connection: Connection;
+  export let keyPair: Keypair;
+
+  // Explicitly mark these values as reactive as they depend on other data
+  // being updated (they're derived from usdcAccounts)
+  let major: string | null;
+  $: major = null && updateBalance();
+  let minor: string | null;
+  $: minor = null && updateBalance();
+  $: usdcAccounts = [];
+  $: usdcAccount = null && updateBalance();
 
   const transactions = [
     {

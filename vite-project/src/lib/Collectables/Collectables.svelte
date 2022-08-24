@@ -6,8 +6,6 @@
 
   log(`Collectables page loading...`);
 
-  import { connect, getKeypairFromString } from "../../../../src/vmwallet";
-
   import { Metaplex } from "@metaplex-foundation/js";
   console.log(Metaplex);
   import type { Connection, Keypair } from "@solana/web3.js";
@@ -15,22 +13,27 @@
   export let connection: Connection;
   export let keyPair: Keypair;
 
-  let collectables: Array<any> = [];
+  interface Collectable {
+    name: string;
+    description: string;
+    image: string;
+  }
+
+  let collectables: Array<Collectable> = [];
 
   (async () => {
-    log(`Connected`);
     const allNftsFromAWallet = await getAllNftsFromAWallet(
       connection,
       keyPair.publicKey
     );
-    collectables = await asyncMap(allNftsFromAWallet, async (nft) => {
+    collectables = (await asyncMap(allNftsFromAWallet, async (nft) => {
       const data = await httpGet(nft.uri);
       return {
         name: data.name,
         description: data.description,
         image: data.image,
       };
-    });
+    })) as Array<Collectable>;
     log("collectables", stringify(collectables));
   })();
 </script>
