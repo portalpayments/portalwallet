@@ -4,6 +4,7 @@
   import USDCSVG from "../../assets/usdc.svg";
   import Checkmark from "../../assets/Checkmark.svg";
   import UnverifiedTag from "../Shared/Label.svelte";
+  import { LabelColor } from "../constants";
   export let verifiedAddress: boolean;
   export let destinationWalletAddress: string | null;
   export let name: string | null;
@@ -37,7 +38,9 @@
       {:else}
         <div>
           <div class="recipient-name">
-            <UnverifiedTag color="grey" size="medium">UNVERIFIED</UnverifiedTag>
+            <UnverifiedTag color={LabelColor.Grey} size="medium"
+              >UNVERIFIED</UnverifiedTag
+            >
           </div>
           <div
             style="text-align: left; font-weight: 600; color: #9d9d9d; font-size: 0.9rem;"
