@@ -1,16 +1,18 @@
 <script lang="ts">
-  import imgUrl from "../../assets/usdc.svg";
+  import usdcSymbolUrl from "../../assets/usdc.svg";
   import { formatNumber } from "../utils";
 
-  // TODO: dynamic URL for symbol
-  // export let symbol: number;
   export let major: string;
   export let minor: string;
+
+  const SYMBOLS = {
+    usdc: usdcSymbolUrl,
+  };
 </script>
 
 <dic class="balanceCard">
   <div class="balance">
-    <img class="symbol" alt="USDC logo" src={imgUrl} />
+    <img class="symbol" alt="USDC logo" src={SYMBOLS.usdc} />
     <div class="major">{formatNumber(major, true)}</div>
     <div class="minor">.{formatNumber(minor, false)}</div>
   </div>
