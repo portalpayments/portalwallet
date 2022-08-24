@@ -7,7 +7,6 @@
   import TransferPage from "./lib/Transfer/TransferPage.svelte";
   import { Circle } from "svelte-loading-spinners";
   import { Router, Route, Link } from "svelte-navigator";
-  import type { Connection, Keypair } from "@solana/web3.js";
   import { getPrivateKey } from "./lib/utils";
   import { getKeypairFromString, connect } from "../../src/vmwallet";
   import { log } from "../../src/functions";
@@ -68,7 +67,7 @@
         <div class="features">
           <div class="feature">
             {#if currentFeature === 0}
-              <HomeScreen {connection} {keyPair} />
+              <HomeScreen />
             {:else if currentFeature === 1}
               <ContactsPage />
             {:else if currentFeature === 2}

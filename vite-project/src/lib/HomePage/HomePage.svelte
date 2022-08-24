@@ -4,6 +4,7 @@
   import Transactions from "./Transactions.svelte";
   import MoneyUtils from "./moneyUtils.svelte";
 
+  import { connection, keyPair } from "../stores";
   import type { Connection, Keypair } from "@solana/web3.js";
 
   import proteinLand from "../../assets/ProfilePics/proteinland.svg";
@@ -18,14 +19,24 @@
 
   import { formatUSDCBalanceString } from "../utils";
 
+  let updatedConnection: Connection;
+  let updatedKeypair: Keypair;
+
   const updateBalance = async () => {
-    if (!keyPair) {
-      log(`Keypair is blank!`, keyPair);
+    if (!updatedConnection) {
+      log(`connection isn't ready`);
       return;
     }
-    log(`Balance has updated`);
+    if (!updatedKeypair) {
+      log(`keypair isn't ready`);
+      return;
+    }
+    log(`Keypair or connection have changed, updating balance`);
 
-    usdcAccounts = await getUSDCAccounts(connection, keyPair.publicKey);
+    usdcAccounts = await getUSDCAccounts(
+      updatedConnection,
+      updatedKeypair.publicKey
+    );
 
     const JUST_ONE_SUPPORTED_USDC_ACCOUNT_FOR_NOW = 0;
     const usdcAccount = usdcAccounts[JUST_ONE_SUPPORTED_USDC_ACCOUNT_FOR_NOW];
@@ -35,17 +46,29 @@
     [major, minor] = formatUSDCBalanceString(balanceString);
   };
 
-  export let connection: Connection;
-  export let keyPair: Keypair;
-
   // Explicitly mark these values as reactive as they depend on other data
   // being updated (they're derived from usdcAccounts)
   let major: string | null;
-  $: major = null && updateBalance();
+  $: major = null;
   let minor: string | null;
-  $: minor = null && updateBalance();
+  $: minor = null;
   $: usdcAccounts = [];
-  $: usdcAccount = null && updateBalance();
+
+  connection.subscribe((newValue) => {
+    if (newValue) {
+      log(`🔌Connected!`);
+      updatedConnection = newValue;
+      updateBalance();
+    }
+  });
+
+  keyPair.subscribe((newValue) => {
+    if (newValue) {
+      log(`🔑Got keys.`);
+      updatedKeypair = newValue;
+      updateBalance();
+    }
+  });
 
   const transactions = [
     {
