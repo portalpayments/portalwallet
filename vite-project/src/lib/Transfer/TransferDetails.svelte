@@ -2,6 +2,7 @@
   import TransferHeading from "./TransferHeading.svelte";
   import TransferButtons from "./TransferButons.svelte";
   import LoaderModal from "../UI/LoaderModal.svelte";
+  import Modal from "../UI/Modal.svelte";
 
   let walletAddress: string = "";
   let amount: number;
@@ -129,7 +130,17 @@
     bind:sendAnywayClicked
   />
   {#if sendClicked}
-    <div>send Clicked</div>
+    <Modal buttonType="transfer"><div>send was clicked</div></Modal>
+  {/if}
+
+  {#if sendAnywayClicked}
+    <Modal buttonType="transfer"><div>send Anyway was clicked</div></Modal>
+  {/if}
+
+  {#if requestVerificationClicked}
+    <Modal buttonType="requestVerification"
+      ><div>Requestverification was clicked</div></Modal
+    >
   {/if}
 </div>
 

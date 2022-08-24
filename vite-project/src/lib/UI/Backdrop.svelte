@@ -1,9 +1,14 @@
-<div class="backdrop" />
+<script type="ts">
+  export let show = true;
+</script>
+
+{#if show}<div class="backdrop" />
+{/if}
 
 <style>
   .backdrop {
-    width: 100%;
-    height: 100%;
+    width: var(--wallet-width);
+    height: var(--wallet-height);
     position: fixed;
     z-index: 110;
     background-color: rgba(0, 0, 0, 0.5);

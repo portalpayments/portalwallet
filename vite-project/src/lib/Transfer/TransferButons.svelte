@@ -9,13 +9,13 @@
   export let transferAmount: number | null;
 
   const sendToVerifiedAddress = () => {
-    sendClicked = true;
     console.log(
       "wallet Address: " +
         destinationWalletAddress +
         " and amount is " +
         transferAmount
     );
+    sendClicked = true;
   };
 
   const sendToUnverifiedAddress = () => {
@@ -26,6 +26,7 @@
         " and amount is " +
         transferAmount
     );
+    sendAnywayClicked = true;
   };
 
   const requestVerification = () => {
@@ -37,6 +38,7 @@
         transferAmount +
         " money"
     );
+    requestVerificationClicked = true;
   };
 </script>
 

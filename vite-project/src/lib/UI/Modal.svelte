@@ -1,24 +1,70 @@
-<script>
+<script type="ts">
   import Backdrop from "./Backdrop.svelte";
   import { Circle } from "svelte-loading-spinners";
+  import { Link } from "svelte-navigator";
+  let show = true;
+  export let buttonType: string;
+
+  const clicked = () => {
+    return (show = false);
+  };
 </script>
 
-<Backdrop />
-<div class="modal"><slot />></div>
+<Backdrop {show} />
+<div
+  class="modal"
+  style="
+    transform: {show ? 'translateY(0)' : 'translateY(-100vh)'};
+    opacity: {show ? '1' : '0'};"
+>
+  <div class="modalContents">
+    <div class="closeButton">
+      {#if buttonType == "transfer"}
+        <Link to="/" on:click={clicked}>x</Link>
+      {:else if buttonType == "requestVerification"}
+        <button on:click={clicked}>x</button>
+      {/if}
+    </div>
+    <div class="infocard"><slot /></div>
+  </div>
+</div>
 
 <style>
   .modal {
     position: fixed;
     z-index: 500;
     background-color: #fff;
-    width: 50%;
+    width: 200px;
     justify-self: center;
     display: grid;
-    justify-content: center;
-    align-items: center;
-    padding: 50px;
+    padding: 5px 0px 15px 0px;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
     border-radius: 7px;
+  }
+
+  .closeButton {
+    align-self: start;
+    justify-self: end;
+    font-size: 1rem;
+  }
+  button {
+    background-color: transparent;
+    font-weight: 600;
+    color: #4d4d4d;
+  }
+  .modalContents {
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-rows: 20px 1fr;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .infocard {
+    display: block;
+    width: 90%;
+    height: 100px;
+    align-self: center;
+    justify-self: center;
   }
 </style>
