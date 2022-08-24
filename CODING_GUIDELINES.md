@@ -7,6 +7,15 @@ These are focused on keeping us moving quickly:
 - Moving quickly makes customers happy.
 - Moving quickly help keep engineers motivated, as they can focus on building things rather wrestling with a giant code base to build things.
 
+## Ask for help
+
+If it feels like a grind:
+
+- Ask for help! It's better to have two people working on something than for one person to feel like they're not making any progress.
+- [Talk to the duck](https://www.mindovermachines.com/when-you-get-stuck-talk-to-the-duck/)
+- Try and make a minimal version for Stack Overflow or Solana Stack Exchange
+- Go for a walk and think about it
+
 ## Code is written more than it is read
 
 - You're writing code to be be read, understood, and changed by your colleagues.
@@ -25,6 +34,14 @@ That way the next person know if/when it's fixed:
 ```
 # TODO: add code to close sockets
 # See https://github.com/PLhery/node-twitter-api-v2/issues/326
+```
+
+## It's OK to hack things to move quickly, just add a TODO
+
+It's ideal to hack things, just let people know why:
+
+```
+# TODO: we should check if the user has a banana here
 ```
 
 ## Favour readability and simplicity over speed
@@ -71,6 +88,8 @@ export const scrypt = promisify(scryptCallback);
 ```
 
 This way we can jump `import { script } from './functions'` and have a working `scrypt` we can use with `async/await`
+
+There's a `sleep()` function you can use instead of timeouts. Just `await sleep(5 * SECONDS)` or similar.
 
 ## Use the SECONDS / MINUTES etc constants for times
 
