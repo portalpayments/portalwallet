@@ -87,17 +87,15 @@ New tokens are issued directly into users Associated Token Accounts. For example
 
 ```
 HD keypair
-  HD Wallet 1 (keypair generated from HD keypairs)
+  HD Wallet 1 (keypair generated from HD keypairs) [owned program by system account]
     Native Token Account
-    USDC Account 1
+    SPL Token account for USDC (associated with USDCs mint)
       USDC
-    USDC Account 2
-      USDC
-    Other Account
-      Other token
+    SPL Token account for an NFT (associated with the NFTs mint)
+      NFT
   HD Wallet 2 (keypair generated from HD keypairs)
     Native Token Account
-    USDC Account 1
+    SPL Token account for USDC (associated with USDCs mint)
       USDC
 
 ```
