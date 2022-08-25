@@ -87,7 +87,7 @@
         <Navbar bind:currentFeature />
       </Route>
     {:else}
-      <Route path="/" primary={false}><Auth /></Route>
+      <Route path="/" primary={false}><div class="login"><Auth /></div></Route>
     {/if}
   </main>
 </Router>
@@ -119,6 +119,17 @@
     overflow: hidden;
     grid-auto-flow: row;
     grid-template-rows: 80px 1fr;
+  }
+  .login {
+    min-width: var(--wallet-width);
+    max-width: var(--wallet-width);
+    min-height: var(--wallet-height);
+    max-height: var(--wallet-height);
+    overflow: hidden;
+    grid-auto-flow: row;
+    grid-template-rows: 1fr;
+    justify-content: center;
+    align-items: center;
   }
   .feature {
     background-color: white;
