@@ -33,9 +33,9 @@
   let transferAmount: number | null;
 
   const ANONYMOUS_WALLET_ADDRESS =
-    "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
+    "ffffffffffffffffffffffffffffffffffffffffffff";
   const VERIFIED_WALLET_ADDRESS =
-    "7FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
+    "gggggggggggggggggggggggggggggggggggggggggggg";
 
   const handleKeyupWalletAddress = async () => {
     if (walletAddress === ANONYMOUS_WALLET_ADDRESS) {

@@ -7,7 +7,7 @@ import {
 import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { connect, putSolIntoWallet } from "./vmwallet";
 import { deepClone, log, stringify } from "./functions";
-import { IDENTITY_TOKEN_NAME, URLS } from "./constants";
+import { IDENTITY_TOKEN_NAME, MIKES_WALLET } from "./constants";
 import { BN as BigNumber } from "bn.js";
 
 describe(`identity tokens`, () => {
@@ -35,7 +35,7 @@ describe(`identity tokens`, () => {
       // In future this can be removed, however right now Solana
       // token standard doesn't support non-transferrable tokens
       // So check that that token wasn't issued against another wallet and transferred
-      issuedAgainst: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+      issuedAgainst: MIKES_WALLET,
       claims: {
         type: "individual",
         givenName: "Micheal-Sean",

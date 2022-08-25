@@ -37,7 +37,7 @@
     },
     // An anonymous wallet pending verification
     {
-      address: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+      address: "dddddddddddddddddddddddddddddddddddddddddddd",
       image: null,
       name: null,
       isAnonymous: true,

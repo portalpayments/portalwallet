@@ -1,17 +1,17 @@
 import { getTwitterRegistry } from "@bonfida/spl-name-service";
 import { Connection } from "@solana/web3.js";
-import { URLS } from "./constants";
+import {
+  JOE_MACCANNS_WALLET,
+  MIKES_WALLET,
+  SHAQS_WALLET,
+  URLS,
+} from "./constants";
 import {
   getHandleForWallet,
   checkIsVerified,
   checkIsWalletVerifiedViaTwitter,
   closeConnection,
 } from "./sns-twitter";
-// Shaq is one of the only people I know
-// with a verified Twitter handle and a Solana wallet.
-const SHAQS_WALLET = "gacMrsrxNisAhCfgsUAVbwmTC3w9nJB6NychLAnTQFv";
-const JOE_MACCANNS_WALLET = "5CJFJoKiZ14tdsjtWgKGQVuVkYW7pcWUR4LFSvDELFod";
-const MIKES_WALLET = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
 
 // Also tried 'raj', 'joker', 'hge' - nobody has reverse records to match Twitter to therr identity
 
@@ -24,7 +24,7 @@ describe("Wallet to Twitter mapping", () => {
     expect(await getHandleForWallet(JOE_MACCANNS_WALLET)).toBeNull();
   });
 
-  test(`Shows mapping to MIke's Twitter account`, async () => {
+  test(`Shows mapping to Mike's Twitter account`, async () => {
     expect(await getHandleForWallet(MIKES_WALLET)).toEqual("mikemaccana");
   });
 });

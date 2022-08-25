@@ -2,6 +2,14 @@ import { clusterApiUrl, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
 export const IDENTITY_TOKEN_NAME = "Portal Identity Token";
 
+// Shaq is one of the only people I know
+// with a verified Twitter handle and a Solana wallet.
+export const SHAQS_WALLET = "gacMrsrxNisAhCfgsUAVbwmTC3w9nJB6NychLAnTQFv";
+export const JOE_MACCANNS_WALLET =
+  "5CJFJoKiZ14tdsjtWgKGQVuVkYW7pcWUR4LFSvDELFod";
+export const MIKES_WALLET = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
+export const VAHEHS_WALLET = "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG";
+
 // From https://www.circle.com/en/usdc/developers
 export const USDC_MAINNET_MINT_ACCOUNT =
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
