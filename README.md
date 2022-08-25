@@ -64,6 +64,21 @@ solana program dump -u m ${METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS} metaplex_tok
 
 ```
 
+## How the Portal Identity Token works
+
+### Getting verified
+
+1. There's a mint account with a small balance of Sol
+2. The mint account mints a Portal Identity Token (which is an NFT) directly to a recipient's wallet
+
+### Verifying a user
+
+1. The verifying account looks for a ATA for the portal identity token mint on the recipient account
+2. We then read the token and check:
+
+- That the token has been signed by our mint account
+- That the token is for our recipient account
+
 ## Minting
 
 Each mint has a single accounts - the docs at https://solanacookbook.com/references/token.html#how-to-get-a-token-mint.
