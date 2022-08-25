@@ -39,11 +39,9 @@ export const mintIdentityToken = async (
 
   expect(uploadResponse.uri);
 
-  // https://github.com/metaplex-foundation/js#create
-  // Full parameters at https://github.com/metaplex-foundation/js/blob/main/packages/js/src/plugins/nftModule/createNft.ts#L64
-
   // From https://github.com/metaplex-foundation/js#create
   // This will take care of creating the mint account, the associated token account, the metadata PDA and the original edition PDA (a.k.a. the master edition) for you.
+  // Full parameters at https://github.com/metaplex-foundation/js/blob/main/packages/js/src/plugins/nftModule/createNft.ts#L64
 
   // See https://github.com/metaplex-foundation/js-examples/blob/main/getting-started-expressjs/createNFT.cjs too
 
@@ -51,7 +49,7 @@ export const mintIdentityToken = async (
     .create({
       uri: uploadResponse.uri, // "https://arweave.net/123",
       name,
-      sellerFeeBasisPoints: 500, // 500 represents 5.00%.
+      sellerFeeBasisPoints: 0, // 500 would represent 5.00%.
     })
     .run();
 

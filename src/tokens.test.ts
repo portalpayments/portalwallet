@@ -206,7 +206,7 @@ describe("minting", () => {
   });
 
   test(`Can send token from Alice's token account to Bob's token account`, async () => {
-    // Alice needs some money to make Bob's token account
+    // Alice needs some money to pay transaction fee to send the USDC
     await putSolIntoWallet(
       connection,
       alice.publicKey,
@@ -224,7 +224,7 @@ describe("minting", () => {
     expect(signature);
   });
 
-  test(`Can find Mike's USDC account from his regular account`, async () => {
+  test(`Can find Bob's USDC account from his regular account and he has recieved the money`, async () => {
     // See https://solana.stackexchange.com/questions/1685/how-do-i-prevent-open-handles-issues-when-using-the-solana-connection-object
     let parsedTokenAccountsByOwner =
       await connection.getParsedTokenAccountsByOwner(bob.publicKey, {

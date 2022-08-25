@@ -93,7 +93,7 @@ describe(`identity tokens`, () => {
         uri: expect.any(String),
         isMutable: true,
         primarySaleHappened: false,
-        sellerFeeBasisPoints: 500,
+        sellerFeeBasisPoints: 0,
         editionNonce: expect.any(Number),
         creators: [
           {
@@ -177,7 +177,7 @@ describe(`identity tokens`, () => {
     }
     const nft = await metaplex.nfts().findByMint({ mintAddress }).run();
 
-    const mintAuthorityAddress = nft.mint.mintAuthorityAddress;
+    const artistAddress = nft.mint.mintAuthorityAddress;
     const nftAddress = nft.address;
 
     expect(nft).toEqual({
@@ -191,7 +191,7 @@ describe(`identity tokens`, () => {
       uri: expect.any(String),
       isMutable: true,
       primarySaleHappened: false,
-      sellerFeeBasisPoints: 500,
+      sellerFeeBasisPoints: 0,
       editionNonce: expect.any(Number),
       creators: [
         {
@@ -209,8 +209,8 @@ describe(`identity tokens`, () => {
       mint: {
         model: "mint",
         address: nftAddress,
-        mintAuthorityAddress,
-        freezeAuthorityAddress: mintAuthorityAddress,
+        mintAuthorityAddress: artistAddress,
+        freezeAuthorityAddress: artistAddress,
         decimals: 0,
         supply: {
           // one
