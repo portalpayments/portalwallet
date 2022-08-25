@@ -2,15 +2,12 @@ import {
   getMint,
   getAccount,
   Account,
-  getOrCreateAssociatedTokenAccount,
-  transfer,
   AccountLayout,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
-import { USD_DECIMALS, SECONDS, DEPOSIT } from "./constants";
-import { getABetterErrorMessage } from "./errors";
-import { log, stringify, deepClone } from "./functions";
+import { USD_DECIMALS, SECONDS, ENOUGH_TO_MAKE_A_NEW_TOKEN } from "./constants";
+import { log } from "./functions";
 import {
   createMintAccount,
   createTokenAccount,
@@ -18,14 +15,7 @@ import {
   makeTokenAccount,
   sendUSDC,
 } from "./tokens";
-import {
-  connect,
-  putSolIntoWallet,
-  checkAccountExists,
-  getAccountBalance,
-} from "./vmwallet";
-
-const ENOUGH_TO_MAKE_A_NEW_TOKEN = 1_000_000_000;
+import { connect, putSolIntoWallet, checkAccountExists } from "./vmwallet";
 
 const AMOUNT_OF_USDC_TO_SEND = 50;
 

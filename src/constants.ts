@@ -40,8 +40,9 @@ export const SOL = LAMPORTS_PER_SOL;
 // see https://docs.solana.com/developing/programming-model/accounts#rent
 // but too many lamports may hit airdrop limit for some test networks.
 export const DEPOSIT = 1_000_000;
-// Likewise 1_000_000 isn't enough to make a new token
-export const NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN = 1_000_000;
+
+export const ENOUGH_TO_MAKE_A_NEW_TOKEN = 1_000_000_000;
+export const NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN = 500_000;
 
 export const USD = Number(`1e${USD_DECIMALS}`);
 

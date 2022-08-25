@@ -7,7 +7,13 @@ import {
 import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { connect, putSolIntoWallet } from "./vmwallet";
 import { deepClone, log, stringify } from "./functions";
-import { IDENTITY_TOKEN_NAME, MIKES_WALLET, ONE, ZERO } from "./constants";
+import {
+  IDENTITY_TOKEN_NAME,
+  MIKES_WALLET,
+  ONE,
+  ZERO,
+  ENOUGH_TO_MAKE_A_NEW_TOKEN,
+} from "./constants";
 import { BN as BigNumber } from "bn.js";
 
 // Quiet utils.log() during tests
