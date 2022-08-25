@@ -1,5 +1,8 @@
 import { Connection, PublicKey } from "@solana/web3.js";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import {
+  getOrCreateAssociatedTokenAccount,
+  TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
 import {
   connect,
   getAccountBalance,
@@ -11,6 +14,8 @@ import { USDC_MAINNET_MINT_ACCOUNT } from "./constants";
 import { getAllNftsFromAWallet } from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
+import { log, stringify } from "./functions";
+import BN from "bn.js";
 
 dotenv.config();
 
@@ -44,12 +49,14 @@ describe(`mainnet integration tests`, () => {
       throw new Error(`Couldn't get a connection, can't continue`);
     }
     const NFTs = await getAllNftsFromAWallet(mainNetConnection, mikeWallet);
+    // Solscan calls this the 'SPL Token Address'
     const NFTaddress = new PublicKey(
       "8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk"
     );
     const artist = new PublicKey(
       "9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX"
     );
+
     expect(NFTs).toEqual([
       {
         model: "metadata",
@@ -80,6 +87,30 @@ describe(`mainnet integration tests`, () => {
         uses: null,
       },
     ]);
+  });
+
+  test(`We can find the Associated Token Account for the Agiza girl mint`, async () => {
+    if (!mainNetConnection) {
+      throw new Error(`Couldn't get a connection, can't continue`);
+    }
+
+    const agizaGirlMint = "8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk";
+
+    const agizaAssociatedTokenAccount = await getOrCreateAssociatedTokenAccount(
+      mainNetConnection,
+      keyPair,
+      new PublicKey(agizaGirlMint),
+      mikePublicKey
+    );
+
+    const address = agizaAssociatedTokenAccount.address.toBase58();
+    const mint = agizaAssociatedTokenAccount.mint.toBase58();
+    const owner = agizaAssociatedTokenAccount.owner.toBase58();
+
+    // https://solscan.io/account/HxunVfDmoeAKmNVxt36jjcBq9p3Zy1Bmocx9sVwJNXdP
+    expect(address).toEqual("HxunVfDmoeAKmNVxt36jjcBq9p3Zy1Bmocx9sVwJNXdP");
+    expect(mint).toEqual(agizaGirlMint);
+    expect(owner).toEqual(mikePublicKey.toBase58());
   });
 
   test(`We can get Mike's SOL balance`, async () => {
