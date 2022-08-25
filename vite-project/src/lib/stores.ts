@@ -16,4 +16,4 @@ export const User = function () {
 }()
 
 //src https://svelte.dev/repl/cc54944f9c2f44209d6da7344ea4c101?version=3.17.2
-export const authStore = writable(null); 
+export const authStore = writable({isLoggedIn: false, name:''}); 

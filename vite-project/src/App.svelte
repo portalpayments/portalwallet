@@ -9,16 +9,12 @@
   import { getPrivateKey } from "./lib/utils";
   import { getKeypairFromString, connect } from "../../src/vmwallet";
   import { log } from "../../src/functions";
-  import Login from "./lib/Login/Login.svelte";
+  import Auth from "./lib/Auth/Auth.svelte";
 
-  let user;
+  import { connection, keyPair, authStore } from "./lib/stores";
 
-  const unUser = User.subscribe((v) => (user = v));
-  onDestroy(unUser);
-
-  $: isLoggedIn = !!user;
-
-  import { connection, keyPair } from "./lib/stores";
+  $authStore;
+  console.log($authStore.isLoggedIn);
 
   connection.subscribe((newValue) => {
     if (newValue) {
@@ -57,17 +53,21 @@
 
 <Router>
   <main>
-    {#if isLoggedIn}
+    {#if $authStore.isLoggedIn}
       <Route path="addMoneyToAccount"
         ><div class="header-and-features">
           adding money to account here
         </div></Route
       >
-      <Route path="transferMoney"><TransferPage /></Route>
+      <Route path="/transferMoney"><TransferPage /></Route>
 
       <Route path="transactions"
-        ><div class="header-and-features">Here go transactions</div></Route
+        ><div class="header-and-features">
+          Here go transactions
+          <Auth />
+        </div></Route
       >
+      <Route path="logout"><Auth /></Route>
       <!-- primary=false to avoid a focus warning from the Svelte router -->
       <Route path="/" primary={false}>
         <div class="header-and-features">
@@ -87,7 +87,7 @@
         <Navbar bind:currentFeature />
       </Route>
     {:else}
-      <Route path="/" primary={false} />
+      <Route path="/" primary={false}><Auth /></Route>
     {/if}
   </main>
 </Router>
