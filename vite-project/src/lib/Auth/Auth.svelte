@@ -1,25 +1,18 @@
 <script type="ts">
   import { authStore } from "../stores";
   import PortalLogoSVG from "../../assets/PortalLogo.svg";
+  import { sleep } from "../../../../src/functions";
+  import { SECOND } from "../../../../src/constants";
 
   let password = "";
   export let name = "Mike";
 
-  let promise; // nothing to start with
-
-  function login(password) {
+  async function login(password) {
+    await sleep(1 * SECOND);
     if (password === "testUser") {
-      promise = new Promise((yay) =>
-        setTimeout(() => yay("logged in!"), 1000)
-      ).then((res) => {
-        $authStore.isLoggedIn = true;
-      });
+      $authStore.isLoggedIn = true;
     } else {
-      promise = new Promise((yay) =>
-        setTimeout(() => yay("logging in failed!"), 1000)
-      ).then((res) => {
-        alert("entered password is wrong");
-      });
+      alert("entered password is wrong");
     }
   }
 
@@ -37,7 +30,13 @@
       <div class="welcomeMsg">
         Welcome Back <span style="font-weight:700;">{name}</span>!
       </div>
-      <form on:submit|preventDefault={login(password)}>
+      <form
+        on:submit|preventDefault={() => {
+          // Small trick to use an async function in a click handler
+          login(password);
+          return false;
+        }}
+      >
         <div class="passwordContainer">
           <div class="password-prompt">Enter your password</div>
           <input type="password" bind:value={password} />
