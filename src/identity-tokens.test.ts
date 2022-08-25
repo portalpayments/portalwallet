@@ -7,8 +7,14 @@ import {
 import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { connect, putSolIntoWallet } from "./vmwallet";
 import { deepClone, log, stringify } from "./functions";
-import { IDENTITY_TOKEN_NAME, MIKES_WALLET } from "./constants";
+import { IDENTITY_TOKEN_NAME, MIKES_WALLET, ONE, ZERO } from "./constants";
 import { BN as BigNumber } from "bn.js";
+
+// Quiet utils.log() during tests
+jest.mock("./functions", () => ({
+  ...jest.requireActual("./functions"),
+  log: jest.fn(),
+}));
 
 describe(`identity tokens`, () => {
   let connection: Connection;
@@ -62,10 +68,6 @@ describe(`identity tokens`, () => {
     const tokenAddress = createOutput.tokenAddress;
     const updateAuthorityAddress = createOutput.nft.updateAuthorityAddress;
 
-    // Make zero and one work
-    const one = new BigNumber(1);
-    const zero = new BigNumber(0);
-
     expect(createOutput).toEqual({
       response: {
         signature: expect.any(String),
@@ -115,7 +117,7 @@ describe(`identity tokens`, () => {
           freezeAuthorityAddress: expect.any(PublicKey), //masterEditionAddressPDA,
           decimals: 0,
           supply: {
-            basisPoints: one,
+            basisPoints: ONE,
             currency: {
               symbol: "Token",
               decimals: 0,
@@ -136,7 +138,7 @@ describe(`identity tokens`, () => {
           mintAddress: mintAddress,
           ownerAddress: testIdentityTokenIssuer.publicKey,
           amount: {
-            basisPoints: one,
+            basisPoints: ONE,
             currency: {
               symbol: "Token",
               decimals: 0,
@@ -146,7 +148,7 @@ describe(`identity tokens`, () => {
           closeAuthorityAddress: null,
           delegateAddress: null,
           delegateAmount: {
-            basisPoints: zero,
+            basisPoints: ZERO,
             currency: {
               symbol: "Token",
               decimals: 0,
@@ -213,8 +215,7 @@ describe(`identity tokens`, () => {
         freezeAuthorityAddress: artistAddress,
         decimals: 0,
         supply: {
-          // one
-          basisPoints: expect.any(BigNumber),
+          basisPoints: ONE,
           currency: {
             symbol: "Token",
             decimals: 0,

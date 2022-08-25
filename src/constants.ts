@@ -1,4 +1,5 @@
 import { clusterApiUrl, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { BN as BigNumber } from "bn.js";
 
 export const IDENTITY_TOKEN_NAME = "Portal Identity Token";
 
@@ -68,3 +69,7 @@ export const SECONDS = SECOND;
 
 export const MINUTE = 60 * SECONDS;
 export const MINUTES = MINUTE;
+
+// Make zero and one work
+export const ZERO = new BigNumber(0);
+export const ONE = new BigNumber(1);
