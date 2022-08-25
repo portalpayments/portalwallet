@@ -1,6 +1,6 @@
 <script type="ts">
   import SuccessfulAction from "../../assets/SuccessfulAction.svg";
-  export let emailAddress: string | null;
+  let emailAddress: string | null;
   export let destinationWalletAddress: string | null;
   export let transferAmount: number | null;
   let requestVerEmailSentSuccessfully = false;

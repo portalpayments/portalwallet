@@ -9,8 +9,12 @@
   import { getPrivateKey } from "./lib/utils";
   import { getKeypairFromString, connect } from "../../src/vmwallet";
   import { log } from "../../src/functions";
+  import Auth from "./lib/Auth/Auth.svelte";
 
-  import { connection, keyPair } from "./lib/stores";
+  import { connection, keyPair, authStore } from "./lib/stores";
+
+  $authStore;
+  console.log($authStore.isLoggedIn);
 
   connection.subscribe((newValue) => {
     if (newValue) {
@@ -49,34 +53,42 @@
 
 <Router>
   <main>
-    <Route path="addMoneyToAccount"
-      ><div class="header-and-features">
-        adding money to account here
-      </div></Route
-    >
-    <Route path="transferMoney"><TransferPage /></Route>
+    {#if $authStore.isLoggedIn}
+      <Route path="addMoneyToAccount"
+        ><div class="header-and-features">
+          adding money to account here
+        </div></Route
+      >
+      <Route path="/transferMoney"><TransferPage /></Route>
 
-    <Route path="transactions"
-      ><div class="header-and-features">Here go transactions</div></Route
-    >
-    <!-- primary=false to avoid a focus warning from the Svelte router -->
-    <Route path="/" primary={false}>
-      <div class="header-and-features">
-        <TopToolbar {...testUser} />
-        <div class="features">
-          <div class="feature">
-            {#if currentFeature === 0}
-              <HomeScreen />
-            {:else if currentFeature === 1}
-              <ContactsPage />
-            {:else if currentFeature === 2}
-              <Collectables />
-            {/if}
+      <Route path="transactions"
+        ><div class="header-and-features">
+          Here go transactions
+          <Auth />
+        </div></Route
+      >
+      <Route path="logout"><Auth /></Route>
+      <!-- primary=false to avoid a focus warning from the Svelte router -->
+      <Route path="/" primary={false}>
+        <div class="header-and-features">
+          <TopToolbar {...testUser} />
+          <div class="features">
+            <div class="feature">
+              {#if currentFeature === 0}
+                <HomeScreen />
+              {:else if currentFeature === 1}
+                <ContactsPage />
+              {:else if currentFeature === 2}
+                <Collectables />
+              {/if}
+            </div>
           </div>
         </div>
-      </div>
-      <Navbar bind:currentFeature />
-    </Route>
+        <Navbar bind:currentFeature />
+      </Route>
+    {:else}
+      <Route path="/" primary={false}><div class="login"><Auth /></div></Route>
+    {/if}
   </main>
 </Router>
 
@@ -107,6 +119,17 @@
     overflow: hidden;
     grid-auto-flow: row;
     grid-template-rows: 80px 1fr;
+  }
+  .login {
+    min-width: var(--wallet-width);
+    max-width: var(--wallet-width);
+    min-height: var(--wallet-height);
+    max-height: var(--wallet-height);
+    overflow: hidden;
+    grid-auto-flow: row;
+    grid-template-rows: 1fr;
+    justify-content: center;
+    align-items: center;
   }
   .feature {
     background-color: white;

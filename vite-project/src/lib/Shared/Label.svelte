@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { LabelColor } from "../constants";
   export let color: LabelColor;
-  export let size: String;
+  export let size: string | null = "";
 </script>
 
 <!-- See https://svelte.dev/tutorial/slots -->
