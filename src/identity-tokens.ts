@@ -12,6 +12,9 @@ import {
   mockStorage,
 } from "@metaplex-foundation/js";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { IDENTITY_TOKEN_NAME } from "./constants";
+
+const name = IDENTITY_TOKEN_NAME;
 
 export const getMetaplex = (
   connection: Connection,
@@ -24,10 +27,10 @@ export const getMetaplex = (
   return metaplex;
 };
 
+// Create an identityToken, it will be owned by identityTokenIssuer
 export const mintIdentityToken = async (
   connection: Connection,
   identityTokenIssuer: Keypair,
-  name: string,
   metadata: Record<string, any>
 ) => {
   const metaplex = getMetaplex(connection, identityTokenIssuer);

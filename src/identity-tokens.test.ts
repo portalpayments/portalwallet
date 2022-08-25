@@ -11,7 +11,6 @@ import { IDENTITY_TOKEN_NAME, MIKES_WALLET } from "./constants";
 import { BN as BigNumber } from "bn.js";
 
 describe(`identity tokens`, () => {
-  let metaplex: Metaplex;
   let connection: Connection;
   let testIdentityTokenIssuer = new Keypair();
   let mintAddress: PublicKey | null = null;
@@ -47,7 +46,6 @@ describe(`identity tokens`, () => {
     const createOutput = await mintIdentityToken(
       connection,
       testIdentityTokenIssuer,
-      name,
       metadata
     );
 
