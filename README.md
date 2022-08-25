@@ -2,7 +2,9 @@
 
 ## A crypto wallet for regular people
 
-![Build status](https://github.com/mikemaccana/vmwallet/actions/workflows/tests.yaml/badge.svg)
+[<img src="https://github.com/mikemaccana/vmwallet/actions/workflows/tests.yaml/badge.svg" alt=Build status"/>
+](https://github.com/portalwallet/portalwallet/actions)
+
 
 ## Development
 
