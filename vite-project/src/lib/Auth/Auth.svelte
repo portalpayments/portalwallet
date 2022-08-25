@@ -27,7 +27,7 @@
   {#if !$authStore.isLoggedIn}
     <div class="login">
       <img src={PortalLogoSVG} alt="Portal Logo" />
-      <div class="welcomeMsg">
+      <div class="welcomeMessage">
         Welcome Back <span style="font-weight:700;">{name}</span>!
       </div>
       <form
@@ -64,7 +64,7 @@
     width: 180px;
     justify-self: center;
   }
-  .welcomeMsg {
+  .welcomeMessage {
     font-size: 1.2rem;
     font-weight: 500;
     color: #4d4d4d;
