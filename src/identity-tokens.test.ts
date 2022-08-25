@@ -182,6 +182,8 @@ describe(`identity tokens`, () => {
     const artistAddress = nft.mint.mintAuthorityAddress;
     const nftAddress = nft.address;
 
+    log(stringify(nft));
+
     expect(nft).toEqual({
       model: "nft",
       updateAuthorityAddress: expect.any(PublicKey),
