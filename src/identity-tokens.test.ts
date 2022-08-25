@@ -11,10 +11,10 @@ import { IDENTITY_TOKEN_NAME, MIKES_WALLET, ONE, ZERO } from "./constants";
 import { BN as BigNumber } from "bn.js";
 
 // Quiet utils.log() during tests
-jest.mock("./functions", () => ({
-  ...jest.requireActual("./functions"),
-  log: jest.fn(),
-}));
+// jest.mock("./functions", () => ({
+//   ...jest.requireActual("./functions"),
+//   log: jest.fn(),
+// }));
 
 describe(`identity tokens`, () => {
   let connection: Connection;
