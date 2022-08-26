@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
   import { log, stringify, asyncMap } from "../../../../src/functions";
   import { getAllNftsFromAWallet } from "../../../../src/identity-tokens";
   import { httpGet } from "../utils";

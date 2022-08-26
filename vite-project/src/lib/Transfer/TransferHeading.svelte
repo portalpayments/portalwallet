@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
   import { Link } from "svelte-navigator";
   import AnonymousSvg from "../../assets/ProfilePics/anonymous.svg";
   import JohnPng from "../../assets/ProfilePics/john.png";

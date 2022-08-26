@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
   import Backdrop from "./Backdrop.svelte";
   import { Link } from "svelte-navigator";
   let show = true;

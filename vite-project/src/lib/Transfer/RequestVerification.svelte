@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
   import SuccessfulAction from "../../assets/SuccessfulAction.svg";
   let emailAddress: string | null;
   export let destinationWalletAddress: string | null;

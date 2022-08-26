@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
   import SuccessfulAction from "../../assets/SuccessfulAction.svg";
   import { truncateWallet } from "../utils";
   import USDCSVG from "../../assets/usdc.svg";
