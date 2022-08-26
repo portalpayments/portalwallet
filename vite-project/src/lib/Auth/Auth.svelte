@@ -47,7 +47,9 @@
     </div>
   {:else}
     <form on:submit|preventDefault={logout}>
-      <button type="submit" class="logoutButton">Log out</button>
+      <button type="submit" class="logoutButton logout-button-topBar"
+        >Log out</button
+      >
     </form>
   {/if}
 </div>
@@ -106,5 +108,10 @@
   .logoutButton {
     background-color: rgba(255, 96, 134, 0.33);
     color: rgb(255, 96, 134);
+  }
+  .logout-button-topBar {
+    padding: 8px 0px;
+    background-color: transparent;
+    font-size: 1rem;
   }
 </style>
