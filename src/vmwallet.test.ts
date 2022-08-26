@@ -40,6 +40,17 @@ describe(`mainnet integration tests`, () => {
   const mikePublicKey = new PublicKey(actualPublicKey);
   const mikeWallet = new PublicKey(actualPublicKey);
 
+  // Artist that made Agiza and Kimzo
+  const artist = new PublicKey("9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX");
+
+  // Solscan calls this the 'SPL Token Address'
+  const agizaNFTaddress = new PublicKey(
+    "8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk"
+  );
+  const kimzoNFTaddress = new PublicKey(
+    "C5veJJL3hUq9s3aUymWjREGYoqbWSzX8aNRaZ9STSCNM"
+  );
+
   beforeAll(async () => {
     mainNetConnection = await connect("mainNetBeta");
   });
@@ -48,45 +59,66 @@ describe(`mainnet integration tests`, () => {
     if (!mainNetConnection) {
       throw new Error(`Couldn't get a connection, can't continue`);
     }
-    const NFTs = await getAllNftsFromAWallet(mainNetConnection, mikeWallet);
-    // Solscan calls this the 'SPL Token Address'
-    const NFTaddress = new PublicKey(
-      "8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk"
-    );
-    const artist = new PublicKey(
-      "9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX"
-    );
+    const nfts = await getAllNftsFromAWallet(mainNetConnection, mikeWallet);
 
-    expect(NFTs).toEqual([
-      {
-        model: "metadata",
-        // https://solscan.io/token/8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk
-        address: new Pda("2TQ464nFCwPs45wYsXXYpkhY7wgUyEVzpecWp1RBMeDU", 255),
-        mintAddress: NFTaddress,
-        updateAuthorityAddress: artist,
-        json: null,
-        jsonLoaded: false,
-        name: "Agiza",
-        symbol: "",
-        // JSON containing the NFT
-        uri: "https://arweave.net/buMXtKDU0stCY8fM8qyENwLlTgqpXyypdojPQ3mWWhU",
-        isMutable: true,
-        primarySaleHappened: true,
-        sellerFeeBasisPoints: 1000,
-        editionNonce: 254,
-        creators: [
-          {
-            address: artist,
-            verified: true,
-            share: 100,
-          },
-        ],
-        tokenStandard: 0,
-        collection: null,
-        collectionDetails: null,
-        uses: null,
-      },
-    ]);
+    const kimzo = nfts.find((nft) => nft.name === "Kimzo");
+    const agiza = nfts.find((nft) => nft.name === "Agiza");
+
+    expect(kimzo).toMatchObject({
+      model: "metadata",
+      address: new Pda("57Xq2KebNs2UdpMhekf2JJjjzHv3ijV7H9DiG5UD2FEU", 255),
+      mintAddress: kimzoNFTaddress,
+      updateAuthorityAddress: artist,
+      json: null,
+      jsonLoaded: false,
+      name: "Kimzo",
+      symbol: "",
+      uri: "https://arweave.net/wkFGaLHMKsAZ7he_XvK3uQXTy3j0kUYiwng1mELmNVk",
+      isMutable: true,
+      primarySaleHappened: true,
+      sellerFeeBasisPoints: 1000,
+      editionNonce: 255,
+      creators: [
+        {
+          address: artist,
+          verified: true,
+          share: 100,
+        },
+      ],
+      tokenStandard: 0,
+      collection: null,
+      collectionDetails: null,
+      uses: null,
+    });
+
+    expect(agiza).toMatchObject({
+      model: "metadata",
+      // https://solscan.io/token/8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk
+      address: new Pda("2TQ464nFCwPs45wYsXXYpkhY7wgUyEVzpecWp1RBMeDU", 255),
+      mintAddress: agizaNFTaddress,
+      updateAuthorityAddress: artist,
+      json: null,
+      jsonLoaded: false,
+      name: "Agiza",
+      symbol: "",
+      // JSON containing the NFT
+      uri: "https://arweave.net/buMXtKDU0stCY8fM8qyENwLlTgqpXyypdojPQ3mWWhU",
+      isMutable: true,
+      primarySaleHappened: true,
+      sellerFeeBasisPoints: 1000,
+      editionNonce: 254,
+      creators: [
+        {
+          address: artist,
+          verified: true,
+          share: 100,
+        },
+      ],
+      tokenStandard: 0,
+      collection: null,
+      collectionDetails: null,
+      uses: null,
+    });
   });
 
   test(`We can find the Associated Token Account for the Agiza girl mint`, async () => {
@@ -94,23 +126,42 @@ describe(`mainnet integration tests`, () => {
       throw new Error(`Couldn't get a connection, can't continue`);
     }
 
-    const agizaGirlMint = "8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk";
-
     const agizaAssociatedTokenAccount = await getOrCreateAssociatedTokenAccount(
       mainNetConnection,
       keyPair,
-      new PublicKey(agizaGirlMint),
+      new PublicKey(agizaNFTaddress),
       mikePublicKey
     );
 
-    const address = agizaAssociatedTokenAccount.address.toBase58();
-    const mint = agizaAssociatedTokenAccount.mint.toBase58();
-    const owner = agizaAssociatedTokenAccount.owner.toBase58();
+    const firstNFTAddress = agizaAssociatedTokenAccount.address.toBase58();
+    const firstNFTMint = agizaAssociatedTokenAccount.mint.toBase58();
+    const firstNFTOwner = agizaAssociatedTokenAccount.owner.toBase58();
 
     // https://solscan.io/account/HxunVfDmoeAKmNVxt36jjcBq9p3Zy1Bmocx9sVwJNXdP
-    expect(address).toEqual("HxunVfDmoeAKmNVxt36jjcBq9p3Zy1Bmocx9sVwJNXdP");
-    expect(mint).toEqual(agizaGirlMint);
-    expect(owner).toEqual(mikePublicKey.toBase58());
+
+    expect(firstNFTAddress).toEqual(
+      "HxunVfDmoeAKmNVxt36jjcBq9p3Zy1Bmocx9sVwJNXdP"
+    );
+    expect(firstNFTMint).toEqual(agizaNFTaddress.toBase58());
+    expect(firstNFTOwner).toEqual(mikePublicKey.toBase58());
+
+    const kimzoAssociatedTokenAccount = await getOrCreateAssociatedTokenAccount(
+      mainNetConnection,
+      keyPair,
+      new PublicKey(kimzoNFTaddress),
+      mikePublicKey
+    );
+
+    const secondNFTAddress = kimzoAssociatedTokenAccount.address.toBase58();
+    const secondNFTMint = kimzoAssociatedTokenAccount.mint.toBase58();
+    const secondNFTOwner = kimzoAssociatedTokenAccount.owner.toBase58();
+
+    // https://solscan.io/account/6YDDeYLruEUeeJ1Y2GDXQ1wSrr4wJvZZefiVEtcsnpCp
+    expect(secondNFTAddress).toEqual(
+      "6YDDeYLruEUeeJ1Y2GDXQ1wSrr4wJvZZefiVEtcsnpCp"
+    );
+    expect(secondNFTMint).toEqual(kimzoNFTaddress.toBase58());
+    expect(secondNFTOwner).toEqual(mikePublicKey.toBase58());
   });
 
   test(`We can get Mike's SOL balance`, async () => {

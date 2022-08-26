@@ -10,10 +10,16 @@ export const JOE_MACCANNS_WALLET =
   "5CJFJoKiZ14tdsjtWgKGQVuVkYW7pcWUR4LFSvDELFod";
 export const MIKES_WALLET = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
 export const VAHEHS_WALLET = "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG";
+export const PORTAL_IDENTITY_TOKEN_WALLET =
+  "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9";
 
 // From https://www.circle.com/en/usdc/developers
 export const USDC_MAINNET_MINT_ACCOUNT =
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+
+// https://developers.circle.com/docs/usdc-on-testnet#usdc-on-solana-testnet
+export const USDC_SOLANA_SPL_TOKEN_ON_DEVNET =
+  "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
 
 export const URLS = {
   // From https://solanacookbook.com/references/local-development.html#connecting-to-environments
@@ -56,10 +62,6 @@ export const SOLANA_COIN_TYPE = 501;
 // Per https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#change
 // Constant 0 is used for external chain and constant 1 for internal chain (also known as change addresses). External chain is used for addresses that are meant to be visible outside of the wallet (e.g. for receiving payments).
 export const EXTERNAL_CHAIN = 0;
-
-// https://developers.circle.com/docs/usdc-on-testnet#usdc-on-solana-testnet
-export const USDC_SOLANA_SPL_TOKEN_ON_DEVNET =
-  "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
 
 // From https://solana-labs.github.io/solana-web3.js/classes/Keypair.html#fromSeed
 // 'Generate a keypair from a 32 byte seed.'
