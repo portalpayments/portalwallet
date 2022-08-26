@@ -1,0 +1,216 @@
+~/Code/vaheh-and-mike/wallet$ ./mint-identity-tokens.ts
+🏦 Minting two identity tokens
+⚡ Connecting to mainNetBeta
+🎟️ make portal identity token for Mike {
+  "response": {
+    "signature": "4HzoZScYQxTXiZbT78Co51SX8WWLp5BFxUY43L5aEhPdcRCuzVB8iPErWREzRx7KBzMC97vfGGYHSUqPEvx7JSZX",
+    "confirmResponse": {
+      "context": {
+        "slot": 147732466
+      },
+      "value": {
+        "err": null
+      }
+    }
+  },
+  "mintAddress": "9ggLn35ZBiioZUrq1HDemkYJb3CygjKceFz98QkuoWaH",
+  "metadataAddress": "592YgFv12MxSKjAgXi1qsHRFJxVLeYPkjqKyDU2UG3Ya",
+  "masterEditionAddress": "FUGh4F3piny9LQGDWJUT71bYkgd6VMhona2AdHRioK4G",
+  "tokenAddress": "9q6BiZfrjDh48oik4VYHaeD2ySwkiksS3d3XfWFGW8wp",
+  "nft": {
+    "model": "nft",
+    "updateAuthorityAddress": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+    "json": {
+      "version": 1,
+      "issuedAgainst": "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+      "claims": {
+        "type": "INDIVIDUAL",
+        "givenName": "Micheal-Sean",
+        "familyName": "MacCana",
+        "imageUrl": "//src/assets/verifiedMikeImage.png"
+      }
+    },
+    "jsonLoaded": true,
+    "name": "Portal Identity Token",
+    "symbol": "",
+    "uri": "https://mockstorage.example.com/4MVncaLIwgEUkTiFdziG",
+    "isMutable": true,
+    "primarySaleHappened": false,
+    "sellerFeeBasisPoints": 0,
+    "editionNonce": 255,
+    "creators": [
+      {
+        "address": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+        "verified": true,
+        "share": 100
+      }
+    ],
+    "tokenStandard": 0,
+    "collection": null,
+    "collectionDetails": null,
+    "uses": null,
+    "address": "9ggLn35ZBiioZUrq1HDemkYJb3CygjKceFz98QkuoWaH",
+    "metadataAddress": "592YgFv12MxSKjAgXi1qsHRFJxVLeYPkjqKyDU2UG3Ya",
+    "mint": {
+      "model": "mint",
+      "address": "9ggLn35ZBiioZUrq1HDemkYJb3CygjKceFz98QkuoWaH",
+      "mintAuthorityAddress": "FUGh4F3piny9LQGDWJUT71bYkgd6VMhona2AdHRioK4G",
+      "freezeAuthorityAddress": "FUGh4F3piny9LQGDWJUT71bYkgd6VMhona2AdHRioK4G",
+      "decimals": 0,
+      "supply": {
+        "basisPoints": "01",
+        "currency": {
+          "symbol": "Token",
+          "decimals": 0,
+          "namespace": "spl-token"
+        }
+      },
+      "isWrappedSol": false,
+      "currency": {
+        "symbol": "Token",
+        "decimals": 0,
+        "namespace": "spl-token"
+      }
+    },
+    "token": {
+      "model": "token",
+      "address": "9q6BiZfrjDh48oik4VYHaeD2ySwkiksS3d3XfWFGW8wp",
+      "isAssociatedToken": true,
+      "mintAddress": "9ggLn35ZBiioZUrq1HDemkYJb3CygjKceFz98QkuoWaH",
+      "ownerAddress": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+      "amount": {
+        "basisPoints": "01",
+        "currency": {
+          "symbol": "Token",
+          "decimals": 0,
+          "namespace": "spl-token"
+        }
+      },
+      "closeAuthorityAddress": null,
+      "delegateAddress": null,
+      "delegateAmount": {
+        "basisPoints": "00",
+        "currency": {
+          "symbol": "Token",
+          "decimals": 0,
+          "namespace": "spl-token"
+        }
+      },
+      "state": 1
+    },
+    "edition": {
+      "model": "nftEdition",
+      "isOriginal": true,
+      "address": "FUGh4F3piny9LQGDWJUT71bYkgd6VMhona2AdHRioK4G",
+      "supply": "00",
+      "maxSupply": "00"
+    }
+  }
+}
+🎟️ make portal identity token for Vaheh {
+  "response": {
+    "signature": "2z4YD8Vf9sFePFT7i21sBmKVVYrNQEWBu19MYTY65WA3XFNmc8qVxobFLqSY7mKxcKAZ2T6GFvgopfC41tfsfmQC",
+    "confirmResponse": {
+      "context": {
+        "slot": 147732480
+      },
+      "value": {
+        "err": null
+      }
+    }
+  },
+  "mintAddress": "GbiWG4Yr3WuKSr7LVYCqYH28SM7vUoBGYUCPTp9imbT3",
+  "metadataAddress": "E8VEKPPJk7vRkAR1tQzt3iN24gJk4TsSEbXgCaDREded",
+  "masterEditionAddress": "3AVCgs6bv7YDEnCAMKoSqATWSqPujzQseVpVnG8MGrgN",
+  "tokenAddress": "DGA5aFZT9DuBa3f9UyPW8Fxmn9vuWXcV5grAbWYCjqaE",
+  "nft": {
+    "model": "nft",
+    "updateAuthorityAddress": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+    "json": {
+      "version": 1,
+      "issuedAgainst": "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+      "claims": {
+        "type": "INDIVIDUAL",
+        "givenName": "Vaheh",
+        "familyName": "Hatami",
+        "imageUrl": "//src/assets/verifiedVahehImage.png"
+      }
+    },
+    "jsonLoaded": true,
+    "name": "Portal Identity Token",
+    "symbol": "",
+    "uri": "https://mockstorage.example.com/fkUrzthu03R5UOsQTMs8",
+    "isMutable": true,
+    "primarySaleHappened": false,
+    "sellerFeeBasisPoints": 0,
+    "editionNonce": 255,
+    "creators": [
+      {
+        "address": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+        "verified": true,
+        "share": 100
+      }
+    ],
+    "tokenStandard": 0,
+    "collection": null,
+    "collectionDetails": null,
+    "uses": null,
+    "address": "GbiWG4Yr3WuKSr7LVYCqYH28SM7vUoBGYUCPTp9imbT3",
+    "metadataAddress": "E8VEKPPJk7vRkAR1tQzt3iN24gJk4TsSEbXgCaDREded",
+    "mint": {
+      "model": "mint",
+      "address": "GbiWG4Yr3WuKSr7LVYCqYH28SM7vUoBGYUCPTp9imbT3",
+      "mintAuthorityAddress": "3AVCgs6bv7YDEnCAMKoSqATWSqPujzQseVpVnG8MGrgN",
+      "freezeAuthorityAddress": "3AVCgs6bv7YDEnCAMKoSqATWSqPujzQseVpVnG8MGrgN",
+      "decimals": 0,
+      "supply": {
+        "basisPoints": "01",
+        "currency": {
+          "symbol": "Token",
+          "decimals": 0,
+          "namespace": "spl-token"
+        }
+      },
+      "isWrappedSol": false,
+      "currency": {
+        "symbol": "Token",
+        "decimals": 0,
+        "namespace": "spl-token"
+      }
+    },
+    "token": {
+      "model": "token",
+      "address": "DGA5aFZT9DuBa3f9UyPW8Fxmn9vuWXcV5grAbWYCjqaE",
+      "isAssociatedToken": true,
+      "mintAddress": "GbiWG4Yr3WuKSr7LVYCqYH28SM7vUoBGYUCPTp9imbT3",
+      "ownerAddress": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+      "amount": {
+        "basisPoints": "01",
+        "currency": {
+          "symbol": "Token",
+          "decimals": 0,
+          "namespace": "spl-token"
+        }
+      },
+      "closeAuthorityAddress": null,
+      "delegateAddress": null,
+      "delegateAmount": {
+        "basisPoints": "00",
+        "currency": {
+          "symbol": "Token",
+          "decimals": 0,
+          "namespace": "spl-token"
+        }
+      },
+      "state": 1
+    },
+    "edition": {
+      "model": "nftEdition",
+      "isOriginal": true,
+      "address": "3AVCgs6bv7YDEnCAMKoSqATWSqPujzQseVpVnG8MGrgN",
+      "supply": "00",
+      "maxSupply": "00"
+    }
+  }
+}
+Completed successfully
