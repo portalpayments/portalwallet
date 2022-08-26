@@ -37,10 +37,8 @@ export const mintIdentityToken = async (
   const metaplexNFTs = metaplex.nfts();
   const uploadResponse = await metaplexNFTs.uploadMetadata(metadata).run();
 
-  expect(uploadResponse.uri);
-
   // From https://github.com/metaplex-foundation/js#create
-  // This will take care of creating the mint account, the associated token account, the metadata PDA and the original edition PDA (a.k.a. the master edition) for you.
+  // "This will take care of creating the mint account, the associated token account, the metadata PDA and the original edition PDA (a.k.a. the master edition) for you.""
   // Full parameters at https://github.com/metaplex-foundation/js/blob/main/packages/js/src/plugins/nftModule/createNft.ts#L64
 
   // See https://github.com/metaplex-foundation/js-examples/blob/main/getting-started-expressjs/createNFT.cjs too
