@@ -1,27 +1,24 @@
-~/Code/vaheh-and-mike/wallet$ ./mint-identity-tokens.ts
-🏦 Minting two identity tokens
-⚡ Connecting to mainNetBeta
 🎟️ make portal identity token for Mike {
   "response": {
-    "signature": "4HzoZScYQxTXiZbT78Co51SX8WWLp5BFxUY43L5aEhPdcRCuzVB8iPErWREzRx7KBzMC97vfGGYHSUqPEvx7JSZX",
+    "signature": "41Syis7TtMRgxuFu9PcaPNT2RF8rAcjm3ixvGJDo7hKwuWmi2DcFxcWGCHCP1fwbqYMkrjae7UXLJRepheuV6izL",
     "confirmResponse": {
       "context": {
-        "slot": 147732466
+        "slot": 147893294
       },
       "value": {
         "err": null
       }
     }
   },
-  "mintAddress": "9ggLn35ZBiioZUrq1HDemkYJb3CygjKceFz98QkuoWaH",
-  "metadataAddress": "592YgFv12MxSKjAgXi1qsHRFJxVLeYPkjqKyDU2UG3Ya",
-  "masterEditionAddress": "FUGh4F3piny9LQGDWJUT71bYkgd6VMhona2AdHRioK4G",
-  "tokenAddress": "9q6BiZfrjDh48oik4VYHaeD2ySwkiksS3d3XfWFGW8wp",
+  "mintAddress": "YF4JccdWVTyjTJmHm6gFrxoqVRBNvLMXuBwF4o4tk7V",
+  "metadataAddress": "7TLtit7jukv2fAq5tdEbiiPhkrreKfk9cyB77ntFvdKK",
+  "masterEditionAddress": "GFs2r7PXKqwRPGdHhreQbyjBhB6eaJ7gzBB1UXLPp4ej",
+  "tokenAddress": "77NCcp1FL4nD3q7igZbk65s4d9oNSkynfB6CBBPP5LrC",
   "nft": {
     "model": "nft",
     "updateAuthorityAddress": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
     "json": {
-      "version": 1,
+      "version": 2,
       "issuedAgainst": "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
       "claims": {
         "type": "INDIVIDUAL",
@@ -33,7 +30,7 @@
     "jsonLoaded": true,
     "name": "Portal Identity Token",
     "symbol": "",
-    "uri": "https://mockstorage.example.com/4MVncaLIwgEUkTiFdziG",
+    "uri": "https://mockstorage.example.com/zuFdMjWqRmLM6PfUliKQ",
     "isMutable": true,
     "primarySaleHappened": false,
     "sellerFeeBasisPoints": 0,
@@ -49,13 +46,13 @@
     "collection": null,
     "collectionDetails": null,
     "uses": null,
-    "address": "9ggLn35ZBiioZUrq1HDemkYJb3CygjKceFz98QkuoWaH",
-    "metadataAddress": "592YgFv12MxSKjAgXi1qsHRFJxVLeYPkjqKyDU2UG3Ya",
+    "address": "YF4JccdWVTyjTJmHm6gFrxoqVRBNvLMXuBwF4o4tk7V",
+    "metadataAddress": "7TLtit7jukv2fAq5tdEbiiPhkrreKfk9cyB77ntFvdKK",
     "mint": {
       "model": "mint",
-      "address": "9ggLn35ZBiioZUrq1HDemkYJb3CygjKceFz98QkuoWaH",
-      "mintAuthorityAddress": "FUGh4F3piny9LQGDWJUT71bYkgd6VMhona2AdHRioK4G",
-      "freezeAuthorityAddress": "FUGh4F3piny9LQGDWJUT71bYkgd6VMhona2AdHRioK4G",
+      "address": "YF4JccdWVTyjTJmHm6gFrxoqVRBNvLMXuBwF4o4tk7V",
+      "mintAuthorityAddress": "GFs2r7PXKqwRPGdHhreQbyjBhB6eaJ7gzBB1UXLPp4ej",
+      "freezeAuthorityAddress": "GFs2r7PXKqwRPGdHhreQbyjBhB6eaJ7gzBB1UXLPp4ej",
       "decimals": 0,
       "supply": {
         "basisPoints": "01",
@@ -74,9 +71,9 @@
     },
     "token": {
       "model": "token",
-      "address": "9q6BiZfrjDh48oik4VYHaeD2ySwkiksS3d3XfWFGW8wp",
+      "address": "77NCcp1FL4nD3q7igZbk65s4d9oNSkynfB6CBBPP5LrC",
       "isAssociatedToken": true,
-      "mintAddress": "9ggLn35ZBiioZUrq1HDemkYJb3CygjKceFz98QkuoWaH",
+      "mintAddress": "YF4JccdWVTyjTJmHm6gFrxoqVRBNvLMXuBwF4o4tk7V",
       "ownerAddress": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
       "amount": {
         "basisPoints": "01",
@@ -101,7 +98,7 @@
     "edition": {
       "model": "nftEdition",
       "isOriginal": true,
-      "address": "FUGh4F3piny9LQGDWJUT71bYkgd6VMhona2AdHRioK4G",
+      "address": "GFs2r7PXKqwRPGdHhreQbyjBhB6eaJ7gzBB1UXLPp4ej",
       "supply": "00",
       "maxSupply": "00"
     }
@@ -109,20 +106,20 @@
 }
 🎟️ make portal identity token for Vaheh {
   "response": {
-    "signature": "2z4YD8Vf9sFePFT7i21sBmKVVYrNQEWBu19MYTY65WA3XFNmc8qVxobFLqSY7mKxcKAZ2T6GFvgopfC41tfsfmQC",
+    "signature": "4mQmA4MbfCuuUeBRmV1KfNsfNWf6BVbNZdrgjMAiEbfVSeDGXc1VehTqYw1cmj2JMQ7M13PKwNGa44zNoamA3CXN",
     "confirmResponse": {
       "context": {
-        "slot": 147732480
+        "slot": 147893299
       },
       "value": {
         "err": null
       }
     }
   },
-  "mintAddress": "GbiWG4Yr3WuKSr7LVYCqYH28SM7vUoBGYUCPTp9imbT3",
-  "metadataAddress": "E8VEKPPJk7vRkAR1tQzt3iN24gJk4TsSEbXgCaDREded",
-  "masterEditionAddress": "3AVCgs6bv7YDEnCAMKoSqATWSqPujzQseVpVnG8MGrgN",
-  "tokenAddress": "DGA5aFZT9DuBa3f9UyPW8Fxmn9vuWXcV5grAbWYCjqaE",
+  "mintAddress": "8n6MWiaAaHctCQ6L1EkzFHjVk5v9XqkikDQmVP8DetHm",
+  "metadataAddress": "ED67D1RqnSdKtWoNr68bwASRnKnEoUcjHcHuQ6kv2Xb4",
+  "masterEditionAddress": "83v8e1hx2LEptswp8hsQi2Sr2eirmq1t3Q4wt1BKaZA7",
+  "tokenAddress": "3KSFM6GfvF798qER9tPLF8zFCJZQ8gweHwE3BmYpCHAf",
   "nft": {
     "model": "nft",
     "updateAuthorityAddress": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
@@ -139,7 +136,7 @@
     "jsonLoaded": true,
     "name": "Portal Identity Token",
     "symbol": "",
-    "uri": "https://mockstorage.example.com/fkUrzthu03R5UOsQTMs8",
+    "uri": "https://mockstorage.example.com/t4uyOj68qaaYkMLdeQzr",
     "isMutable": true,
     "primarySaleHappened": false,
     "sellerFeeBasisPoints": 0,
@@ -155,13 +152,13 @@
     "collection": null,
     "collectionDetails": null,
     "uses": null,
-    "address": "GbiWG4Yr3WuKSr7LVYCqYH28SM7vUoBGYUCPTp9imbT3",
-    "metadataAddress": "E8VEKPPJk7vRkAR1tQzt3iN24gJk4TsSEbXgCaDREded",
+    "address": "8n6MWiaAaHctCQ6L1EkzFHjVk5v9XqkikDQmVP8DetHm",
+    "metadataAddress": "ED67D1RqnSdKtWoNr68bwASRnKnEoUcjHcHuQ6kv2Xb4",
     "mint": {
       "model": "mint",
-      "address": "GbiWG4Yr3WuKSr7LVYCqYH28SM7vUoBGYUCPTp9imbT3",
-      "mintAuthorityAddress": "3AVCgs6bv7YDEnCAMKoSqATWSqPujzQseVpVnG8MGrgN",
-      "freezeAuthorityAddress": "3AVCgs6bv7YDEnCAMKoSqATWSqPujzQseVpVnG8MGrgN",
+      "address": "8n6MWiaAaHctCQ6L1EkzFHjVk5v9XqkikDQmVP8DetHm",
+      "mintAuthorityAddress": "83v8e1hx2LEptswp8hsQi2Sr2eirmq1t3Q4wt1BKaZA7",
+      "freezeAuthorityAddress": "83v8e1hx2LEptswp8hsQi2Sr2eirmq1t3Q4wt1BKaZA7",
       "decimals": 0,
       "supply": {
         "basisPoints": "01",
@@ -180,9 +177,9 @@
     },
     "token": {
       "model": "token",
-      "address": "DGA5aFZT9DuBa3f9UyPW8Fxmn9vuWXcV5grAbWYCjqaE",
+      "address": "3KSFM6GfvF798qER9tPLF8zFCJZQ8gweHwE3BmYpCHAf",
       "isAssociatedToken": true,
-      "mintAddress": "GbiWG4Yr3WuKSr7LVYCqYH28SM7vUoBGYUCPTp9imbT3",
+      "mintAddress": "8n6MWiaAaHctCQ6L1EkzFHjVk5v9XqkikDQmVP8DetHm",
       "ownerAddress": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
       "amount": {
         "basisPoints": "01",
@@ -207,10 +204,9 @@
     "edition": {
       "model": "nftEdition",
       "isOriginal": true,
-      "address": "3AVCgs6bv7YDEnCAMKoSqATWSqPujzQseVpVnG8MGrgN",
+      "address": "83v8e1hx2LEptswp8hsQi2Sr2eirmq1t3Q4wt1BKaZA7",
       "supply": "00",
       "maxSupply": "00"
     }
   }
 }
-Completed successfully

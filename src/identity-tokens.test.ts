@@ -1,6 +1,6 @@
 import { Metaplex, Pda } from "@metaplex-foundation/js";
 import {
-  getAllNftsFromAWallet,
+  getAllNftMetadatasFromAWallet,
   getMetaplex,
   mintIdentityToken,
 } from "./identity-tokens";
@@ -15,6 +15,7 @@ import {
   ENOUGH_TO_MAKE_A_NEW_TOKEN,
 } from "./constants";
 import { BN as BigNumber } from "bn.js";
+import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
 
 // Quiet utils.log() during tests
 // jest.mock("./functions", () => ({
@@ -26,6 +27,7 @@ describe(`identity tokens`, () => {
   let connection: Connection;
   let testIdentityTokenIssuer = new Keypair();
   let mintAddress: PublicKey | null = null;
+  let senderTokenAccount: PublicKey | null = null;
 
   beforeAll(async () => {
     connection = await connect("localhost");
@@ -58,12 +60,11 @@ describe(`identity tokens`, () => {
     const createOutput = await mintIdentityToken(
       connection,
       testIdentityTokenIssuer,
-      metadata
+      metadata,
+      false
     );
 
     mintAddress = createOutput.mintAddress;
-
-    // Lets us compare to BigNumbers (bn.js) easily
 
     // Created fresh, but will be referenced a few times in our output
     //
@@ -249,7 +250,27 @@ describe(`identity tokens`, () => {
   });
 
   // test(`We can transfer the NFT we just made`, async () => {
-  //   //..
+  //   const destinationAccount = new Keypair();
+
+  //   const destinationTokenAccount = await makeTokenAccount(
+  //     connection,
+  //     testIdentityTokenIssuer,
+  //     testIdentityTokenIssuer.publicKey,
+  //     destinationAccount
+  //   );
+
+  //   await putSolIntoWallet(
+  //     connection,
+  //     destinationAccount.publicKey,
+  //     ENOUGH_TO_MAKE_A_NEW_TOKEN
+  //   );
+
+  //   const signature = await transferPortalIdentityToken(
+  //     connection,
+  //     testIdentityTokenIssuer,
+  //     senderTokenAccount,
+  //     destinationAccount.publicKey
+  //   );
   // });
 
   // test(`We can get the associated token account for Portal Identity Token for alice's wallet`, () => {

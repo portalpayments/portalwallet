@@ -6,12 +6,13 @@ import {
 import {
   connect,
   getAccountBalance,
+  getKeypairFromEnvFile,
   getKeypairFromString,
   getUSDCAccounts,
 } from "./vmwallet";
 
 import { USDC_MAINNET_MINT_ACCOUNT } from "./constants";
-import { getAllNftsFromAWallet } from "./identity-tokens";
+import { getAllNftMetadatasFromAWallet } from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
 import { log, stringify } from "./functions";
@@ -20,25 +21,21 @@ import BN from "bn.js";
 dotenv.config();
 
 // Quiet functions.log() during tests
-jest.mock("./functions", () => ({
-  ...jest.requireActual("./functions"),
-  log: jest.fn(),
-}));
+// jest.mock("./functions", () => ({
+//   ...jest.requireActual("./functions"),
+//   log: jest.fn(),
+// }));
 
 describe(`mainnet integration tests`, () => {
   let mainNetConnection: Connection | null = null;
-  const privateKeyFromEnvFile = process.env.PRIVATE_KEY;
-  if (!privateKeyFromEnvFile) {
-    throw new Error(
-      "Please add PRIVATE_KEY to your env file with a private key extracted from Phantom etc."
-    );
-  }
-  // From https://yihau.github.io/solana-web3-demo/tour/create-keypair.html
+  process.env.IDENTITY_TOKEN_PRIVATE_KEY;
 
-  const keyPair = getKeypairFromString(privateKeyFromEnvFile);
-  const actualPublicKey = keyPair.publicKey;
-  const mikePublicKey = new PublicKey(actualPublicKey);
-  const mikeWallet = new PublicKey(actualPublicKey);
+  const mikeKeypair = getKeypairFromEnvFile("MIKES_PRIVATE_KEY");
+  const mikePublicKey = mikeKeypair.publicKey;
+
+  const identityTokenIssuerKeypair = getKeypairFromEnvFile(
+    "IDENTITY_TOKEN_PRIVATE_KEY"
+  );
 
   // Artist that made Agiza and Kimzo
   const artist = new PublicKey("9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX");
@@ -59,7 +56,11 @@ describe(`mainnet integration tests`, () => {
     if (!mainNetConnection) {
       throw new Error(`Couldn't get a connection, can't continue`);
     }
-    const nfts = await getAllNftsFromAWallet(mainNetConnection, mikeWallet);
+    const nfts = await getAllNftMetadatasFromAWallet(
+      mainNetConnection,
+      identityTokenIssuerKeypair,
+      mikePublicKey
+    );
 
     const kimzo = nfts.find((nft) => nft.name === "Kimzo");
     const agiza = nfts.find((nft) => nft.name === "Agiza");
@@ -128,10 +129,15 @@ describe(`mainnet integration tests`, () => {
 
     const agizaAssociatedTokenAccount = await getOrCreateAssociatedTokenAccount(
       mainNetConnection,
-      keyPair,
+      mikeKeypair,
       new PublicKey(agizaNFTaddress),
       mikePublicKey
     );
+
+    // Each Token is a seperate item
+    // So therefore will have a seperate mint
+    //
+    // See all token accounts on a wallet? Then find accounts called 'portal identity token'
 
     const firstNFTAddress = agizaAssociatedTokenAccount.address.toBase58();
     const firstNFTMint = agizaAssociatedTokenAccount.mint.toBase58();
@@ -147,7 +153,7 @@ describe(`mainnet integration tests`, () => {
 
     const kimzoAssociatedTokenAccount = await getOrCreateAssociatedTokenAccount(
       mainNetConnection,
-      keyPair,
+      mikeKeypair,
       new PublicKey(kimzoNFTaddress),
       mikePublicKey
     );
@@ -190,7 +196,7 @@ describe(`mainnet integration tests`, () => {
               info: {
                 isNative: false,
                 mint: USDC_MAINNET_MINT_ACCOUNT,
-                owner: actualPublicKey.toString(),
+                owner: mikePublicKey.toString(),
                 state: "initialized",
                 tokenAmount: {
                   amount: expect.any(String),

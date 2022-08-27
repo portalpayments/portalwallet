@@ -76,3 +76,15 @@ export const putSolIntoWallet = async (
     signature: airdropSignature,
   });
 };
+
+export const getKeypairFromEnvFile = (envFileKey: string) => {
+  // From https://yihau.github.io/solana-web3-demo/tour/create-keypair.html
+  const privateKeyFromEnvFile = process.env[envFileKey];
+  if (!privateKeyFromEnvFile) {
+    throw new Error(
+      `Please add '${envFileKey}' to your .env file with a private key extracted from Phantom etc.`
+    );
+  }
+  const keyPair = getKeypairFromString(privateKeyFromEnvFile);
+  return keyPair;
+};

@@ -138,3 +138,32 @@ export const sendUSDC = async (
     throw error;
   }
 };
+
+// See https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
+export const transferPortalIdentityToken = async (
+  connection: Connection,
+  sender: Keypair,
+  senderTokenAccount: Account,
+  recipientTokenAccount: Account
+) => {
+  try {
+    const signature = await transfer(
+      connection,
+      sender,
+      senderTokenAccount.address,
+      recipientTokenAccount.address,
+      sender.publicKey,
+      1,
+      []
+    );
+
+    return signature;
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    const fullErrorMessage = getABetterErrorMessage(error.message);
+    if (fullErrorMessage) {
+      throw new Error(fullErrorMessage);
+    }
+    throw error;
+  }
+};
