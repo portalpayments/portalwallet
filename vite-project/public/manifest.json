@@ -1,0 +1,14 @@
+{
+    "name": "Portal Wallet",
+    "description": "send money to verified recipients over crypto",
+    "version": "1.0",
+    "manifest_version": 3,
+   
+    "action": {
+        "default_popup": "index.html"
+       
+    },
+    "permissions": ["storage"],
+
+"content_security_policy": {"script-src": "self ", "object-src": "self"}
+}
