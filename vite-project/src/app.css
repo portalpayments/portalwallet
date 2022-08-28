@@ -8,9 +8,6 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-  width: 300px;
-  height: 600px;
-  max-height: 600px;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -35,8 +32,8 @@ body {
   margin: 0;
   display: grid;
   place-items: center;
-  min-width: 320px;
-  min-height: 200vh;
+  width: 300px;
+  height: 600px;
   background: black;
   text-align: center;
 }
