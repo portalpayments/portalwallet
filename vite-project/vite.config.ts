@@ -32,17 +32,16 @@ export default defineConfig({
     target: "es2020",
     rollupOptions: {
       plugins: [nodePolyfills({ crypto: true })],
-      
     },
   },
   optimizeDeps: {
     esbuildOptions: {
-      define: {
-        global: 'globalThis'
-    },
-      plugins: [NodeGlobalsPolyfillPlugin({ buffer: true, })],
+     define:{
+      global: 'globalThis'
+     },
+      plugins: [NodeGlobalsPolyfillPlugin({ buffer: true})],
       target: "es2020",
     },
   },
 });
-//  process: true,
+
