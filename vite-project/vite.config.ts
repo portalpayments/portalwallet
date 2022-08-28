@@ -3,11 +3,10 @@ import { defineConfig } from "vite";
 import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 import nodePolyfills from "rollup-plugin-node-polyfills";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
-import { resolve } from "path";
 
 
-const srcDir = resolve(__dirname, "src");
-const libDir = resolve(srcDir, "lib");
+
+
 // Config is based on metaplex + vite examle from:
 // https://github.com/metaplex-foundation/js-examples/tree/main/getting-started-vite
 
@@ -23,11 +22,11 @@ export default defineConfig({
       assert: "assert",
       crypto: "crypto-browserify",
       util: "util",
-      src: srcDir,
     },
   },
   define: {
     "process.env": process.env ?? {},
+    
   },
   build: {
     target: "es2020",
@@ -41,7 +40,7 @@ export default defineConfig({
       define: {
         global: 'globalThis'
     },
-      plugins: [NodeGlobalsPolyfillPlugin({ buffer: true })],
+      plugins: [NodeGlobalsPolyfillPlugin({ buffer: true, process: true, })],
       target: "es2020",
     },
   },
