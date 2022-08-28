@@ -40,8 +40,9 @@ export default defineConfig({
       define: {
         global: 'globalThis'
     },
-      plugins: [NodeGlobalsPolyfillPlugin({ buffer: true, process: true, })],
+      plugins: [NodeGlobalsPolyfillPlugin({ buffer: true, })],
       target: "es2020",
     },
   },
 });
+//  process: true,
