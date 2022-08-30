@@ -1,8 +1,10 @@
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { AccountInfo, Connection, Keypair, PublicKey } from "@solana/web3.js";
 
 import { log } from "./functions";
 import { URLS, USDC_MAINNET_MINT_ACCOUNT } from "./constants";
+import { asyncMap } from "./functions";
 import base58 from "bs58";
+import { AccountLayout, RawAccount, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 export const getKeypairFromString = (privateKeyString: string) => {
   let decodedPrivateKey: Buffer;
@@ -87,4 +89,26 @@ export const getKeypairFromEnvFile = (envFileKey: string) => {
   }
   const keyPair = getKeypairFromString(privateKeyFromEnvFile);
   return keyPair;
+};
+
+// Just a wrapper with sensible defaults
+export const getTokenAccountsByOwner = async (
+  connection: Connection,
+  publicKey: PublicKey
+): Promise<Array<RawAccount>> => {
+  const tokenAccountsByOwner = await connection.getTokenAccountsByOwner(
+    publicKey,
+    {
+      programId: TOKEN_PROGRAM_ID,
+    }
+  );
+
+  const rawAccounts = await asyncMap(
+    tokenAccountsByOwner.value,
+    async (tokenAccount) => {
+      return AccountLayout.decode(tokenAccount.account.data);
+    }
+  );
+
+  return rawAccounts as Array<RawAccount>;
 };

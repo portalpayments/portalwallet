@@ -15,7 +15,12 @@ import {
   makeTokenAccount,
   sendUSDC,
 } from "./tokens";
-import { connect, putSolIntoWallet, checkAccountExists } from "./vmwallet";
+import {
+  connect,
+  putSolIntoWallet,
+  checkAccountExists,
+  getTokenAccountsByOwner,
+} from "./vmwallet";
 
 const AMOUNT_OF_USDC_TO_SEND = 50;
 
@@ -39,6 +44,7 @@ describe("minting", () => {
 
   afterAll(async () => {
     // Close connection?
+    // See https://solana.stackexchange.com/questions/1685/how-do-i-prevent-open-handles-issues-when-using-the-solana-connection-object
   });
   test(
     `createNewToken makes a mint account and new tokens`,
@@ -258,17 +264,13 @@ describe("minting", () => {
   });
 
   test(`Get all Bob's token accounts`, async () => {
-    // See https://solana.stackexchange.com/questions/1685/how-do-i-prevent-open-handles-issues-when-using-the-solana-connection-object
-    const tokenAccounts = await connection.getTokenAccountsByOwner(
-      bob.publicKey,
-      {
-        programId: TOKEN_PROGRAM_ID,
-      }
+    const tokenAccounts = await getTokenAccountsByOwner(
+      connection,
+      bob.publicKey
     );
 
-    const tokenAccount = tokenAccounts.value[0];
-    const rawAccount = AccountLayout.decode(tokenAccount.account.data);
-    expect(rawAccount.mint).toEqual(mintAccountPublicKey);
-    expect(rawAccount.amount).toEqual(50n);
+    const tokenAccount = tokenAccounts[0];
+    expect(tokenAccount.mint).toEqual(mintAccountPublicKey);
+    expect(tokenAccount.amount).toEqual(50n);
   });
 });
