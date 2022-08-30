@@ -20,5 +20,6 @@
     box-sizing: border-box;
     transition: all 0.3s ease-out;
     border-radius: 7px;
+    overflow-x: hidden;
   }
 </style>
