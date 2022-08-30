@@ -394,15 +394,15 @@ describe(`identity tokens`, () => {
       uri: expect.any(String),
       uses: null,
     });
-
-    // if (!identityToken?.uri) {
-    // }
-
-    // const data = await httpGet(identityToken.uri);
-
-    // expect(data).toMatchObject({});
   });
 
+  // TODO - set up a mock mockstorage item?
+  // if (!identityToken?.uri) {
+  // }
+
+  // const data = await httpGet(identityToken.uri);
+
+  // expect(data).toMatchObject({});
   // test(`We can read the Portal Identity Token from the Alice's wallet's Portal Identity Token account`, () => {
   //   //
   // });

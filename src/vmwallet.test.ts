@@ -131,11 +131,6 @@ describe(`mainnet integration tests`, () => {
       mikePublicKey
     );
 
-    // Each Token is a seperate item
-    // So therefore will have a seperate mint
-    //
-    // See all token accounts on a wallet? Then find accounts called 'portal identity token'
-
     const firstNFTAddress = agizaAssociatedTokenAccount.address.toBase58();
     const firstNFTMint = agizaAssociatedTokenAccount.mint.toBase58();
     const firstNFTOwner = agizaAssociatedTokenAccount.owner.toBase58();
