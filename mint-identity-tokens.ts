@@ -4,9 +4,14 @@
 // https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 
 import { log, stringify } from "./src/functions";
-import { MIKES_WALLET, VAHEHS_WALLET } from "./src/constants";
+import {
+  LATEST_IDENTITY_TOKEN_VERSION,
+  MIKES_WALLET,
+  VAHEHS_WALLET,
+} from "./src/constants";
 import {
   getFullNFTsFromWallet,
+  getTokenMetaData,
   mintIdentityToken,
 } from "./src/identity-tokens";
 import { connect, getKeypairFromString } from "./src/vmwallet";
@@ -25,36 +30,9 @@ if (!identityTokenPrivateKey) {
 
 const identityTokenIssuer = getKeypairFromString(identityTokenPrivateKey);
 
-// Older were minted with test storage URLs, timed out, etc.
-const LATEST_IDENTITY_TOKEN_VERSION = 5;
+const mikeMetadata = getTokenMetaData(MIKES_WALLET, "Micheal-Sean", "MacCana");
 
-const mikeMetadata = {
-  version: LATEST_IDENTITY_TOKEN_VERSION,
-  // In future this can be removed, however right now Solana
-  // token standard doesn't support non-transferrable tokens
-  // So check that that token wasn't issued against another wallet and transferred
-  issuedAgainst: MIKES_WALLET,
-  claims: {
-    type: "INDIVIDUAL",
-    givenName: "Micheal-Sean",
-    familyName: "MacCana",
-    imageUrl: "//src/assets/verifiedMikeImage.png",
-  },
-};
-
-const vahehMetadata = {
-  version: 1,
-  // In future this can be removed, however right now Solana
-  // token standard doesn't support non-transferrable tokens
-  // So check that that token wasn't issued against another wallet and transferred
-  issuedAgainst: VAHEHS_WALLET,
-  claims: {
-    type: "INDIVIDUAL",
-    givenName: "Vaheh",
-    familyName: "Hatami",
-    imageUrl: "//src/assets/verifiedVahehImage.png",
-  },
-};
+const vahehMetadata = getTokenMetaData(VAHEHS_WALLET, "Vaheh", "Hatami");
 
 (async () => {
   log(`🏦 Minting two identity tokens`);

@@ -61,6 +61,9 @@ export const USD_DECIMALS = 2;
 
 export const SOL = LAMPORTS_PER_SOL;
 
+// Older were minted with test storage URLs, timed out, etc.
+export const LATEST_IDENTITY_TOKEN_VERSION = 5;
+
 // TODO: reducing this to 1_000 makes wallets not visible
 // which seems to be the rent requirement -
 // see https://docs.solana.com/developing/programming-model/accounts#rent

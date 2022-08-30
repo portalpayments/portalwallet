@@ -2,6 +2,7 @@ import { Metaplex, Pda } from "@metaplex-foundation/js";
 import {
   getAllNftMetadatasFromAWallet,
   getMetaplex,
+  getTokenMetaData,
   mintIdentityToken,
 } from "./identity-tokens";
 import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
@@ -43,19 +44,8 @@ describe(`identity tokens`, () => {
   });
 
   test(`we can mint an identity token`, async () => {
-    const metadata = {
-      version: 1,
-      // In future this can be removed, however right now Solana
-      // token standard doesn't support non-transferrable tokens
-      // So check that that token wasn't issued against another wallet and transferred
-      issuedAgainst: MIKES_WALLET,
-      claims: {
-        type: "individual",
-        givenName: "Micheal-Sean",
-        familyName: "MacCana",
-        imageUrl: "//src/assets/verifiedImage.png",
-      },
-    };
+    const metadata = getTokenMetaData(MIKES_WALLET, "Micheal-Sean", "MacCana");
+
     const name = IDENTITY_TOKEN_NAME;
     const createOutput = await mintIdentityToken(
       connection,
@@ -249,29 +239,29 @@ describe(`identity tokens`, () => {
     });
   });
 
-  // test(`We can transfer the NFT we just made`, async () => {
-  //   const destinationAccount = new Keypair();
+  test(`We can transfer the NFT we just made`, async () => {
+    const destinationAccount = new Keypair();
 
-  //   const destinationTokenAccount = await makeTokenAccount(
-  //     connection,
-  //     testIdentityTokenIssuer,
-  //     testIdentityTokenIssuer.publicKey,
-  //     destinationAccount
-  //   );
+    const destinationTokenAccount = await makeTokenAccount(
+      connection,
+      testIdentityTokenIssuer,
+      testIdentityTokenIssuer.publicKey,
+      destinationAccount
+    );
 
-  //   await putSolIntoWallet(
-  //     connection,
-  //     destinationAccount.publicKey,
-  //     ENOUGH_TO_MAKE_A_NEW_TOKEN
-  //   );
+    await putSolIntoWallet(
+      connection,
+      destinationAccount.publicKey,
+      ENOUGH_TO_MAKE_A_NEW_TOKEN
+    );
 
-  //   const signature = await transferPortalIdentityToken(
-  //     connection,
-  //     testIdentityTokenIssuer,
-  //     senderTokenAccount,
-  //     destinationAccount.publicKey
-  //   );
-  // });
+    const signature = await transferPortalIdentityToken(
+      connection,
+      testIdentityTokenIssuer,
+      senderTokenAccount,
+      destinationAccount.publicKey
+    );
+  });
 
   // test(`We can get the associated token account for Portal Identity Token for alice's wallet`, () => {
   //   //

@@ -15,7 +15,11 @@ import {
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { asyncMap, log } from "./functions";
 
-import { IDENTITY_TOKEN_NAME } from "./constants";
+import {
+  IDENTITY_TOKEN_NAME,
+  LATEST_IDENTITY_TOKEN_VERSION,
+  MIKES_WALLET,
+} from "./constants";
 import { stringify } from "./functions";
 
 // TODO maybe use node fetch after node 18
@@ -85,6 +89,26 @@ export const getAllNftMetadatasFromAWallet = async (
     .run();
 
   return findNftsByOwnerOutput;
+};
+
+export const getTokenMetaData = (
+  wallet: string,
+  givenName: string,
+  familyName: string
+) => {
+  return {
+    version: LATEST_IDENTITY_TOKEN_VERSION,
+    // In future this can be removed, however right now Solana
+    // token standard doesn't support non-transferrable tokens
+    // So check that that token wasn't issued against another wallet and transferred
+    issuedAgainst: wallet,
+    claims: {
+      type: "INDIVIDUAL",
+      givenName,
+      familyName,
+      imageUrl: "//src/assets/verifiedMikeImage.png",
+    },
+  };
 };
 
 export const getFullNFTsFromWallet = async (
