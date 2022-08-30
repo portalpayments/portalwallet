@@ -6,7 +6,7 @@ import {
   mintIdentityToken,
 } from "./identity-tokens";
 import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
-import { connect, putSolIntoWallet } from "./vmwallet";
+import { connect, getTokenAccountsByOwner, putSolIntoWallet } from "./vmwallet";
 import { deepClone, log, stringify } from "./functions";
 import {
   IDENTITY_TOKEN_NAME,
@@ -259,10 +259,10 @@ describe(`identity tokens`, () => {
 
     expect(destinationTokenAccount).toEqual({
       address: expect.any(PublicKey),
-      amount: BigInt(0),
+      amount: 0n,
       closeAuthority: null,
       delegate: null,
-      delegatedAmount: BigInt(0),
+      delegatedAmount: 0n,
       isFrozen: false,
       isInitialized: true,
       isNative: false,
@@ -270,6 +270,27 @@ describe(`identity tokens`, () => {
       owner: alice.publicKey,
       rentExemptReserve: null,
     });
+
+    const tokenAccountsByOwner = await getTokenAccountsByOwner(
+      connection,
+      alice.publicKey
+    );
+
+    expect(tokenAccountsByOwner).toEqual([
+      {
+        amount: 0n,
+        closeAuthority: new PublicKey("11111111111111111111111111111111"),
+        closeAuthorityOption: 0,
+        delegate: new PublicKey("11111111111111111111111111111111"),
+        delegateOption: 0,
+        delegatedAmount: 0n,
+        isNative: 0n,
+        isNativeOption: 0,
+        mint: mintAddress,
+        owner: alice.publicKey,
+        state: 1,
+      },
+    ]);
   });
 
   // test(`We can transfer the NFT we just made to the Associated Token Account in Alice's wallet`, async () => {
