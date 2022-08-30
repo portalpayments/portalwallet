@@ -42,10 +42,6 @@ describe("minting", () => {
     connection = await connect("localhost");
   });
 
-  afterAll(async () => {
-    // Close connection?
-    // See https://solana.stackexchange.com/questions/1685/how-do-i-prevent-open-handles-issues-when-using-the-solana-connection-object
-  });
   test(
     `createNewToken makes a mint account and new tokens`,
     async () => {

@@ -25,9 +25,6 @@ describe(`restoration`, () => {
     connection = await connect("localhost");
   });
 
-  afterAll(async () => {
-    // TODO: close connection?
-  });
   test(`wallets can be created`, async () => {
     const seed = await convertPhraseToSeed(expectedCleanedPhrase, fullName);
     keypairs = await seedToKeypairs(seed, password);

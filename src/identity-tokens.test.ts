@@ -7,13 +7,14 @@ import {
 } from "./identity-tokens";
 import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { connect, getTokenAccountsByOwner, putSolIntoWallet } from "./vmwallet";
-import { deepClone, log, stringify } from "./functions";
+import { deepClone, log, sleep, stringify } from "./functions";
 import {
   IDENTITY_TOKEN_NAME,
   MIKES_WALLET,
   ONE,
   ZERO,
   ENOUGH_TO_MAKE_A_NEW_TOKEN,
+  SECONDS,
 } from "./constants";
 import { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
@@ -38,10 +39,6 @@ describe(`identity tokens`, () => {
       testIdentityTokenIssuer.publicKey,
       1_000_000_000
     );
-  });
-
-  afterAll(async () => {
-    // Close connection?
   });
 
   test(`we can mint an identity token for Alice`, async () => {

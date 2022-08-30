@@ -17,12 +17,13 @@ import {
   ARTIST,
   KIMZO_NFT_ADDRESS,
   KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT,
+  SECONDS,
   USDC_MAINNET_MINT_ACCOUNT,
 } from "./constants";
 import { getAllNftMetadatasFromAWallet } from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
-import { log, stringify } from "./functions";
+import { log, sleep, stringify } from "./functions";
 import BN from "bn.js";
 
 dotenv.config();
