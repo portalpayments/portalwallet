@@ -143,15 +143,15 @@ export const sendUSDC = async (
 export const transferPortalIdentityToken = async (
   connection: Connection,
   sender: Keypair,
-  senderTokenAccount: Account,
-  recipientTokenAccount: Account
+  senderTokenAccount: PublicKey,
+  recipientTokenAccount: PublicKey
 ) => {
   try {
     const signature = await transfer(
       connection,
       sender,
-      senderTokenAccount.address,
-      recipientTokenAccount.address,
+      senderTokenAccount,
+      recipientTokenAccount,
       sender.publicKey,
       1,
       []

@@ -25,6 +25,7 @@ import { stringify } from "./functions";
 // TODO maybe use node fetch after node 18
 import axios from "axios";
 import { ExpandedNFT } from "./types";
+import { getTokenAccountsByOwner } from "./vmwallet";
 
 const name = IDENTITY_TOKEN_NAME;
 
@@ -132,7 +133,7 @@ export const getFullNFTsFromWallet = async (
     return (
       metaplex
         .nfts()
-        // TODO: hacking, this is probably a bad idea but apparently .findAllByOwner() may return a bunch of differemt types of objects
+        // TODO: hacking, this is probably a bad idea but apparently .findAllByOwner() may return a bunch of different types of objects
         // @ts-ignore
         .load({ metadata })
         .run()
@@ -140,7 +141,6 @@ export const getFullNFTsFromWallet = async (
   });
 
   const nftData = await asyncMap(nfts as Array<ExpandedNFT>, async (nft) => {
-    // @ts-ignore
     try {
       const response = await axios.get(nft.uri);
       const datum = response.data;
@@ -154,34 +154,52 @@ export const getFullNFTsFromWallet = async (
 
   log(stringify(nftData));
 
-  // const matchingNFTMetadatas = nfts.filter((nft) => nft.name === name);
-  // log(stringify(matchingNFTMetadatas));
-  // if (matchingNFTMetadatas?.length > 1) {
-  //   throw new Error(`Found more than one matching NFT for the name '${name}'`);
-  // }
-  // if (!matchingNFTMetadatas.length) {
-  //   throw new Error(`Found no NFTs ,matching the name`);
-  // }
-  // const matchingNFTMetadata = matchingNFTMetadatas[0];
-  // const nft = await
-
   return nftData;
 };
 
-// export const transferIdentityToken = async (recipient: PublicKey) => {
-//   // https://solanacookbook.com/references/basic-transactions.html#how-to-send-spl-tokens
-//   let txhash = await transferChecked(
-//     connection, // connection
-//     feePayer: , // payer
-//     fromTokenAccount, // from (should be a token account)
-//     mintPubkey, // mint
-//     destination, // to (should be a token account)
-//     currentOwner,
-//     1,
-//     0
+export const getIdentityTokenFromWallet = async (
+  connection: Connection,
+  identityTokenIssuer: Keypair,
+  wallet: PublicKey
+) => {
+  const metaplex = await getMetaplex(connection, identityTokenIssuer);
+  const nfts = await metaplex
+    .nfts()
+    .findAllByOwner({
+      owner: wallet,
+    })
+    .run();
+
+  const identityToken = nfts.find((nft) => {
+    // Quick note we need to toBase58() both addresses for the comparison to work.
+    return (
+      nft.creators[0].address.toBase58() ===
+      identityTokenIssuer.publicKey.toBase58()
+    );
+  });
+
+  if (!identityToken) {
+    throw new Error(`Could not find identity token for wallet '${wallet}'`);
+  }
+
+  return identityToken;
+};
+
+// export const getVerifiedIdentity = async (
+//   connection: Connection,
+//   mintAddress: PublicKey,
+//   wallet: PublicKey
+// ) => {
+//   const tokenAccountsByOwner = await getTokenAccountsByOwner(
+//     connection,
+//     wallet
 //   );
 
-//   const result = await sendAndConfirmTransaction(connection, transaction, [
-//     fromWallet,
-//   ]);
+//   const portalAssociatedTokenAccount = tokenAccountsByOwner.find(
+//     (tokenAccount) => {
+//       return tokenAccount.mint === mintAddress;
+//     }
+//   );
+
+//   const portalIdentityToken = portalAssociatedTokenAccount.
 // };

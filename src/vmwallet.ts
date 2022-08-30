@@ -91,11 +91,19 @@ export const getKeypairFromEnvFile = (envFileKey: string) => {
   return keyPair;
 };
 
+// Make a custom object that combined the decoded rawAccount
+// with the public key in the token Accounts address
+// So we have all the useful detauls for an Associated Token Account
+// in one object
+interface TokenAccount extends RawAccount {
+  address: PublicKey;
+}
+
 // Just a wrapper with sensible defaults
 export const getTokenAccountsByOwner = async (
   connection: Connection,
   publicKey: PublicKey
-): Promise<Array<RawAccount>> => {
+): Promise<Array<TokenAccount>> => {
   const tokenAccountsByOwner = await connection.getTokenAccountsByOwner(
     publicKey,
     {
@@ -103,12 +111,17 @@ export const getTokenAccountsByOwner = async (
     }
   );
 
-  const rawAccounts = await asyncMap(
+  const tokenAccounts = await asyncMap(
     tokenAccountsByOwner.value,
     async (tokenAccount) => {
-      return AccountLayout.decode(tokenAccount.account.data);
+      const rawAccountWithAddress: Partial<TokenAccount> = AccountLayout.decode(
+        tokenAccount.account.data
+      );
+      rawAccountWithAddress.address = tokenAccount.pubkey;
+
+      return rawAccountWithAddress;
     }
   );
 
-  return rawAccounts as Array<RawAccount>;
+  return tokenAccounts as Array<TokenAccount>;
 };
