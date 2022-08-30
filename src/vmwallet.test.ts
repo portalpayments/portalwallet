@@ -13,8 +13,10 @@ import {
 
 import {
   AGIZA_NFT_ADDRESS,
+  AGIZA_NFT_ASSOCIATED_TOKEN_ACCOUNT,
   ARTIST,
   KIMZO_NFT_ADDRESS,
+  KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT,
   USDC_MAINNET_MINT_ACCOUNT,
 } from "./constants";
 import { getAllNftMetadatasFromAWallet } from "./identity-tokens";
@@ -137,11 +139,7 @@ describe(`mainnet integration tests`, () => {
     const firstNFTMint = agizaAssociatedTokenAccount.mint.toBase58();
     const firstNFTOwner = agizaAssociatedTokenAccount.owner.toBase58();
 
-    // https://solscan.io/account/HxunVfDmoeAKmNVxt36jjcBq9p3Zy1Bmocx9sVwJNXdP
-
-    expect(firstNFTAddress).toEqual(
-      "HxunVfDmoeAKmNVxt36jjcBq9p3Zy1Bmocx9sVwJNXdP"
-    );
+    expect(firstNFTAddress).toEqual(AGIZA_NFT_ASSOCIATED_TOKEN_ACCOUNT);
     expect(firstNFTMint).toEqual(AGIZA_NFT_ADDRESS.toBase58());
     expect(firstNFTOwner).toEqual(mikePublicKey.toBase58());
 
@@ -156,10 +154,7 @@ describe(`mainnet integration tests`, () => {
     const secondNFTMint = kimzoAssociatedTokenAccount.mint.toBase58();
     const secondNFTOwner = kimzoAssociatedTokenAccount.owner.toBase58();
 
-    // https://solscan.io/account/6YDDeYLruEUeeJ1Y2GDXQ1wSrr4wJvZZefiVEtcsnpCp
-    expect(secondNFTAddress).toEqual(
-      "6YDDeYLruEUeeJ1Y2GDXQ1wSrr4wJvZZefiVEtcsnpCp"
-    );
+    expect(secondNFTAddress).toEqual(KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT);
     expect(secondNFTMint).toEqual(KIMZO_NFT_ADDRESS.toBase58());
     expect(secondNFTOwner).toEqual(mikePublicKey.toBase58());
   });

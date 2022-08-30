@@ -18,11 +18,17 @@ export const ARTIST = new PublicKey(
   "9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX"
 );
 
+// https://solscan.io/account/HxunVfDmoeAKmNVxt36jjcBq9p3Zy1Bmocx9sVwJNXdP
+export const AGIZA_NFT_ASSOCIATED_TOKEN_ACCOUNT =
+  "HxunVfDmoeAKmNVxt36jjcBq9p3Zy1Bmocx9sVwJNXdP";
 // Solscan calls this the 'SPL Token Address'
 export const AGIZA_NFT_ADDRESS = new PublicKey(
   "8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk"
 );
 
+// https://solscan.io/account/6YDDeYLruEUeeJ1Y2GDXQ1wSrr4wJvZZefiVEtcsnpCp
+export const KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT =
+  "6YDDeYLruEUeeJ1Y2GDXQ1wSrr4wJvZZefiVEtcsnpCp";
 export const KIMZO_NFT_ADDRESS = new PublicKey(
   "C5veJJL3hUq9s3aUymWjREGYoqbWSzX8aNRaZ9STSCNM"
 );
