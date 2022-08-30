@@ -11,7 +11,12 @@ import {
   getUSDCAccounts,
 } from "./vmwallet";
 
-import { USDC_MAINNET_MINT_ACCOUNT } from "./constants";
+import {
+  AGIZA_NFT_ADDRESS,
+  ARTIST,
+  KIMZO_NFT_ADDRESS,
+  USDC_MAINNET_MINT_ACCOUNT,
+} from "./constants";
 import { getAllNftMetadatasFromAWallet } from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
@@ -37,17 +42,6 @@ describe(`mainnet integration tests`, () => {
     "IDENTITY_TOKEN_PRIVATE_KEY"
   );
 
-  // Artist that made Agiza and Kimzo
-  const artist = new PublicKey("9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX");
-
-  // Solscan calls this the 'SPL Token Address'
-  const agizaNFTaddress = new PublicKey(
-    "8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk"
-  );
-  const kimzoNFTaddress = new PublicKey(
-    "C5veJJL3hUq9s3aUymWjREGYoqbWSzX8aNRaZ9STSCNM"
-  );
-
   beforeAll(async () => {
     mainNetConnection = await connect("mainNetBeta");
   });
@@ -68,8 +62,8 @@ describe(`mainnet integration tests`, () => {
     expect(kimzo).toMatchObject({
       model: "metadata",
       address: new Pda("57Xq2KebNs2UdpMhekf2JJjjzHv3ijV7H9DiG5UD2FEU", 255),
-      mintAddress: kimzoNFTaddress,
-      updateAuthorityAddress: artist,
+      mintAddress: KIMZO_NFT_ADDRESS,
+      updateAuthorityAddress: ARTIST,
       json: null,
       jsonLoaded: false,
       name: "Kimzo",
@@ -81,7 +75,7 @@ describe(`mainnet integration tests`, () => {
       editionNonce: 255,
       creators: [
         {
-          address: artist,
+          address: ARTIST,
           verified: true,
           share: 100,
         },
@@ -96,8 +90,8 @@ describe(`mainnet integration tests`, () => {
       model: "metadata",
       // https://solscan.io/token/8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk
       address: new Pda("2TQ464nFCwPs45wYsXXYpkhY7wgUyEVzpecWp1RBMeDU", 255),
-      mintAddress: agizaNFTaddress,
-      updateAuthorityAddress: artist,
+      mintAddress: AGIZA_NFT_ADDRESS,
+      updateAuthorityAddress: ARTIST,
       json: null,
       jsonLoaded: false,
       name: "Agiza",
@@ -110,7 +104,7 @@ describe(`mainnet integration tests`, () => {
       editionNonce: 254,
       creators: [
         {
-          address: artist,
+          address: ARTIST,
           verified: true,
           share: 100,
         },
@@ -130,7 +124,7 @@ describe(`mainnet integration tests`, () => {
     const agizaAssociatedTokenAccount = await getOrCreateAssociatedTokenAccount(
       mainNetConnection,
       mikeKeypair,
-      new PublicKey(agizaNFTaddress),
+      new PublicKey(AGIZA_NFT_ADDRESS),
       mikePublicKey
     );
 
@@ -148,13 +142,13 @@ describe(`mainnet integration tests`, () => {
     expect(firstNFTAddress).toEqual(
       "HxunVfDmoeAKmNVxt36jjcBq9p3Zy1Bmocx9sVwJNXdP"
     );
-    expect(firstNFTMint).toEqual(agizaNFTaddress.toBase58());
+    expect(firstNFTMint).toEqual(AGIZA_NFT_ADDRESS.toBase58());
     expect(firstNFTOwner).toEqual(mikePublicKey.toBase58());
 
     const kimzoAssociatedTokenAccount = await getOrCreateAssociatedTokenAccount(
       mainNetConnection,
       mikeKeypair,
-      new PublicKey(kimzoNFTaddress),
+      new PublicKey(KIMZO_NFT_ADDRESS),
       mikePublicKey
     );
 
@@ -166,7 +160,7 @@ describe(`mainnet integration tests`, () => {
     expect(secondNFTAddress).toEqual(
       "6YDDeYLruEUeeJ1Y2GDXQ1wSrr4wJvZZefiVEtcsnpCp"
     );
-    expect(secondNFTMint).toEqual(kimzoNFTaddress.toBase58());
+    expect(secondNFTMint).toEqual(KIMZO_NFT_ADDRESS.toBase58());
     expect(secondNFTOwner).toEqual(mikePublicKey.toBase58());
   });
 

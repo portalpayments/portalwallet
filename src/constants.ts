@@ -10,8 +10,22 @@ export const JOE_MACCANNS_WALLET =
   "5CJFJoKiZ14tdsjtWgKGQVuVkYW7pcWUR4LFSvDELFod";
 export const MIKES_WALLET = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
 export const VAHEHS_WALLET = "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG";
-export const PORTAL_IDENTITY_TOKEN_WALLET =
+export const PORTAL_IDENTITY_TOKEN_ISSUER_WALLET =
   "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9";
+
+// Artist that made Agiza and Kimzo
+export const ARTIST = new PublicKey(
+  "9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX"
+);
+
+// Solscan calls this the 'SPL Token Address'
+export const AGIZA_NFT_ADDRESS = new PublicKey(
+  "8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk"
+);
+
+export const KIMZO_NFT_ADDRESS = new PublicKey(
+  "C5veJJL3hUq9s3aUymWjREGYoqbWSzX8aNRaZ9STSCNM"
+);
 
 // From https://www.circle.com/en/usdc/developers
 export const USDC_MAINNET_MINT_ACCOUNT =

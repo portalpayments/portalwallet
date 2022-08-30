@@ -80,6 +80,8 @@ describe(`restoration`, () => {
         testUSDCAuthority,
         testUSDCAuthority.publicKey
       )
-    ).rejects.toThrow("Insufficient funds");
+    ).rejects.toThrow(
+      "failed to send transaction: Transaction simulation failed: Attempt to debit an account but found no record of a prior credit."
+    );
   });
 });
