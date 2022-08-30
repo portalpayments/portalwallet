@@ -10,7 +10,7 @@
   import { getKeypairFromString, connect } from "../../src/vmwallet";
   import { log } from "../../src/functions";
   import Auth from "./lib/Auth/Auth.svelte";
-
+  import SendToContacts from "./lib/Contacts/SendToContacts/SendToContacts.svelte";
   import { connection, keyPair, authStore } from "./lib/stores";
 
   $authStore;
@@ -69,6 +69,7 @@
       >
       <Route path="logout"><Auth /></Route>
       <!-- primary=false to avoid a focus warning from the Svelte router -->
+      <Route path="contacts/:address" primary={false}><SendToContacts /></Route>
       <Route path="/" primary={false}>
         <div class="header-and-features">
           <TopToolbar {...testUser} />

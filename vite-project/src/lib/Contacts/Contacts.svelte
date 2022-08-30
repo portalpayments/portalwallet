@@ -3,6 +3,7 @@
   import { LabelColor } from "../constants";
   import { truncateWallet } from "../utils";
   import anonymousImageUrl from "../../assets/ProfilePics/anonymous.svg";
+  import { Link } from "svelte-navigator";
   interface Contact {
     address: string;
     image: string | null;
@@ -20,6 +21,7 @@
       <img src={contact.image || anonymousImageUrl} alt="wallet avatar" />
 
       <div class="name-and-labels">
+        <Link to={"/contacts/" + contact.address} />
         <div class="name">
           {#if contact.name}
             {contact.name}
@@ -53,12 +55,13 @@
     grid-auto-rows: 70px;
     gap: 0px;
     height: auto;
-    overflow-y: scroll;
+    overflow-y: hidden;
   }
 
   .name-and-labels {
     display: grid;
     grid-auto-flow: row;
+    position: relative;
   }
 
   .contact {
@@ -86,5 +89,14 @@
 
   img {
     width: 100%;
+  }
+  .name-and-labels > :global(a) {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: transparent;
+    z-index: 1;
   }
 </style>
