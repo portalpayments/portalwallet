@@ -1,0 +1,108 @@
+$ ./mint-identity-tokens.ts
+🏦 Minting two identity tokens
+⚡ Connecting to mainNetBeta
+🎟️ make portal identity token for Mike {
+  "response": {
+    "signature": "2Yb59u6Pe5q7G3nSSGV7dHgTy3LPMjxNBc4SnS3KT4Qo1u6jLXvX9rBt5eR4jfPgWVkVr9m9oDmEcfD5vifb7FGV",
+    "confirmResponse": {
+      "context": {
+        "slot": 148374108
+      },
+      "value": {
+        "err": null
+      }
+    }
+  },
+  "mintAddress": "J7nfNW2vZYeecyKFS6BrVTqayvxVVek21wbYGM97HCrs",
+  "metadataAddress": "EBTvuQ7tTPSaBB2baXXyseTod4eZvDLT7ck24kHMSeHP",
+  "masterEditionAddress": "Cv2H4ZafZcxvBPsncBpQXjxNcDY9d5CVf8spc3kzgXPS",
+  "tokenAddress": "FvGmPpkBXQhBg6gdo7KiL6AtjfrQCsC2J1jdErdPGYfz",
+  "nft": {
+    "model": "nft",
+    "updateAuthorityAddress": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+    "json": {
+      "version": 6,
+      "issuedAgainst": "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+      "claims": {
+        "type": "INDIVIDUAL",
+        "givenName": "Micheal-Sean",
+        "familyName": "MacCana",
+        "imageUrl": "//src/assets/verifiedMikeImage.png"
+      }
+    },
+    "jsonLoaded": true,
+    "name": "Portal Identity Token",
+    "symbol": "",
+    "uri": "https://arweave.net/ndYjq81ejDp4utKrd3vgW-XT3cmCWs4Q4jLjAqbUuH8",
+    "isMutable": true,
+    "primarySaleHappened": false,
+    "sellerFeeBasisPoints": 0,
+    "editionNonce": 255,
+    "creators": [
+      {
+        "address": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+        "verified": true,
+        "share": 100
+      }
+    ],
+    "tokenStandard": 0,
+    "collection": null,
+    "collectionDetails": null,
+    "uses": null,
+    "address": "J7nfNW2vZYeecyKFS6BrVTqayvxVVek21wbYGM97HCrs",
+    "metadataAddress": "EBTvuQ7tTPSaBB2baXXyseTod4eZvDLT7ck24kHMSeHP",
+    "mint": {
+      "model": "mint",
+      "address": "J7nfNW2vZYeecyKFS6BrVTqayvxVVek21wbYGM97HCrs",
+      "mintAuthorityAddress": "Cv2H4ZafZcxvBPsncBpQXjxNcDY9d5CVf8spc3kzgXPS",
+      "freezeAuthorityAddress": "Cv2H4ZafZcxvBPsncBpQXjxNcDY9d5CVf8spc3kzgXPS",
+      "decimals": 0,
+      "supply": {
+        "basisPoints": "01",
+        "currency": {
+          "symbol": "Token",
+          "decimals": 0,
+          "namespace": "spl-token"
+        }
+      },
+      "isWrappedSol": false,
+      "currency": {
+        "symbol": "Token",
+        "decimals": 0,
+        "namespace": "spl-token"
+      }
+    },
+    "token": {
+      "model": "token",
+      "address": "FvGmPpkBXQhBg6gdo7KiL6AtjfrQCsC2J1jdErdPGYfz",
+      "isAssociatedToken": true,
+      "mintAddress": "J7nfNW2vZYeecyKFS6BrVTqayvxVVek21wbYGM97HCrs",
+      "ownerAddress": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+      "amount": {
+        "basisPoints": "01",
+        "currency": {
+          "symbol": "Token",
+          "decimals": 0,
+          "namespace": "spl-token"
+        }
+      },
+      "closeAuthorityAddress": null,
+      "delegateAddress": null,
+      "delegateAmount": {
+        "basisPoints": "00",
+        "currency": {
+          "symbol": "Token",
+          "decimals": 0,
+          "namespace": "spl-token"
+        }
+      },
+      "state": 1
+    },
+    "edition": {
+      "model": "nftEdition",
+      "isOriginal": true,
+      "address": "Cv2H4ZafZcxvBPsncBpQXjxNcDY9d5CVf8spc3kzgXPS",
+      "supply": "00",
+      "maxSupply": "00"
+    }
+  }

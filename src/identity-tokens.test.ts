@@ -404,7 +404,4 @@ describe(`identity tokens`, () => {
   // const data = await httpGet(identityToken.uri);
 
   // expect(data).toMatchObject({});
-  // test(`We can read the Portal Identity Token from the Alice's wallet's Portal Identity Token account`, () => {
-  //   //
-  // });
 });
