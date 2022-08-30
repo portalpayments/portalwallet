@@ -100,3 +100,8 @@ export const MINUTES = MINUTE;
 // Hopefully one day BigNumber will be replaced by BigInt (which is native to JS)
 export const ZERO = new BigNumber(0);
 export const ONE = new BigNumber(1);
+
+// https://solscan.io/account/11111111111111111111111111111111
+export const SOLANA_SYSTEM_PROGRAM = new PublicKey(
+  "11111111111111111111111111111111"
+);

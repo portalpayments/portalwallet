@@ -16,6 +16,7 @@ import {
   ZERO,
   ENOUGH_TO_MAKE_A_NEW_TOKEN,
   SECONDS,
+  SOLANA_SYSTEM_PROGRAM,
 } from "./constants";
 import BN, { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
@@ -254,9 +255,9 @@ describe(`identity tokens`, () => {
       {
         address: expect.any(PublicKey),
         amount: 1n,
-        closeAuthority: new PublicKey("11111111111111111111111111111111"),
+        closeAuthority: SOLANA_SYSTEM_PROGRAM,
         closeAuthorityOption: 0,
-        delegate: new PublicKey("11111111111111111111111111111111"),
+        delegate: SOLANA_SYSTEM_PROGRAM,
         delegateOption: 0,
         delegatedAmount: 0n,
         isNative: 0n,
@@ -304,9 +305,9 @@ describe(`identity tokens`, () => {
       {
         address: expect.any(PublicKey),
         amount: 0n,
-        closeAuthority: new PublicKey("11111111111111111111111111111111"),
+        closeAuthority: SOLANA_SYSTEM_PROGRAM,
         closeAuthorityOption: 0,
-        delegate: new PublicKey("11111111111111111111111111111111"),
+        delegate: SOLANA_SYSTEM_PROGRAM,
         delegateOption: 0,
         delegatedAmount: 0n,
         isNative: 0n,
@@ -347,9 +348,9 @@ describe(`identity tokens`, () => {
         address: expect.any(PublicKey),
         // The token has now arrived in Alice's account
         amount: 1n,
-        closeAuthority: new PublicKey("11111111111111111111111111111111"),
+        closeAuthority: SOLANA_SYSTEM_PROGRAM,
         closeAuthorityOption: 0,
-        delegate: new PublicKey("11111111111111111111111111111111"),
+        delegate: SOLANA_SYSTEM_PROGRAM,
         delegateOption: 0,
         delegatedAmount: 0n,
         isNative: 0n,
