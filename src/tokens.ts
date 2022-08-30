@@ -97,14 +97,14 @@ export const makeTokenAccount = async (
   connection: Connection,
   payer: Keypair,
   mintAccountPublicKey: PublicKey,
-  recipient: Keypair
+  recipientPublicKey: PublicKey
 ) => {
-  // Create Bob's token account
+  // Create recipient's token account
   const recipientTokenAccount = await getOrCreateAssociatedTokenAccount(
     connection,
     payer,
     mintAccountPublicKey,
-    recipient.publicKey,
+    recipientPublicKey,
     false
   );
   return recipientTokenAccount;

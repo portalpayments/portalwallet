@@ -97,5 +97,6 @@ export const MINUTE = 60 * SECONDS;
 export const MINUTES = MINUTE;
 
 // Make zero and one work
+// Hopefully one day BigNumber will be replaced by BigInt (which is native to JS)
 export const ZERO = new BigNumber(0);
 export const ONE = new BigNumber(1);

@@ -26,7 +26,8 @@ import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
 
 describe(`identity tokens`, () => {
   let connection: Connection;
-  let testIdentityTokenIssuer = new Keypair();
+  const alice = new Keypair();
+  const testIdentityTokenIssuer = new Keypair();
   let mintAddress: PublicKey | null = null;
   let senderTokenAccount: PublicKey | null = null;
 
@@ -43,8 +44,14 @@ describe(`identity tokens`, () => {
     // Close connection?
   });
 
-  test(`we can mint an identity token`, async () => {
-    const metadata = getTokenMetaData(MIKES_WALLET, "Micheal-Sean", "MacCana");
+  test(`we can mint an identity token for Alice`, async () => {
+    await putSolIntoWallet(connection, alice.publicKey, 1_000_000_000);
+
+    const metadata = getTokenMetaData(
+      alice.publicKey.toBase58(),
+      "Alice",
+      "Smith"
+    );
 
     const name = IDENTITY_TOKEN_NAME;
     const createOutput = await mintIdentityToken(
@@ -179,7 +186,7 @@ describe(`identity tokens`, () => {
     const artistAddress = nft.mint.mintAuthorityAddress;
     const nftAddress = nft.address;
 
-    log(stringify(nft));
+    // log(stringify(nft));
 
     expect(nft).toEqual({
       model: "nft",
@@ -239,39 +246,43 @@ describe(`identity tokens`, () => {
     });
   });
 
-  test(`We can transfer the NFT we just made`, async () => {
-    const destinationAccount = new Keypair();
-
+  test(`We make an Associated Token Account for the Portal Identity Token in Alice's wallet`, async () => {
+    if (!mintAddress) {
+      throw new Error(`You need to mint a token first`);
+    }
     const destinationTokenAccount = await makeTokenAccount(
       connection,
       testIdentityTokenIssuer,
-      testIdentityTokenIssuer.publicKey,
-      destinationAccount
+      mintAddress,
+      alice.publicKey
     );
 
-    await putSolIntoWallet(
-      connection,
-      destinationAccount.publicKey,
-      ENOUGH_TO_MAKE_A_NEW_TOKEN
-    );
-
-    const signature = await transferPortalIdentityToken(
-      connection,
-      testIdentityTokenIssuer,
-      senderTokenAccount,
-      destinationAccount.publicKey
-    );
+    expect(destinationTokenAccount).toEqual({
+      address: expect.any(PublicKey),
+      amount: BigInt(0),
+      closeAuthority: null,
+      delegate: null,
+      delegatedAmount: BigInt(0),
+      isFrozen: false,
+      isInitialized: true,
+      isNative: false,
+      mint: mintAddress,
+      owner: alice.publicKey,
+      rentExemptReserve: null,
+    });
   });
 
+  // test(`We can transfer the NFT we just made to the Associated Token Account in Alice's wallet`, async () => {
+  //   const signature = await transferPortalIdentityToken(
+  //     connection,
+  //     testIdentityTokenIssuer,
+  //     // TODO: check this account from the NFT output above
+  //     senderTokenAccount,
+  //     alice.publicKey
+  //   );
+  // });
+
   // test(`We can get the associated token account for Portal Identity Token for alice's wallet`, () => {
-  //   //
-  // });
-
-  // test(`We can read the Portal Identity Token from the Alice's wallet's Portal Identity Token account`, () => {
-  //   //
-  // });
-
-  // test(`We can read the Portal Identity Token from the Alice's wallet's Portal Identity Token account`, () => {
   //   //
   // });
 

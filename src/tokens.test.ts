@@ -166,7 +166,7 @@ describe("minting", () => {
       connection,
       testUSDCAuthority,
       mintAccountPublicKey,
-      bob
+      bob.publicKey
     );
 
     log(
