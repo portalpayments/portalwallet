@@ -68,6 +68,11 @@
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
   }
+  .dropbuttonclicked > img {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+  }
 
   /* The container <div> - needed to position the dropdown content */
   .dropdown {
@@ -78,7 +83,7 @@
   /* Dropdown Content (Hidden by Default) */
   .dropdown-content {
     position: absolute;
-    width: 100%;
+    width: 99%;
     height: 32px;
     border-bottom-right-radius: 21px;
     border-bottom-left-radius: 21px;
