@@ -9,6 +9,7 @@
   import { SECONDS, SECOND } from "../../../../src/constants";
   import { sleep } from "../../../../src/functions";
 
+
   let walletAddress: string = "";
   let amount: number;
   let fetchedAddressDetails = {
@@ -20,15 +21,11 @@
   };
 
   let sendButtonDisabled = true;
-
   let showGasFee = false;
-
   let isLoading = false;
-
   let isRequestingVerification = false;
   let isSendingAnyway = false;
   let isSending = false;
-
   let destinationWalletAddress: string | null;
   let transferAmount: number | null;
 
@@ -114,6 +111,7 @@
           handleKeyupWalletAddress,
           2 * SECONDS
         )}
+        
       />
       <span class="floating-label">wallet address</span>
     </div>

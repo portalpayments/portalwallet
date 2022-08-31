@@ -3,6 +3,8 @@
   import PortalLogoSVG from "../../assets/PortalLogo.svg";
   import { sleep } from "../../../../src/functions";
   import { SECOND } from "../../../../src/constants";
+ 
+  export let focusOn = null;
 
   let password = "";
   export let name = "Mike";
@@ -41,7 +43,7 @@
       >
         <div class="passwordContainer">
           <div class="password-prompt">Enter your password</div>
-          <input type="password" bind:value={password} />
+          <input type="password" bind:value={password} autofocus/>
 
           <button type="submit" class="loginButton">Log in</button>
         </div>

@@ -4,7 +4,7 @@
   import Navbar from "./lib/Navbar/Navbar.svelte";
   import Collectables from "./lib/Collectables/Collectables.svelte";
   import ContactsPage from "./lib/Contacts/ContactsPage.svelte";
-  import TransferPage from "./lib/Transfer/TransferPage.svelte";
+  import TransferPage from "./lib/Transfer/TransferDetails.svelte";
   import { Router, Route } from "svelte-navigator";
   import { getPrivateKey } from "./lib/utils";
   import {
@@ -21,7 +21,8 @@
     authStore,
     identityTokenIssuerPublicKey,
   } from "./lib/stores";
-
+ 
+	
   $authStore;
   console.log($authStore.isLoggedIn);
 
@@ -82,11 +83,12 @@
           adding money to account here
         </div></Route
       >
-      <Route path="/transferMoney"><TransferPage /></Route>
+      <Route path="/transferMoney">
+        <TransferPage/>
+       </Route>
 
       <Route path="transactions"
         ><div class="header-and-features">
-          Here go transactions
           <Auth />
         </div></Route
       >
