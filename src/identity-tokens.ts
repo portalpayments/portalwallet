@@ -184,22 +184,3 @@ export const getIdentityTokenFromWallet = async (
 
   return identityToken;
 };
-
-// export const getVerifiedIdentity = async (
-//   connection: Connection,
-//   mintAddress: PublicKey,
-//   wallet: PublicKey
-// ) => {
-//   const tokenAccountsByOwner = await getTokenAccountsByOwner(
-//     connection,
-//     wallet
-//   );
-
-//   const portalAssociatedTokenAccount = tokenAccountsByOwner.find(
-//     (tokenAccount) => {
-//       return tokenAccount.mint === mintAddress;
-//     }
-//   );
-
-//   const portalIdentityToken = portalAssociatedTokenAccount.
-// };
