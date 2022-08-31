@@ -174,7 +174,7 @@ export const getIdentityTokenFromWallet = async (
   const identityToken = nfts.find((nft) => {
     // Quick note we need to toBase58() both addresses for the comparison to work.
     return (
-      nft.creators[0].address.toBase58() ===
+      nft?.creators?.[0]?.address.toBase58() ===
       identityTokenIssuerPublicKey.toBase58()
     );
   });
