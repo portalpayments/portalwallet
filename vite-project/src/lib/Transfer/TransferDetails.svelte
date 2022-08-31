@@ -11,7 +11,7 @@
   import base58 from "bs58";
 
   import { SECONDS, SECOND } from "../../../../src/constants";
-  import { sleep } from "../../../../src/functions";
+  import { log } from "../../../../src/functions";
 
   let walletAddress: string = "";
   let amount: number;
@@ -53,20 +53,23 @@
 
     let isValidWalletAddress: Boolean | null = null;
     try {
-      base58.decode(walletAddress);
+      new PublicKey(walletAddress);
       isValidWalletAddress = true;
     } catch {
       isValidWalletAddress = false;
     }
 
     if (!isValidWalletAddress) {
+      // TODO: handle invalid wallet addresses better
+      log(`This is not a valid wallet address`);
+
       fetchedAddressDetails.addressFetched = false;
       fetchedAddressDetails.isAnonymous = false;
       sendButtonDisabled = true;
       isRequestingVerification = false;
       isSendingAnyway = false;
       isSending = false;
-
+      isLoading = false;
       return;
     }
 
@@ -139,10 +142,7 @@
         bind:value={walletAddress}
         type="text"
         required
-        on:keyup|preventDefault={debounce(
-          handleKeyupWalletAddress,
-          2 * SECONDS
-        )}
+        on:keyup|preventDefault={debounce(handleKeyupWalletAddress, 1 * SECOND)}
       />
       <span class="floating-label">wallet address</span>
     </div>
