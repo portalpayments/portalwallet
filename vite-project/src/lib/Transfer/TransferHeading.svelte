@@ -4,15 +4,13 @@
   import JohnPng from "../../assets/ProfilePics/john.png";
   import UnverifiedTag from "../Shared/Label.svelte";
   import Checkmark from "../../assets/Checkmark.svg";
-  import { LabelColor } from "../constants";
+  import { LabelColor, warningUnverifiedAccount } from "../constants";
 
   export let name = "John O'Mally";
   export let isAnonymous = true;
   export let isPending = false;
   export let isNew = false;
   export let addressFetched = false;
-  let warningUnverfiedAccount =
-    "This address is unverified. We highly suggest you send money only to verified addresses, because the transfer cannot be undone. You can click below to request verification. We will notify you once the address is verified.";
 </script>
 
 <div class="recipientDetails">
@@ -56,7 +54,7 @@
         {/if}
       </div>
       {#if isAnonymous}
-        <div class="unverified-message">{warningUnverfiedAccount}</div>
+        <div class="unverified-message">{warningUnverifiedAccount}</div>
       {/if}
     </div>
   {/if}

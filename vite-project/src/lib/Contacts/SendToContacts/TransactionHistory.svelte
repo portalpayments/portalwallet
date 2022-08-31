@@ -1,5 +1,6 @@
 <script lang="ts">
   import Modal from "../../UI/Modal.svelte";
+  import { warningUnverifiedAccount } from "../../constants";
   import RequestVerification from "../../Transfer/RequestVerification.svelte";
   import USDC from "../../../assets/usdc.svg";
 
@@ -67,10 +68,7 @@
   {#if transactions.length === 0}
     <div class="history-container">
       <div class="warning">
-        This address is unverified. We highly suggest you send money only to
-        verified addresses, because the transfer cannot be undone. You can click
-        below to request verification. We will notify you once the address is
-        verified.
+        {warningUnverifiedAccount}
       </div>
     </div>
   {:else}
