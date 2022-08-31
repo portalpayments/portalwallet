@@ -10,7 +10,7 @@ import {
 import { asyncMap } from "./functions";
 import base58 from "bs58";
 import { AccountLayout, RawAccount, TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { getIdentityTokenFromWallet } from "./identity-tokens";
 import { TokenMetaData, TokenMetaDataClaims } from "./types";
 
@@ -136,22 +136,32 @@ export const getTokenAccountsByOwner = async (
 
 export const verifyWallet = async (
   connection: Connection,
-  identityTokenIssuer: Keypair,
+  metaplexKeypair: Keypair,
+  identityTokenIssuerPublicKey: PublicKey,
   wallet: PublicKey
 ): Promise<TokenMetaDataClaims | null> => {
   const identityToken = await getIdentityTokenFromWallet(
     connection,
-    identityTokenIssuer,
+    metaplexKeypair,
+    identityTokenIssuerPublicKey,
     wallet
   );
 
-  const arweaveResponseBody = (await axios.get(identityToken.uri)).data;
-
-  if (arweaveResponseBody.issuedAgainst !== wallet.toBase58()) {
+  if (!identityToken) {
     return null;
   }
 
-  if (arweaveResponseBody.version < LATEST_IDENTITY_TOKEN_VERSION) {
+  let arweaveResponse: AxiosResponse<any, any>;
+  try {
+    arweaveResponse = await axios.get(identityToken.uri);
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    throw new Error(`Error fetching data from ARWeave: ${error.message}`);
+  }
+
+  const arweaveResponseBody = arweaveResponse.data;
+
+  if (arweaveResponseBody.issuedAgainst !== wallet.toBase58()) {
     return null;
   }
 

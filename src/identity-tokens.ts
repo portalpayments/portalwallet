@@ -31,16 +31,16 @@ const name = IDENTITY_TOKEN_NAME;
 
 export const getMetaplex = (
   connection: Connection,
-  identityTokenIssuer: Keypair,
+  keypair: Keypair,
   isProduction: boolean = false
 ) => {
   if (isProduction) {
     return Metaplex.make(connection)
-      .use(keypairIdentity(identityTokenIssuer))
+      .use(keypairIdentity(keypair))
       .use(bundlrStorage());
   }
   return Metaplex.make(connection)
-    .use(keypairIdentity(identityTokenIssuer))
+    .use(keypairIdentity(keypair))
     .use(mockStorage());
 };
 
@@ -159,10 +159,11 @@ export const getFullNFTsFromWallet = async (
 
 export const getIdentityTokenFromWallet = async (
   connection: Connection,
-  identityTokenIssuer: Keypair,
+  metaplexKeypair: Keypair,
+  identityTokenIssuerPublicKey: PublicKey,
   wallet: PublicKey
 ) => {
-  const metaplex = await getMetaplex(connection, identityTokenIssuer);
+  const metaplex = await getMetaplex(connection, metaplexKeypair);
   const nfts = await metaplex
     .nfts()
     .findAllByOwner({
@@ -174,12 +175,12 @@ export const getIdentityTokenFromWallet = async (
     // Quick note we need to toBase58() both addresses for the comparison to work.
     return (
       nft.creators[0].address.toBase58() ===
-      identityTokenIssuer.publicKey.toBase58()
+      identityTokenIssuerPublicKey.toBase58()
     );
   });
 
   if (!identityToken) {
-    throw new Error(`Could not find identity token for wallet '${wallet}'`);
+    return null;
   }
 
   return identityToken;

@@ -20,18 +20,11 @@ import {
   KIMZO_NFT_ADDRESS,
   KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT,
   MIKES_WALLET,
-  SECONDS,
   USDC_MAINNET_MINT_ACCOUNT,
 } from "./constants";
-import {
-  getAllNftMetadatasFromAWallet,
-  getIdentityTokenFromWallet,
-} from "./identity-tokens";
+import { getAllNftMetadatasFromAWallet } from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
-import { log, sleep, stringify } from "./functions";
-import BN from "bn.js";
-import axios from "axios";
 
 dotenv.config();
 
@@ -227,6 +220,7 @@ describe(`mainnet integration tests`, () => {
     const claims = await verifyWallet(
       mainNetConnection,
       identityTokenIssuer,
+      identityTokenIssuer.publicKey,
       new PublicKey(MIKES_WALLET)
     );
 
@@ -251,6 +245,7 @@ describe(`mainnet integration tests`, () => {
     const claims = await verifyWallet(
       mainNetConnection,
       identityTokenIssuer,
+      identityTokenIssuer.publicKey,
       new PublicKey(JOE_MCCANNS_WALLET)
     );
 

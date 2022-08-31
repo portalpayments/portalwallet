@@ -87,9 +87,14 @@ const identityTokenIssuer = getKeypairFromString(identityTokenPrivateKey);
   const identityToken = await getIdentityTokenFromWallet(
     connection,
     identityTokenIssuer,
+    identityTokenIssuer.publicKey,
     new PublicKey(MIKES_WALLET)
   );
   log(identityToken);
+
+  if (!identityToken) {
+    throw new Error(`Mising identity token`);
+  }
 
   const dataFromUri = await axios.get(identityToken.uri);
   log(dataFromUri);

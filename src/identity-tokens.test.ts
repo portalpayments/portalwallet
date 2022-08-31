@@ -366,6 +366,7 @@ describe(`identity tokens`, () => {
     const identityToken = await getIdentityTokenFromWallet(
       connection,
       testIdentityTokenIssuer,
+      testIdentityTokenIssuer.publicKey,
       alice.publicKey
     );
 
