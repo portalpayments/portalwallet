@@ -1,10 +1,14 @@
 <script lang="ts">
+  import { connection, keyPair, identityTokenIssuerPublicKey } from "../stores";
+  import { PublicKey, Connection, Keypair } from "@solana/web3.js";
   import TransferHeading from "./TransferHeading.svelte";
   import TransferButtons from "./TransferButtons.svelte";
   import LoaderModal from "../UI/LoaderModal.svelte";
   import Modal from "../UI/Modal.svelte";
   import RequestVerification from "./RequestVerification.svelte";
   import TransactionCompleted from "./TransactionCompleted.svelte";
+  import { verifyWallet } from "../../../../src/vmwallet";
+  import base58 from "bs58";
 
   import { SECONDS, SECOND } from "../../../../src/constants";
   import { sleep } from "../../../../src/functions";
@@ -32,39 +36,64 @@
   let destinationWalletAddress: string | null;
   let transferAmount: number | null;
 
-  const ANONYMOUS_WALLET_ADDRESS =
-    "ffffffffffffffffffffffffffffffffffffffffffff";
-  const VERIFIED_WALLET_ADDRESS =
-    "gggggggggggggggggggggggggggggggggggggggggggg";
+  let connectionValue: Connection | null = null;
+
+  connection.subscribe((value) => {
+    connectionValue = value;
+  });
+
+  let keyPairValue: Keypair | null = null;
+
+  keyPair.subscribe((value) => {
+    keyPairValue = value;
+  });
 
   const handleKeyupWalletAddress = async () => {
-    if (walletAddress === ANONYMOUS_WALLET_ADDRESS) {
-      isLoading = true;
-      await sleep(7 * SECONDS);
-      isLoading = false;
-      fetchedAddressDetails.addressFetched = true;
-      fetchedAddressDetails.isAnonymous = true;
-      destinationWalletAddress = walletAddress;
+    isLoading = true;
+
+    let isValidWalletAddress: Boolean | null = null;
+    try {
+      base58.decode(walletAddress);
+      isValidWalletAddress = true;
+    } catch {
+      isValidWalletAddress = false;
     }
-    if (walletAddress === VERIFIED_WALLET_ADDRESS) {
-      isLoading = true;
-      await sleep(7 * SECONDS);
-      isLoading = false;
-      fetchedAddressDetails.addressFetched = true;
-      fetchedAddressDetails.isNew = true;
-      fetchedAddressDetails.name = "John O'Mally";
-      fetchedAddressDetails.isAnonymous = false;
-      sendButtonDisabled = false;
-      destinationWalletAddress = walletAddress;
-    }
-    if (walletAddress === "") {
+
+    if (!isValidWalletAddress) {
       fetchedAddressDetails.addressFetched = false;
       fetchedAddressDetails.isAnonymous = false;
       sendButtonDisabled = true;
       isRequestingVerification = false;
       isSendingAnyway = false;
       isSending = false;
+
+      return;
     }
+
+    // Get identity from the portal Identity Token
+    const verifiedClaims = await verifyWallet(
+      connectionValue,
+      keyPairValue,
+      identityTokenIssuerPublicKey,
+      new PublicKey(walletAddress)
+    );
+
+    isLoading = false;
+
+    if (!verifiedClaims) {
+      fetchedAddressDetails.addressFetched = true;
+      fetchedAddressDetails.isAnonymous = true;
+    }
+
+    if (verifiedClaims) {
+      fetchedAddressDetails.addressFetched = true;
+      fetchedAddressDetails.isNew = true;
+      fetchedAddressDetails.name = `${verifiedClaims.givenName} ${verifiedClaims.familyName}`;
+      fetchedAddressDetails.isAnonymous = false;
+      sendButtonDisabled = false;
+    }
+
+    destinationWalletAddress = walletAddress;
   };
 
   // From https://...
