@@ -17,8 +17,8 @@
   <div class="back-button">
     <Link to="/">&#8249;</Link>
   </div>
-  <!-- <div class="contact-details"> -->
-  <img src={contact.image} />
+
+  <img src={contact.image} alt={contact.name} />
 
   <div class="name">
     {contact.name}
@@ -31,7 +31,6 @@
       {/if}
     </div>
   </div>
-  <!-- </div> -->
 </div>
 
 <style>
