@@ -1,10 +1,18 @@
 import { AccountInfo, Connection, Keypair, PublicKey } from "@solana/web3.js";
 
 import { log } from "./functions";
-import { URLS, USDC_MAINNET_MINT_ACCOUNT } from "./constants";
+import {
+  LATEST_IDENTITY_TOKEN_VERSION,
+  MIKES_WALLET,
+  URLS,
+  USDC_MAINNET_MINT_ACCOUNT,
+} from "./constants";
 import { asyncMap } from "./functions";
 import base58 from "bs58";
 import { AccountLayout, RawAccount, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import axios from "axios";
+import { getIdentityTokenFromWallet } from "./identity-tokens";
+import { TokenMetaData, TokenMetaDataClaims } from "./types";
 
 export const getKeypairFromString = (privateKeyString: string) => {
   let decodedPrivateKey: Buffer;
@@ -124,4 +132,32 @@ export const getTokenAccountsByOwner = async (
   );
 
   return tokenAccounts as Array<TokenAccount>;
+};
+
+export const verifyWallet = async (
+  connection: Connection,
+  identityTokenIssuer: Keypair,
+  wallet: PublicKey
+): Promise<TokenMetaDataClaims | null> => {
+  const identityToken = await getIdentityTokenFromWallet(
+    connection,
+    identityTokenIssuer,
+    wallet
+  );
+
+  const arweaveResponseBody = (await axios.get(identityToken.uri)).data;
+
+  if (arweaveResponseBody.issuedAgainst !== wallet.toBase58()) {
+    return null;
+  }
+
+  if (arweaveResponseBody.version < LATEST_IDENTITY_TOKEN_VERSION) {
+    return null;
+  }
+
+  if (arweaveResponseBody.version < LATEST_IDENTITY_TOKEN_VERSION) {
+    return null;
+  }
+
+  return arweaveResponseBody.claims;
 };

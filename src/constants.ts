@@ -64,6 +64,9 @@ export const SOL = LAMPORTS_PER_SOL;
 // Older were minted with test storage URLs, timed out, etc.
 export const LATEST_IDENTITY_TOKEN_VERSION = 6;
 
+// Oldest that's acceptable to use in UI
+export const MINIMUM_IDENTITY_TOKEN_VERSION = LATEST_IDENTITY_TOKEN_VERSION;
+
 // TODO: reducing this to 1_000 makes wallets not visible
 // which seems to be the rent requirement -
 // see https://docs.solana.com/developing/programming-model/accounts#rent

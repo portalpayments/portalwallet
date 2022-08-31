@@ -24,7 +24,7 @@ import { stringify } from "./functions";
 
 // TODO maybe use node fetch after node 18
 import axios from "axios";
-import { ExpandedNFT } from "./types";
+import { ExpandedNFT, TokenMetaData } from "./types";
 import { getTokenAccountsByOwner } from "./vmwallet";
 
 const name = IDENTITY_TOKEN_NAME;
@@ -96,7 +96,7 @@ export const getTokenMetaData = (
   wallet: string,
   givenName: string,
   familyName: string
-) => {
+): TokenMetaData => {
   return {
     version: LATEST_IDENTITY_TOKEN_VERSION,
     // In future this can be removed, however right now Solana

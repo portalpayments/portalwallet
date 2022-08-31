@@ -9,6 +9,7 @@ import {
   getKeypairFromEnvFile,
   getKeypairFromString,
   getUSDCAccounts,
+  verifyWallet,
 } from "./vmwallet";
 
 import {
@@ -222,25 +223,17 @@ describe(`mainnet integration tests`, () => {
 
     const identityTokenIssuer = getKeypairFromString(identityTokenPrivateKey);
 
-    const identityToken = await getIdentityTokenFromWallet(
+    const claims = await verifyWallet(
       mainNetConnection,
       identityTokenIssuer,
       new PublicKey(MIKES_WALLET)
     );
-    log(identityToken);
 
-    const response = await axios.get(identityToken.uri);
-    log(response.data);
-
-    expect(response.data).toEqual({
-      claims: {
-        familyName: "MacCana",
-        givenName: "Micheal-Sean",
-        imageUrl: "//src/assets/verifiedMikeImage.png",
-        type: "INDIVIDUAL",
-      },
-      issuedAgainst: MIKES_WALLET,
-      version: 6,
+    expect(claims).toEqual({
+      familyName: "MacCana",
+      givenName: "Micheal-Sean",
+      imageUrl: "//src/assets/verifiedMikeImage.png",
+      type: "INDIVIDUAL",
     });
   });
 });

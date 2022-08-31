@@ -51,3 +51,16 @@ export interface ExpandedNFT {
     maxSupply: string;
   };
 }
+
+export interface TokenMetaData {
+  version: number;
+  issuedAgainst: string;
+  claims: TokenMetaDataClaims;
+}
+
+export interface TokenMetaDataClaims {
+  type: string;
+  givenName: string;
+  familyName: string;
+  imageUrl: string;
+}
