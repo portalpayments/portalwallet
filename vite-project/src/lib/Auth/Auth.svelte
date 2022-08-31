@@ -7,9 +7,11 @@
   let password = "";
   export let name = "Mike";
 
+  const TEMPORARY_PASSWORD = "password";
+
   async function login(password) {
     await sleep(1 * SECOND);
-    if (password === "testUser") {
+    if (password === "password") {
       $authStore.isLoggedIn = true;
     } else {
       alert("entered password is wrong");
