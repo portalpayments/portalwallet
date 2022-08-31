@@ -83,6 +83,7 @@
   /* Dropdown Content (Hidden by Default) */
   .dropdown-content {
     position: absolute;
+    // Eyeballing it - to my eye the right borders weren’t aligned in Chrome
     width: 99%;
     height: 32px;
     border-bottom-right-radius: 21px;
