@@ -4,23 +4,12 @@
 // https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 
 import { log, stringify } from "./src/functions";
-import {
-  LATEST_IDENTITY_TOKEN_VERSION,
-  MIKES_WALLET,
-  VAHEHS_WALLET,
-} from "./src/constants";
-import {
-  getFullNFTsFromWallet,
-  getIdentityTokenFromWallet,
-  getTokenMetaData,
-  mintIdentityToken,
-} from "./src/identity-tokens";
+import { MIKES_WALLET } from "./src/constants";
+import { getTokenMetaData, mintIdentityToken } from "./src/identity-tokens";
 import { connect, getKeypairFromString } from "./src/vmwallet";
 import dotenv from "dotenv";
 import { makeTokenAccount, transferPortalIdentityToken } from "./src/tokens";
-import { Account } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
-import axios from "axios";
 
 dotenv.config();
 
@@ -32,72 +21,56 @@ if (!identityTokenPrivateKey) {
 
 const identityTokenIssuer = getKeypairFromString(identityTokenPrivateKey);
 
-(async () => {
-  log(`🏦 Minting two identity tokens`);
+const mintAndTransferIdentityToken = async (
+  wallet: string,
+  givenName: string,
+  familyName: string
+) => {
+  log(`🏦 Minting identity tokens`);
   const connection = await connect("mainNetBeta");
 
-  // const mikeTokenCreateOutput = await mintIdentityToken(
-  //   connection,
-  //   identityTokenIssuer,
-  //   getTokenMetaData(MIKES_WALLET, "Micheal-Sean", "MacCana"),
-  //   true
-  // );
-
-  // log(
-  //   `🎟️ make portal identity token for Mike`,
-  //   stringify(mikeTokenCreateOutput)
-  // );
-
-  // const vahehTokenCreateOutput = await mintIdentityToken(
-  //   connection,
-  //   identityTokenIssuer,
-  //   getTokenMetaData(VAHEHS_WALLET, "Vaheh", "Hatami"),
-  //   true
-  // );
-
-  // log(
-  //   `🎟️ make portal identity token for Vaheh`,
-  //   stringify(vahehTokenCreateOutput)
-  // );
-
-  // https://solscan.io/account/FvGmPpkBXQhBg6gdo7KiL6AtjfrQCsC2J1jdErdPGYfz
-  // const mintAddress = new PublicKey(
-  //   "J7nfNW2vZYeecyKFS6BrVTqayvxVVek21wbYGM97HCrs"
-  // );
-  // const destinationTokenAccount = await makeTokenAccount(
-  //   connection,
-  //   identityTokenIssuer,
-  //   mintAddress,
-  //   new PublicKey(MIKES_WALLET)
-  // );
-
-  // log(destinationTokenAccount);
-
-  // const signature = await transferPortalIdentityToken(
-  //   connection,
-  //   identityTokenIssuer,
-  //   new PublicKey("FvGmPpkBXQhBg6gdo7KiL6AtjfrQCsC2J1jdErdPGYfz"),
-  //   new PublicKey("9A1FCs5FciGYpxz7yd8yrr2pjmFqtM9NRXMDCpAGWEGr")
-  // );
-
-  // log(signature);
-
-  log(`Finding the portal identity token minted for Mike`);
-
-  const identityToken = await getIdentityTokenFromWallet(
+  const tokenCreateOutput = await mintIdentityToken(
     connection,
     identityTokenIssuer,
-    identityTokenIssuer.publicKey,
-    new PublicKey(MIKES_WALLET)
+    getTokenMetaData(wallet, givenName, familyName),
+    true
   );
-  log(identityToken);
 
-  if (!identityToken) {
-    throw new Error(`Mising identity token`);
-  }
+  const mintAddress = tokenCreateOutput.mintAddress;
+  const tokenAddress = tokenCreateOutput.tokenAddress;
 
-  const dataFromUri = await axios.get(identityToken.uri);
-  log(dataFromUri);
+  log(`🎟️The token for ${givenName} has been created.`, {
+    mintAddress: mintAddress.toBase58(),
+    tokenAddress: tokenAddress.toBase58(),
+  });
+
+  // Yes really, the sender token account is the token address
+  const senderTokenAccount = tokenAddress;
+
+  const tokenAccountResults = await makeTokenAccount(
+    connection,
+    identityTokenIssuer,
+    mintAddress,
+    new PublicKey(wallet)
+  );
+
+  const recipientTokenAccount = tokenAccountResults.address;
+
+  log(
+    `👛 made token account for this mint on ${givenName}'s wallet, recipient token account is`,
+    recipientTokenAccount.toBase58()
+  );
+
+  const signature = await transferPortalIdentityToken(
+    connection,
+    identityTokenIssuer,
+    senderTokenAccount,
+    recipientTokenAccount
+  );
+
+  log(`Transferred token to final destination!`, signature);
 
   log(`✅ Completed successfully`);
-})();
+};
+
+mintAndTransferIdentityToken(MIKES_WALLET, "Micheal-Sean", "MacCana");
