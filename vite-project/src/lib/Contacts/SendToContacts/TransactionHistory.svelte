@@ -236,9 +236,7 @@
     height: 40%;
     color: #4d4d4d;
   }
-  .disabled {
-    background-color: #63a6ee;
-  }
+
   .request-verification {
     background-color: #2775c9;
     width: 93%;
