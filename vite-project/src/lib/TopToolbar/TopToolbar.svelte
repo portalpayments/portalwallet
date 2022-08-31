@@ -3,7 +3,7 @@
   import NotifiactionBell from "../../assets/notification-bell.svg";
   import Auth from "../Auth/Auth.svelte";
   export let name = "anonymous";
-  export let verified = false;
+  export let isVerified = false;
 
   let dropbuttonClicked = false;
 </script>
@@ -15,7 +15,7 @@
       on:click={() => (dropbuttonClicked = !dropbuttonClicked)}
     >
       {name}
-      {#if verified}
+      {#if isVerified}
         <img src={Checkmark} alt="User is Verified" />
       {/if}
     </button>
@@ -56,7 +56,7 @@
     filter: invert(37%) sepia(30%) saturate(2457%) hue-rotate(184deg)
       brightness(97%) contrast(87%);
   }
-  /* src https://www.w3schools.com/howto/howto_js_dropdown.asp*/
+  /* From https://www.w3schools.com/howto/howto_js_dropdown.asp*/
 
   .dropbuttonclicked {
     background: rgba(61, 101, 245, 0.2);

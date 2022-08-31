@@ -7,11 +7,20 @@
   import TransferPage from "./lib/Transfer/TransferPage.svelte";
   import { Router, Route } from "svelte-navigator";
   import { getPrivateKey } from "./lib/utils";
-  import { getKeypairFromString, connect } from "../../src/vmwallet";
+  import {
+    getKeypairFromString,
+    connect,
+    verifyWallet,
+  } from "../../src/vmwallet";
   import { log } from "../../src/functions";
   import Auth from "./lib/Auth/Auth.svelte";
   import SendToContacts from "./lib/Contacts/SendToContacts/SendToContacts.svelte";
-  import { connection, keyPair, authStore } from "./lib/stores";
+  import {
+    connection,
+    keyPair,
+    authStore,
+    identityTokenIssuerPublicKey,
+  } from "./lib/stores";
 
   $authStore;
   console.log($authStore.isLoggedIn);
@@ -32,7 +41,7 @@
 
   interface User {
     name: string;
-    verified: boolean;
+    isVerified: boolean;
   }
 
   let testUser: null | User = null;
@@ -46,8 +55,22 @@
     const newKeyPair = await getKeypairFromString(privateKey);
     keyPair.set(newKeyPair);
 
-    // TODO: get these values from the portal Identity Token
-    testUser = { name: "Chris Austin", verified: true };
+    // Get identity from the portal Identity Token
+    const verifiedClaims = await verifyWallet(
+      newConnection,
+      newKeyPair,
+      identityTokenIssuerPublicKey,
+      newKeyPair.publicKey
+    );
+
+    if (verifiedClaims) {
+      testUser = {
+        name: `${verifiedClaims.givenName} ${verifiedClaims.familyName}`,
+        isVerified: true,
+      };
+      return;
+    }
+    testUser = { name: "Anonymous", isVerified: false };
   })();
 </script>
 
