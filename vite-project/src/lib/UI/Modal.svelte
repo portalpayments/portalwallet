@@ -18,9 +18,9 @@
 >
   <div class="modalContents">
     <div class="closeButton">
-      {#if buttonType == "transfer"}
+      {#if buttonType === "transfer"}
         <Link to="/" on:click={clicked}>×</Link>
-      {:else if buttonType == "requestVerification"}
+      {:else if buttonType === "requestVerification"}
         <button on:click={clicked}>×</button>
       {/if}
     </div>
