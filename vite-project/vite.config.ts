@@ -32,6 +32,9 @@ export default defineConfig({
   },
   optimizeDeps: {
     esbuildOptions: {
+      define: {
+        global: "globalThis",
+      },
       plugins: [NodeGlobalsPolyfillPlugin({ buffer: true })],
       target: "es2020",
     },
