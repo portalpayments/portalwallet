@@ -1,7 +1,7 @@
 import { getTwitterRegistry } from "@bonfida/spl-name-service";
 import { Connection } from "@solana/web3.js";
 import {
-  JOE_MACCANNS_WALLET,
+  JOE_MCCANNS_WALLET,
   MIKES_WALLET,
   SHAQS_WALLET,
   URLS,
@@ -21,7 +21,7 @@ describe("Wallet to Twitter mapping", () => {
   });
 
   test(`Says Joe McCann's wallet hasn't been set up for reverse Twitter`, async () => {
-    expect(await getHandleForWallet(JOE_MACCANNS_WALLET)).toBeNull();
+    expect(await getHandleForWallet(JOE_MCCANNS_WALLET)).toBeNull();
   });
 
   test(`Shows mapping to Mike's Twitter account`, async () => {
@@ -63,7 +63,7 @@ describe(`Wallet => Twitter verification`, () => {
   });
   test(`Joe doesn't have wallet to Twitter mappings set up`, async () => {
     expect(
-      await checkIsWalletVerifiedViaTwitter(JOE_MACCANNS_WALLET)
+      await checkIsWalletVerifiedViaTwitter(JOE_MCCANNS_WALLET)
     ).toBeFalsy();
   });
 });

@@ -6,7 +6,7 @@ export const IDENTITY_TOKEN_NAME = "Portal Identity Token";
 // Shaq is one of the only people I know
 // with a verified Twitter handle and a Solana wallet.
 export const SHAQS_WALLET = "gacMrsrxNisAhCfgsUAVbwmTC3w9nJB6NychLAnTQFv";
-export const JOE_MACCANNS_WALLET =
+export const JOE_MCCANNS_WALLET =
   "5CJFJoKiZ14tdsjtWgKGQVuVkYW7pcWUR4LFSvDELFod";
 export const MIKES_WALLET = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
 export const VAHEHS_WALLET = "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG";

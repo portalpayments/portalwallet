@@ -16,6 +16,7 @@ import {
   AGIZA_NFT_ADDRESS,
   AGIZA_NFT_ASSOCIATED_TOKEN_ACCOUNT,
   ARTIST,
+  JOE_MCCANNS_WALLET,
   KIMZO_NFT_ADDRESS,
   KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT,
   MIKES_WALLET,
@@ -235,5 +236,24 @@ describe(`mainnet integration tests`, () => {
       imageUrl: "//src/assets/verifiedMikeImage.png",
       type: "INDIVIDUAL",
     });
+  });
+
+  test(`We can not verify Joe McCann's wallet`, async () => {
+    if (!mainNetConnection) {
+      throw new Error(`Couldn't get a connection, can't continue`);
+    }
+    if (!identityTokenPrivateKey) {
+      throw new Error(`IDENTITY_TOKEN_PRIVATE_KEY isn't  set in .env file`);
+    }
+
+    const identityTokenIssuer = getKeypairFromString(identityTokenPrivateKey);
+
+    const claims = await verifyWallet(
+      mainNetConnection,
+      identityTokenIssuer,
+      new PublicKey(JOE_MCCANNS_WALLET)
+    );
+
+    expect(claims).toBeNull();
   });
 });
