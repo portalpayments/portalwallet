@@ -17,22 +17,29 @@ import {
   ARTIST,
   KIMZO_NFT_ADDRESS,
   KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT,
+  MIKES_WALLET,
   SECONDS,
   USDC_MAINNET_MINT_ACCOUNT,
 } from "./constants";
-import { getAllNftMetadatasFromAWallet } from "./identity-tokens";
+import {
+  getAllNftMetadatasFromAWallet,
+  getIdentityTokenFromWallet,
+} from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
 import { log, sleep, stringify } from "./functions";
 import BN from "bn.js";
+import axios from "axios";
 
 dotenv.config();
 
 // Quiet functions.log() during tests
-// jest.mock("./functions", () => ({
-//   ...jest.requireActual("./functions"),
-//   log: jest.fn(),
-// }));
+jest.mock("./functions", () => ({
+  ...jest.requireActual("./functions"),
+  log: jest.fn(),
+}));
+
+const identityTokenPrivateKey = process.env.IDENTITY_TOKEN_PRIVATE_KEY;
 
 describe(`mainnet integration tests`, () => {
   let mainNetConnection: Connection | null = null;
@@ -203,5 +210,37 @@ describe(`mainnet integration tests`, () => {
         pubkey: new PublicKey("Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc"),
       },
     ]);
+  });
+
+  test(`We can verify Mike's wallet belongs to Mike`, async () => {
+    if (!mainNetConnection) {
+      throw new Error(`Couldn't get a connection, can't continue`);
+    }
+    if (!identityTokenPrivateKey) {
+      throw new Error(`IDENTITY_TOKEN_PRIVATE_KEY isn't  set in .env file`);
+    }
+
+    const identityTokenIssuer = getKeypairFromString(identityTokenPrivateKey);
+
+    const identityToken = await getIdentityTokenFromWallet(
+      mainNetConnection,
+      identityTokenIssuer,
+      new PublicKey(MIKES_WALLET)
+    );
+    log(identityToken);
+
+    const response = await axios.get(identityToken.uri);
+    log(response.data);
+
+    expect(response.data).toEqual({
+      claims: {
+        familyName: "MacCana",
+        givenName: "Micheal-Sean",
+        imageUrl: "//src/assets/verifiedMikeImage.png",
+        type: "INDIVIDUAL",
+      },
+      issuedAgainst: MIKES_WALLET,
+      version: 6,
+    });
   });
 });
