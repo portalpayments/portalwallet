@@ -1,30 +1,30 @@
 <script lang="ts">
   import Checkmark from "../../assets/Checkmark.svg";
-  import NotifiactionBell from "../../assets/notification-bell.svg";
+  import NotificationBell from "../../assets/notification-bell.svg";
   import Auth from "../Auth/Auth.svelte";
   export let name = "anonymous";
   export let isVerified = false;
 
-  let dropbuttonClicked = false;
+  let isDropdownActive = false;
 </script>
 
 <div class="header">
   <div class="dropdown">
     <button
-      class={!dropbuttonClicked ? "dropbutton" : "dropbuttonclicked "}
-      on:click={() => (dropbuttonClicked = !dropbuttonClicked)}
+      class={!isDropdownActive ? "drop-button" : "drop-button-active "}
+      on:click={() => (isDropdownActive = !isDropdownActive)}
     >
       {name}
       {#if isVerified}
         <img src={Checkmark} alt="User is Verified" />
       {/if}
     </button>
-    <div class="dropdown-content {!dropbuttonClicked ? 'hide' : ''}">
+    <div class="dropdown-content {isDropdownActive ? 'active' : ''}">
       <Auth />
     </div>
   </div>
   <button style="justify-self: end; background: none; padding: 0;">
-    <img src={NotifiactionBell} alt="Notifications" class="bellIcon" />
+    <img src={NotificationBell} alt="Notifications" class="bell-icon" />
   </button>
 </div>
 
@@ -33,42 +33,43 @@
     display: grid;
     grid-auto-flow: column;
     padding: 0px 10px 0px 10px;
-    grid-template-columns: 1fr 100px;
+    grid-template-columns: 1fr 50px;
     align-items: center;
     justify-items: start;
     gap: 4px;
   }
-  .dropbutton {
+  .drop-button {
     background: rgba(61, 101, 245, 0.2);
     padding: 5px 10px 5px 10px;
     border-radius: 21px;
     color: #2d5177;
-    font-weight: 600;
-    font-size: 1rem;
     cursor: pointer;
+    font-weight: 600;
+    border: 0;
   }
-  .dropbutton > img {
+  .drop-button > img {
     width: 18px;
     height: 18px;
     vertical-align: middle;
   }
-  .bellIcon {
+  .bell-icon {
     filter: invert(37%) sepia(30%) saturate(2457%) hue-rotate(184deg)
       brightness(97%) contrast(87%);
   }
   /* From https://www.w3schools.com/howto/howto_js_dropdown.asp*/
 
-  .dropbuttonclicked {
+  .drop-button-active {
     background: rgba(61, 101, 245, 0.2);
     padding: 5px 10px 5px 10px;
-    border-radius: 21px;
+    border-radius: 14px;
     color: #2d5177;
     font-weight: 600;
-    font-size: 1rem;
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
+    border: 0;
   }
-  .dropbuttonclicked > img {
+  .drop-button-active > img {
     width: 18px;
     height: 18px;
     vertical-align: middle;
@@ -77,25 +78,28 @@
   /* The container <div> - needed to position the dropdown content */
   .dropdown {
     position: relative;
-    display: inline-block;
+    display: grid;
+    height: 32px;
+    font-size: 10pt;
+    line-height: 10pt;
   }
 
-  /* Dropdown Content (Hidden by Default) */
   .dropdown-content {
+    /* Hidden by Default */
+    display: none;
+    /* 32px from it's nearest positioned ancestor */
     position: absolute;
-    /* Eyeballing it - to my eye the right borders weren’t aligned in Chrome */
-    width: 99%;
-    height: 32px;
-    border-bottom-right-radius: 21px;
-    border-bottom-left-radius: 21px;
+    top: 32px;
+
+    width: 100%;
+    border-bottom-right-radius: 14px;
+    border-bottom-left-radius: 14px;
     background-color: #fff;
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     font-size: 1rem;
   }
-
-  /* Add or remove this to hide or show */
-  .hide {
-    display: none;
+  .dropdown-content.active {
+    display: grid;
   }
 </style>
