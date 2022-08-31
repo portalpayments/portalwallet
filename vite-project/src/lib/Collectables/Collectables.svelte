@@ -1,6 +1,6 @@
 <script lang="ts">
   import { log, stringify, asyncMap } from "../../../../src/functions";
-  import { getAllNftsFromAWallet } from "../../../../src/identity-tokens";
+  import { getAllNftMetadatasFromAWallet } from "../../../../src/identity-tokens";
   import { httpGet } from "../utils";
   import type { Collectable } from "../types";
 
@@ -23,8 +23,9 @@
       return;
     }
     log(`🖼️ Keypair or connection have changed, updating collectables`);
-    const allNftsFromAWallet = await getAllNftsFromAWallet(
+    const allNftsFromAWallet = await getAllNftMetadatasFromAWallet(
       updatedConnection,
+      updatedKeypair,
       updatedKeypair.publicKey
     );
     collectables = (await asyncMap(allNftsFromAWallet, async (nft) => {
