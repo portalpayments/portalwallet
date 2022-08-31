@@ -17,6 +17,7 @@
           transferAmount +
           " money"
       );
+      console.log('isPending in rv: '+ isPending)
       setTimeout(() => {
         requestVerEmailSentSuccessfully = true;
         isPending = true;

@@ -31,6 +31,7 @@
 <style>
   .modal {
     position: fixed;
+    top: 200px;
     z-index: 500;
     background-color: #fff;
     width: 250px;
