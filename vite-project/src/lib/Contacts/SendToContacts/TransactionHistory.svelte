@@ -18,13 +18,11 @@
   //TODO replace the following code with a backend function sending money to recipient
   // And reload the trnasaction history to show the latest transaction
   const sendMoney = () => {
-    if (contactWalletAddress) {
+    if (contactWalletAddress && sendAmount>0) {
       console.log(
         "Sending amount " + sendAmount + " To " + contactWalletAddress
       );
-    }
-
-    transactions.push({
+      transactions.push({
       date: "31/08/2022 08:52:21",
       amount: sendAmount,
       received: false,
@@ -32,6 +30,8 @@
 
     sendAmount = null;
     transactions = transactions;
+    }
+ 
   };
 
   const requestVerificationModal = () => {
@@ -60,6 +60,7 @@
     <button
       type="submit"
       disabled={sendAmount === 0 || sendAmount === null}
+      class={sendAmount === 0 || sendAmount === null? 'disabled': ""}
       on:click={sendMoney}>send</button
     >
   </div>
@@ -239,7 +240,7 @@
     color: #4d4d4d;
   }
   .disabled {
-    background-color: #63a6ee;
+    background-color: #98caff;
   }
   .request-verification {
     background-color: #2775c9;
