@@ -171,7 +171,6 @@
       ><div>
         <!-- TODO emailAddress is missing -->
         <RequestVerification
-          emailAddress="user@example.com"
           {destinationWalletAddress}
           {transferAmount}
           bind:isPending={fetchedAddressDetails.isPending}

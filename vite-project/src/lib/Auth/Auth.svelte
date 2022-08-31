@@ -73,11 +73,11 @@
   }
   input {
     border-radius: 9px;
-    padding: 10px 0px 0px 10px;
+    padding: 0px 0px 0px 6px;
     border: 1px solid rgba(217, 217, 217, 0.7);
     background-color: rgba(217, 217, 217, 0.1);
     width: 200px;
-    height: 25px;
+    height: 38px;
     font-size: 1.1rem;
     color: #4d4d4d;
     font-weight: 600;
