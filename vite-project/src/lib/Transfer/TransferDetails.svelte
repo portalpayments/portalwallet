@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
   import TransferHeading from "./TransferHeading.svelte";
   import TransferButtons from "./TransferButtons.svelte";
   import LoaderModal from "../UI/LoaderModal.svelte";

@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
   export let isAnonymous = false;
   export let requestVerificationClicked = false;
   export let sendAnywayClicked = false;

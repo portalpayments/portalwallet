@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
   import { authStore } from "../stores";
   import PortalLogoSVG from "../../assets/PortalLogo.svg";
   import { sleep } from "../../../../src/functions";
