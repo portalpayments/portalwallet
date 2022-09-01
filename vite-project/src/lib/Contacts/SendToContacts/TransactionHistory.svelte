@@ -155,8 +155,7 @@
   }
 
   .amount {
-    padding: 0.5em 1.1em;
-    max-width: 40px;
+    padding: 12px 24px;
     border-radius: 27px;
     align-items: center;
     gap: 5px;
