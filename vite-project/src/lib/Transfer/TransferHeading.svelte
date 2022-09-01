@@ -15,7 +15,7 @@
 
 <div class="recipientDetails">
   <div class="back-button">
-    <Link to="/">&#8249;</Link>
+    <Link to="/">‹</Link>
   </div>
   {#if addressFetched}
     <div class="verification-status">
