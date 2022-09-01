@@ -43,7 +43,11 @@
   <div class="history-container">
     <div class="transaction-history">
       {#each transactions as transaction}
-        <div class={transaction.received ? "amount-received" : "amount-sent"}>
+        <div
+          class={transaction.received
+            ? "amount amount-received"
+            : "amount amount-sent"}
+        >
           <img
             src={USDC}
             class={!transaction.received ? "white-usdc" : ""}
@@ -75,7 +79,11 @@
     <div class="history-container">
       <div class="transaction-history">
         {#each transactions as transaction}
-          <div class={transaction.received ? "amount-received" : "amount-sent"}>
+          <div
+            class={transaction.received
+              ? "amount amount-received"
+              : "amount amount-sent"}
+          >
             <img
               src={USDC}
               class={!transaction.received ? "white-usdc" : ""}
@@ -145,19 +153,22 @@
   .white-usdc {
     filter: brightness(0) invert(1);
   }
+
+  .amount {
+    padding: 0.5em 1.1em;
+    max-width: 40px;
+    border-radius: 27px;
+    align-items: center;
+    gap: 5px;
+    display: grid;
+    justify-content: center;
+    grid-auto-flow: column;
+  }
   .amount-received {
     position: relative;
-    max-width: 40px;
     background-color: #d9d9d9;
     color: #2775c9;
     justify-self: start;
-    display: grid;
-    grid-auto-flow: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    padding: 0.5em 1.1em;
-    border-radius: 27px;
   }
 
   .amount-received::before {
@@ -174,15 +185,7 @@
   .amount-sent {
     position: relative;
     justify-self: end;
-    max-width: 40px;
     background-color: #419cfd;
-    display: grid;
-    grid-auto-flow: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    padding: 0.5em 1.1em;
-    border-radius: 27px;
   }
 
   .amount-sent::before {
