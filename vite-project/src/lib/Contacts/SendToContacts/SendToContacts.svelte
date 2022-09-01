@@ -8,7 +8,7 @@
   import anonymous from "../../../assets/ProfilePics/anonymous.svg";
   import TransactionHistory from "./TransactionHistory.svelte";
 
-  //Toggle verifiedContact to test mocked data
+  // Toggle verifiedContact to test mocked data
   let verifiedContact = true;
 
   let contact;
@@ -35,7 +35,7 @@
 
   let transactions = [];
 
-  //Comment out the next lines when probbing sending money to unverified
+  //Comment out the next lines when testing sending money to unverified
   //account for the first time
   transactions = [
     { date: "29/08/2022 10:52:21", amount: 47, received: false },

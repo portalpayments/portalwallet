@@ -13,7 +13,7 @@
   };
 </script>
 
-<div class="headingContainer">
+<div class="heading-container">
   <div class="back-button">
     <Link to="/">&#8249;</Link>
   </div>
@@ -34,7 +34,7 @@
 </div>
 
 <style>
-  .headingContainer {
+  .heading-container {
     display: grid;
     grid-auto-flow: column;
     grid-template-columns: 30px 60px 1fr;

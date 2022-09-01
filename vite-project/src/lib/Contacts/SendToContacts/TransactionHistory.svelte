@@ -69,7 +69,7 @@
     >
   </div>
 {:else}
-  {#if transactions.length === 0}
+  {#if !transactions.length}
     <div class="history-container">
       <div class="warning">
         {warningUnverifiedAccount}
