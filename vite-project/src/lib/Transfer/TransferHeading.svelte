@@ -37,19 +37,14 @@
         {:else}
           <img src={JohnPng} class="profilePic" alt="Address is verified" />
 
-          <div>
-            <div>
-              {name}<img
-                src={Checkmark}
-                class="checkmark"
-                alt="User is Verified"
-              />
-            </div>
-            {#if isNew}
-              <div class="recipient-transaction-history">
+          <div class="recipient-info">
+            {name}
+            <div class="recipient-security-info">
+              <img src={Checkmark} class="checkmark" alt="User is Verified" />
+              {#if isNew}
                 <UnverifiedTag color={LabelColor.Yellow}>New</UnverifiedTag>
-              </div>
-            {/if}
+              {/if}
+            </div>
           </div>
         {/if}
       </div>
@@ -107,11 +102,9 @@
     min-height: 60px;
     max-height: 60px;
   }
-  .recipient-transaction-history {
-    justify-self: start;
-    /* This is weird, when I do align-self start, it acts as align self end */
-    align-self: end;
-    font-size: 1rem;
+  .recipient-security-information {
+    display: grid;
+    align-items: start;
   }
 
   .unverified-message {
