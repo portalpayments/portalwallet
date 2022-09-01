@@ -1,5 +1,10 @@
 <script lang="ts">
   import Contacts from "./Contacts.svelte";
+  import {
+    VAHEHS_WALLET,
+    JOE_MCCANNS_WALLET,
+    SHAQS_WALLET,
+  } from "../../../../src/constants";
   import ContactsHeading from "./ContactsHeading.svelte";
 
   import ewan from "../../assets/ProfilePics/ewan.png";
@@ -10,18 +15,9 @@
   const contacts = [
     // A new and verified person
     {
-      address: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      address: VAHEHS_WALLET,
       image: ewan,
-      name: "Ewan O'Mally",
-      isAnonymous: false,
-      isNew: true,
-      isPending: false,
-    },
-    // A verified person
-    {
-      address: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-      image: john,
-      name: "John O'Hara",
+      name: "Vaheh Hatami",
       isAnonymous: false,
       isNew: false,
       isPending: false,
@@ -35,9 +31,9 @@
       isNew: false,
       isPending: false,
     },
-    // An anonymous wallet pending verification
+    // An anonymous wallet (Joe McCann) pending verification
     {
-      address: "dddddddddddddddddddddddddddddddddddddddddddd",
+      address: JOE_MCCANNS_WALLET,
       image: null,
       name: null,
       isAnonymous: true,
@@ -45,7 +41,7 @@
       isPending: true,
     },
     {
-      address: "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      address: SHAQS_WALLET,
       image: jane,
       name: "Jane Taylor",
       isAnonymous: false,
