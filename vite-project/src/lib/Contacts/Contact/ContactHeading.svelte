@@ -3,16 +3,20 @@
   import Label from "../../Shared/Label.svelte";
   import { LabelColor } from "../../constants";
   import type { Contact } from "../../types";
+  import type { TokenMetaDataClaims } from "../../../../../src/types";
 
   export let contact: Contact | null = null;
+  export let verifiedClaims: TokenMetaDataClaims | null = null;
 </script>
 
 <div class="heading-container">
   <div class="back-button">
-    <Link to="/">&#8249;</Link>
+    <Link to="/">‹</Link>
   </div>
 
-  {#if contact}
+  HELLO
+
+  {#if contact && verifiedClaims}
     <img src={contact.image} alt={contact.name} />
 
     <div class="name">
@@ -25,7 +29,10 @@
           <Label color={LabelColor.Yellow}>Pending</Label>
         {/if}
       </div>
-    </div>{/if}
+    </div>
+  {:else}
+    Loading
+  {/if}
 </div>
 
 <style>

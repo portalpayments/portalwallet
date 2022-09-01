@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SendToContactsHeading from "./SendToContactHeading.svelte";
+  import ContactHeading from "./ContactHeading.svelte";
   import john from "../../../assets/ProfilePics/john.png";
   import anonymous from "../../../assets/ProfilePics/anonymous.svg";
   import TransactionHistory from "./TransactionHistory.svelte";
@@ -10,12 +10,17 @@
   } from "../../stores";
   import { PublicKey, Connection, Keypair } from "@solana/web3.js";
   import { verifyWallet } from "../../../../../src/vmwallet";
+  import { log } from "../../../../../src/functions";
   import type { Contact } from "../../types";
+  import type { TokenMetaDataClaims } from "../../../../../src/types";
 
   // TODO We can use the wallet address to fetch data from localstorage
   let contactWalletAddress: string = window.location.href.split("/").pop();
 
+  log(`Loading send to contact screen for ${contactWalletAddress}`);
+
   let connectionValue: Connection | null = null;
+  let verifiedClaims: TokenMetaDataClaims | null = null;
 
   connection.subscribe((value) => {
     connectionValue = value;
@@ -27,13 +32,11 @@
     keyPairValue = value;
   });
 
-  let transactions = [];
-
   let contact: Contact | null = null;
 
   (async () => {
     // Get identity from the portal Identity Token
-    const verifiedClaims = await verifyWallet(
+    verifiedClaims = await verifyWallet(
       connectionValue,
       keyPairValue,
       identityTokenIssuerPublicKey,
@@ -53,7 +56,7 @@
     contact = {
       walletAddress: contactWalletAddress,
       image: anonymous,
-      name: "Eric Roberts",
+      name: "Anonymous",
       isAnonymous: true,
       isNew: false,
       isPending: false,
@@ -63,7 +66,7 @@
 
 <div class="contactPage">
   {#if contact}
-    <SendToContactsHeading {contact} />
+    <ContactHeading {contact} {verifiedClaims} />
     <TransactionHistory {contact} />
   {:else}
     Loading

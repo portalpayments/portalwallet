@@ -10,8 +10,7 @@
   const TEMPORARY_PASSWORD = "password";
 
   async function login(password) {
-    await sleep(1 * SECOND);
-    if (password === "password") {
+    if (password === TEMPORARY_PASSWORD) {
       $authStore.isLoggedIn = true;
     } else {
       alert("entered password is wrong");

@@ -14,7 +14,7 @@
   } from "../../src/vmwallet";
   import { log } from "../../src/functions";
   import Auth from "./lib/Auth/Auth.svelte";
-  import SendToContacts from "./lib/Contacts/SendToContacts/SendToContact.svelte";
+  import Contact from "./lib/Contacts/Contact/Contact.svelte";
   import {
     connection,
     keyPair,
@@ -92,7 +92,7 @@
       >
       <Route path="logout"><Auth /></Route>
       <!-- primary=false to avoid a focus warning from the Svelte router -->
-      <Route path="contacts/:address" primary={false}><SendToContacts /></Route>
+      <Route path="contacts/:address" primary={false}><Contact /></Route>
       <Route path="/" primary={false}>
         <div class="header-and-features">
           <TopToolbar {...testUser} />

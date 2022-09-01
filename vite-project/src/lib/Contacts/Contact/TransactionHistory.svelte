@@ -1,6 +1,7 @@
 <script lang="ts">
   import Modal from "../../UI/Modal.svelte";
   import { warningUnverifiedAccount } from "../../constants";
+  import { formatUSDCBalanceString } from "../../utils";
   import RequestVerification from "../../Transfer/RequestVerification.svelte";
   import USDC from "../../../assets/usdc.svg";
   import type { Contact } from "../../../lib/types";
@@ -59,7 +60,7 @@
             class={!transaction.isReceived ? "white-usdc" : ""}
             alt="USDC logo"
           />
-          <div>{transaction.amount}</div>
+          <div>{formatUSDCBalanceString(transaction.amount)}</div>
         </div>
       {/each}
     </div>
