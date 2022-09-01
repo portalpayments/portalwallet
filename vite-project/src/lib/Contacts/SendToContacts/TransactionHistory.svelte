@@ -171,6 +171,7 @@
     justify-self: start;
   }
 
+  /* The little bump on the speech bubbles */
   .amount-received::before {
     content: "";
     position: absolute;
@@ -187,6 +188,8 @@
     justify-self: end;
     background-color: #419cfd;
   }
+
+  /* The little bump on the speech bubbles */
 
   .amount-sent::before {
     content: "";
