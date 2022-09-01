@@ -3,15 +3,22 @@
   import { warningUnverifiedAccount } from "../../constants";
   import RequestVerification from "../../Transfer/RequestVerification.svelte";
   import USDC from "../../../assets/usdc.svg";
+  import type { Contact } from "../../../lib/types";
+  import { log } from "../../../../../src/functions";
+
+  export let contact: Contact | null = null;
 
   interface Transaction {
-    date: string;
+    date: number;
     amount: number;
-    received: boolean;
+    isReceived: boolean;
   }
-  export let contactWalletAddress: string | null;
-  export let isAnonymous: boolean | null;
-  export let transactions: Array<Transaction>;
+
+  export let transactions: Array<Transaction> = [
+    { date: 1662051517814, amount: 4700, isReceived: false },
+    { date: 1662051517814, amount: 2300, isReceived: false },
+    { date: 1662051517814, amount: 40000, isReceived: true },
+  ];
   export let isPending: boolean | null = null;
   let requestingVerification = false;
   let sendAmount: number | null = null;
@@ -19,14 +26,13 @@
   // TODO replace the following code with a backend function sending money to recipient
   // And reload the transaction history to show the latest transaction
   const sendMoney = () => {
-    if (contactWalletAddress && sendAmount > 0) {
-      console.log(
-        "Sending amount " + sendAmount + " To " + contactWalletAddress
-      );
+    if (contact.walletAddress && sendAmount > 0) {
+      log("Sending amount " + sendAmount + " To " + contact.walletAddress);
+      const now = new Date().valueOf();
       transactions.push({
-        date: "31/08/2022 08:52:21",
+        date: now,
         amount: sendAmount,
-        received: false,
+        isReceived: false,
       });
 
       sendAmount = null;
@@ -39,18 +45,18 @@
   };
 </script>
 
-{#if !isAnonymous}
+{#if !contact.isAnonymous}
   <div class="history-container">
     <div class="transaction-history">
       {#each transactions as transaction}
         <div
-          class={transaction.received
+          class={transaction.isReceived
             ? "amount amount-received"
             : "amount amount-sent"}
         >
           <img
             src={USDC}
-            class={!transaction.received ? "white-usdc" : ""}
+            class={!transaction.isReceived ? "white-usdc" : ""}
             alt="USDC logo"
           />
           <div>{transaction.amount}</div>
@@ -80,13 +86,13 @@
       <div class="transaction-history">
         {#each transactions as transaction}
           <div
-            class={transaction.received
+            class={transaction.isReceived
               ? "amount amount-received"
               : "amount amount-sent"}
           >
             <img
               src={USDC}
-              class={!transaction.received ? "white-usdc" : ""}
+              class={!transaction.isReceived ? "white-usdc" : ""}
               alt="USDC logo"
             />
             <div>{transaction.amount}</div>
@@ -100,7 +106,7 @@
       >Request verification</button
     >
     <div class="send-money">
-      <input type="text" bind:value={sendAmount} />
+      <input type="number" step=".01" bind:value={sendAmount} />
       <button
         type="submit"
         disabled={sendAmount === 0 || sendAmount === null}
@@ -115,7 +121,7 @@
     ><div class="request-container">
       <!-- TODO emailAddress is missing -->
       <RequestVerification
-        destinationWalletAddress={contactWalletAddress}
+        destinationWalletAddress={contact.walletAddress}
         transferAmount={sendAmount}
         bind:isPending
       />

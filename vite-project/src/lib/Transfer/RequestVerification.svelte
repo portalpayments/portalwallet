@@ -1,45 +1,47 @@
 <script lang="ts">
   import SuccessfulAction from "../../assets/SuccessfulAction.svg";
-  let emailAddress: string | null;
+  let emailAddress: string | null = null;
+  import { log, sleep } from "../../../../src/functions";
+  import { SECOND } from "../../../../src/constants";
   export let destinationWalletAddress: string | null;
   export let transferAmount: number | null;
-  let requestVerEmailSentSuccessfully = false;
+  let isRequestVerificationEmailSentSuccessfully = false;
   export let isPending = false;
 
-  const sendVerificationEmail = () => {
+  const sendVerificationEmail = async () => {
     if (emailAddress != "" || emailAddress != null) {
-      console.log("sending an email to " + emailAddress);
-      console.log("request verification was clicked");
-      console.log(
+      log("sending an email to " + emailAddress);
+      log("request verification was clicked");
+      log(
         "wallet Address: " +
           destinationWalletAddress +
           " wants to send you " +
           transferAmount +
           " money"
       );
-      setTimeout(() => {
-        requestVerEmailSentSuccessfully = true;
-        isPending = true;
-      }, 1000);
+      await sleep(1 * SECOND);
+      isRequestVerificationEmailSentSuccessfully = true;
+      isPending = true;
     } else {
-      console.log("Input a valid email address");
+      log("Input a valid email address");
     }
   };
 </script>
 
-{#if !requestVerEmailSentSuccessfully}
+{#if !isRequestVerificationEmailSentSuccessfully}
   <div class="emailAddressContainer">
     <input bind:value={emailAddress} type="email" required />
     <span class="floating-label">Recipient email address</span>
     <button on:click={sendVerificationEmail} class="request-verification"
       >Request verification</button
     >
-  </div>{:else if requestVerEmailSentSuccessfully}
+  </div>
+{:else if isRequestVerificationEmailSentSuccessfully}
   <div class="emailSent">
     <img src={SuccessfulAction} alt="email was sent successfully" />
     <div>
       A verification request has been sent successfully. We will notify you once
-      the address is verified
+      the address is verified.
     </div>
   </div>
 {/if}

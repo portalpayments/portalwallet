@@ -9,3 +9,12 @@ export interface Collectable {
   description: string;
   image: string;
 }
+
+export interface Contact {
+  walletAddress: string;
+  image: string;
+  name: string;
+  isAnonymous: boolean;
+  isNew: boolean;
+  isPending: boolean;
+}

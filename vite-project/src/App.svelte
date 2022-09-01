@@ -14,7 +14,7 @@
   } from "../../src/vmwallet";
   import { log } from "../../src/functions";
   import Auth from "./lib/Auth/Auth.svelte";
-  import SendToContacts from "./lib/Contacts/SendToContacts/SendToContacts.svelte";
+  import SendToContacts from "./lib/Contacts/SendToContacts/SendToContact.svelte";
   import {
     connection,
     keyPair,

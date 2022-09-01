@@ -2,15 +2,9 @@
   import { Link } from "svelte-navigator";
   import Label from "../../Shared/Label.svelte";
   import { LabelColor } from "../../constants";
+  import type { Contact } from "../../types";
 
-  export let contact = {
-    address: "",
-    image: "",
-    name: "",
-    isAnonymous: false,
-    isNew: false,
-    isPending: false,
-  };
+  export let contact: Contact | null = null;
 </script>
 
 <div class="heading-container">
@@ -18,19 +12,20 @@
     <Link to="/">&#8249;</Link>
   </div>
 
-  <img src={contact.image} alt={contact.name} />
+  {#if contact}
+    <img src={contact.image} alt={contact.name} />
 
-  <div class="name">
-    {contact.name}
-    <div class="labels">
-      {#if contact.isAnonymous}
-        <Label color={LabelColor.Grey}>unverified</Label>
-      {/if}
-      {#if contact.isPending}
-        <Label color={LabelColor.Yellow}>Pending</Label>
-      {/if}
-    </div>
-  </div>
+    <div class="name">
+      {contact.name}
+      <div class="labels">
+        {#if contact.isAnonymous}
+          <Label color={LabelColor.Grey}>unverified</Label>
+        {/if}
+        {#if contact.isPending}
+          <Label color={LabelColor.Yellow}>Pending</Label>
+        {/if}
+      </div>
+    </div>{/if}
 </div>
 
 <style>
