@@ -20,6 +20,7 @@
   import type { VerifiedClaims } from "../../../../src/types";
 
   let hasLoadedVerificationStateFromNetwork = false;
+  let isCurrentlyLoadingVerificationStateFromNetwork = false;
   let destinationWalletAddress: string | null;
   let verifiedClaims: VerifiedClaims | null = null;
 
@@ -29,13 +30,25 @@
 
   let showGasFee = false;
 
-  let isRequestingVerification = false;
+  let isAskingWalletOwnerToGetVerified = false;
+
   let isSendingAnyway = false;
   let isSending = false;
 
   let transferAmount: number | null;
 
   let connection: Connection | null = null;
+
+  let contact;
+
+  $: if (destinationWalletAddress && verifiedClaims) {
+    contact = {
+      walletAddress: destinationWalletAddress,
+      isNew: true,
+      isPending: false,
+      verifiedClaims,
+    };
+  }
 
   connectionStore.subscribe((value) => {
     connection = value;
@@ -48,6 +61,7 @@
   });
 
   const handleKeyupdestinationWalletAddress = async () => {
+    isCurrentlyLoadingVerificationStateFromNetwork = true;
     let isValiddestinationWalletAddress = checkIfValidWalletAddress(
       destinationWalletAddress
     );
@@ -58,10 +72,11 @@
 
       verifiedClaims = null;
       isSendButtonDisabled = true;
-      isRequestingVerification = false;
+      isAskingWalletOwnerToGetVerified = false;
       isSendingAnyway = false;
       isSending = false;
       hasLoadedVerificationStateFromNetwork = false;
+      isCurrentlyLoadingVerificationStateFromNetwork = false;
       return;
     }
 
@@ -78,6 +93,7 @@
     log(`Verification result!`, verifiedClaims);
 
     hasLoadedVerificationStateFromNetwork = true;
+    isCurrentlyLoadingVerificationStateFromNetwork = false;
   };
 
   const handleKeyupAmount = () => {
@@ -93,11 +109,7 @@
 
 <div class="wallet">
   <div>
-    <TransferHeading
-      {destinationWalletAddress}
-      {verifiedClaims}
-      {hasLoadedVerificationStateFromNetwork}
-    />
+    <TransferHeading {contact} {hasLoadedVerificationStateFromNetwork} />
   </div>
 
   <div class="detailsContainer">
@@ -126,16 +138,18 @@
         <span class="gasfee"> fee: 0.00025</span>{/if}
     </div>
   </div>
-  {#if hasLoadedVerificationStateFromNetwork}
+
+  {#if isCurrentlyLoadingVerificationStateFromNetwork}
     <LoaderModal />
   {/if}
+
   <TransferButtons
     isAnonymous={Boolean(verifiedClaims)}
     sendButtonDisabled={isSendButtonDisabled}
     {destinationWalletAddress}
     {transferAmount}
     bind:sendClicked={isSending}
-    bind:requestVerificationClicked={isRequestingVerification}
+    bind:requestVerificationClicked={isAskingWalletOwnerToGetVerified}
     bind:sendAnywayClicked={isSendingAnyway}
   />
   {#if isSending}
@@ -162,7 +176,7 @@
     >
   {/if}
 
-  {#if isRequestingVerification}
+  {#if isAskingWalletOwnerToGetVerified}
     <Modal buttonType="requestVerification">
       <!-- <div>
        emailAddress is missing

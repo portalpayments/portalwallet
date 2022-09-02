@@ -6,21 +6,8 @@
   import type { VerifiedClaims } from "../../../../src/types";
   import type { Contact } from "../../lib/types";
 
-  // TODO: implement isNew
-  export let isNew = false;
-
-  export let destinationWalletAddress: string | null = null;
-  export let verifiedClaims: VerifiedClaims;
+  export let contact: Contact;
   export let hasLoadedVerificationStateFromNetwork: boolean = false;
-
-  let contact: Contact = {
-    walletAddress: destinationWalletAddress,
-    isNew,
-    isPending: false,
-    verifiedClaims,
-  };
-
-  debugger;
 </script>
 
 <div class="recipientDetails">
@@ -28,15 +15,15 @@
   {#if hasLoadedVerificationStateFromNetwork}
     <div class="verification-status">
       <div class="verified-header">
-        {#if verifiedClaims?.type}
+        {#if contact.verifiedClaims.type}
           <Verified {contact} />
         {:else}
           <Unverified {contact} />
         {/if}
       </div>
-      {#if !verifiedClaims?.type}
+      <!-- {#if !verifiedClaims?.type}
         <div class="unverified-message">{warningUnverifiedAccount}</div>
-      {/if}
+      {/if} -->
     </div>
   {:else}
     Loading...
