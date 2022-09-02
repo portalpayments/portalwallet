@@ -1,5 +1,9 @@
 <script lang="ts">
-  import { connection, keyPair, identityTokenIssuerPublicKey } from "../stores";
+  import {
+    connectionStore,
+    keyPairStore,
+    identityTokenIssuerPublicKey,
+  } from "../stores";
   import { PublicKey, Connection, Keypair } from "@solana/web3.js";
   import TransferHeading from "./TransferHeading.svelte";
   import TransferButtons from "./TransferButtons.svelte";
@@ -36,16 +40,16 @@
   let destinationWalletAddress: string | null;
   let transferAmount: number | null;
 
-  let connectionValue: Connection | null = null;
+  let connection: Connection | null = null;
 
-  connection.subscribe((value) => {
-    connectionValue = value;
+  connectionStore.subscribe((value) => {
+    connection = value;
   });
 
-  let keyPairValue: Keypair | null = null;
+  let keyPair: Keypair | null = null;
 
-  keyPair.subscribe((value) => {
-    keyPairValue = value;
+  keyPairStore.subscribe((value) => {
+    keyPair = value;
   });
 
   const handleKeyupWalletAddress = async () => {
@@ -75,8 +79,8 @@
 
     // Get identity from the portal Identity Token
     const verifiedClaims = await verifyWallet(
-      connectionValue,
-      keyPairValue,
+      connection,
+      keyPair,
       identityTokenIssuerPublicKey,
       new PublicKey(walletAddress)
     );
@@ -133,7 +137,7 @@
 
 <div class="wallet">
   <div>
-    <TransferHeading {...fetchedAddressDetails} />
+    <!-- <TransferHeading {...fetchedAddressDetails} /> -->
   </div>
 
   <div class="detailsContainer">

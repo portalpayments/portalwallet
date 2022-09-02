@@ -7,7 +7,6 @@
   import Verified from "../../Shared/Verified.svelte";
 
   export let contact: Contact;
-  export let verifiedClaims: verifiedClaims | null;
 
   const walletAddress = contact.walletAddress;
 
@@ -21,10 +20,10 @@
   <BackButton />
 
   {#if contact}
-    {#if verifiedClaims}
-      <Unverified {walletAddress} />
+    {#if contact.verifiedClaims}
+      <Verified {contact} />
     {:else}
-      <Verified {verifiedClaims} {isNew} />
+      <Unverified {contact} />
     {/if}
   {:else}
     Loading

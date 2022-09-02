@@ -1,74 +1,44 @@
 <script lang="ts">
+  import { contactsStore } from "../../../lib/stores.js";
+
   import ContactHeading from "./ContactHeading.svelte";
   import Transactions from "./Transactions.svelte";
   import {
-    connection,
-    keyPair,
+    connectionStore,
+    keyPairStore,
+    transactionsStore,
     identityTokenIssuerPublicKey,
   } from "../../stores";
-  import { PublicKey, Connection, Keypair } from "@solana/web3.js";
+  import type { PublicKey, Connection, Keypair } from "@solana/web3.js";
   import { verifyWallet } from "../../../../../src/vmwallet";
   import { log, stringify } from "../../../../../src/functions";
-  import type { verifiedClaims } from "../../../../../src/types";
+  import type { Contact, Transaction } from "../../../lib/types";
+
+  let contact: Contact;
+
+  // Use the wallet address to determine the wallet to use
+  let contactWalletAddress: string = window.location.href.split("/").pop();
+
+  contactsStore.subscribe((newValue) => {
+    contact = newValue.find((contact) => {
+      contact.walletAddress === contactWalletAddress;
+    });
+  });
 
   import SendMoney from "./SendMoney.svelte";
 
-  import type { Contact, Transaction } from "../../../lib/types";
-
-  export let contact: Contact;
-
-  export let transactions: Array<Transaction> = [
-    { date: 1662051517814, amount: 4700, isReceived: false },
-    { date: 1662051517814, amount: 2300, isReceived: false },
-    { date: 1662051517814, amount: 40000, isReceived: true },
-  ];
-  export let isPending: boolean | null = null;
-  let requestingVerification = false;
-  let sendAmount: number | null = null;
-
-  // TODO We can use the wallet address to fetch data from localstorage
-  let contactWalletAddress: string = window.location.href.split("/").pop();
-
   log(`Loading send to contact screen for ${contactWalletAddress}`);
 
-  let connectionValue: Connection | null = null;
-  let verifiedClaims: verifiedClaims | null = null;
+  let transactions: Array<Transaction> = [];
 
-  connection.subscribe((value) => {
-    connectionValue = value;
+  transactionsStore.subscribe((newValue) => {
+    transactions = newValue;
   });
-
-  let keyPairValue: Keypair | null = null;
-
-  keyPair.subscribe((value) => {
-    keyPairValue = value;
-  });
-
-  const requestVerificationModal = () => {
-    requestingVerification = true;
-  };
-
-  (async () => {
-    // Get identity from the portal Identity Token
-    verifiedClaims = await verifyWallet(
-      connectionValue,
-      keyPairValue,
-      identityTokenIssuerPublicKey,
-      new PublicKey(contactWalletAddress)
-    );
-
-    contact = {
-      walletAddress: contactWalletAddress,
-      isAnonymous: !connectionValue,
-      isNew: false,
-      isPending: false,
-    };
-  })();
 </script>
 
 <div class="contactPage">
   {#if contact}
-    <ContactHeading {contact} {verifiedClaims} />
+    <ContactHeading {contact} />
     <Transactions {transactions} />
     <SendMoney {contact} />
     <!-- {warningUnverifiedAccount} -->

@@ -1,26 +1,18 @@
 <script lang="ts">
-  interface Transaction {
-    image: string;
-    name: string;
-    isPositive: boolean;
-    amountMajor: number;
-    amountMinor: number;
-  }
+  import { transactionsStore } from "../../lib/stores";
+  import TransactionComponent from "./Transaction.svelte";
+  import type { Transaction } from "../../lib/types";
 
-  export let transactions: Array<Transaction>;
+  let transactions: Array<Transaction> = [];
+
+  transactionsStore.subscribe((newValue) => {
+    transactions = newValue;
+  });
 </script>
 
 <div class="transactions">
   {#each transactions as transaction}
-    <div class="transaction">
-      <img src={transaction.image} alt="wallet avatar" />
-      <div class="name">{transaction.name}</div>
-      <div class="amount {transaction.isPositive ? 'positive' : ''}">
-        {transaction.isPositive
-          ? "+"
-          : ""}{transaction.amountMajor}.{transaction.amountMinor}
-      </div>
-    </div>
+    <TransactionComponent {transaction} />
   {/each}
 </div>
 
@@ -36,27 +28,5 @@
     height: auto;
     max-height: 300px;
     overflow: hidden;
-  }
-
-  .transaction {
-    display: grid;
-    color: #4d4d4d;
-    grid-auto-flow: column;
-    grid-template-columns: 42px 1fr 64px;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .name {
-    text-align: left;
-  }
-
-  .amount {
-    text-align: right;
-    font-weight: 600;
-  }
-
-  .positive {
-    color: var(--bright-green);
   }
 </style>

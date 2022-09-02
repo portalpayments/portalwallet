@@ -3,7 +3,6 @@
   import Unverified from "../Shared/Unverified.svelte";
   import Verified from "../Shared/Verified.svelte";
   import { warningUnverifiedAccount } from "../constants";
-  import type { verifiedClaims } from "../../../../src/types";
 
   // TODO: implement isNew
   export let isNew = false;
@@ -17,11 +16,12 @@
   {#if addressFetched}
     <div class="verification-status">
       <div class="verified-header">
-        {#if verifiedClaims}
-          <Unverified {walletAddress} />
+        TODO
+        <!-- {#if contact.verifiedClaims}
+          <Verified {contact} />
         {:else}
-          <Verified {verifiedClaims} {isNew} />
-        {/if}
+          <Unverified {contact} />
+        {/if} -->
       </div>
       {#if !verifiedClaims}
         <div class="unverified-message">{warningUnverifiedAccount}</div>

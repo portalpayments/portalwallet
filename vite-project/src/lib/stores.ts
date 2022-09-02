@@ -2,12 +2,45 @@ import { writable, type Writable } from "svelte/store";
 import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
 import { identityTokenIssuerPublicKeyString } from "./constants";
 import { VAHEHS_WALLET } from "../../../src/constants";
-import type { Contact } from "../lib/types";
+import type { Contact, Transaction } from "../lib/types";
 
 // Our connection to Solana
-export const connection: Writable<null | Connection> = writable(null);
-export const keyPair: Writable<null | Keypair> = writable(null);
+export const connectionStore: Writable<null | Connection> = writable(null);
 
+// The active users's keypair
+export const keyPairStore: Writable<null | Keypair> = writable(null);
+
+export const transactionsStore: Writable<Array<Transaction>> = writable([
+  {
+    walletAddress: VAHEHS_WALLET,
+    date: 1662136510630,
+    amount: 40000,
+    isReceived: true,
+  },
+  // {
+  //   image: proteinLand,
+  //   name: "ProteinLand",
+  //   isPositive: false,
+  //   amountMajor: 3,
+  //   amountMinor: 50,
+  // },
+  // {
+  //   image: jane,
+  //   name: "Jane Taylor",
+  //   isPositive: false,
+  //   amountMajor: 21,
+  //   amountMinor: 25,
+  // },
+  // {
+  //   image: john,
+  //   name: "Jane Taylor",
+  //   isPositive: false,
+  //   amountMajor: 21,
+  //   amountMinor: 25,
+  // }
+]);
+
+// Their contacts
 export const contactsStore: Writable<Array<Contact>> = writable([
   {
     walletAddress: VAHEHS_WALLET,

@@ -4,12 +4,8 @@
   import Transactions from "./Transactions.svelte";
   import MoneyUtils from "./moneyUtils.svelte";
 
-  import { connection, keyPair } from "../stores";
+  import { connectionStore, keyPairStore } from "../stores";
   import type { Connection, Keypair } from "@solana/web3.js";
-
-  import proteinLand from "../../assets/ProfilePics/proteinland.svg";
-  import john from "../../assets/ProfilePics/john.png";
-  import jane from "../../assets/ProfilePics/jane.png";
 
   import { log, stringify } from "../../../../src/functions";
 
@@ -19,22 +15,19 @@
 
   import { formatUSDCBalanceString } from "../utils";
 
-  let updatedConnection: Connection;
-  let updatedKeypair: Keypair;
+  let connection: Connection;
+  let keypair: Keypair;
 
   const updateBalance = async () => {
-    if (!updatedConnection) {
+    if (!connection) {
       return;
     }
-    if (!updatedKeypair) {
+    if (!keypair) {
       return;
     }
     log(`🔢 Keypair or connection have changed, updating balance`);
 
-    usdcAccounts = await getUSDCAccounts(
-      updatedConnection,
-      updatedKeypair.publicKey
-    );
+    usdcAccounts = await getUSDCAccounts(connection, keypair.publicKey);
 
     const JUST_ONE_SUPPORTED_USDC_ACCOUNT_FOR_NOW = 0;
     const usdcAccount = usdcAccounts[JUST_ONE_SUPPORTED_USDC_ACCOUNT_FOR_NOW];
@@ -52,53 +45,22 @@
   $: minor = null;
   $: usdcAccounts = [];
 
-  connection.subscribe((newValue) => {
+  connectionStore.subscribe((newValue) => {
     if (newValue) {
-      updatedConnection = newValue;
+      connection = newValue;
       updateBalance();
     }
   });
 
-  keyPair.subscribe((newValue) => {
+  keyPairStore.subscribe((newValue) => {
     if (newValue) {
-      updatedKeypair = newValue;
+      keypair = newValue;
       updateBalance();
     }
   });
-
-  const transactions = [
-    {
-      image: john,
-      name: "John O'Hara",
-      isPositive: true,
-      amountMajor: 400,
-      amountMinor: 0,
-    },
-    {
-      image: proteinLand,
-      name: "ProteinLand",
-      isPositive: false,
-      amountMajor: 3,
-      amountMinor: 50,
-    },
-    {
-      image: jane,
-      name: "Jane Taylor",
-      isPositive: false,
-      amountMajor: 21,
-      amountMinor: 25,
-    },
-    {
-      image: john,
-      name: "Jane Taylor",
-      isPositive: false,
-      amountMajor: 21,
-      amountMinor: 25,
-    },
-  ];
 </script>
 
 <Balance {major} {minor} />
 <MoneyUtils />
 <TransactionsHeading />
-<Transactions {transactions} />
+<Transactions />

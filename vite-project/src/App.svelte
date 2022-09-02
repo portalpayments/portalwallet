@@ -16,8 +16,8 @@
   import Auth from "./lib/Auth/Auth.svelte";
   import Contact from "./lib/Contacts/Contact/Contact.svelte";
   import {
-    connection,
-    keyPair,
+    connectionStore,
+    keyPairStore,
     authStore,
     identityTokenIssuerPublicKey,
   } from "./lib/stores";
@@ -25,13 +25,13 @@
   $authStore;
   console.log($authStore.isLoggedIn);
 
-  connection.subscribe((newValue) => {
+  connectionStore.subscribe((newValue) => {
     if (newValue) {
       log(`🔌Connected!`);
     }
   });
 
-  keyPair.subscribe((newValue) => {
+  keyPairStore.subscribe((newValue) => {
     if (newValue) {
       log(`🔑Got keys.`);
     }
@@ -48,12 +48,12 @@
   (async () => {
     // Connect to Solana
     const newConnection = await connect("mainNetBeta");
-    connection.set(newConnection);
+    connectionStore.set(newConnection);
 
     // Get our Private Key from LocalStorage
     const privateKey = getPrivateKey();
     const newKeyPair = await getKeypairFromString(privateKey);
-    keyPair.set(newKeyPair);
+    keyPairStore.set(newKeyPair);
 
     // Get identity from the portal Identity Token
     const verifiedClaims = await verifyWallet(

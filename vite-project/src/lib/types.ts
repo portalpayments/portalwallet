@@ -20,6 +20,7 @@ export interface Contact {
 }
 
 export interface Transaction {
+  walletAddress: string;
   date: number;
   amount: number;
   isReceived: boolean;
