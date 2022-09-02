@@ -19,7 +19,11 @@
 </script>
 
 <div class="transaction">
-  <img src={contact.verifiedClaims?.imageUrl} alt="wallet avatar" />
+  <img
+    class="profile-pic"
+    src={contact.verifiedClaims?.imageUrl}
+    alt="wallet avatar"
+  />
   <div class="name">
     {contact.verifiedClaims?.givenName}
     {contact.verifiedClaims?.familyName}
@@ -41,6 +45,10 @@
     grid-template-columns: 42px 1fr 64px;
     align-items: center;
     gap: 8px;
+  }
+
+  .profile-pic {
+    border-radius: 50%;
   }
 
   img {

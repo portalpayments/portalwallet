@@ -16,16 +16,10 @@ export const keyPairStore: Writable<null | Keypair> = writable(null);
 
 export const transactionsStore: Writable<Array<Transaction>> = writable([
   {
-    walletAddress: VAHEHS_WALLET,
+    walletAddress: SHAQS_WALLET,
     date: 1662136510630,
     amount: 40000,
     isReceived: true,
-  },
-  {
-    walletAddress: SHAQS_WALLET,
-    date: 1662136510630,
-    amount: 350,
-    isReceived: false,
   },
   {
     walletAddress: JOE_MCCANNS_WALLET,
@@ -38,17 +32,6 @@ export const transactionsStore: Writable<Array<Transaction>> = writable([
 // Their contacts
 export const contactsStore: Writable<Array<Contact>> = writable([
   {
-    walletAddress: VAHEHS_WALLET,
-    isNew: false,
-    isPending: false,
-    verifiedClaims: {
-      type: "INDIVIDUAL",
-      givenName: "Vaheh",
-      familyName: "Hatami",
-      imageUrl: "/src/assets/ProfilePics/john.png",
-    },
-  },
-  {
     walletAddress: SHAQS_WALLET,
     isNew: false,
     isPending: false,
@@ -56,7 +39,7 @@ export const contactsStore: Writable<Array<Contact>> = writable([
       type: "INDIVIDUAL",
       givenName: "Shaquille",
       familyName: "O'Neal",
-      imageUrl: "/src/assets/ProfilePics/ewan.png",
+      imageUrl: "/src/assets/ProfilePics/shaq.jpg",
     },
   },
   {
@@ -65,37 +48,11 @@ export const contactsStore: Writable<Array<Contact>> = writable([
     isPending: false,
     verifiedClaims: {
       type: "INDIVIDUAL",
-      givenName: "Josepl",
+      givenName: "Joseph",
       familyName: "McCann",
-      imageUrl: "/src/assets/ProfilePics/greg.png",
+      imageUrl: "/src/assets/ProfilePics/joe.jpg",
     },
   },
-  // A verified business we've done transactions with before
-  // {
-  //   address: "cccccccccccccccccccccccccccccccccccccccccccc",
-  //   image: proteinLand,
-  //   name: "ProteinLand",
-  //   isAnonymous: false,
-  //   isNew: false,
-  //   isPending: false,
-  // },
-  // // An anonymous wallet (Joe McCann) pending verification
-  // {
-  //   address: JOE_MCCANNS_WALLET,
-  //   image: null,
-  //   name: null,
-  //   isAnonymous: true,
-  //   isNew: false,
-  //   isPending: true,
-  // },
-  // {
-  //   address: SHAQS_WALLET,
-  //   image: jane,
-  //   name: "Jane Taylor",
-  //   isAnonymous: false,
-  //   isNew: false,
-  //   isPending: false,
-  // },
 ]);
 
 // From https://svelte.dev/repl/d7b5f0d565a441cfac66e093ee6fe62d?version=3.19.1

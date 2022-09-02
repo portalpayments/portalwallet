@@ -15,7 +15,7 @@
   {#if hasLoadedVerificationStateFromNetwork}
     <div class="verification-status">
       <div class="verified-header">
-        {#if contact.verifiedClaims.type}
+        {#if contact?.verifiedClaims?.type}
           <Verified {contact} />
         {:else}
           <Unverified {contact} />
