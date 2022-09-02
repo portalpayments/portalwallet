@@ -2,7 +2,7 @@
   import TransactionsHeading from "./TransactionsHeading.svelte";
   import Balance from "./Balance.svelte";
   import Transactions from "./Transactions.svelte";
-  import MoneyUtils from "./moneyUtils.svelte";
+  import Buttons from "./Buttons.svelte";
 
   import { connectionStore, keyPairStore } from "../stores";
   import type { Connection, Keypair } from "@solana/web3.js";
@@ -61,6 +61,6 @@
 </script>
 
 <Balance {major} {minor} />
-<MoneyUtils />
+<Buttons />
 <TransactionsHeading />
 <Transactions />
