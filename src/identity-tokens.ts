@@ -107,7 +107,7 @@ export const getTokenMetaData = (
       type: "INDIVIDUAL",
       givenName,
       familyName,
-      imageUrl: "//src/assets/verifiedMikeImage.png",
+      imageUrl: "//src/assets/ProfilePics/vaheh.jpg",
     },
   };
 };

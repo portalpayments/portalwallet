@@ -2,16 +2,24 @@
   import Label from "../Shared/Label.svelte";
   import Checkmark from "../../assets/Checkmark.svg";
   import { LabelColor } from "../constants";
+  import { VAHEHS_WALLET, MIKES_WALLET } from "../../../../src/constants";
   import type { Contact } from "../types";
 
   export let contact: Contact;
+
+  // TODO: delete
+  const hackProfilePicsByWallet = {
+    [VAHEHS_WALLET]: "/src/assets/ProfilePics/vaheh.jpg",
+    [MIKES_WALLET]: "/src/assets/ProfilePics/mike.jpg",
+  };
 
   // TODO: implement
   let isNew = false;
 </script>
 
+<!-- TODO: src={contact.verifiedClaims.imageUrl} -->
 <img
-  src={contact.verifiedClaims.imageUrl}
+  src={hackProfilePicsByWallet[contact.walletAddress]}
   class="profile-pic"
   alt="Address is verified"
 />
@@ -20,13 +28,14 @@
   {contact.verifiedClaims.familyName}
   <div class="badges-and-labels">
     <img src={Checkmark} class="verified-checkmark" alt="User is Verified" />
-    {#if isNew}
-      <Label color={LabelColor.Yellow}>New</Label>
-    {/if}
+    <Label color={LabelColor.Yellow}>New</Label>
   </div>
 </div>
 
 <style>
+  .profile-pic {
+    border-radius: 50%;
+  }
   .verified-checkmark {
     height: 18px;
     /* transform: translateY(4px); */
@@ -42,6 +51,9 @@
 
   .badges-and-labels {
     display: grid;
-    align-items: start;
+    grid-auto-flow: column;
+    justify-content: start;
+    align-items: center;
+    gap: 6px;
   }
 </style>
