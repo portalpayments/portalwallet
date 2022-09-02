@@ -23,6 +23,7 @@
   .transactions {
     display: grid;
     grid-auto-flow: row;
+    grid-auto-rows: 48px;
     padding: 0 12px;
     gap: 6px;
     height: auto;

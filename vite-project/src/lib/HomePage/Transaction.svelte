@@ -26,8 +26,9 @@
   </div>
   <div class="amount {transaction.isReceived ? 'positive' : ''}">
     {transaction.isReceived ? "+" : ""}
-    {getFormattedMajorUnits(transaction.amount)}
-    {getFormattedMinorUnits(transaction.amount)}
+    {getFormattedMajorUnits(transaction.amount)}{getFormattedMinorUnits(
+      transaction.amount
+    )}
   </div>
 </div>
 
@@ -40,6 +41,10 @@
     grid-template-columns: 42px 1fr 64px;
     align-items: center;
     gap: 8px;
+  }
+
+  img {
+    width: 100%;
   }
 
   .name {
