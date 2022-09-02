@@ -4,6 +4,7 @@
   import JohnPng from "../../assets/ProfilePics/john.png";
   import UnverifiedTag from "../Shared/Label.svelte";
   import Checkmark from "../../assets/Checkmark.svg";
+  import BackButton from "../Shared/BackButton.svelte";
   import { LabelColor, warningUnverifiedAccount } from "../constants";
 
   export let name = "John O'Mally";
@@ -14,9 +15,7 @@
 </script>
 
 <div class="recipientDetails">
-  <div class="back-button">
-    <Link to="/">‹</Link>
-  </div>
+  <BackButton />
   {#if addressFetched}
     <div class="verification-status">
       <div class="verified-header">
@@ -112,22 +111,5 @@
     line-height: 130%;
     color: #4d4d4d;
     font-weight: 500;
-  }
-
-  .back-button {
-    font-size: 2rem;
-    padding: 10px;
-    width: 10%;
-  }
-
-  /* global is needed for 'a' element under Link */
-  .back-button :global(a) {
-    text-decoration: none;
-    padding: 7px 0px;
-    background-color: transparent;
-    display: inline-block;
-    color: #3a3a3a;
-    font-size: 2rem;
-    font-weight: 400;
   }
 </style>

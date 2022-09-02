@@ -16,7 +16,7 @@
     >
       {name}
       {#if isVerified}
-        <img src={Checkmark} alt="User is Verified" />
+        <img src={Checkmark} alt="Verified" />
       {/if}
     </button>
     <div class="dropdown-content {isDropdownActive ? 'active' : ''}">

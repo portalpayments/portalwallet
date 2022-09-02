@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Link } from "svelte-navigator";
   import Label from "../../Shared/Label.svelte";
+  import BackButton from "../../Shared/BackButton.svelte";
   import { LabelColor } from "../../constants";
   import { log, stringify } from "../../../../../src/functions";
   import type { Contact } from "../../types";
@@ -13,9 +14,7 @@
 </script>
 
 <div class="heading">
-  <div class="back-button">
-    <Link to="/">‹</Link>
-  </div>
+  <BackButton />
 
   {#if contact && verifiedClaims}
     <img src={contact.image} alt={contact.name} />
