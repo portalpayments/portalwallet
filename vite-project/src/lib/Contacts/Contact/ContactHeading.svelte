@@ -2,19 +2,20 @@
   import { Link } from "svelte-navigator";
   import Label from "../../Shared/Label.svelte";
   import { LabelColor } from "../../constants";
+  import { log, stringify } from "../../../../../src/functions";
   import type { Contact } from "../../types";
   import type { TokenMetaDataClaims } from "../../../../../src/types";
+  export let contact: Contact;
+  export let verifiedClaims: TokenMetaDataClaims | null;
 
-  export let contact: Contact | null = null;
-  export let verifiedClaims: TokenMetaDataClaims | null = null;
+  log(`contact is`, stringify(contact));
+  log(`verifiedClaims is`, stringify(verifiedClaims));
 </script>
 
-<div class="heading-container">
+<div class="heading">
   <div class="back-button">
     <Link to="/">‹</Link>
   </div>
-
-  HELLO
 
   {#if contact && verifiedClaims}
     <img src={contact.image} alt={contact.name} />
@@ -36,7 +37,7 @@
 </div>
 
 <style>
-  .heading-container {
+  .heading {
     display: grid;
     grid-auto-flow: column;
     grid-template-columns: 30px 60px 1fr;

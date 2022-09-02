@@ -11,3 +11,6 @@ export const identityTokenIssuerPublicKeyString =
 
 export const warningUnverifiedAccount =
   "We suggest you only send money to verified addresses. You can click below to request verification. We will notify you once the address is verified.";
+
+// Used to validate 12, 12.34, etc.
+export const NUMBERS_OPTIONAL_DECIMAL_PLACE_TWO_NUMBERS = "^d*(.d{0,2})?$";

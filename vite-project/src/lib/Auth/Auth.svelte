@@ -5,6 +5,7 @@
   import { SECOND } from "../../../../src/constants";
 
   let password = "";
+  // TODO: get name from wallet
   export let name = "Mike";
 
   const TEMPORARY_PASSWORD = "password";

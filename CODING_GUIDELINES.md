@@ -60,9 +60,9 @@ Name things, rather than putting in [magic numbers](<https://en.wikipedia.org/wi
 
 It's just noise, nobody else will understand why it's commented out, and we can always get it back from git if we need to.
 
-## Refactor on first paste
+## Don't cut and paste
 
-Having a single implementation of each function lets us refactor and fix bugs easily.
+Having a single implementation of each function, style, or UI lets us refactor and fix bugs easily.
 
 ## Let tools worry about linting and let's talk about building things.
 

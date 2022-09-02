@@ -18,3 +18,9 @@ export interface Contact {
   isNew: boolean;
   isPending: boolean;
 }
+
+export interface Transaction {
+  date: number;
+  amount: number;
+  isReceived: boolean;
+}

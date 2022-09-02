@@ -36,6 +36,14 @@ export const formatUSDCBalanceString = (balanceString: string) => {
   return [major, minor];
 };
 
+export const formatUSDCBalanceNumber = (balanceNumber: number) => {
+  const dollars = balanceNumber / 100;
+  return dollars.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
+};
+
 export const truncateWallet = (wallet: string): string => {
   const start = wallet.slice(0, WALLET_CHARACTERS_TO_SHOW);
   const lastCharacter = wallet.length - 1;

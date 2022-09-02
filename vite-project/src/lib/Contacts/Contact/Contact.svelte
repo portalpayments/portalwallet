@@ -1,8 +1,7 @@
 <script lang="ts">
   import ContactHeading from "./ContactHeading.svelte";
-  import john from "../../../assets/ProfilePics/john.png";
   import anonymous from "../../../assets/ProfilePics/anonymous.svg";
-  import TransactionHistory from "./TransactionHistory.svelte";
+  import Transactions from "./Transactions.svelte";
   import {
     connection,
     keyPair,
@@ -10,9 +9,29 @@
   } from "../../stores";
   import { PublicKey, Connection, Keypair } from "@solana/web3.js";
   import { verifyWallet } from "../../../../../src/vmwallet";
-  import { log } from "../../../../../src/functions";
-  import type { Contact } from "../../types";
+  import { log, stringify } from "../../../../../src/functions";
   import type { TokenMetaDataClaims } from "../../../../../src/types";
+
+  import Modal from "../../UI/Modal.svelte";
+  import {
+    warningUnverifiedAccount,
+    NUMBERS_OPTIONAL_DECIMAL_PLACE_TWO_NUMBERS,
+  } from "../../constants";
+  import RequestVerification from "../../Transfer/RequestVerification.svelte";
+  import SendMoney from "./SendMoney.svelte";
+
+  import type { Contact, Transaction } from "../../../lib/types";
+
+  export let contact: Contact | null = null;
+
+  export let transactions: Array<Transaction> = [
+    { date: 1662051517814, amount: 4700, isReceived: false },
+    { date: 1662051517814, amount: 2300, isReceived: false },
+    { date: 1662051517814, amount: 40000, isReceived: true },
+  ];
+  export let isPending: boolean | null = null;
+  let requestingVerification = false;
+  let sendAmount: number | null = null;
 
   // TODO We can use the wallet address to fetch data from localstorage
   let contactWalletAddress: string = window.location.href.split("/").pop();
@@ -32,7 +51,9 @@
     keyPairValue = value;
   });
 
-  let contact: Contact | null = null;
+  const requestVerificationModal = () => {
+    requestingVerification = true;
+  };
 
   (async () => {
     // Get identity from the portal Identity Token
@@ -46,7 +67,7 @@
     if (verifiedClaims) {
       contact = {
         walletAddress: contactWalletAddress,
-        image: john,
+        image: verifiedClaims.imageUrl,
         name: `${verifiedClaims.givenName} ${verifiedClaims.familyName}`,
         isAnonymous: false,
         isNew: false,
@@ -67,7 +88,38 @@
 <div class="contactPage">
   {#if contact}
     <ContactHeading {contact} {verifiedClaims} />
-    <TransactionHistory {contact} />
+    {#if !contact.isAnonymous}
+      <Transactions {transactions} />
+      <SendMoney />
+    {:else}
+      {#if !transactions.length}
+        <div class="history-container">
+          <div class="warning">
+            {warningUnverifiedAccount}
+          </div>
+        </div>
+      {:else}
+        <Transactions {transactions} />
+      {/if}
+      <div>
+        <button on:click={requestVerificationModal} class="request-verification"
+          >Request verification</button
+        >
+        <SendMoney />
+      </div>
+    {/if}
+    {#if requestingVerification}
+      <Modal buttonType="requestVerification">
+        <div class="request-container">
+          <!-- TODO emailAddress is missing -->
+          <RequestVerification
+            destinationWalletAddress={contact.walletAddress}
+            transferAmount={sendAmount}
+            bind:isPending
+          />
+        </div>
+      </Modal>
+    {/if}
   {:else}
     Loading
   {/if}
@@ -81,5 +133,45 @@
     display: grid;
     grid-auto-flow: row;
     grid-template-rows: 90px 1fr;
+  }
+
+  button {
+    width: 45%;
+    padding: 0px 0px;
+    margin: auto;
+    height: 38px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.1rem;
+    background-color: #419cfd;
+  }
+  .warning {
+    font-size: 1rem;
+    margin: auto;
+    margin-top: 50%;
+    /* Weird number */
+    width: 95%;
+    height: 40%;
+    color: #4d4d4d;
+  }
+
+  .request-verification {
+    background-color: #2775c9;
+    /* Weird number */
+    width: 93%;
+    height: 40px;
+    margin-bottom: 5px;
+  }
+
+  .warning {
+    font-size: 1rem;
+    margin: auto;
+    margin-top: 50%;
+    width: 95%;
+    height: 40%;
+    color: #4d4d4d;
+  }
+  .send-anyway {
+    background-color: #9d9d9d;
   }
 </style>
