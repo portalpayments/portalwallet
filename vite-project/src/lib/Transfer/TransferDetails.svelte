@@ -16,10 +16,12 @@
   import base58 from "bs58";
 
   import { SECONDS, SECOND } from "../../../../src/constants";
+  import { checkIfValidWalletAddress } from "../utils";
   import { log } from "../../../../src/functions";
 
   let walletAddress: string = "";
   let amount: number;
+
   let fetchedAddressDetails = {
     addressFetched: false,
     name: "",
@@ -56,13 +58,7 @@
   const handleKeyupWalletAddress = async () => {
     isLoading = true;
 
-    let isValidWalletAddress: Boolean | null = null;
-    try {
-      new PublicKey(walletAddress);
-      isValidWalletAddress = true;
-    } catch {
-      isValidWalletAddress = false;
-    }
+    let isValidWalletAddress = checkIfValidWalletAddress(walletAddress);
 
     if (!isValidWalletAddress) {
       // TODO: handle invalid wallet addresses better

@@ -1,3 +1,5 @@
+import { PublicKey } from "@solana/web3.js";
+
 const WALLET_CHARACTERS_TO_SHOW = 5;
 
 // Adds commas to numbers
@@ -61,6 +63,15 @@ export const getFormattedMinorUnits = (
     `.${minorUnitsRemainder}0`;
   }
   return `.${minorUnitsRemainder}`;
+};
+
+export const checkIfValidWalletAddress = (walletAddress: string) => {
+  try {
+    new PublicKey(walletAddress);
+    return true;
+  } catch {
+    return false;
+  }
 };
 
 export const truncateWallet = (wallet: string): string => {
