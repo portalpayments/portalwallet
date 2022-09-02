@@ -3,12 +3,13 @@
   import Unverified from "../Shared/Unverified.svelte";
   import Verified from "../Shared/Verified.svelte";
   import { warningUnverifiedAccount } from "../constants";
+  import type { VerifiedClaims } from "../../../../src/types";
 
   // TODO: implement isNew
   export let isNew = false;
   export let addressFetched = false;
   export let walletAddress: string;
-  export let verifiedClaims: verifiedClaims;
+  export let verifiedClaims: VerifiedClaims;
 </script>
 
 <div class="recipientDetails">
