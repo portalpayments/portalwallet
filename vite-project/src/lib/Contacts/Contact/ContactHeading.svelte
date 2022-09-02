@@ -2,12 +2,12 @@
   import BackButton from "../../Shared/BackButton.svelte";
   import { log, stringify } from "../../../../../src/functions";
   import type { Contact } from "../../types";
-  import type { TokenMetaDataClaims } from "../../../../../src/types";
+  import type { verifiedClaims } from "../../../../../src/types";
   import Unverified from "../../Shared/Unverified.svelte";
   import Verified from "../../Shared/Verified.svelte";
 
   export let contact: Contact;
-  export let verifiedClaims: TokenMetaDataClaims | null;
+  export let verifiedClaims: verifiedClaims | null;
 
   const walletAddress = contact.walletAddress;
 

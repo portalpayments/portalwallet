@@ -9,7 +9,7 @@
   import { PublicKey, Connection, Keypair } from "@solana/web3.js";
   import { verifyWallet } from "../../../../../src/vmwallet";
   import { log, stringify } from "../../../../../src/functions";
-  import type { TokenMetaDataClaims } from "../../../../../src/types";
+  import type { verifiedClaims } from "../../../../../src/types";
 
   import SendMoney from "./SendMoney.svelte";
 
@@ -32,7 +32,7 @@
   log(`Loading send to contact screen for ${contactWalletAddress}`);
 
   let connectionValue: Connection | null = null;
-  let verifiedClaims: TokenMetaDataClaims | null = null;
+  let verifiedClaims: verifiedClaims | null = null;
 
   connection.subscribe((value) => {
     connectionValue = value;

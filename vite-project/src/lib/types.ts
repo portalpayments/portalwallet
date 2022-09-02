@@ -1,3 +1,5 @@
+import type { VerifiedClaims } from "../../../src/types";
+
 export interface Creator {
   address: string;
   verified: boolean;
@@ -12,9 +14,9 @@ export interface Collectable {
 
 export interface Contact {
   walletAddress: string;
-  isAnonymous: boolean;
   isNew: boolean;
   isPending: boolean;
+  verifiedClaims: VerifiedClaims;
 }
 
 export interface Transaction {

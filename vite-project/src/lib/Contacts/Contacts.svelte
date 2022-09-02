@@ -1,49 +1,29 @@
 <script lang="ts">
-  import Label from "../Shared/Label.svelte";
-  import { LabelColor } from "../constants";
-  import { truncateWallet } from "../utils";
-  import anonymousImageUrl from "../../assets/ProfilePics/anonymous.svg";
   import { Link } from "svelte-navigator";
-  interface Contact {
-    address: string;
-    image: string | null;
-    name: string | null;
-    isAnonymous: boolean;
-    isNew: boolean;
-    isPending: boolean;
-  }
-  export let contacts: Array<Contact>;
+  import { contactsStore } from "../stores.js";
+  import type { Contact } from "../types.js";
+
+  import Unverified from "../Shared/Unverified.svelte";
+  import Verified from "../Shared/Verified.svelte";
+
+  let contacts: Array<Contact>;
+
+  contactsStore.subscribe((newValue) => {
+    contacts = newValue;
+  });
 </script>
 
 <div class="contacts">
   {#each contacts as contact}
-    <div class="contact">
-      <img src={contact.image || anonymousImageUrl} alt="wallet avatar" />
-
-      <div class="name-and-labels">
-        <Link to={"/contacts/" + contact.address} />
-        <div class="name">
-          {#if contact.name}
-            {contact.name}
-          {:else}
-            {truncateWallet(contact.address)}
-          {/if}
-        </div>
-        {#if contact.isAnonymous || contact.isNew || contact.isPending}
-          <div class="labels">
-            {#if contact.isNew}
-              <Label color={LabelColor.Green}>New</Label>
-            {/if}
-            {#if contact.isAnonymous}
-              <Label color={LabelColor.Grey}>Anonymous</Label>
-            {/if}
-            {#if contact.isPending}
-              <Label color={LabelColor.Yellow}>Pending</Label>
-            {/if}
-          </div>
+    <Link to={"/contacts/" + contact.walletAddress}>
+      <div class="contact">
+        {#if contact.verifiedClaims}
+          <Verified {contact} />
+        {:else}
+          <Unverified {contact} />
         {/if}
       </div>
-    </div>
+    </Link>
   {/each}
 </div>
 
@@ -58,12 +38,6 @@
     overflow-y: hidden;
   }
 
-  .name-and-labels {
-    display: grid;
-    grid-auto-flow: row;
-    position: relative;
-  }
-
   .contact {
     display: grid;
     color: #4d4d4d;
@@ -74,29 +48,5 @@
     gap: 8px;
     min-height: 70px;
     padding: 0 12px 0 12px;
-  }
-
-  .name {
-    text-align: left;
-  }
-
-  .labels {
-    display: grid;
-    grid-auto-flow: column;
-    justify-content: left;
-    gap: 3px;
-  }
-
-  img {
-    width: 100%;
-  }
-  .name-and-labels > :global(a) {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background-color: transparent;
-    z-index: 1;
   }
 </style>

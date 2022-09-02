@@ -2,20 +2,24 @@
   import Label from "../Shared/Label.svelte";
   import Checkmark from "../../assets/Checkmark.svg";
   import { LabelColor } from "../constants";
+  import type { Contact } from "../types";
 
-  export let verifiedClaims;
-  export let isNew: boolean;
+  export let contact: Contact;
+
+  // TODO: implement
+  let isNew = false;
 </script>
 
 <img
-  src={verifiedClaims.imageUrl}
-  class="profilePic"
+  src={contact.verifiedClaims.imageUrl}
+  class="profile-pic"
   alt="Address is verified"
 />
 <div class="recipient-info">
-  {verifiedClaims.name}
+  {contact.verifiedClaims.givenName}
+  {contact.verifiedClaims.familyName}
   <div class="badges-and-labels">
-    <img src={Checkmark} class="checkmark" alt="User is Verified" />
+    <img src={Checkmark} class="verified-checkmark" alt="User is Verified" />
     {#if isNew}
       <Label color={LabelColor.Yellow}>New</Label>
     {/if}
@@ -23,15 +27,12 @@
 </div>
 
 <style>
-  .checkmark {
+  .verified-checkmark {
     height: 18px;
-    margin-left: 5px;
-    transform: translateY(4px);
+    /* transform: translateY(4px); */
   }
-  .profilePic {
-    margin: auto;
-    height: 60px;
-    width: 60px;
+  .profile-pic {
+    width: 100%;
   }
 
   .recipient-info {

@@ -55,10 +55,10 @@ export interface ExpandedNFT {
 export interface TokenMetaData {
   version: number;
   issuedAgainst: string;
-  claims: TokenMetaDataClaims;
+  claims: VerifiedClaims;
 }
 
-export interface TokenMetaDataClaims {
+export interface VerifiedClaims {
   type: string;
   givenName: string;
   familyName: string;
