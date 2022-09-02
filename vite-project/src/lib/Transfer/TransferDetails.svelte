@@ -12,6 +12,7 @@
   import RequestVerification from "./RequestVerification.svelte";
   import TransactionCompleted from "./TransactionCompleted.svelte";
   import { verifyWallet } from "../../../../src/vmwallet";
+  import { debounce } from "lodash";
   import base58 from "bs58";
 
   import { SECONDS, SECOND } from "../../../../src/constants";
@@ -102,27 +103,6 @@
 
     destinationWalletAddress = walletAddress;
   };
-
-  // From https://...
-  function debounce(cb, interval, immediate = null) {
-    var timeout;
-
-    return function () {
-      var context = this,
-        args = arguments;
-      var later = function () {
-        timeout = null;
-        if (!immediate) cb.apply(context, args);
-      };
-
-      var callNow = immediate && !timeout;
-
-      clearTimeout(timeout);
-      timeout = setTimeout(later, interval);
-
-      if (callNow) cb.apply(context, args);
-    };
-  }
 
   const handleKeyupAmount = () => {
     if (amount > 0) {
