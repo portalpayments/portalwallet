@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { formatUSDCBalanceNumber } from "../../utils";
+  import { getFormattedMajorUnits, getFormattedMinorUnits } from "../../utils";
   import USDClogo from "../../../assets/usdc.svg";
   import { log, stringify } from "../../../../../src/functions";
   import type { Contact, Transaction } from "../../../lib/types";
@@ -20,7 +20,12 @@
           class={!transaction.isReceived ? "white-usdc" : ""}
           alt="USDC logo"
         />
-        <div>{formatUSDCBalanceNumber(transaction.amount)}</div>
+        <div>
+          <span class="major">{getFormattedMajorUnits(transaction.amount)}</span
+          >.<span class="minor"
+            >{getFormattedMinorUnits(transaction.amount)}</span
+          >
+        </div>
       </div>
     {/each}
   </div>
@@ -56,6 +61,13 @@
   }
   .white-usdc {
     filter: brightness(0) invert(1);
+  }
+
+  .major {
+  }
+
+  .minor {
+    font-size: 24px;
   }
 
   .amount {
