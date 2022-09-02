@@ -12,8 +12,6 @@ export interface Collectable {
 
 export interface Contact {
   walletAddress: string;
-  image: string;
-  name: string;
   isAnonymous: boolean;
   isNew: boolean;
   isPending: boolean;

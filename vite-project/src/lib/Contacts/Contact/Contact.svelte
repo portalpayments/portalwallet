@@ -1,6 +1,5 @@
 <script lang="ts">
   import ContactHeading from "./ContactHeading.svelte";
-  import anonymous from "../../../assets/ProfilePics/anonymous.svg";
   import Transactions from "./Transactions.svelte";
   import {
     connection,
@@ -12,17 +11,11 @@
   import { log, stringify } from "../../../../../src/functions";
   import type { TokenMetaDataClaims } from "../../../../../src/types";
 
-  import Modal from "../../UI/Modal.svelte";
-  import {
-    warningUnverifiedAccount,
-    NUMBERS_OPTIONAL_DECIMAL_PLACE_TWO_NUMBERS,
-  } from "../../constants";
-  import RequestVerification from "../../Transfer/RequestVerification.svelte";
   import SendMoney from "./SendMoney.svelte";
 
   import type { Contact, Transaction } from "../../../lib/types";
 
-  export let contact: Contact | null = null;
+  export let contact: Contact;
 
   export let transactions: Array<Transaction> = [
     { date: 1662051517814, amount: 4700, isReceived: false },
@@ -64,21 +57,9 @@
       new PublicKey(contactWalletAddress)
     );
 
-    if (verifiedClaims) {
-      contact = {
-        walletAddress: contactWalletAddress,
-        image: verifiedClaims.imageUrl,
-        name: `${verifiedClaims.givenName} ${verifiedClaims.familyName}`,
-        isAnonymous: false,
-        isNew: false,
-        isPending: false,
-      };
-    }
     contact = {
       walletAddress: contactWalletAddress,
-      image: anonymous,
-      name: "Anonymous",
-      isAnonymous: true,
+      isAnonymous: !connectionValue,
       isNew: false,
       isPending: false,
     };
@@ -88,46 +69,31 @@
 <div class="contactPage">
   {#if contact}
     <ContactHeading {contact} {verifiedClaims} />
-    {#if !contact.isAnonymous}
-      <Transactions {transactions} />
-      <SendMoney />
-    {:else}
-      {#if !transactions.length}
-        <div class="history-container">
-          <div class="warning">
-            {warningUnverifiedAccount}
-          </div>
-        </div>
-      {:else}
-        <Transactions {transactions} />
-      {/if}
-      <div>
-        <button on:click={requestVerificationModal} class="request-verification"
-          >Request verification</button
-        >
-        <SendMoney />
+    <Transactions {transactions} />
+    <SendMoney {contact} />
+    <!-- {warningUnverifiedAccount} -->
+    <!-- <button on:click={requestVerificationModal} class="request-verification"
+        >Request verification</button
+      > -->
+
+    <!-- <Modal buttonType="requestVerification">
+      <div class="request-container">
+         TODO emailAddress is missing 
+        <RequestVerification
+          destinationWalletAddress={contact.walletAddress}
+          transferAmount={sendAmount}
+          bind:isPending
+        />
       </div>
-    {/if}
-    {#if requestingVerification}
-      <Modal buttonType="requestVerification">
-        <div class="request-container">
-          <!-- TODO emailAddress is missing -->
-          <RequestVerification
-            destinationWalletAddress={contact.walletAddress}
-            transferAmount={sendAmount}
-            bind:isPending
-          />
-        </div>
-      </Modal>
-    {/if}
+    </Modal>
+    {#if requestingVerification}{/if} -->
   {:else}
-    Loading
+    Loading...
   {/if}
 </div>
 
 <style>
   .contactPage {
-    overflow-x: hidden;
     height: var(--wallet-height);
     width: var(--wallet-width);
     display: grid;
@@ -135,7 +101,7 @@
     grid-template-rows: 90px 1fr;
   }
 
-  button {
+  /* button {
     width: 45%;
     padding: 0px 0px;
     margin: auto;
@@ -149,7 +115,6 @@
     font-size: 1rem;
     margin: auto;
     margin-top: 50%;
-    /* Weird number */
     width: 95%;
     height: 40%;
     color: #4d4d4d;
@@ -157,7 +122,6 @@
 
   .request-verification {
     background-color: #2775c9;
-    /* Weird number */
     width: 93%;
     height: 40px;
     margin-bottom: 5px;
@@ -173,5 +137,5 @@
   }
   .send-anyway {
     background-color: #9d9d9d;
-  }
+  } */
 </style>

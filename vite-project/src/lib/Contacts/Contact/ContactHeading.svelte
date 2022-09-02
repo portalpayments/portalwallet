@@ -1,35 +1,31 @@
 <script lang="ts">
-  import { Link } from "svelte-navigator";
-  import Label from "../../Shared/Label.svelte";
   import BackButton from "../../Shared/BackButton.svelte";
-  import { LabelColor } from "../../constants";
   import { log, stringify } from "../../../../../src/functions";
   import type { Contact } from "../../types";
   import type { TokenMetaDataClaims } from "../../../../../src/types";
+  import Unverified from "../../Shared/Unverified.svelte";
+  import Verified from "../../Shared/Verified.svelte";
+
   export let contact: Contact;
   export let verifiedClaims: TokenMetaDataClaims | null;
 
-  log(`contact is`, stringify(contact));
+  const walletAddress = contact.walletAddress;
+
+  // If someone is in contacts we don't consider them new
+  const isNew = false;
+
   log(`verifiedClaims is`, stringify(verifiedClaims));
 </script>
 
 <div class="heading">
   <BackButton />
 
-  {#if contact && verifiedClaims}
-    <img src={contact.image} alt={contact.name} />
-
-    <div class="name">
-      {contact.name}
-      <div class="labels">
-        {#if contact.isAnonymous}
-          <Label color={LabelColor.Grey}>unverified</Label>
-        {/if}
-        {#if contact.isPending}
-          <Label color={LabelColor.Yellow}>Pending</Label>
-        {/if}
-      </div>
-    </div>
+  {#if contact}
+    {#if verifiedClaims}
+      <Unverified {walletAddress} />
+    {:else}
+      <Verified {verifiedClaims} {isNew} />
+    {/if}
   {:else}
     Loading
   {/if}
@@ -57,26 +53,12 @@
     color: #4d4d4d;
     font-weight: 600;
   }
-  .back-button {
-    font-size: 2rem;
-    padding: 10px;
-    width: 10%;
-  }
+
   img {
     width: 55px;
     margin: auto;
   }
 
-  /* global is needed for 'a' element under Link */
-  .back-button :global(a) {
-    text-decoration: none;
-    padding: 7px 0px;
-    background-color: transparent;
-    display: inline-block;
-    color: #3a3a3a;
-    font-size: 2rem;
-    font-weight: 400;
-  }
   .labels {
     display: grid;
     grid-auto-flow: column;

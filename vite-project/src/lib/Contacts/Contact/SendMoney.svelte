@@ -1,29 +1,27 @@
 <script lang="ts">
-  import {
-    warningUnverifiedAccount,
-    NUMBERS_OPTIONAL_DECIMAL_PLACE_TWO_NUMBERS,
-  } from "../../constants";
-  import type { Contact, Transaction } from "../../../lib/types";
+  import { NUMBERS_OPTIONAL_DECIMAL_PLACE_TWO_NUMBERS } from "../../constants";
+  import type { Contact } from "../../../lib/types";
   import { log, stringify } from "../../../../../src/functions";
-  export let sendAmount;
+
+  let sendAmount;
 
   export let contact: Contact | null = null;
-  export let transactions;
 
   // TODO replace the following code with a backend function sending money to recipient
   // And reload the transaction history to show the latest transaction
   const sendMoney = () => {
     if (contact.walletAddress && sendAmount > 0) {
       log("Sending amount " + sendAmount + " To " + contact.walletAddress);
-      const now = new Date().valueOf();
-      transactions.push({
-        date: now,
-        amount: sendAmount,
-        isReceived: false,
-      });
+      // const now = new Date().valueOf();
+      // TODO add to transactions
+      //   transactions.push({
+      //     date: now,
+      //     amount: sendAmount,
+      //     isReceived: false,
+      //   });
 
-      sendAmount = null;
-      transactions = transactions;
+      //   sendAmount = null;
+      //   transactions = transactions;
     }
   };
 </script>
