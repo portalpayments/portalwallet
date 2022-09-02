@@ -8,7 +8,7 @@
   // TODO: get name from wallet
   export let name = "Mike";
 
-  const TEMPORARY_PASSWORD = "password";
+  const TEMPORARY_PASSWORD = "";
 
   async function login(password) {
     if (password === TEMPORARY_PASSWORD) {
