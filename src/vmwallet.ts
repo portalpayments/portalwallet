@@ -40,7 +40,10 @@ export const connect = async (
   networkName: keyof typeof URLS
 ): Promise<Connection> => {
   log(`⚡ Connecting to ${networkName}`);
-  const connection = new Connection(URLS[networkName], "confirmed");
+  const connection = new Connection(URLS[networkName], {
+    commitment: "confirmed",
+    disableRetryOnRateLimit: true,
+  });
   return connection;
 };
 
