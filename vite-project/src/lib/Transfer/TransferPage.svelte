@@ -1,7 +1,7 @@
 <script>
-  import TransferDetails from "./TransferDetails.svelte";
+  import Transfer from "./Transfer.svelte";
 </script>
 
-<TransferDetails />
+<Transfer />
 
 <style></style>

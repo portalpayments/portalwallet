@@ -13,34 +13,26 @@
   import TransactionCompleted from "./TransactionCompleted.svelte";
   import { verifyWallet } from "../../../../src/vmwallet";
   import { debounce } from "lodash";
-  import base58 from "bs58";
 
   import { SECONDS, SECOND } from "../../../../src/constants";
   import { checkIfValidWalletAddress } from "../utils";
   import { log } from "../../../../src/functions";
+  import type { VerifiedClaims } from "../../../../src/types";
 
-  let walletAddress: string = "";
+  let hasLoadedVerificationStateFromNetwork = false;
+  let destinationWalletAddress: string | null;
+  let verifiedClaims: VerifiedClaims | null = null;
+
   let amount: number;
 
-  let fetchedAddressDetails = {
-    addressFetched: false,
-    name: "",
-    isAnonymous: false,
-    isPending: false,
-    isNew: false,
-  };
-
-  let sendButtonDisabled = true;
+  let isSendButtonDisabled = true;
 
   let showGasFee = false;
-
-  let isLoading = false;
 
   let isRequestingVerification = false;
   let isSendingAnyway = false;
   let isSending = false;
 
-  let destinationWalletAddress: string | null;
   let transferAmount: number | null;
 
   let connection: Connection | null = null;
@@ -55,49 +47,37 @@
     keyPair = value;
   });
 
-  const handleKeyupWalletAddress = async () => {
-    isLoading = true;
+  const handleKeyupdestinationWalletAddress = async () => {
+    let isValiddestinationWalletAddress = checkIfValidWalletAddress(
+      destinationWalletAddress
+    );
 
-    let isValidWalletAddress = checkIfValidWalletAddress(walletAddress);
-
-    if (!isValidWalletAddress) {
+    if (!isValiddestinationWalletAddress) {
       // TODO: handle invalid wallet addresses better
       log(`This is not a valid wallet address`);
 
-      fetchedAddressDetails.addressFetched = false;
-      fetchedAddressDetails.isAnonymous = false;
-      sendButtonDisabled = true;
+      verifiedClaims = null;
+      isSendButtonDisabled = true;
       isRequestingVerification = false;
       isSendingAnyway = false;
       isSending = false;
-      isLoading = false;
+      hasLoadedVerificationStateFromNetwork = false;
       return;
     }
 
+    log(`Valid wallet address!`);
+
     // Get identity from the portal Identity Token
-    const verifiedClaims = await verifyWallet(
+    verifiedClaims = await verifyWallet(
       connection,
       keyPair,
       identityTokenIssuerPublicKey,
-      new PublicKey(walletAddress)
+      new PublicKey(destinationWalletAddress)
     );
 
-    isLoading = false;
+    log(`Verification result!`, verifiedClaims);
 
-    if (!verifiedClaims) {
-      fetchedAddressDetails.addressFetched = true;
-      fetchedAddressDetails.isAnonymous = true;
-    }
-
-    if (verifiedClaims) {
-      fetchedAddressDetails.addressFetched = true;
-      fetchedAddressDetails.isNew = true;
-      fetchedAddressDetails.name = `${verifiedClaims.givenName} ${verifiedClaims.familyName}`;
-      fetchedAddressDetails.isAnonymous = false;
-      sendButtonDisabled = false;
-    }
-
-    destinationWalletAddress = walletAddress;
+    hasLoadedVerificationStateFromNetwork = true;
   };
 
   const handleKeyupAmount = () => {
@@ -113,16 +93,23 @@
 
 <div class="wallet">
   <div>
-    <!-- <TransferHeading {...fetchedAddressDetails} /> -->
+    <TransferHeading
+      {destinationWalletAddress}
+      {verifiedClaims}
+      {hasLoadedVerificationStateFromNetwork}
+    />
   </div>
 
   <div class="detailsContainer">
-    <div class="walletaddressContainer">
+    <div class="destinationWalletAddressContainer">
       <input
-        bind:value={walletAddress}
+        bind:value={destinationWalletAddress}
         type="text"
         required
-        on:keyup|preventDefault={debounce(handleKeyupWalletAddress, 1 * SECOND)}
+        on:keyup|preventDefault={debounce(
+          handleKeyupdestinationWalletAddress,
+          1 * SECOND
+        )}
       />
       <span class="floating-label">wallet address</span>
     </div>
@@ -139,12 +126,12 @@
         <span class="gasfee"> fee: 0.00025</span>{/if}
     </div>
   </div>
-  {#if isLoading}
+  {#if hasLoadedVerificationStateFromNetwork}
     <LoaderModal />
   {/if}
   <TransferButtons
-    isAnonymous={fetchedAddressDetails.isAnonymous}
-    {sendButtonDisabled}
+    isAnonymous={Boolean(verifiedClaims)}
+    sendButtonDisabled={isSendButtonDisabled}
     {destinationWalletAddress}
     {transferAmount}
     bind:sendClicked={isSending}
@@ -157,7 +144,7 @@
         {destinationWalletAddress}
         {transferAmount}
         verifiedAddress={true}
-        name={fetchedAddressDetails.name}
+        name={verifiedClaims.givenName}
       />
     </Modal>
   {/if}
@@ -169,23 +156,23 @@
           {destinationWalletAddress}
           {transferAmount}
           verifiedAddress={false}
-          name={fetchedAddressDetails.name}
+          name={null}
         />
       </div></Modal
     >
   {/if}
 
   {#if isRequestingVerification}
-    <Modal buttonType="requestVerification"
-      ><div>
-        <!-- TODO emailAddress is missing -->
+    <Modal buttonType="requestVerification">
+      <!-- <div>
+       emailAddress is missing
         <RequestVerification
-          {destinationWalletAddress}
+          {destinationdestinationWalletAddress}
           {transferAmount}
-          bind:isPending={fetchedAddressDetails.isPending}
-        />
-      </div></Modal
-    >
+          bind:isPending
+        />isPending
+      </div> -->
+    </Modal>
   {/if}
 </div>
 
@@ -249,7 +236,7 @@
     transition: 0.2s ease all;
     font-size: 0.9rem;
   }
-  .walletaddressContainer {
+  .destinationWalletAddressContainer {
     position: relative;
   }
   .amountContainer {

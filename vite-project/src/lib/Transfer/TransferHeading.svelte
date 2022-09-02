@@ -4,30 +4,42 @@
   import Verified from "../Shared/Verified.svelte";
   import { warningUnverifiedAccount } from "../constants";
   import type { VerifiedClaims } from "../../../../src/types";
+  import type { Contact } from "../../lib/types";
 
   // TODO: implement isNew
   export let isNew = false;
-  export let addressFetched = false;
-  export let walletAddress: string;
+
+  export let destinationWalletAddress: string | null = null;
   export let verifiedClaims: VerifiedClaims;
+  export let hasLoadedVerificationStateFromNetwork: boolean = false;
+
+  let contact: Contact = {
+    walletAddress: destinationWalletAddress,
+    isNew,
+    isPending: false,
+    verifiedClaims,
+  };
+
+  debugger;
 </script>
 
 <div class="recipientDetails">
   <BackButton />
-  {#if addressFetched}
+  {#if hasLoadedVerificationStateFromNetwork}
     <div class="verification-status">
       <div class="verified-header">
-        TODO
-        <!-- {#if contact.verifiedClaims}
+        {#if verifiedClaims?.type}
           <Verified {contact} />
         {:else}
           <Unverified {contact} />
-        {/if} -->
+        {/if}
       </div>
-      {#if !verifiedClaims}
+      {#if !verifiedClaims?.type}
         <div class="unverified-message">{warningUnverifiedAccount}</div>
       {/if}
     </div>
+  {:else}
+    Loading...
   {/if}
 </div>
 
@@ -44,7 +56,7 @@
   .verification-status {
     display: grid;
     grid-auto-flow: row;
-    grid-template-rows: 60px 1fr;
+    grid-template-rows: 64px 1fr;
     padding: 6px 6px;
     gap: 12px;
     margin: auto;
@@ -57,11 +69,11 @@
     font-size: 1.1rem;
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 60px 1fr;
+    grid-template-columns: 64px 1fr;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-    height: 60px;
+    gap: 12px;
+    height: 64px;
     color: #4d4d4d;
     font-weight: 600;
   }
