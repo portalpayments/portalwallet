@@ -42,22 +42,25 @@ export const getMultiplier = (digits = 2) => {
 
 export const getFormattedMajorUnits = (minorUnits: number, digits = 2) => {
   const multiplier = getMultiplier(digits);
-  console.log(`wtf`, minorUnits / multiplier);
   const majorPart = Math.floor(minorUnits / multiplier);
-  console.log(
-    `minorUnits was`,
-    minorUnits,
-    `majorPart is `,
-    majorPart,
-    `miltiplier is`,
-    multiplier
-  );
   return String(majorPart.toLocaleString("en-US"));
 };
 
-export const getFormattedMinorUnits = (minorUnits: number, digits = 2) => {
+export const getFormattedMinorUnits = (
+  totalInMinorUnits: number,
+  digits = 2
+) => {
   const multiplier = getMultiplier(digits);
-  return String(minorUnits % multiplier);
+  const minorUnitsRemainder = totalInMinorUnits % multiplier;
+  // Don't show .00, just show whole number
+  if (!minorUnitsRemainder) {
+    return "";
+  }
+
+  if (minorUnitsRemainder % 10 === 0) {
+    `.${minorUnitsRemainder}0`;
+  }
+  return `.${minorUnitsRemainder}`;
 };
 
 export const truncateWallet = (wallet: string): string => {

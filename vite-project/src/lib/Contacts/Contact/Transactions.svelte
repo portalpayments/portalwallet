@@ -22,7 +22,7 @@
         />
         <div>
           <span class="major">{getFormattedMajorUnits(transaction.amount)}</span
-          >.<span class="minor"
+          ><span class="minor"
             >{getFormattedMinorUnits(transaction.amount)}</span
           >
         </div>

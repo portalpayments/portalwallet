@@ -14,6 +14,14 @@ describe(`utils`, () => {
   });
 
   test(`getFormattedMinorUnits formats minor units correctly`, async () => {
-    expect(getFormattedMinorUnits(12345678)).toEqual("78");
+    expect(getFormattedMinorUnits(12345678)).toEqual(".78");
+  });
+
+  test(`getFormattedMinorUnits shows .70 not .7`, async () => {
+    expect(getFormattedMinorUnits(12345670)).toEqual(".70");
+  });
+
+  test(`getFormattedMinorUnits returns nothing for .00`, async () => {
+    expect(getFormattedMinorUnits(12345600)).toEqual("");
   });
 });
