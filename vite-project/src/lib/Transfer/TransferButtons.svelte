@@ -3,7 +3,7 @@
   export let isAnonymous = false;
   export let requestVerificationClicked = false;
   export let sendAnywayClicked = false;
-  export let sendClicked = false;
+  export let isSending = false;
   export let sendButtonDisabled = true;
 
   export let destinationWalletAddress: string | null;
@@ -13,7 +13,8 @@
     log(
       `destinationWalletAddress: ${destinationWalletAddress} and transferAmount: ${transferAmount}`
     );
-    sendClicked = true;
+
+    isSending = true;
   };
 
   const sendToUnverifiedAddress = () => {
@@ -34,16 +35,18 @@
     <button
       class={sendButtonDisabled ? "disabled" : "send"}
       on:click={sendToVerifiedAddress}
-      disabled={sendButtonDisabled}>Send</button
+      disabled={sendButtonDisabled}
     >
+      Send
+    </button>
   {:else}
-    <button on:click={requestVerificationModal} class="request-verification"
-      >Request verification</button
-    >
+    <button on:click={requestVerificationModal} class="request-verification">
+      Request verification
+    </button>
 
-    <button on:click={sendToUnverifiedAddress} class="send-anyway"
-      >Send anyway</button
-    >
+    <button on:click={sendToUnverifiedAddress} class="send-anyway">
+      Send anyway
+    </button>
   {/if}
 </div>
 
