@@ -1,30 +1,30 @@
 <script lang="ts">
   import Backdrop from "./Backdrop.svelte";
   import { Link } from "svelte-navigator";
-  let show = true;
-  export let buttonType: string;
+  let isOpen = true;
+  export let buttonType: "transfer" | "requestVerification";
 
-  const clicked = () => {
-    return (show = false);
+  const onCloseButtonClicked = () => {
+    return (isOpen = false);
   };
 </script>
 
-<Backdrop {show} />
+<Backdrop show={isOpen} />
 <div
   class="modal"
   style="
-    transform: {show ? 'translateY(0)' : 'translateY(-100vh)'};
-    opacity: {show ? '1' : '0'};"
+    transform: {isOpen ? 'translateY(0)' : 'translateY(-100vh)'};
+    opacity: {isOpen ? '1' : '0'};"
 >
-  <div class="modalContents">
-    <div class="closeButton">
+  <div class="modal-contents">
+    <div class="close-button">
       {#if buttonType === "transfer"}
-        <Link to="/" on:click={clicked}>×</Link>
+        <Link to="/" on:click={onCloseButtonClicked}>×</Link>
       {:else if buttonType === "requestVerification"}
-        <button on:click={clicked}>×</button>
+        <button on:click={onCloseButtonClicked}>×</button>
       {/if}
     </div>
-    <div class="infocard"><slot /></div>
+    <div class="card"><slot /></div>
   </div>
 </div>
 
@@ -45,32 +45,35 @@
     border-radius: 7px;
   }
 
-  .closeButton {
+  .close-button {
     align-self: start;
     justify-self: end;
     font-size: 1rem;
   }
 
   /* global needed for 'a' element under Link */
-  .closeButton > :global(a) {
+  .close-button > :global(a) {
     background-color: transparent;
     font-weight: 600;
     color: #9d9d9d;
     padding-right: 5px;
   }
+
   button {
     background-color: transparent;
     font-weight: 600;
     color: #9d9d9d;
   }
-  .modalContents {
+
+  .modal-contents {
     display: grid;
     grid-auto-flow: row;
     grid-template-rows: 20px 1fr;
     grid-template-columns: 1fr;
     gap: 5px;
   }
-  .infocard {
+
+  .card {
     display: block;
     width: 85%;
     height: auto;
