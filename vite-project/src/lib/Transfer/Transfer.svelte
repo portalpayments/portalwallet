@@ -19,7 +19,7 @@
 
   let hasLoadedVerificationStateFromNetwork = false;
   let isCurrentlyLoadingVerificationStateFromNetwork = false;
-  let destinationWalletAddress: string | null;
+  let destinationWalletAddress: string | null = null;
   let verifiedClaims: VerifiedClaims | null = null;
 
   let amount: number;
@@ -66,7 +66,7 @@
 
     if (!isValiddestinationWalletAddress) {
       // TODO: handle invalid wallet addresses better
-      log(`This is not a valid wallet address`);
+      log(`This ${destinationWalletAddress} is not a valid wallet address`);
 
       verifiedClaims = null;
       isSendButtonDisabled = true;
@@ -110,14 +110,14 @@
 
   <div class="destination-and-amount">
     <Input
-      value={destinationWalletAddress}
+      bind:value={destinationWalletAddress}
       label="wallet address"
       isAmount={false}
       onTypingPause={handleKeyupDestinationWalletAddress}
     />
 
     <Input
-      value={amount}
+      bind:value={amount}
       label="amount"
       isAmount={true}
       onTypingPause={handleKeyupAmount}
