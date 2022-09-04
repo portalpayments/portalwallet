@@ -124,23 +124,23 @@
     sendButtonDisabled={isSendButtonDisabled}
     {destinationWalletAddress}
     {transferAmount}
-    bind:sendClicked={isSending}
+    bind:isSending
     bind:requestVerificationClicked={isAskingWalletOwnerToGetVerified}
     bind:sendAnywayClicked={isSendingAnyway}
   />
   {#if isSending || isSendingAnyway}
-    {#if transActionIsComplete}
-      <Modal buttonType="transfer">
-        <TransactionCompleted
-          {destinationWalletAddress}
-          {transferAmount}
-          verifiedAddress={Boolean(verifiedClaims)}
-          name={verifiedClaims.givenName}
-        />
-      </Modal>
-    {:else}
+    <Modal buttonType="transfer">
+      <!-- {#if transActionIsComplete} -->
+      <TransactionCompleted
+        {destinationWalletAddress}
+        {transferAmount}
+        verifiedAddress={Boolean(verifiedClaims)}
+        name={verifiedClaims.givenName}
+      />
+      <!-- {:else}
       Loading...
-    {/if}
+      {/if} -->
+    </Modal>
   {/if}
 
   {#if isAskingWalletOwnerToGetVerified}
