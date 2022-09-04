@@ -168,8 +168,8 @@
   {/if}
 
   {#if isSendingAnyway}
-    <Modal buttonType="transfer"
-      ><div>
+    <Modal buttonType="transfer">
+      <div>
         <TransactionCompleted
           {destinationWalletAddress}
           {transferAmount}
