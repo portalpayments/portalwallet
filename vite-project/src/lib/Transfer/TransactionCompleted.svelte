@@ -1,6 +1,7 @@
 <script lang="ts">
   import SuccessfulAction from "../../assets/SuccessfulAction.svg";
   import { truncateWallet } from "../utils";
+  import { log } from "../../../../src/functions";
   import USDCSVG from "../../assets/usdc.svg";
   import Checkmark from "../../assets/Checkmark.svg";
   import UnverifiedTag from "../Shared/Label.svelte";
@@ -9,6 +10,8 @@
   export let destinationWalletAddress: string | null;
   export let name: string | null;
   export let transferAmount: number | null;
+
+  log(`transferAmount is`, transferAmount);
 </script>
 
 <div class="transaction-details">
@@ -38,9 +41,9 @@
       {:else}
         <div>
           <div class="recipient-name">
-            <UnverifiedTag color={LabelColor.Grey} size="medium"
-              >UNVERIFIED</UnverifiedTag
-            >
+            <UnverifiedTag color={LabelColor.Grey} size="medium">
+              UNVERIFIED
+            </UnverifiedTag>
           </div>
           <div
             style="text-align: left; font-weight: 600; color: #9d9d9d; font-size: 0.9rem;"

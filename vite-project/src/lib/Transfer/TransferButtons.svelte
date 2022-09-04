@@ -11,7 +11,7 @@
 
   const sendToVerifiedAddress = () => {
     log(
-      `destinationWalletAddress: ${destinationWalletAddress} and transferAmount: ${transferAmount}`
+      `Sending to: destinationWalletAddress: ${destinationWalletAddress} and transferAmount: ${transferAmount}`
     );
 
     isSending = true;
