@@ -3,7 +3,6 @@
   import Unverified from "../Shared/Unverified.svelte";
   import Verified from "../Shared/Verified.svelte";
   import { warningUnverifiedAccount } from "../constants";
-  import type { VerifiedClaims } from "../../../../src/types";
   import type { Contact } from "../../lib/types";
 
   export let contact: Contact;
@@ -21,9 +20,9 @@
           <Unverified {contact} />
         {/if}
       </div>
-      <!-- {#if !verifiedClaims?.type}
+      {#if !contact?.verifiedClaims?.type}
         <div class="unverified-message">{warningUnverifiedAccount}</div>
-      {/if} -->
+      {/if}
     </div>
   {:else}
     Loading...

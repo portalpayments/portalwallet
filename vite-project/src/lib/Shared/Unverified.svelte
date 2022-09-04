@@ -28,7 +28,6 @@
 
 <style>
   .profile-pic {
-    margin: auto;
     height: 60px;
     width: 60px;
   }

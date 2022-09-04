@@ -2,7 +2,12 @@
   import Label from "../Shared/Label.svelte";
   import Checkmark from "../../assets/Checkmark.svg";
   import { LabelColor } from "../constants";
-  import { VAHEHS_WALLET, MIKES_WALLET } from "../../../../src/constants";
+  import {
+    VAHEHS_WALLET,
+    MIKES_WALLET,
+    JOE_MCCANNS_WALLET,
+    SHAQS_WALLET,
+  } from "../../../../src/constants";
   import type { Contact } from "../types";
 
   export let contact: Contact;
@@ -11,6 +16,8 @@
   const hackProfilePicsByWallet = {
     [VAHEHS_WALLET]: "/src/assets/ProfilePics/vaheh.jpg",
     [MIKES_WALLET]: "/src/assets/ProfilePics/mike.jpg",
+    [JOE_MCCANNS_WALLET]: "/src/assets/ProfilePics/joe.jpg",
+    [SHAQS_WALLET]: "/src/assets/ProfilePics/shaq.jpg",
   };
 
   // TODO: implement
@@ -38,7 +45,6 @@
   }
   .verified-checkmark {
     height: 18px;
-    /* transform: translateY(4px); */
   }
   .profile-pic {
     width: 100%;
