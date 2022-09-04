@@ -116,7 +116,7 @@
     <TransferHeading {contact} {hasLoadedVerificationStateFromNetwork} />
   </div>
 
-  <div class="detailsContainer">
+  <div class="wallet-and-amount">
     <div class="destinationWalletAddressContainer">
       <input
         bind:value={destinationWalletAddress}
@@ -207,7 +207,7 @@
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 100%;
   }
-  .detailsContainer {
+  .wallet-and-amount {
     display: grid;
     grid-auto-flow: row;
     grid-template-rows: 1fr;
