@@ -8,6 +8,7 @@
   import TransferHeading from "./TransferHeading.svelte";
   import TransferButtons from "./TransferButtons.svelte";
   import LoaderModal from "../UI/LoaderModal.svelte";
+  import Input from "../UI/Input.svelte";
   import Modal from "../UI/Modal.svelte";
   import RequestVerification from "./RequestVerification.svelte";
   import TransactionCompleted from "./TransactionCompleted.svelte";
@@ -64,7 +65,7 @@
     keyPair = value;
   });
 
-  const handleKeyupdestinationWalletAddress = async () => {
+  const handleKeyupDestinationWalletAddress = async () => {
     isCurrentlyLoadingVerificationStateFromNetwork = true;
     let isValiddestinationWalletAddress = checkIfValidWalletAddress(
       destinationWalletAddress
@@ -117,30 +118,19 @@
   </div>
 
   <div class="wallet-and-amount">
-    <div class="destination-wallet">
-      <input
-        bind:value={destinationWalletAddress}
-        type="text"
-        required
-        on:keyup|preventDefault={debounce(
-          handleKeyupdestinationWalletAddress,
-          1 * SECOND
-        )}
-      />
-      <span class="floating-label">wallet address</span>
-    </div>
-    <div class="amount-and-gas-fee">
-      <input
-        class="usdc-amount"
-        bind:value={amount}
-        type="text"
-        required
-        on:keyup|preventDefault={debounce(handleKeyupAmount, 1 * SECOND)}
-      />
-      <span class="floating-label">amount</span>
-      {#if showGasFee}
-        <span class="gasfee"> fee: 0.00025</span>{/if}
-    </div>
+    <Input
+      value={destinationWalletAddress}
+      label="wallet address"
+      isAmount={false}
+      onTypingPause={handleKeyupDestinationWalletAddress}
+    />
+
+    <Input
+      value={amount}
+      label="amount"
+      isAmount={true}
+      onTypingPause={handleKeyupAmount}
+    />
   </div>
 
   {#if isCurrentlyLoadingVerificationStateFromNetwork}
@@ -215,57 +205,5 @@
     align-self: center;
     width: 100%;
     gap: 15px;
-  }
-  input {
-    border-radius: 9px;
-    padding: 10px 0px 0px 10px;
-    border: 1px solid rgba(217, 217, 217, 0.3);
-    background-color: rgba(217, 217, 217, 0.3);
-    font-size: 14px;
-    width: 200px;
-    height: 35px;
-    font-size: 1.1rem;
-    color: #4d4d4d;
-    font-weight: 600;
-  }
-  .usdc-amount {
-    background: url("../../assets/usdc.svg") no-repeat scroll 175px 10px;
-    background-size: 26px;
-    background-color: rgba(217, 217, 217, 0.3);
-  }
-  input:focus {
-    outline: none !important;
-    border: 2px solid rgba(65, 156, 253, 0.8);
-    box-shadow: 0 0 2px rgba(65, 156, 253, 0.3);
-  }
-  input:focus ~ .floating-label,
-  input:not(:focus):valid ~ .floating-label {
-    top: -1px;
-    font-size: 0.7rem;
-    opacity: 1;
-  }
-
-  .floating-label {
-    position: absolute;
-    pointer-events: none;
-    color: #9d9d9d;
-    left: 15px;
-    top: 10px;
-    transition: 0.2s ease all;
-    font-size: 0.9rem;
-  }
-  .destination-wallet {
-    position: relative;
-  }
-  .amount-and-gas-fee {
-    position: relative;
-    display: grid;
-  }
-  .gasfee {
-    font-size: 0.65rem;
-    color: #4d4d4d;
-    justify-self: end;
-    font-weight: 600;
-    padding: 3px 4px 0px 0px;
   }
 </style>
