@@ -13,13 +13,6 @@
   import RequestVerification from "./RequestVerification.svelte";
   import TransactionCompleted from "./TransactionCompleted.svelte";
   import { verifyWallet } from "../../../../src/vmwallet";
-  import { debounce } from "lodash";
-
-  import {
-    SECONDS,
-    SECOND,
-    SOLANA_WALLET_REGEX,
-  } from "../../../../src/constants";
   import { checkIfValidWalletAddress } from "../utils";
   import { log } from "../../../../src/functions";
   import type { VerifiedClaims } from "../../../../src/types";
@@ -112,12 +105,10 @@
   };
 </script>
 
-<div class="wallet">
-  <div>
-    <TransferHeading {contact} {hasLoadedVerificationStateFromNetwork} />
-  </div>
+<div class="transfer-screen">
+  <TransferHeading {contact} {hasLoadedVerificationStateFromNetwork} />
 
-  <div class="wallet-and-amount">
+  <div class="destination-and-amount">
     <Input
       value={destinationWalletAddress}
       label="wallet address"
@@ -185,7 +176,7 @@
 </div>
 
 <style>
-  .wallet {
+  .transfer-screen {
     min-width: var(--wallet-width);
     max-width: var(--wallet-width);
     min-height: var(--wallet-height);
@@ -197,7 +188,7 @@
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 100%;
   }
-  .wallet-and-amount {
+  .destination-and-amount {
     display: grid;
     grid-auto-flow: row;
     grid-template-rows: 1fr;
