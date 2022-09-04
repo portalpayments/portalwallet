@@ -176,8 +176,8 @@
           verifiedAddress={false}
           name={null}
         />
-      </div></Modal
-    >
+      </div>
+    </Modal>
   {/if}
 
   {#if isAskingWalletOwnerToGetVerified}
