@@ -24,8 +24,6 @@
         <div class="unverified-message">{warningUnverifiedAccount}</div>
       {/if}
     </div>
-  {:else}
-    Loading...
   {/if}
 </div>
 

@@ -57,8 +57,6 @@
       </div>
     </Modal>
     {#if requestingVerification}{/if} -->
-  {:else}
-    Loading...
   {/if}
 </div>
 
