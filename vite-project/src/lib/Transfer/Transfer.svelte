@@ -90,8 +90,7 @@
 
     hasLoadedVerificationStateFromNetwork = true;
     isCurrentlyLoadingVerificationStateFromNetwork = false;
-
-    isSendButtonDisabled = true;
+    isSendButtonDisabled = false;
   };
 </script>
 
