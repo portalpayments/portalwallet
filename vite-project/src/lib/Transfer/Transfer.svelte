@@ -14,7 +14,11 @@
   import { verifyWallet } from "../../../../src/vmwallet";
   import { debounce } from "lodash";
 
-  import { SECONDS, SECOND } from "../../../../src/constants";
+  import {
+    SECONDS,
+    SECOND,
+    SOLANA_WALLET_REGEX,
+  } from "../../../../src/constants";
   import { checkIfValidWalletAddress } from "../utils";
   import { log } from "../../../../src/functions";
   import type { VerifiedClaims } from "../../../../src/types";

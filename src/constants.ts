@@ -18,6 +18,9 @@ export const ARTIST = new PublicKey(
   "9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX"
 );
 
+// From https://docs.solana.com/integrations/exchange
+export const SOLANA_WALLET_REGEX = "[1-9A-HJ-NP-Za-km-z]{32,44}";
+
 // https://solscan.io/account/HxunVfDmoeAKmNVxt36jjcBq9p3Zy1Bmocx9sVwJNXdP
 export const AGIZA_NFT_ASSOCIATED_TOKEN_ACCOUNT =
   "HxunVfDmoeAKmNVxt36jjcBq9p3Zy1Bmocx9sVwJNXdP";
