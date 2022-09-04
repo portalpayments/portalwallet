@@ -11,10 +11,7 @@
 
   const sendToVerifiedAddress = () => {
     log(
-      "wallet Address: " +
-        destinationWalletAddress +
-        " and amount is " +
-        transferAmount
+      `destinationWalletAddress: ${destinationWalletAddress} and transferAmount: ${transferAmount}`
     );
     sendClicked = true;
   };
@@ -22,10 +19,7 @@
   const sendToUnverifiedAddress = () => {
     log("send anyway was clicked");
     log(
-      "wallet Address: " +
-        destinationWalletAddress +
-        " and amount is " +
-        transferAmount
+      `destinationWalletAddress: ${destinationWalletAddress} and transferAmount: ${transferAmount}`
     );
     sendAnywayClicked = true;
   };

@@ -17,23 +17,21 @@
   import { log } from "../../../../src/functions";
   import type { VerifiedClaims } from "../../../../src/types";
 
+  let destinationWalletAddress: string | null = null;
+  let transferAmount: number | null;
+
   let hasLoadedVerificationStateFromNetwork = false;
   let isCurrentlyLoadingVerificationStateFromNetwork = false;
-  let destinationWalletAddress: string | null = null;
+
   let verifiedClaims: VerifiedClaims | null = null;
 
-  let amount: number;
-
   let isSendButtonDisabled = true;
-
-  let showGasFee = false;
 
   let isAskingWalletOwnerToGetVerified = false;
 
   let isSendingAnyway = false;
   let isSending = false;
-
-  let transferAmount: number | null;
+  let transActionIsComplete = false;
 
   let connection: Connection | null = null;
 
@@ -60,16 +58,16 @@
 
   const handleKeyupDestinationWalletAddress = async () => {
     isCurrentlyLoadingVerificationStateFromNetwork = true;
-    let isValiddestinationWalletAddress = checkIfValidWalletAddress(
+    isSendButtonDisabled = true;
+
+    let isValidDestinationWalletAddress = checkIfValidWalletAddress(
       destinationWalletAddress
     );
 
-    if (!isValiddestinationWalletAddress) {
+    if (!isValidDestinationWalletAddress) {
       // TODO: handle invalid wallet addresses better
       log(`This ${destinationWalletAddress} is not a valid wallet address`);
-
       verifiedClaims = null;
-      isSendButtonDisabled = true;
       isAskingWalletOwnerToGetVerified = false;
       isSendingAnyway = false;
       isSending = false;
@@ -92,16 +90,8 @@
 
     hasLoadedVerificationStateFromNetwork = true;
     isCurrentlyLoadingVerificationStateFromNetwork = false;
-  };
 
-  const handleKeyupAmount = () => {
-    if (amount > 0) {
-      showGasFee = true;
-      transferAmount = amount;
-    } else {
-      showGasFee = false;
-      transferAmount = null;
-    }
+    isSendButtonDisabled = true;
   };
 </script>
 
@@ -113,14 +103,16 @@
       bind:value={destinationWalletAddress}
       label="wallet address"
       isAmount={false}
+      filterField={"walletAddress"}
       onTypingPause={handleKeyupDestinationWalletAddress}
     />
 
     <Input
-      bind:value={amount}
+      bind:value={transferAmount}
       label="amount"
       isAmount={true}
-      onTypingPause={handleKeyupAmount}
+      filterField={"numbers"}
+      onTypingPause={null}
     />
   </div>
 
@@ -129,7 +121,7 @@
   {/if}
 
   <TransferButtons
-    isAnonymous={Boolean(verifiedClaims)}
+    isAnonymous={!verifiedClaims}
     sendButtonDisabled={isSendButtonDisabled}
     {destinationWalletAddress}
     {transferAmount}
@@ -137,28 +129,19 @@
     bind:requestVerificationClicked={isAskingWalletOwnerToGetVerified}
     bind:sendAnywayClicked={isSendingAnyway}
   />
-  {#if isSending}
-    <Modal buttonType="transfer">
-      <TransactionCompleted
-        {destinationWalletAddress}
-        {transferAmount}
-        verifiedAddress={true}
-        name={verifiedClaims.givenName}
-      />
-    </Modal>
-  {/if}
-
-  {#if isSendingAnyway}
-    <Modal buttonType="transfer">
-      <div>
+  {#if isSending || isSendingAnyway}
+    {#if transActionIsComplete}
+      <Modal buttonType="transfer">
         <TransactionCompleted
           {destinationWalletAddress}
           {transferAmount}
-          verifiedAddress={false}
-          name={null}
+          verifiedAddress={Boolean(verifiedClaims)}
+          name={verifiedClaims.givenName}
         />
-      </div>
-    </Modal>
+      </Modal>
+    {:else}
+      Loading...
+    {/if}
   {/if}
 
   {#if isAskingWalletOwnerToGetVerified}

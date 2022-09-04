@@ -1,25 +1,70 @@
 <script lang="ts">
   import { debounce } from "lodash";
   import { SECOND } from "../../../../src/constants";
+  import { log } from "../../../../src/functions";
+
   export let value: string | number;
   export let isAmount: boolean;
+  export let showGasFee: boolean = false;
   export let label: string;
-  export let onTypingPause: svelte.JSX.KeyboardEventHandler<HTMLInputElement>;
+  export let filterField: "numbers" | "walletAddress" | null = null;
+  export let onTypingPause: svelte.JSX.KeyboardEventHandler<HTMLInputElement> | null;
+
+  const badValuesByFilters = {
+    numbers: /[^\d\.]/gi,
+    walletAddress: /[^1-9A-HJ-NP-Za-km-z]/gi,
+  };
+
+  const removeFromString = (string: String, regex: RegExp) => {
+    if (string.match(regex)) {
+      log(`Removing regex '${regex}' from string '${string}'`);
+    } else {
+      log(`No bad characters`);
+    }
+    return string.replace(regex, "");
+  };
+
+  const filterInput = (event) => {
+    let target = event.target;
+    let badValues = badValuesByFilters[filterField];
+    log(`Removing values for filter ${filterField}`);
+    target.value = removeFromString(target.value, badValues);
+
+    const ALREADY_HAS_DECIMAL_PLACE =
+      filterField === "numbers" &&
+      String(value).includes(".") &&
+      event.data === ".";
+    if (ALREADY_HAS_DECIMAL_PLACE) {
+      log(`Removing second decimal place`);
+      target.value = target.value.replace(/.$/gi, "");
+    }
+  };
 </script>
 
 <div class="input-and-label">
-  <!-- pattern={SOLANA_WALLET_REGEX}  -->
   <input
     bind:value
     type="text"
     class={isAmount ? "usdc-amount" : ""}
     required
-    on:keyup|preventDefault={debounce(onTypingPause, 1 * SECOND)}
+    on:keyup|preventDefault={debounce((event) => {
+      if (isAmount) {
+        if (value > 0) {
+          showGasFee = true;
+        } else {
+          showGasFee = false;
+        }
+      }
+      if (onTypingPause) {
+        onTypingPause(event);
+      }
+    }, 1 * SECOND)}
+    on:input|capture={filterInput}
   />
   <span class="floating-label">{label}</span>
 
   {#if isAmount}
-    <span class="gasfee"> fee: 0.00025</span>
+    <span class="gas-fee"> fee: 0.00025</span>
   {/if}
 </div>
 
@@ -70,7 +115,7 @@
     position: relative;
     display: grid;
   }
-  .gasfee {
+  .gas-fee {
     font-size: 0.65rem;
     color: #4d4d4d;
     justify-self: end;
