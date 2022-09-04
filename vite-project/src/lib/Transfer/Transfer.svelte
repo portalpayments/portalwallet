@@ -6,7 +6,7 @@
   } from "../stores";
   import { PublicKey, Connection, Keypair } from "@solana/web3.js";
   import TransferHeading from "./TransferHeading.svelte";
-  import TransferButtons from "./TransferButtons.svelte";
+  import ConfirmTransferButtons from "./TransferButtons.svelte";
   import LoaderModal from "../UI/LoaderModal.svelte";
   import Input from "../UI/Input.svelte";
   import Modal from "../UI/Modal.svelte";
@@ -14,7 +14,8 @@
   import TransactionCompleted from "./TransactionCompleted.svelte";
   import { verifyWallet } from "../../../../src/vmwallet";
   import { checkIfValidWalletAddress } from "../utils";
-  import { log } from "../../../../src/functions";
+  import { log, sleep } from "../../../../src/functions";
+  import { SECONDS, SECOND } from "../../../../src/constants";
   import type { VerifiedClaims } from "../../../../src/types";
 
   let destinationWalletAddress: string | null = null;
@@ -45,6 +46,17 @@
       verifiedClaims,
     };
   }
+
+  const doTransfer = async () => {
+    log(`Doing transfer`);
+    await sleep(1 * SECOND);
+    log(`Finished transfer`);
+    isSending = false;
+    isSendingAnyway = false;
+    transActionIsComplete = true;
+  };
+
+  $: (isSending || isSendingAnyway) && doTransfer();
 
   connectionStore.subscribe((value) => {
     connection = value;
@@ -119,7 +131,7 @@
     <LoaderModal />
   {/if}
 
-  <TransferButtons
+  <ConfirmTransferButtons
     isAnonymous={!verifiedClaims}
     sendButtonDisabled={isSendButtonDisabled}
     {destinationWalletAddress}
@@ -128,18 +140,19 @@
     bind:requestVerificationClicked={isAskingWalletOwnerToGetVerified}
     bind:sendAnywayClicked={isSendingAnyway}
   />
+
   {#if isSending || isSendingAnyway}
+    <Modal buttonType="transfer">Loading...</Modal>
+  {/if}
+
+  {#if transActionIsComplete}
     <Modal buttonType="transfer">
-      <!-- {#if transActionIsComplete} -->
       <TransactionCompleted
         {destinationWalletAddress}
         {transferAmount}
         verifiedAddress={Boolean(verifiedClaims)}
         name={verifiedClaims.givenName}
       />
-      <!-- {:else}
-      Loading...
-      {/if} -->
     </Modal>
   {/if}
 
