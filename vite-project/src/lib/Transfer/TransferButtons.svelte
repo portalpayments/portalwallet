@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { log } from "../../../../src/functions";
   export let isAnonymous = false;
   export let requestVerificationClicked = false;
   export let sendAnywayClicked = false;
@@ -9,7 +10,7 @@
   export let transferAmount: number | null;
 
   const sendToVerifiedAddress = () => {
-    console.log(
+    log(
       "wallet Address: " +
         destinationWalletAddress +
         " and amount is " +
@@ -19,8 +20,8 @@
   };
 
   const sendToUnverifiedAddress = () => {
-    console.log("send anyway was clicked");
-    console.log(
+    log("send anyway was clicked");
+    log(
       "wallet Address: " +
         destinationWalletAddress +
         " and amount is " +
