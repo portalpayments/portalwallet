@@ -42,7 +42,7 @@
           <div class="password-prompt">Enter your password</div>
           <input type="password" bind:value={password} />
 
-          <button type="submit" class="loginButton">Log in</button>
+          <button type="submit" class="login-button">Log in</button>
         </div>
       </form>
     </div>
@@ -97,17 +97,20 @@
     grid-auto-flow: row;
     grid-template-rows: 30px 1fr 1fr;
   }
+
   button {
     width: 100%;
     padding: 8px 0px;
     margin: auto;
-
     font-weight: 600;
     font-size: 1.1rem;
   }
-  .loginButton {
+
+  .login-button {
     background-color: #2775c9;
     color: #fff;
+    border-radius: 24px;
+    background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
   }
   .logoutButton {
     background-color: rgba(255, 96, 134, 0.33);
