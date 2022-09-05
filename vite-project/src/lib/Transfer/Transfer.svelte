@@ -14,7 +14,7 @@
   import TransactionCompleted from "./TransactionCompleted.svelte";
   import { verifyWallet } from "../../../../src/vmwallet";
   import { checkIfValidWalletAddress } from "../utils";
-  import { log, sleep, stringify, isEmpty } from "../../../../src/functions";
+  import { log, sleep, stringify } from "../../../../src/functions";
   import {
     SECONDS,
     SECOND,
@@ -180,7 +180,7 @@
   {/if}
 
   <ConfirmTransferButtons
-    isAnonymous={isEmpty(verifiedClaims)}
+    isAnonymous={!verifiedClaims}
     {isSendButtonDisabled}
     {destinationWalletAddress}
     {transferAmount}

@@ -4,7 +4,6 @@
   import { log } from "../../../../src/functions";
   import type { VerifiedClaims } from "../../../../src/types";
   import USDClogo from "../../assets/usdc.svg";
-  import { isEmpty } from "../../../../src/functions";
 
   export let verifiedClaims: VerifiedClaims;
   export let destinationWalletAddress: string | null;
@@ -26,7 +25,7 @@
       src={USDClogo}
       alt="usdc symbol"
     />{transferAmount} to
-    <br />{#if !isEmpty(verifiedClaims)}{verifiedClaims.givenName}
+    <br />{#if verifiedClaims}{verifiedClaims.givenName}
       {verifiedClaims.familyName}{:else}{truncateWallet(
         destinationWalletAddress
       )}{/if}
