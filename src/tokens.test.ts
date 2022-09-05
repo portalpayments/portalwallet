@@ -10,7 +10,6 @@ import { USD_DECIMALS, SECONDS, ENOUGH_TO_MAKE_A_NEW_TOKEN } from "./constants";
 import { log } from "./functions";
 import {
   createMintAccount,
-  createTokenAccount,
   mintTokens,
   makeTokenAccount,
   sendUSDC,
@@ -79,10 +78,10 @@ describe("minting", () => {
   );
 
   test(`we can make a token account for Alice`, async () => {
-    alicesTokenAccount = await createTokenAccount(
+    alicesTokenAccount = await makeTokenAccount(
       connection,
-      mintAccountPublicKey,
       testUSDCAuthority,
+      mintAccountPublicKey,
       alice.publicKey
     );
 
