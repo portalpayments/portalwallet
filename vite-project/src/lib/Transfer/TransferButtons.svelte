@@ -1,10 +1,10 @@
 <script lang="ts">
   import { log } from "../../../../src/functions";
   export let isAnonymous = false;
-  export let requestVerificationClicked = false;
+  export let isAskingWalletOwnerToGetVerified = false;
   export let sendAnywayClicked = false;
   export let isSending = false;
-  export let sendButtonDisabled = true;
+  export let isSendButtonDisabled = true;
 
   export let destinationWalletAddress: string | null;
   export let transferAmount: number | null;
@@ -26,16 +26,16 @@
   };
 
   const requestVerificationModal = () => {
-    requestVerificationClicked = true;
+    isAskingWalletOwnerToGetVerified = true;
   };
 </script>
 
 <div class="buttonContainer">
   {#if !isAnonymous}
     <button
-      class={sendButtonDisabled ? "disabled" : "send"}
+      class={isSendButtonDisabled ? "disabled" : "send"}
       on:click={sendToVerifiedAddress}
-      disabled={sendButtonDisabled}
+      disabled={isSendButtonDisabled}
     >
       Send
     </button>

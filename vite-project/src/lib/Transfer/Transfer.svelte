@@ -14,7 +14,7 @@
   import TransactionCompleted from "./TransactionCompleted.svelte";
   import { verifyWallet } from "../../../../src/vmwallet";
   import { checkIfValidWalletAddress } from "../utils";
-  import { log, sleep } from "../../../../src/functions";
+  import { log, sleep, stringify } from "../../../../src/functions";
   import { SECONDS, SECOND } from "../../../../src/constants";
   import type { VerifiedClaims } from "../../../../src/types";
 
@@ -134,12 +134,12 @@
   {/if}
 
   <ConfirmTransferButtons
-    isAnonymous={!verifiedClaims}
-    sendButtonDisabled={isSendButtonDisabled}
+    isAnonymous={!Boolean(verifiedClaims?.type)}
+    {isSendButtonDisabled}
     {destinationWalletAddress}
     {transferAmount}
     bind:isSending
-    bind:requestVerificationClicked={isAskingWalletOwnerToGetVerified}
+    bind:isAskingWalletOwnerToGetVerified
     bind:sendAnywayClicked={isSendingAnyway}
   />
 
@@ -160,14 +160,11 @@
 
   {#if isAskingWalletOwnerToGetVerified}
     <Modal buttonType="requestVerification">
-      <!-- <div>
-       emailAddress is missing
-        <RequestVerification
-          {destinationdestinationWalletAddress}
-          {transferAmount}
-          bind:isPending
-        />isPending
-      </div> -->
+      <RequestVerification
+        {destinationWalletAddress}
+        {transferAmount}
+        bind:isPending={isAskingWalletOwnerToGetVerified}
+      />
     </Modal>
   {/if}
 </div>
