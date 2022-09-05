@@ -30,7 +30,7 @@
   };
 </script>
 
-<div class="buttonContainer">
+<div class="buttons">
   {#if !isAnonymous}
     <button
       class={isSendButtonDisabled ? "disabled" : "send"}
@@ -51,7 +51,7 @@
 </div>
 
 <style>
-  .buttonContainer {
+  .buttons {
     display: grid;
     grid-auto-flow: row;
     grid-template-rows: 1fr;
