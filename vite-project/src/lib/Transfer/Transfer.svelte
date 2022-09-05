@@ -103,7 +103,7 @@
         keyPair,
         senderTokenAccount,
         recipientTokenAccount,
-        transferAmount
+        transferAmountInMinorUnits
       );
       log(`Finished transfer, signature was`, signature);
     } else {
