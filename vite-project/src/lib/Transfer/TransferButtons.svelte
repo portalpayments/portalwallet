@@ -65,6 +65,7 @@
     color: #fff;
     font-weight: 600;
     font-size: 1.1rem;
+    border-radius: 24px;
   }
 
   .disabled {
