@@ -31,22 +31,25 @@
 </script>
 
 <div class="buttons">
-  {#if !isAnonymous}
-    <button
-      class={isSendButtonDisabled ? "disabled" : "send"}
-      on:click={sendToVerifiedAddress}
-      disabled={isSendButtonDisabled}
-    >
-      Send
-    </button>
-  {:else}
-    <button on:click={requestVerificationModal} class="request-verification">
-      Request verification
-    </button>
+  <!-- Don't bother showing anything until there's a destination wallet address -->
+  {#if destinationWalletAddress}
+    {#if !isAnonymous}
+      <button
+        class={isSendButtonDisabled ? "disabled" : "send"}
+        on:click={sendToVerifiedAddress}
+        disabled={isSendButtonDisabled}
+      >
+        Send
+      </button>
+    {:else}
+      <button on:click={requestVerificationModal} class="request-verification">
+        Request verification
+      </button>
 
-    <button on:click={sendToUnverifiedAddress} class="send-anyway">
-      Send anyway
-    </button>
+      <button on:click={sendToUnverifiedAddress} class="send-anyway">
+        Send anyway
+      </button>
+    {/if}
   {/if}
 </div>
 
