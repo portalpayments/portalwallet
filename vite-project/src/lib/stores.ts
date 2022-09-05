@@ -48,7 +48,7 @@ export const contactsStore: Writable<Array<Contact>> = writable([
     isPending: false,
     verifiedClaims: {
       type: "INDIVIDUAL",
-      givenName: "Joseph",
+      givenName: "Joseph Isaac",
       familyName: "McCann",
       imageUrl: "/src/assets/ProfilePics/joe.jpg",
     },
