@@ -28,7 +28,6 @@
   const filterInput = (event) => {
     let target = event.target;
     let badValues = badValuesByFilters[filterField];
-    log(`Removing values for filter ${filterField}`);
     target.value = removeFromString(target.value, badValues);
 
     const ALREADY_HAS_DECIMAL_PLACE =
@@ -36,9 +35,9 @@
       String(value).includes(".") &&
       event.data === ".";
     if (ALREADY_HAS_DECIMAL_PLACE) {
-      log(`Removing second decimal place`);
       target.value = target.value.replace(/.$/gi, "");
     }
+    // TODO: implement max decimal places (eg allow 12.34, stop 12.345)
   };
 </script>
 
