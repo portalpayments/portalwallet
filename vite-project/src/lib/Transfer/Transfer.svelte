@@ -21,7 +21,10 @@
     USDC_MAINNET_MINT_ACCOUNT,
   } from "../../../../src/constants";
   import type { VerifiedClaims } from "../../../../src/types";
+  import { makeTokenAccount, sendUSDC } from "../../../../src/tokens";
   import type { Contact } from "../types";
+
+  const ACTUALLY_SEND_MONEY = false;
 
   let destinationWalletAddress: string | null = null;
   let transferAmount: number | null = null;
@@ -54,9 +57,48 @@
   }
 
   const doTransfer = async () => {
-    log(`Doing transfer`);
-    await sleep(1 * SECOND);
-    log(`Finished transfer`);
+    const transferAmountInMinorUnits = Number(transferAmount) * 100;
+
+    if (ACTUALLY_SEND_MONEY) {
+      log(`Doing transfer, will send ${transferAmountInMinorUnits} cents`);
+
+      const senderTokenAccount = await makeTokenAccount(
+        connection,
+        keyPair,
+        new PublicKey(USDC_MAINNET_MINT_ACCOUNT),
+        keyPair.publicKey
+      );
+
+      log(
+        `Made / found our USDC token account`,
+        senderTokenAccount.address.toBase58()
+      );
+
+      const recipientTokenAccount = await makeTokenAccount(
+        connection,
+        keyPair,
+        new PublicKey(USDC_MAINNET_MINT_ACCOUNT),
+        new PublicKey(contact.walletAddress)
+      );
+
+      log(
+        `Made / found recipient's USDC token account`,
+        senderTokenAccount.address.toBase58()
+      );
+
+      const signature = await sendUSDC(
+        connection,
+        keyPair,
+        senderTokenAccount,
+        recipientTokenAccount,
+        transferAmount
+      );
+      log(`Finished transfer, signature was`, signature);
+    } else {
+      log(`ACTUALLY_SEND_MONEY is false, skipping transfer`);
+      await sleep(1 * SECOND);
+    }
+
     isSending = false;
     isSendingAnyway = false;
     transActionIsComplete = true;
