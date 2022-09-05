@@ -2,6 +2,7 @@
   import { debounce } from "lodash";
   import { SECOND } from "../../../../src/constants";
   import { log } from "../../../../src/functions";
+  import USDClogo from "../../../src/assets/usdc.svg";
 
   export let value: string | number;
   export let isAmount: boolean;
@@ -61,7 +62,14 @@
     }, 1 * SECOND)}
     on:input|capture={filterInput}
   />
-  <span class="floating-label">{label}</span>
+  <span class="floating-label"
+    >{label}
+    {#if isAmount}<img
+        class="inline-usdc"
+        src={USDClogo}
+        alt="usdc logo"
+      />{/if}</span
+  >
 
   {#if isAmount}
     <span class="gas-fee"> fee: 0.00025</span>
@@ -71,7 +79,7 @@
 <style>
   input {
     border-radius: 9px;
-    padding: 10px 0px 0px 10px;
+    padding: 10px 10px 0px 10px;
     border: 1px solid rgba(217, 217, 217, 0.3);
     background-color: rgba(217, 217, 217, 0.3);
     font-size: 14px;
@@ -81,10 +89,12 @@
     color: #4d4d4d;
     font-weight: 600;
   }
+
+  .inline-usdc {
+    display: inline-block;
+  }
   .usdc-amount {
-    background: url("../../assets/usdc.svg") no-repeat scroll 175px 10px;
-    background-size: 26px;
-    background-color: rgba(217, 217, 217, 0.3);
+    text-align: right;
   }
   input:focus {
     outline: none !important;
@@ -98,14 +108,25 @@
     opacity: 1;
   }
 
+  input:focus ~ .floating-label .inline-usdc,
+  input:not(:focus):valid ~ .floating-label .inline-usdc {
+    height: 10px;
+    transform: translateY(1px);
+  }
+
   .floating-label {
     position: absolute;
     pointer-events: none;
     color: #9d9d9d;
-    left: 15px;
-    top: 10px;
+    left: 12px;
+    top: 12px;
     transition: 0.2s ease all;
     font-size: 0.9rem;
+  }
+
+  .floating-label .inline-usdc {
+    height: 12px;
+    transform: translateY(2px);
   }
 
   .input-and-label {

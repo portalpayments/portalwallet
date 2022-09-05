@@ -73,12 +73,14 @@
   }
 
   .request-verification {
-    background-color: #2775c9;
+    /* background-color: #2775c9; */
+    background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
   }
   .send-anyway {
     background-color: #9d9d9d;
   }
   .send {
-    background-color: #2775c9;
+    /* background-color: #2775c9; */
+    background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
   }
 </style>
