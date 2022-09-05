@@ -9,34 +9,50 @@
   export let hasLoadedVerificationStateFromNetwork: boolean = false;
 </script>
 
-<div class="recipientDetails">
+<div class="back-heading-and-recipient-details">
   <BackButton />
-  {#if hasLoadedVerificationStateFromNetwork}
-    <div class="verification-status">
-      <div class="verified-header">
-        {#if contact?.verifiedClaims?.type}
-          <Verified {contact} />
-        {:else}
-          <Unverified {contact} />
+  <div class="heading-and-recipient-details">
+    <h1>Transfer</h1>
+    {#if hasLoadedVerificationStateFromNetwork}
+      <div class="verification-status">
+        <div class="verified-header">
+          {#if contact?.verifiedClaims?.type}
+            <Verified {contact} />
+          {:else}
+            <Unverified {contact} />
+          {/if}
+        </div>
+        {#if !contact?.verifiedClaims?.type}
+          <div class="unverified-message">{warningUnverifiedAccount}</div>
         {/if}
       </div>
-      {#if !contact?.verifiedClaims?.type}
-        <div class="unverified-message">{warningUnverifiedAccount}</div>
-      {/if}
-    </div>
-  {/if}
+    {/if}
+  </div>
 </div>
 
 <style>
-  .recipientDetails {
+  .back-heading-and-recipient-details {
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 12px 1fr;
+    /* Back button, main heading */
+    grid-template-columns: 24px 1fr;
     width: 100%;
     height: 150px;
     justify-content: center;
     align-items: baseline;
   }
+
+  .heading-and-recipient-details {
+    display: grid;
+    grid-auto-flow: row;
+  }
+
+  h1 {
+    font-size: 24px;
+    /* Center, despite back button */
+    transform: translateX(-12px);
+  }
+
   .verification-status {
     display: grid;
     grid-auto-flow: row;

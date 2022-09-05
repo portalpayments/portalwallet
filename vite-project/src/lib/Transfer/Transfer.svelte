@@ -110,8 +110,6 @@
   <TransferHeading {contact} {hasLoadedVerificationStateFromNetwork} />
 
   <div class="destination-and-amount">
-    <h1>Transfer</h1>
-
     <Input
       bind:value={destinationWalletAddress}
       label="wallet address"
