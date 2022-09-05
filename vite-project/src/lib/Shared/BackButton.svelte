@@ -9,14 +9,17 @@
 <style>
   .back-button {
     font-size: 2rem;
-    padding: 10px;
-    width: 10%;
+    position: absolute;
+    /* Just eyeballing it to fit beside the heading on the Transfers page */
+    top: 42px;
+    left: 6px;
+    margin: 0;
+    padding: 0;
   }
 
   /* global is needed for 'a' element under Link */
   .back-button :global(a) {
     text-decoration: none;
-    padding: 7px 0px;
     background-color: transparent;
     display: inline-block;
     color: #3a3a3a;

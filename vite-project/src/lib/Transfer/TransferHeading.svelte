@@ -11,9 +11,7 @@
 </script>
 
 <div class="transfer-heading">
-  <divl class="top-left">
-    <BackButton />
-  </divl>
+  <BackButton />
   <h1>Transfer</h1>
   {#if hasLoadedVerificationStateFromNetwork}
     <div class="verification-status">
@@ -39,14 +37,6 @@
     height: 150px;
     justify-content: center;
     align-items: baseline;
-  }
-
-  .top-left {
-    position: absolute;
-    top: 6px;
-    left: 6px;
-    margin: 0;
-    padding: 0;
   }
 
   h1 {
