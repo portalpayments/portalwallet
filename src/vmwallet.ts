@@ -12,7 +12,7 @@ import base58 from "bs58";
 import { AccountLayout, RawAccount, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import axios, { AxiosResponse } from "axios";
 import { getIdentityTokenFromWallet } from "./identity-tokens";
-import { TokenMetaData, verifiedClaims } from "./types";
+import type { VerifiedClaims } from "./types";
 
 export const getKeypairFromString = (privateKeyString: string) => {
   let decodedPrivateKey: Buffer;
@@ -142,7 +142,7 @@ export const verifyWallet = async (
   metaplexKeypair: Keypair,
   identityTokenIssuerPublicKey: PublicKey,
   wallet: PublicKey
-): Promise<verifiedClaims | null> => {
+): Promise<VerifiedClaims | null> => {
   const identityToken = await getIdentityTokenFromWallet(
     connection,
     metaplexKeypair,
