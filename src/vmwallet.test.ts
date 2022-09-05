@@ -36,7 +36,7 @@ jest.mock("./functions", () => ({
 
 const identityTokenPrivateKey = process.env.IDENTITY_TOKEN_PRIVATE_KEY;
 
-describe(`mainnet integration tests`, () => {
+describe.skip(`mainnet integration tests`, () => {
   let mainNetConnection: Connection | null = null;
   process.env.IDENTITY_TOKEN_PRIVATE_KEY;
 
