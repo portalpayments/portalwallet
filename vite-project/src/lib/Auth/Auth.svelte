@@ -8,10 +8,9 @@
   // TODO: get name from wallet
   export let name = "Mike";
 
-  const TEMPORARY_PASSWORD = "";
-
   async function login(password) {
-    if (password === TEMPORARY_PASSWORD) {
+    // TODO: implement a real check using encryption on localStorage item.
+    if (true) {
       $authStore.isLoggedIn = true;
     } else {
       alert("entered password is wrong");
