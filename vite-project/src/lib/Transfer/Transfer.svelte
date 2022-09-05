@@ -40,7 +40,7 @@
 
   let isSendingAnyway = false;
   let isSending = false;
-  let transActionIsComplete = false;
+  let isTransactionComplete = false;
 
   let connection: Connection | null = null;
 
@@ -101,7 +101,7 @@
 
     isSending = false;
     isSendingAnyway = false;
-    transActionIsComplete = true;
+    isTransactionComplete = true;
   };
 
   $: (isSending || isSendingAnyway) && doTransfer();
@@ -193,7 +193,7 @@
     <Modal buttonType="transfer">Loading...</Modal>
   {/if}
 
-  {#if transActionIsComplete}
+  {#if isTransactionComplete}
     <Modal buttonType="transfer">
       <TransactionCompleted
         {destinationWalletAddress}
