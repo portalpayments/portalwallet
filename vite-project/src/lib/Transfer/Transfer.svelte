@@ -24,7 +24,19 @@
   import { makeTokenAccount, sendUSDC } from "../../../../src/tokens";
   import type { Contact } from "../types";
 
-  const ACTUALLY_SEND_MONEY = false;
+  const ACTUALLY_SEND_MONEY = true;
+
+  const CACHED_VERIFIED_CLAIMS_BY_WALLET_ADDRESS: Record<
+    string,
+    VerifiedClaims
+  > = {
+    "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG": {
+      familyName: "Hatami",
+      givenName: "Vaheh",
+      imageUrl: "//src/assets/verifiedMikeImage.png",
+      type: "INDIVIDUAL",
+    },
+  };
 
   let destinationWalletAddress: string | null = null;
   let transferAmount: number | null = null;
