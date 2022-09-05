@@ -74,5 +74,6 @@
     display: grid;
     align-self: center;
     justify-self: center;
+    justify-items: center;
   }
 </style>

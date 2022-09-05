@@ -214,6 +214,7 @@
 
   {#if isSending || isSendingAnyway}
     <Modal buttonType="transfer">
+      <div class="transferring-wait">Sending money...</div>
       <Circle color="#419cfd" />
     </Modal>
   {/if}
@@ -263,5 +264,10 @@
     align-self: center;
     width: 100%;
     gap: 15px;
+  }
+
+  .transferring-wait {
+    padding-bottom: 24px;
+    font-weight: bold;
   }
 </style>
