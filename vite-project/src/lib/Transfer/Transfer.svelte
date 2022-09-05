@@ -226,6 +226,9 @@
     align-items: center;
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 100%;
+
+    /* Cool subtle background borrowed from website */
+    background: radial-gradient(at 50% 50%, #ddfff6 0, #fff 80%, #fff 100%);
   }
   .destination-and-amount {
     display: grid;
