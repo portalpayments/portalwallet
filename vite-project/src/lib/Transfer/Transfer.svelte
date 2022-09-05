@@ -7,9 +7,9 @@
   import { PublicKey, Connection, Keypair } from "@solana/web3.js";
   import TransferHeading from "./TransferHeading.svelte";
   import ConfirmTransferButtons from "./TransferButtons.svelte";
-  import LoaderModal from "../UI/LoaderModal.svelte";
-  import Input from "../UI/Input.svelte";
-  import Modal from "../UI/Modal.svelte";
+  import LoaderModal from "../Shared/LoaderModal.svelte";
+  import Input from "../Shared/Input.svelte";
+  import Modal from "../Shared/Modal.svelte";
   import RequestVerification from "./RequestVerification.svelte";
   import TransactionCompleted from "./TransactionCompleted.svelte";
   import { verifyWallet } from "../../../../src/vmwallet";
