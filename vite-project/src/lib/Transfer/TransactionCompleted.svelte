@@ -26,7 +26,7 @@
       class="usdc-symbol"
       src={USDClogo}
       alt="usdc symbol"
-    />{transferAmount} to {#if verifiedClaims.type}{verifiedClaims.givenName}
+    />{transferAmount} to {#if verifiedClaims?.type}{verifiedClaims.givenName}
       {verifiedClaims.familyName}{:else}{truncateWallet(
         destinationWalletAddress
       )}{/if}

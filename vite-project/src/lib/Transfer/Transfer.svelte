@@ -17,9 +17,10 @@
   import { log, sleep, stringify } from "../../../../src/functions";
   import { SECONDS, SECOND } from "../../../../src/constants";
   import type { VerifiedClaims } from "../../../../src/types";
+  import type { Contact } from "../types";
 
   let destinationWalletAddress: string | null = null;
-  let transferAmount: number | null;
+  let transferAmount: number | null = null;
 
   let hasLoadedVerificationStateFromNetwork = false;
   let isCurrentlyLoadingVerificationStateFromNetwork = false;
@@ -36,9 +37,10 @@
 
   let connection: Connection | null = null;
 
-  let contact;
+  let contact: Contact | null = null;
 
-  $: if (destinationWalletAddress && verifiedClaims) {
+  $: {
+    log(`Updating contact`);
     contact = {
       walletAddress: destinationWalletAddress,
       isNew: true,
