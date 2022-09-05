@@ -15,6 +15,8 @@
   import { verifyWallet } from "../../../../src/vmwallet";
   import { checkIfValidWalletAddress } from "../utils";
   import { log, sleep, stringify } from "../../../../src/functions";
+  import { Circle } from "svelte-loading-spinners";
+
   import {
     SECONDS,
     SECOND,
@@ -211,7 +213,9 @@
   />
 
   {#if isSending || isSendingAnyway}
-    <Modal buttonType="transfer">Loading...</Modal>
+    <Modal buttonType="transfer">
+      <Circle color="#419cfd" />
+    </Modal>
   {/if}
 
   {#if isTransactionComplete}
