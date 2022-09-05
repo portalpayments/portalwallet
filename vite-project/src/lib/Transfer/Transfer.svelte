@@ -150,8 +150,7 @@
       <TransactionCompleted
         {destinationWalletAddress}
         {transferAmount}
-        verifiedAddress={Boolean(verifiedClaims)}
-        name={verifiedClaims.givenName}
+        {verifiedClaims}
       />
     </Modal>
   {/if}

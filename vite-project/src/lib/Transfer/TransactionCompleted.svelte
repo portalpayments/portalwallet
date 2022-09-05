@@ -2,60 +2,53 @@
   import SuccessfulAction from "../../assets/SuccessfulAction.svg";
   import { truncateWallet } from "../utils";
   import { log } from "../../../../src/functions";
-  import USDCSVG from "../../assets/usdc.svg";
+  import type { VerifiedClaims } from "../../../../src/types";
+  import USDClogo from "../../assets/usdc.svg";
   import Checkmark from "../../assets/Checkmark.svg";
   import UnverifiedTag from "../Shared/Label.svelte";
   import { LabelColor } from "../constants";
-  export let verifiedAddress: boolean;
+  export let verifiedClaims: VerifiedClaims;
   export let destinationWalletAddress: string | null;
-  export let name: string | null;
   export let transferAmount: number | null;
 
   log(`transferAmount is`, transferAmount);
 </script>
 
 <div class="transaction-details">
-  <div style="color: #9d9d9d; font-size: 1rem;">Transaction Complete!</div>
-  <img src={SuccessfulAction} alt="money sent successfully" />
+  <h1>Transaction Complete!</h1>
+  <img
+    class="success-icon"
+    src={SuccessfulAction}
+    alt="money sent successfully"
+  />
   <div class="recipient-and-amount">
-    <div class="amount">
-      <div>Amount:</div>
-
-      <img src={USDCSVG} alt="usdc symbol" />
-
-      <div style="font-weight: 600;">{transferAmount}</div>
-    </div>
-    <div class="recipient">
-      Recipient:
-      {#if verifiedAddress}
-        <div>
-          <div class="recipient-name">
-            {name}<img src={Checkmark} alt="verified recipient" />
-          </div>
-          <div class="wallet-address">
-            {truncateWallet(destinationWalletAddress)}
-          </div>
-        </div>
-      {:else}
-        <div>
-          <div class="recipient-name">
-            <UnverifiedTag color={LabelColor.Grey} size="medium">
-              UNVERIFIED
-            </UnverifiedTag>
-          </div>
-          <div class="wallet-address">
-            {truncateWallet(destinationWalletAddress)}
-          </div>
-        </div>{/if}
-    </div>
+    Sent <img
+      class="usdc-symbol"
+      src={USDClogo}
+      alt="usdc symbol"
+    />{transferAmount} to {#if verifiedClaims.type}{verifiedClaims.givenName}
+      {verifiedClaims.familyName}{:else}{truncateWallet(
+        destinationWalletAddress
+      )}{/if}
   </div>
 </div>
 
 <style>
-  img {
-    width: 60px;
+  h1 {
+    font-size: 1rem;
+    margin: 0;
+  }
+  .success-icon {
+    width: 64px;
     justify-self: center;
     align-self: center;
+  }
+
+  .usdc-symbol {
+    display: inline;
+    height: 16px;
+    /* Hack to get baseline of $ to line up with baseline of text */
+    transform: translateY(2px);
   }
 
   .transaction-details {
@@ -65,49 +58,10 @@
     grid-template-rows: 20px 60px 1fr;
     justify-content: center;
     align-items: start;
-    gap: 10px;
+    gap: 24px;
     color: #4d4d4d;
     font-size: 1.1rem;
   }
   .recipient-and-amount {
-    display: grid;
-    grid-auto-flow: row;
-    grid-template-rows: 24px 24px;
-    gap: 15px;
-    justify-content: center;
-    align-items: center;
-  }
-  .recipient {
-    display: grid;
-    grid-auto-flow: column;
-    grid-template-columns: 80px 1fr;
-    gap: 3px;
-  }
-  .amount {
-    display: grid;
-    grid-auto-flow: column;
-    grid-template-columns: 80px 24px 20px;
-    gap: 3px;
-    align-items: baseline;
-  }
-  .amount img {
-    width: 22px;
-    transform: translateY(-1px);
-  }
-  .recipient-name img {
-    width: 15px;
-  }
-  .recipient-name {
-    font-weight: 600;
-    display: grid;
-    grid-auto-flow: column;
-    gap: 5px;
-  }
-
-  .wallet-address {
-    text-align: left;
-    font-weight: 600;
-    color: #9d9d9d;
-    font-size: 0.9rem;
   }
 </style>

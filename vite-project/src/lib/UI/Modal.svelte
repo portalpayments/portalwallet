@@ -16,47 +16,52 @@
     transform: {isOpen ? 'translateY(0)' : 'translateY(-100vh)'};
     opacity: {isOpen ? '1' : '0'};"
 >
-  <div class="modal-contents">
-    <div class="close-button">
-      {#if buttonType === "transfer"}
-        <Link to="/" on:click={onCloseButtonClicked}>×</Link>
-      {:else if buttonType === "requestVerification"}
-        <button on:click={onCloseButtonClicked}>×</button>
-      {/if}
-    </div>
-    <div class="card"><slot /></div>
+  <div class="close-button">
+    {#if buttonType === "transfer"}
+      <Link to="/" on:click={onCloseButtonClicked}>×</Link>
+    {:else if buttonType === "requestVerification"}
+      <button on:click={onCloseButtonClicked}>×</button>
+    {/if}
   </div>
+  <div class="card"><slot /></div>
 </div>
 
 <style>
   .modal {
     position: fixed;
-    top: 200px;
     z-index: 500;
     background-color: #fff;
     width: 250px;
-    min-height: 225px;
-    max-height: 250px;
     justify-self: center;
     display: grid;
-    padding: 5px 0px 30px 0px;
+    padding: 24px 6px;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
-    border-radius: 7px;
+    border-radius: 6px;
+
+    display: grid;
+    grid-auto-flow: row;
+    gap: 6px;
   }
 
+  /* TODO - close buttons generally not used on mobile amnd this is too small */
   .close-button {
-    align-self: start;
-    justify-self: end;
+    position: absolute;
+    top: 12px;
+    right: 12px;
     font-size: 1rem;
   }
 
   /* global needed for 'a' element under Link */
   .close-button > :global(a) {
+    height: 12px;
+    width: 12px;
+    align-content: center;
+    justify-content: center;
     background-color: transparent;
     font-weight: 600;
     color: #9d9d9d;
-    padding-right: 5px;
+    display: grid;
   }
 
   button {
@@ -65,18 +70,8 @@
     color: #9d9d9d;
   }
 
-  .modal-contents {
-    display: grid;
-    grid-auto-flow: row;
-    grid-template-rows: 20px 1fr;
-    grid-template-columns: 1fr;
-    gap: 5px;
-  }
-
   .card {
-    display: block;
-    width: 85%;
-    height: auto;
+    display: grid;
     align-self: center;
     justify-self: center;
   }
