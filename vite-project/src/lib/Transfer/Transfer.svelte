@@ -150,13 +150,22 @@
 
     log(`Valid wallet address!`);
 
-    // Get identity from the portal Identity Token
-    verifiedClaims = await verifyWallet(
-      connection,
-      keyPair,
-      identityTokenIssuerPublicKey,
-      new PublicKey(destinationWalletAddress)
-    );
+    const cachedVerifiedClaims =
+      CACHED_VERIFIED_CLAIMS_BY_WALLET_ADDRESS[destinationWalletAddress];
+
+    if (cachedVerifiedClaims) {
+      log(`Using cached verified claims`);
+      verifiedClaims = cachedVerifiedClaims;
+      await sleep(1 * SECOND);
+    } else {
+      // Get identity from the portal Identity Token
+      verifiedClaims = await verifyWallet(
+        connection,
+        keyPair,
+        identityTokenIssuerPublicKey,
+        new PublicKey(destinationWalletAddress)
+      );
+    }
 
     log(`Verification result!`, verifiedClaims);
 
