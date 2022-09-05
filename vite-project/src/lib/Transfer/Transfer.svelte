@@ -14,8 +14,12 @@
   import TransactionCompleted from "./TransactionCompleted.svelte";
   import { verifyWallet } from "../../../../src/vmwallet";
   import { checkIfValidWalletAddress } from "../utils";
-  import { log, sleep, stringify } from "../../../../src/functions";
-  import { SECONDS, SECOND } from "../../../../src/constants";
+  import { log, sleep, stringify, isEmpty } from "../../../../src/functions";
+  import {
+    SECONDS,
+    SECOND,
+    USDC_MAINNET_MINT_ACCOUNT,
+  } from "../../../../src/constants";
   import type { VerifiedClaims } from "../../../../src/types";
   import type { Contact } from "../types";
 
@@ -134,7 +138,7 @@
   {/if}
 
   <ConfirmTransferButtons
-    isAnonymous={!Boolean(verifiedClaims?.type)}
+    isAnonymous={isEmpty(verifiedClaims)}
     {isSendButtonDisabled}
     {destinationWalletAddress}
     {transferAmount}

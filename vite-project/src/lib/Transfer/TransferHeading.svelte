@@ -4,6 +4,7 @@
   import Verified from "../Shared/Verified.svelte";
   import { warningUnverifiedAccount } from "../constants";
   import type { Contact } from "../../lib/types";
+  import { isEmpty } from "../../../../src/functions";
 
   export let contact: Contact;
   export let hasLoadedVerificationStateFromNetwork: boolean = false;
@@ -16,13 +17,13 @@
     {#if hasLoadedVerificationStateFromNetwork}
       <div class="verification-status">
         <div class="verified-header">
-          {#if contact?.verifiedClaims?.type}
-            <Verified {contact} />
-          {:else}
+          {#if isEmpty(contact.verifiedClaims)}
             <Unverified {contact} />
+          {:else}
+            <Verified {contact} />
           {/if}
         </div>
-        {#if !contact?.verifiedClaims?.type}
+        {#if isEmpty(contact.verifiedClaims)}
           <div class="unverified-message">{warningUnverifiedAccount}</div>
         {/if}
       </div>

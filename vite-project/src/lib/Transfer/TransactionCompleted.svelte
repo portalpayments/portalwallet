@@ -4,9 +4,8 @@
   import { log } from "../../../../src/functions";
   import type { VerifiedClaims } from "../../../../src/types";
   import USDClogo from "../../assets/usdc.svg";
-  import Checkmark from "../../assets/Checkmark.svg";
-  import UnverifiedTag from "../Shared/Label.svelte";
-  import { LabelColor } from "../constants";
+  import { isEmpty } from "../../../../src/functions";
+
   export let verifiedClaims: VerifiedClaims;
   export let destinationWalletAddress: string | null;
   export let transferAmount: number | null;
@@ -26,7 +25,8 @@
       class="usdc-symbol"
       src={USDClogo}
       alt="usdc symbol"
-    />{transferAmount} to {#if verifiedClaims?.type}{verifiedClaims.givenName}
+    />{transferAmount} to
+    <br />{#if !isEmpty(verifiedClaims)}{verifiedClaims.givenName}
       {verifiedClaims.familyName}{:else}{truncateWallet(
         destinationWalletAddress
       )}{/if}
@@ -61,7 +61,5 @@
     gap: 24px;
     color: #4d4d4d;
     font-size: 1.1rem;
-  }
-  .recipient-and-amount {
   }
 </style>

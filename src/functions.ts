@@ -49,7 +49,11 @@ export const stringify = (object: any): string => {
   return JSON.stringify(object, null, 2);
 };
 
-export const isEmpty = (object: Record<string, unknown>): boolean => {
+export const isEmpty = (object: any): boolean => {
+  // Real objects are always truthy
+  if (!object) {
+    return false;
+  }
   return Object.keys(object).length === 0;
 };
 
