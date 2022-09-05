@@ -20,6 +20,16 @@
   --white: #f5f5f5;
   --light-grey: #ccc;
   --mid-grey: #999;
+
+  /* From website */
+  --other-white: #fbfbfb;
+  --slate-gray: #282c34;
+  --dark-blue: #1e2e54;
+  --pale-blue: #76d9ff;
+  --bright-green: #90d072;
+  --mid-blue: #419cfd;
+  --teal: #3797bc;
+  --link-color: var(--mid-blue);
 }
 
 a,
