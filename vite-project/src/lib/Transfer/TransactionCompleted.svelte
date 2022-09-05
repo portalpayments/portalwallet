@@ -32,9 +32,7 @@
           <div class="recipient-name">
             {name}<img src={Checkmark} alt="verified recipient" />
           </div>
-          <div
-            style="text-align: left; font-weight: 600; color: #9d9d9d; font-size: 0.9rem;"
-          >
+          <div class="wallet-address">
             {truncateWallet(destinationWalletAddress)}
           </div>
         </div>
@@ -45,9 +43,7 @@
               UNVERIFIED
             </UnverifiedTag>
           </div>
-          <div
-            style="text-align: left; font-weight: 600; color: #9d9d9d; font-size: 0.9rem;"
-          >
+          <div class="wallet-address">
             {truncateWallet(destinationWalletAddress)}
           </div>
         </div>{/if}
@@ -106,5 +102,12 @@
     display: grid;
     grid-auto-flow: column;
     gap: 5px;
+  }
+
+  .wallet-address {
+    text-align: left;
+    font-weight: 600;
+    color: #9d9d9d;
+    font-size: 0.9rem;
   }
 </style>
