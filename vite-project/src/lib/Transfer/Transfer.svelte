@@ -71,7 +71,8 @@
   }
 
   const doTransfer = async () => {
-    const transferAmountInMinorUnits = Number(transferAmount) * 100;
+    // USDC actually has 6 decimal places
+    const transferAmountInMinorUnits = Number(transferAmount) * 1e6;
 
     if (ACTUALLY_SEND_MONEY) {
       log(`Doing transfer, will send ${transferAmountInMinorUnits} cents`);
