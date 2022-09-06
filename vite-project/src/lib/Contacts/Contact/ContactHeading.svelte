@@ -2,18 +2,13 @@
   import BackButton from "../../Shared/BackButton.svelte";
   import { log, stringify } from "../../../../../src/functions";
   import type { Contact } from "../../types";
-  import type { verifiedClaims } from "../../../../../src/types";
+  import type { VerifiedClaims } from "../../../../../src/types";
   import Unverified from "../../Shared/Unverified.svelte";
   import Verified from "../../Shared/Verified.svelte";
 
   export let contact: Contact;
 
-  const walletAddress = contact.walletAddress;
-
-  // If someone is in contacts we don't consider them new
-  const isNew = false;
-
-  log(`verifiedClaims is`, stringify(verifiedClaims));
+  log(`contact is`, stringify(contact));
 </script>
 
 <div class="heading">
@@ -42,24 +37,5 @@
     width: 100%;
     margin-top: 10px;
     border-bottom: 1px solid #d9d9d9;
-  }
-
-  .name {
-    display: grid;
-    grid-auto-flow: row;
-    text-align: left;
-    font-size: 1.2rem;
-    color: #4d4d4d;
-    font-weight: 600;
-  }
-
-  img {
-    width: 55px;
-    margin: auto;
-  }
-
-  .labels {
-    display: grid;
-    grid-auto-flow: column;
   }
 </style>
