@@ -54,7 +54,7 @@
     width: 45%;
     height: 38px;
     font-size: 1.1rem;
-    color: #4d4d4d;
+    color: var(--black);
     font-weight: 600;
   }
   input:focus {

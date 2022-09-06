@@ -40,7 +40,7 @@
 
   .contact {
     display: grid;
-    color: #4d4d4d;
+    color: var(--black);
     grid-auto-flow: column;
     grid-template-columns: 42px 1fr;
     border-bottom: 1px solid #e7e7e7;

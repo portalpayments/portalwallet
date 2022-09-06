@@ -40,7 +40,7 @@
   .transaction {
     display: grid;
     height: 64px;
-    color: #4d4d4d;
+    color: var(--black);
     grid-auto-flow: column;
     grid-template-columns: 42px 1fr 64px;
     align-items: center;

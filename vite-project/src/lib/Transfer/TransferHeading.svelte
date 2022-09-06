@@ -74,14 +74,14 @@
     align-items: center;
     gap: 12px;
     height: 64px;
-    color: #4d4d4d;
+    color: var(--black);
     font-weight: 600;
   }
 
   .unverified-message {
     font-size: 0.8rem;
     line-height: 130%;
-    color: #4d4d4d;
+    color: var(--black);
     font-weight: 500;
   }
 </style>

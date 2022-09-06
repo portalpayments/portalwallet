@@ -81,7 +81,7 @@
     width: 200px;
     height: 35px;
     font-size: 1.1rem;
-    color: #4d4d4d;
+    color: var(--black);
     font-weight: 600;
   }
 

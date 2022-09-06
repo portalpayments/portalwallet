@@ -85,7 +85,7 @@
     width: 200px;
     height: 35px;
     font-size: 1.1rem;
-    color: #4d4d4d;
+    color: var(--black);
     font-weight: 600;
   }
 
@@ -137,7 +137,7 @@
   }
   .gas-fee {
     font-size: 0.65rem;
-    color: #4d4d4d;
+    color: var(--black);
     justify-self: end;
     font-weight: 600;
     padding: 3px 4px 0px 0px;

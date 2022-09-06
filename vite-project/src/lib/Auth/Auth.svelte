@@ -73,7 +73,7 @@
   .welcomeMessage {
     font-size: 1.2rem;
     font-weight: 500;
-    color: #4d4d4d;
+    color: var(--black);
   }
   input {
     border-radius: 9px;
@@ -83,7 +83,7 @@
     width: 200px;
     height: 38px;
     font-size: 1.1rem;
-    color: #4d4d4d;
+    color: var(--black);
     font-weight: 600;
   }
   input:focus {

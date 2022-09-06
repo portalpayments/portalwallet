@@ -58,7 +58,7 @@
     justify-content: center;
     align-items: start;
     gap: 24px;
-    color: #4d4d4d;
+    color: var(--black);
     font-size: 1.1rem;
   }
 </style>
