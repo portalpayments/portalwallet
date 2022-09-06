@@ -22,6 +22,14 @@ localStorage.setItem("PORTAL_PRIVATE_KEY", "123456789012345678901234567890123456
 
 Get your private key from **Phantom** -> ⚙️ -> **Export Private Key**
 
+## To test the Web Extension
+
+```
+npm run build
+```
+
+Then in Chrome / Edge etc, click **manage Extensions**, turn on **Developer Mode**, **Load unpacked** and pick the`dist` folder.
+
 ## For tests
 
 You'll need an `.env` file with:
