@@ -93,7 +93,7 @@
       <Route path="logout"><Auth /></Route>
       <!-- primary=false to avoid a focus warning from the Svelte router -->
       <Route path="contacts/:address" primary={false}><Contact /></Route>
-      <Route path="/" primary={false}>
+      <Route primary={false}>
         <div class="header-and-features">
           <TopToolbar {...testUser} />
           <div class="features">
@@ -111,7 +111,7 @@
         <Navbar bind:currentFeature />
       </Route>
     {:else}
-      <Route path="/" primary={false}><div class="login"><Auth /></div></Route>
+      <Route primary={false}><div class="login"><Auth /></div></Route>
     {/if}
   </main>
 </Router>
