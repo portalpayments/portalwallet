@@ -34,7 +34,7 @@
   }
 
   .heading button:hover {
-    color: #5d5d5d;
+    color: var(--black);
   }
   .heading button:active {
     color: #3a3a3a;

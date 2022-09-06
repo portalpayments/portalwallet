@@ -46,7 +46,7 @@
     justify-self: center;
     display: grid;
     grid-auto-flow: column;
-    border: 1.5px solid #f3f3f3;
+    border: 1.5px solid var(--chalk-white);
     border-radius: 29px;
     /* Bunch the buttons up together in the center */
     grid-auto-columns: min-content;
