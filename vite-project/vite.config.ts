@@ -29,8 +29,14 @@ export default defineConfig({
     rollupOptions: {
       plugins: [nodePolyfills({ crypto: true })],
     },
+    // From https://github.com/vitejs/vite/issues/9703#issuecomment-1216662109
+    commonjsOptions: {
+      include: [],
+    },
   },
   optimizeDeps: {
+    // From https://github.com/vitejs/vite/issues/9703#issuecomment-1216662109
+    disabled: false,
     esbuildOptions: {
       define: {
         global: "globalThis",
