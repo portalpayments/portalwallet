@@ -29,13 +29,14 @@
   .heading {
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 30px 60px 1fr;
-    gap: 10px;
+    grid-template-columns: 64px 1fr;
+    gap: 12px;
     justify-content: center;
     align-items: center;
     height: 80px;
     width: 100%;
-    margin-top: 10px;
+    padding: 12px 24px;
     border-bottom: 1px solid #d9d9d9;
+    box-sizing: border-box;
   }
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import AnonymousSvg from "../../assets/ProfilePics/anonymous.svg";
+  import AnonymousImage from "../../assets/ProfilePics/anonymous.svg";
   import Label from "../Shared/Label.svelte";
   import { LabelColor } from "../constants";
   import type { Contact } from "../types";
@@ -12,7 +12,7 @@
   let isNew = false;
 </script>
 
-<img src={AnonymousSvg} class="profile-pic" alt="Address is not verified" />
+<img src={AnonymousImage} class="profile-pic" alt="Address is not verified" />
 <div class="recipient-info">
   {truncateWallet(contact.walletAddress)}
   <div class="badges-and-labels">
