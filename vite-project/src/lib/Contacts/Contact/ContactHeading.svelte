@@ -36,7 +36,7 @@
     height: 80px;
     width: 100%;
     padding: 12px 24px;
-    border-bottom: 1px solid #d9d9d9;
+    border-bottom: 1px solid var(--dark-grey);
     box-sizing: border-box;
   }
 </style>
