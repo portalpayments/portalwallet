@@ -8,6 +8,9 @@ export const IDENTITY_TOKEN_NAME = "Portal Identity Token";
 export const SHAQS_WALLET = "gacMrsrxNisAhCfgsUAVbwmTC3w9nJB6NychLAnTQFv";
 export const JOE_MCCANNS_WALLET =
   "5CJFJoKiZ14tdsjtWgKGQVuVkYW7pcWUR4LFSvDELFod";
+export const KEVIN_ROSES_WALLET =
+  "3ikkFnEDBvUXPHfCmvXma4qBGZxMooveQ5eM6LLQgeuQ";
+
 export const MIKES_WALLET = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
 export const VAHEHS_WALLET = "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG";
 export const PORTAL_IDENTITY_TOKEN_ISSUER_WALLET =

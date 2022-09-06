@@ -3,6 +3,7 @@ import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
 import { identityTokenIssuerPublicKeyString } from "./constants";
 import {
   JOE_MCCANNS_WALLET,
+  KEVIN_ROSES_WALLET,
   SHAQS_WALLET,
   VAHEHS_WALLET,
 } from "../../../src/constants";
@@ -52,6 +53,12 @@ export const contactsStore: Writable<Array<Contact>> = writable([
       familyName: "McCann",
       imageUrl: "/src/assets/ProfilePics/joe.jpg",
     },
+  },
+  {
+    walletAddress: KEVIN_ROSES_WALLET,
+    isNew: false,
+    isPending: false,
+    verifiedClaims: null,
   },
 ]);
 
