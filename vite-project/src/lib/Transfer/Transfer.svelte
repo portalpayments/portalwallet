@@ -99,7 +99,7 @@
 
       log(
         `Made / found recipient's USDC token account`,
-        senderTokenAccount.address.toBase58()
+        recipientTokenAccount.address.toBase58()
       );
 
       const signature = await sendUSDC(
