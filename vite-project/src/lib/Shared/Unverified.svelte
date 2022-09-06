@@ -1,5 +1,5 @@
 <script lang="ts">
-  import AnonymousImage from "../../assets/ProfilePics/anonymous.svg";
+  import AnonymousImage from "../../assets/anonymous.svg";
   import Label from "../Shared/Label.svelte";
   import { LabelColor } from "../constants";
   import type { Contact } from "../types";
