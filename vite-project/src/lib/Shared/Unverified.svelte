@@ -28,8 +28,7 @@
 
 <style>
   .profile-pic {
-    height: 60px;
-    width: 60px;
+    width: 100%;
   }
 
   .recipient-info {
