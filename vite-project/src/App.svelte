@@ -77,12 +77,12 @@
 <Router>
   <main>
     {#if $authStore.isLoggedIn}
-      <Route path="addMoneyToAccount"
-        ><div class="header-and-features">
-          adding money to account here
-        </div></Route
-      >
-      <Route path="/transferMoney"><TransferPage /></Route>
+      <Route path="addMoneyToAccount">
+        <div class="header-and-features">adding money to account here</div>
+      </Route>
+      <Route path="/transferMoney">
+        <TransferPage />
+      </Route>
 
       <Route path="transactions"
         ><div class="header-and-features">
