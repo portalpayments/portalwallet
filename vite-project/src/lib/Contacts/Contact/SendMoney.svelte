@@ -70,7 +70,7 @@
     color: #fff;
     font-weight: 600;
     font-size: 1.1rem;
-    background-color: #419cfd;
+    background-color: var(--mid-blue);
   }
 
   .disabled {

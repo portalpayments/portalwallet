@@ -29,6 +29,6 @@
   }
   .add-and-transfer-buttons :global(a.button):active {
     color: #fff;
-    background-color: #419cfd;
+    background-color: var(--mid-blue);
   }
 </style>

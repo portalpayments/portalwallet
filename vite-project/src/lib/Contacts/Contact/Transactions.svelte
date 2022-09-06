@@ -82,7 +82,7 @@
   .amount-received {
     position: relative;
     background-color: var(--dark-grey);
-    color: #2775c9;
+    color: var(--mid-blue);
     justify-self: start;
   }
 
@@ -101,7 +101,7 @@
   .amount-sent {
     position: relative;
     justify-self: end;
-    background-color: #419cfd;
+    background-color: var(--mid-blue);
   }
 
   /* The little bump on the speech bubbles */
@@ -115,6 +115,6 @@
     left: 2.1em;
     border: 0.6rem solid transparent;
     border-bottom: none;
-    border-top-color: #419cfd;
+    border-top-color: var(--mid-blue);
   }
 </style>

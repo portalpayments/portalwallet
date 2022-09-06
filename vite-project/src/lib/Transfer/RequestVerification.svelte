@@ -70,7 +70,7 @@
     align-self: center;
   }
   .request-verification {
-    background-color: #2775c9;
+    background-color: var(--mid-blue);
   }
   input {
     border-radius: 9px;

@@ -4,7 +4,7 @@
 </script>
 
 <Backdrop />
-<div class="modal"><Circle color="#419cfd" /></div>
+<div class="modal"><Circle color="var(--mid-blue)" /></div>
 
 <style>
   .modal {

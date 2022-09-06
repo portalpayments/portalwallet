@@ -27,7 +27,7 @@
     justify-content: center;
   }
   :root {
-    --usdc-blue: #2775c9;
+    --usdc-blue: var(--mid-blue);
   }
   .balance {
     color: var(--usdc-blue);

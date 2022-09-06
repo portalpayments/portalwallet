@@ -30,16 +30,16 @@
     border: 0;
     width: fit-content;
     background-color: transparent;
-    color: #419cfd;
+    color: var(--mid-blue);
     font-weight: 600;
     text-transform: none;
     font-size: 0.9rem;
   }
 
   .heading :global(a):hover {
-    color: #64acfa;
+    color: var(--mid-blue);
   }
   .heading :global(a):active {
-    color: #4998ed;
+    color: var(--chalk-white);
   }
 </style>

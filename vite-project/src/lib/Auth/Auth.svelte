@@ -107,7 +107,7 @@
   }
 
   .login-button {
-    background-color: #2775c9;
+    background-color: var(--mid-blue);
     color: #fff;
     border-radius: 24px;
     background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
