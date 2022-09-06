@@ -14,10 +14,10 @@
 
   // TODO: delete
   const hackProfilePicsByWallet = {
-    [VAHEHS_WALLET]: "/src/assets/ProfilePics/vaheh.jpg",
-    [MIKES_WALLET]: "/src/assets/ProfilePics/mike.jpg",
-    [JOE_MCCANNS_WALLET]: "/src/assets/ProfilePics/joe.jpg",
-    [SHAQS_WALLET]: "/src/assets/ProfilePics/shaq.jpg",
+    [VAHEHS_WALLET]: "/ProfilePics/vaheh.jpg",
+    [MIKES_WALLET]: "/ProfilePics/mike.jpg",
+    [JOE_MCCANNS_WALLET]: "/ProfilePics/joe.jpg",
+    [SHAQS_WALLET]: "/ProfilePics/shaq.jpg",
   };
 
   // TODO: implement

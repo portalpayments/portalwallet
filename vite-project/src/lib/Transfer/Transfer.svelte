@@ -35,7 +35,8 @@
     "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG": {
       familyName: "Hatami",
       givenName: "Vaheh",
-      imageUrl: "//src/assets/verifiedMikeImage.png",
+      // TODO: add images next time we mint tokens
+      imageUrl: "",
       type: "INDIVIDUAL",
     },
   };

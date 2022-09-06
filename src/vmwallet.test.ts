@@ -227,7 +227,7 @@ describe.skip(`mainnet integration tests`, () => {
     expect(claims).toEqual({
       familyName: "MacCana",
       givenName: "Micheal-Sean",
-      imageUrl: "//src/assets/ProfilePics/vaheh.jpg",
+      imageUrl: "/ProfilePics/vaheh.jpg",
       type: "INDIVIDUAL",
     });
   });

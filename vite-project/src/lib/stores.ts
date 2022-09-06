@@ -40,7 +40,7 @@ export const contactsStore: Writable<Array<Contact>> = writable([
       type: "INDIVIDUAL",
       givenName: "Shaquille",
       familyName: "O'Neal",
-      imageUrl: "/src/assets/ProfilePics/shaq.jpg",
+      imageUrl: "/ProfilePics/shaq.jpg",
     },
   },
   {
@@ -51,7 +51,7 @@ export const contactsStore: Writable<Array<Contact>> = writable([
       type: "INDIVIDUAL",
       givenName: "Joseph Isaac",
       familyName: "McCann",
-      imageUrl: "/src/assets/ProfilePics/joe.jpg",
+      imageUrl: "/ProfilePics/joe.jpg",
     },
   },
   {
