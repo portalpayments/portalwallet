@@ -164,10 +164,12 @@ export const verifyWallet = async (
 
   const arweaveResponseBody = arweaveResponse.data;
 
+  // Ensure the token is actually issued for this wallet
   if (arweaveResponseBody.issuedAgainst !== wallet.toBase58()) {
     return null;
   }
 
+  // Don't support older, beta tokens.
   if (arweaveResponseBody.version < LATEST_IDENTITY_TOKEN_VERSION) {
     return null;
   }
