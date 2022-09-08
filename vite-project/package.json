@@ -12,7 +12,7 @@
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@metaplex-foundation/js": "^0.15.0",
-    "@solana/web3.js": "^1.47.3",
+    "@solana/web3.js": "^1.59.1",
     "@sveltejs/adapter-static": "^1.0.0-next.39",
     "@sveltejs/vite-plugin-svelte": "^1.0.2",
     "@tsconfig/svelte": "^3.0.0",
@@ -36,6 +36,8 @@
     "webextension-polyfill": "^0.10.0"
   },
   "dependencies": {
+    "@solana/spl-token": "^0.3.4",
+    "@solana/spl-token-registry": "^0.2.4574",
     "prettier": "^2.7.1"
   }
 }
