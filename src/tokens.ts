@@ -107,7 +107,9 @@ export const sendUSDC = async (
       recipientTokenAccount.address,
       sender.publicKey,
       amount,
-      []
+      // We get an odd error (only in production builds)
+      // when we leave this empty.
+      [sender]
     );
 
     return signature;
