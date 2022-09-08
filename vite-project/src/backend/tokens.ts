@@ -2,14 +2,14 @@
 // OK docs: https://solanacookbook.com/references/token.html#how-to-create-a-new-token
 // MUCH BETTER explanation, but with older code samples: https://github.com/jacobcreech/Token-Creator
 
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import type { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import {
   createMint,
   getOrCreateAssociatedTokenAccount,
-  Account,
   mintToChecked,
   transfer,
 } from "@solana/spl-token";
+import type { Account } from "@solana/spl-token";
 
 import { USD_DECIMALS } from "./constants";
 import { getABetterErrorMessage } from "./errors";

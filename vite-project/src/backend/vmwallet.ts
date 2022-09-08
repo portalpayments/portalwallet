@@ -1,4 +1,5 @@
-import { AccountInfo, Connection, Keypair, PublicKey } from "@solana/web3.js";
+
+import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 
 import { log } from "./functions";
 import {
@@ -9,13 +10,15 @@ import {
 } from "./constants";
 import { asyncMap } from "./functions";
 import base58 from "bs58";
-import { AccountLayout, RawAccount, TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import axios, { AxiosResponse } from "axios";
+import { AccountLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import type { RawAccount } from "@solana/spl-token";
+import axios from "axios";
+import type { AxiosResponse } from "axios";
 import { getIdentityTokenFromWallet } from "./identity-tokens";
 import type { VerifiedClaims } from "./types";
 
 export const getKeypairFromString = (privateKeyString: string) => {
-  let decodedPrivateKey: Buffer;
+  let decodedPrivateKey: Uint8Array;
   try {
     decodedPrivateKey = base58.decode(privateKeyString);
   } catch (throwObject) {
