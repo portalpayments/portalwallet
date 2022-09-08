@@ -10,19 +10,6 @@
   "author": "Mike MacCana <mike.maccana@gmail.com> and Vahah Hatami <vaheh.hatami@gmail.com>",
   "license": "UNLICENSED",
   "devDependencies": {
-    "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
-    "@types/bcrypt": "^5.0.0",
-    "@types/bn.js": "^5.1.0",
-    "@types/bs58": "^4.0.1",
-    "@types/jest": "^28.1.1",
-    "assert": "^2.0.0",
-    "crypto-browserify": "^3.12.0",
-    "jest": "^28.1.1",
-    "prettier": "2.7.1",
-    "rollup-plugin-node-polyfills": "^0.2.1",
-    "ts-jest": "^28.0.5",
-    "typescript": "^4.7.3",
-    "util": "^0.12.4"
   },
   "dependencies": {
     "@bonfida/spl-name-service": "^0.1.40",
@@ -40,6 +27,19 @@
     "dotenv": "^16.0.1",
     "ed25519-hd-key": "^1.2.0",
     "tweetnacl": "^1.0.3",
-    "twitter-api-v2": "^1.12.3"
+    "twitter-api-v2": "^1.12.3",
+    "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
+    "@types/bcrypt": "^5.0.0",
+    "@types/bn.js": "^5.1.0",
+    "@types/bs58": "^4.0.1",
+    "@types/jest": "^28.1.1",
+    "assert": "^2.0.0",
+    "crypto-browserify": "^3.12.0",
+    "jest": "^28.1.1",
+    "prettier": "2.7.1",
+    "rollup-plugin-node-polyfills": "^0.2.1",
+    "ts-jest": "^28.0.5",
+    "typescript": "^4.7.3",
+    "util": "^0.12.4"
   }
 }
