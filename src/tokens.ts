@@ -87,6 +87,14 @@ export const sendUSDC = async (
   amount: number
 ) => {
   try {
+
+    log(`Inside sendUSDC:`, {
+      senderTokenAccount: senderTokenAccount.address.toBase58(),
+      recipientTokenAccount: recipientTokenAccount.address.toBase58(),
+      senderPublicKey: sender.publicKey.toBase58(),
+      amount,
+    })
+    
     const signature = await transfer(
       connection,
       sender,
