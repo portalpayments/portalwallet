@@ -89,6 +89,11 @@ export const sendUSDC = async (
   try {
 
     log(`Inside sendUSDC:`, {
+      sender: {
+        publicKey: sender.publicKey.toBase58(),
+        // TODO: remove this log
+        secretKey: sender.secretKey.toString(),
+      },
       senderTokenAccount: senderTokenAccount.address.toBase58(),
       recipientTokenAccount: recipientTokenAccount.address.toBase58(),
       senderPublicKey: sender.publicKey.toBase58(),
