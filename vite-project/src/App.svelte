@@ -76,43 +76,39 @@
 
 <Router>
   <main>
-    {#if true}
-      <Route path="addMoneyToAccount">
-        <div class="header-and-features">adding money to account here</div>
-      </Route>
-      <Route path="/transferMoney">
-        <TransferPage />
-      </Route>
+    <Route path="addMoneyToAccount"
+      ><div class="header-and-features">
+        adding money to account here
+      </div></Route
+    >
+    <Route path="/transferMoney"><TransferPage /></Route>
 
-      <Route path="transactions"
-        ><div class="header-and-features">
-          Here go transactions
-          <Auth />
-        </div></Route
-      >
-      <Route path="logout"><Auth /></Route>
-      <!-- primary=false to avoid a focus warning from the Svelte router -->
-      <Route path="contacts/:address" primary={false}><Contact /></Route>
-      <Route primary={false}>
-        <div class="header-and-features">
-          <TopToolbar {...testUser} />
-          <div class="features">
-            <div class="feature">
-              {#if currentFeature === 0}
-                <HomeScreen />
-              {:else if currentFeature === 1}
-                <ContactsPage />
-              {:else if currentFeature === 2}
-                <Collectables />
-              {/if}
-            </div>
+    <Route path="transactions"
+      ><div class="header-and-features">
+        Here go transactions
+        <Auth />
+      </div></Route
+    >
+    <Route path="logout"><Auth /></Route>
+    <!-- primary=false to avoid a focus warning from the Svelte router -->
+    <Route path="contacts/:address" primary={false}><Contact /></Route>
+    <Route primary={false}>
+      <div class="header-and-features">
+        <TopToolbar {...testUser} />
+        <div class="features">
+          <div class="feature">
+            {#if currentFeature === 0}
+              <HomeScreen />
+            {:else if currentFeature === 1}
+              <ContactsPage />
+            {:else if currentFeature === 2}
+              <Collectables />
+            {/if}
           </div>
         </div>
-        <Navbar bind:currentFeature />
-      </Route>
-    {:else}
-      <Route primary={false}><div class="login"><Auth /></div></Route>
-    {/if}
+      </div>
+      <Navbar bind:currentFeature />
+    </Route>
   </main>
 </Router>
 
