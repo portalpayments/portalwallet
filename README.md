@@ -28,7 +28,7 @@ Get your private key from **Phantom** -> ⚙️ -> **Export Private Key**
 npm run build
 ```
 
-Then in Chrome / Edge etc, click **manage Extensions**, turn on **Developer Mode**, **Load unpacked** and pick the`dist` folder.
+Then in Chrome / Edge etc, click **manage Extensions**, turn on **Developer Mode**, **Load unpacked** and pick the `dist` folder.
 
 ## For tests
 
