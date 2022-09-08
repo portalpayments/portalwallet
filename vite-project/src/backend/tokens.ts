@@ -102,7 +102,11 @@ export const sendUSDC = async (
       recipientTokenAccount.address,
       sender.publicKey,
       amount,
-      []
+      [],
+      {
+        // https://solanacookbook.com/guides/retrying-transactions.html#facts
+        maxRetries: 6,
+      }
     );
 
     return signature;
