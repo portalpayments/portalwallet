@@ -1,7 +1,7 @@
 <script lang="ts">
   import { NUMBERS_OPTIONAL_DECIMAL_PLACE_TWO_NUMBERS } from "../../constants";
   import type { Contact } from "../../../lib/types";
-  import { log, stringify } from "../../../../../src/functions";
+  import { log, stringify } from "../../../backend/functions";
 
   let sendAmount;
 

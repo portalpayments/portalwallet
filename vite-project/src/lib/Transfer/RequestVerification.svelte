@@ -1,8 +1,8 @@
 <script lang="ts">
   import SuccessfulAction from "../../assets/SuccessfulAction.svg";
   let emailAddress: string | null = null;
-  import { log, sleep } from "../../../../src/functions";
-  import { SECOND } from "../../../../src/constants";
+  import { log, sleep } from "../../backend/functions";
+  import { SECOND } from "../../backend/constants";
   export let destinationWalletAddress: string | null;
   export let transferAmount: number | null;
   let isRequestVerificationEmailSentSuccessfully = false;

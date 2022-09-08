@@ -7,11 +7,11 @@
   import { connectionStore, keyPairStore } from "../stores";
   import type { Connection, Keypair } from "@solana/web3.js";
 
-  import { log, stringify } from "../../../../src/functions";
+  import { log, stringify } from "../../backend/functions";
 
   log(`Homepage loading...`);
 
-  import { getUSDCAccounts } from "../../../../src/vmwallet";
+  import { getUSDCAccounts } from "../../backend/vmwallet";
 
   import { formatUSDCBalanceString } from "../utils";
 

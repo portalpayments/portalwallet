@@ -1,8 +1,8 @@
 <script lang="ts">
   import SuccessfulAction from "../../assets/SuccessfulAction.svg";
   import { truncateWallet } from "../utils";
-  import { log } from "../../../../src/functions";
-  import type { VerifiedClaims } from "../../../../src/types";
+  import { log } from "../../backend/functions";
+  import type { VerifiedClaims } from "../../backend/types";
   import USDClogo from "../../assets/usdc.svg";
 
   export let verifiedClaims: VerifiedClaims;

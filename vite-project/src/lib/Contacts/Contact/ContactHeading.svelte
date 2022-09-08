@@ -1,8 +1,8 @@
 <script lang="ts">
   import BackButton from "../../Shared/BackButton.svelte";
-  import { log, stringify } from "../../../../../src/functions";
+  import { log, stringify } from "../../../backend/functions";
   import type { Contact } from "../../types";
-  import type { VerifiedClaims } from "../../../../../src/types";
+  import type { VerifiedClaims } from "../../../backend/types";
   import Unverified from "../../Shared/Unverified.svelte";
   import Verified from "../../Shared/Verified.svelte";
 

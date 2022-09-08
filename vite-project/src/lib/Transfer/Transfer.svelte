@@ -12,18 +12,18 @@
   import Modal from "../Shared/Modal.svelte";
   import RequestVerification from "./RequestVerification.svelte";
   import TransactionCompleted from "./TransactionCompleted.svelte";
-  import { verifyWallet } from "../../../../src/vmwallet";
+  import { verifyWallet } from "../../backend/vmwallet";
   import { checkIfValidWalletAddress } from "../utils";
-  import { log, sleep, stringify } from "../../../../src/functions";
+  import { log, sleep, stringify } from "../../backend/functions";
   import { Circle } from "svelte-loading-spinners";
 
   import {
     SECONDS,
     SECOND,
     USDC_MAINNET_MINT_ACCOUNT,
-  } from "../../../../src/constants";
-  import type { VerifiedClaims } from "../../../../src/types";
-  import { makeTokenAccount, sendUSDC } from "../../../../src/tokens";
+  } from "../../backend/constants";
+  import type { VerifiedClaims } from "../../backend/types";
+  import { makeTokenAccount, sendUSDC } from "../../backend/tokens";
   import type { Contact } from "../types";
 
   const ACTUALLY_SEND_MONEY = true;

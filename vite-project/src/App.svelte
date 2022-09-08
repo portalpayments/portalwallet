@@ -11,8 +11,8 @@
     getKeypairFromString,
     connect,
     verifyWallet,
-  } from "../../src/vmwallet";
-  import { log } from "../../src/functions";
+  } from "./backend/vmwallet";
+  import { log } from "./backend/functions";
   import Auth from "./lib/Auth/Auth.svelte";
   import Contact from "./lib/Contacts/Contact/Contact.svelte";
   import {

@@ -10,8 +10,8 @@
     identityTokenIssuerPublicKey,
   } from "../../stores";
   import type { PublicKey, Connection, Keypair } from "@solana/web3.js";
-  import { verifyWallet } from "../../../../../src/vmwallet";
-  import { log, stringify } from "../../../../../src/functions";
+  import { verifyWallet } from "../../../backend/vmwallet";
+  import { log, stringify } from "../../../backend/functions";
   import type { Contact, Transaction } from "../../../lib/types";
   import SendMoney from "./SendMoney.svelte";
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { debounce } from "lodash";
-  import { SECOND } from "../../../../src/constants";
-  import { log } from "../../../../src/functions";
+  import { SECOND } from "../../backend/constants";
+  import { log } from "../../backend/functions";
   import USDClogo from "../../../src/assets/usdc.svg";
 
   export let value: string | number;

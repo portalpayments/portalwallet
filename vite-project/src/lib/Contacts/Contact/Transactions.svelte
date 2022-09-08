@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getFormattedMajorUnits, getFormattedMinorUnits } from "../../utils";
   import USDClogo from "../../../assets/usdc.svg";
-  import { log, stringify } from "../../../../../src/functions";
+  import { log, stringify } from "../../../backend/functions";
   import type { Contact, Transaction } from "../../../lib/types";
 
   export let transactions: Array<Transaction>;

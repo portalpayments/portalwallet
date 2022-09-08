@@ -1,4 +1,4 @@
-import type { VerifiedClaims } from "../../../src/types";
+import type { VerifiedClaims } from "../backend/types";
 
 export interface Creator {
   address: string;

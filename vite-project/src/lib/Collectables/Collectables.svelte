@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { log, stringify, asyncMap } from "../../../../src/functions";
-  import { getAllNftMetadatasFromAWallet } from "../../../../src/identity-tokens";
+  import { log, stringify, asyncMap } from "../../backend/functions";
+  import { getAllNftMetadatasFromAWallet } from "../../backend/identity-tokens";
   import { httpGet } from "../utils";
   import type { Collectable } from "../types";
 

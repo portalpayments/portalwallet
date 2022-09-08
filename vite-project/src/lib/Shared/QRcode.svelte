@@ -1,6 +1,6 @@
 <script lang="ts">
   import qrcode from "qrcode";
-  import { log } from "../../../../src/functions";
+  import { log } from "../../backend/functions";
 
   export let walletAddress: string;
 

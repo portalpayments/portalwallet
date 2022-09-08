@@ -1,8 +1,8 @@
 <script lang="ts">
   import { authStore } from "../stores";
   import PortalLogoSVG from "../../assets/PortalLogo.svg";
-  import { sleep } from "../../../../src/functions";
-  import { SECOND } from "../../../../src/constants";
+  import { sleep } from "../../backend/functions";
+  import { SECOND } from "../../backend/constants";
 
   let password = "";
   // TODO: get name from wallet

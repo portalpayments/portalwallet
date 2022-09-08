@@ -7,7 +7,7 @@
     MIKES_WALLET,
     JOE_MCCANNS_WALLET,
     SHAQS_WALLET,
-  } from "../../../../src/constants";
+  } from "../../backend/constants";
   import type { Contact } from "../types";
 
   export let contact: Contact;

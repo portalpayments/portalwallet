@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { log } from "../../../../src/functions";
+  import { log } from "../../backend/functions";
   export let isAnonymous = false;
   export let isAskingWalletOwnerToGetVerified = false;
   export let sendAnywayClicked = false;

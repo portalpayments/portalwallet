@@ -6,7 +6,7 @@ import {
   KEVIN_ROSES_WALLET,
   SHAQS_WALLET,
   VAHEHS_WALLET,
-} from "../../../src/constants";
+} from "../backend/constants";
 import type { Contact, Transaction } from "../lib/types";
 
 // Our connection to Solana

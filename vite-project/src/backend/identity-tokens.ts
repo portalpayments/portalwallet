@@ -18,14 +18,12 @@ import { asyncMap, log } from "./functions";
 import {
   IDENTITY_TOKEN_NAME,
   LATEST_IDENTITY_TOKEN_VERSION,
-  MIKES_WALLET,
 } from "./constants";
 import { stringify } from "./functions";
 
 // TODO maybe use node fetch after node 18
 import axios from "axios";
-import { ExpandedNFT, TokenMetaData } from "./types";
-import { getTokenAccountsByOwner } from "./vmwallet";
+import type { TokenMetaData, ExpandedNFT } from "./types";
 
 const name = IDENTITY_TOKEN_NAME;
 
