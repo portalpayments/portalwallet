@@ -1,8 +1,6 @@
-# Portal Wallet
+# Portal Wallet - YCombinator Demo
 
-##
-
-In Chrome, click **manage Extensions**, turn on **Developer Mode**, **Load unpacked** and pick the `dist` folder.
+In Chrome, click **manage Extensions**, turn on **Developer Mode**, **Load** and pick the `zip` file.
 
 ## A crypto wallet for regular people
 
@@ -19,4 +17,3 @@ Then in your browser DevTools console run:
 localStorage.setItem("PORTAL_PRIVATE_KEY", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678")
 ```
 
-Get your private key from **Phantom** -> ⚙️ -> **Export Private Key**

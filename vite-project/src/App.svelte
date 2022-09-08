@@ -22,8 +22,10 @@
     identityTokenIssuerPublicKey,
   } from "./lib/stores";
 
+  // Hack for YCombinator
+  // localStorage.setItem("PORTAL_PRIVATE_KEY", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678")
+
   $authStore;
-  console.log($authStore.isLoggedIn);
 
   connectionStore.subscribe((newValue) => {
     if (newValue) {
