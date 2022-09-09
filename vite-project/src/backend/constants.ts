@@ -13,6 +13,10 @@ export const KEVIN_ROSES_WALLET =
 
 export const MIKES_WALLET = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
 export const VAHEHS_WALLET = "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG";
+
+
+export const YCOMBINATOR_DEMO_WALLET_FOR_JARED = "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz";
+
 export const PORTAL_IDENTITY_TOKEN_ISSUER_WALLET =
   "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9";
 
