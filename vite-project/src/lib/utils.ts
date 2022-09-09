@@ -32,6 +32,10 @@ export const formatNumber = (
 };
 
 export const formatUSDCBalanceString = (balanceString: string) => {
+  // Balances of say 10.00 will have a balanceString of '10'
+  if ( ! balanceString.includes('.' ) ) {
+    return balanceString
+  }
   const parts = balanceString.split(".");
   const major = parts[0];
   const minor = parts[1].slice(0, 2);
