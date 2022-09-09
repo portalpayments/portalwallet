@@ -33,8 +33,9 @@ export default defineConfig({
     commonjsOptions: {
       include: [],
     },
-    // Help debug issues during alpha testing
-    minify: false,
+    // false to help debug issues during alpha testing
+    // true to send demos to investors 
+    minify: true,
   },
   optimizeDeps: {
     // From https://github.com/vitejs/vite/issues/9703#issuecomment-1216662109
