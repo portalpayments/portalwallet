@@ -3,12 +3,12 @@
 // Send the token to Vaheh's wallet
 // https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 
-import { log, stringify } from "./src/functions";
-import { MIKES_WALLET } from "./src/constants";
-import { getTokenMetaData, mintIdentityToken } from "./src/identity-tokens";
-import { connect, getKeypairFromString } from "./src/vmwallet";
+import { log, stringify } from "./src/backend/functions";
+import { MIKES_WALLET, YCOMBINATOR_DEMO_WALLET_FOR_JARED } from "./src/backend/constants";
+import { getTokenMetaData, mintIdentityToken } from "./src/backend/identity-tokens";
+import { connect, getKeypairFromString } from "./src/backend/vmwallet";
 import dotenv from "dotenv";
-import { makeTokenAccount, transferPortalIdentityToken } from "./src/tokens";
+import { makeTokenAccount, transferPortalIdentityToken } from "./src/backend/tokens";
 import { PublicKey } from "@solana/web3.js";
 
 dotenv.config();
@@ -73,4 +73,4 @@ const mintAndTransferIdentityToken = async (
   log(`✅ Completed successfully`);
 };
 
-mintAndTransferIdentityToken(MIKES_WALLET, "Micheal-Sean", "MacCana");
+mintAndTransferIdentityToken(YCOMBINATOR_DEMO_WALLET_FOR_JARED, "Jared", "Friedman");
