@@ -1,8 +1,42 @@
 # Portal Wallet - YCombinator Demo
 
-In Chrome, click **manage Extensions**, turn on **Developer Mode**, **Load** and pick the `zip` file.
+Hi YCombinator! We've made a quick demo of Portal for you. You can use this to send real money to identified recipients anywhere in the world instantly.
 
-Hi YCombinator! We have made a demo wallet for Garry Tan that's already signed in and verified. Normally, users go through a regular Jumio / Onfido government-supplied ID check as part of signup, to get verified, we've saved you the time for this demo! 
+## Installinng the extensions
+
+Normally Portal is installed through the Chrome Web Store (or Edge Web Store etc). But for this demo we'll install it the old fashioned way.
+
+Download an unzip the the file provided. 
+
+Then in Chrome, click the three dot menu then **Manage Extensions**:
+
+<img src="docs/0-open-extensions.png" alt="manage extensions"/>
+
+Turn on **Developer Mode**
+
+<img src="docs/1-chrome-extensions.png" alt="developer mode"/>
+
+Now click **Load unpacked extension**
+
+<img src="docs/2-developer-mode.png" alt="Load unpacked extension"/>
+
+Select the folder:
+
+<img src="3-load-unpackaged.png" alt="Load unpacked extension"/>
+
+Now the extension is loaded:
+
+<img src="4-loaded.png" alt="extension loaded"/>
+
+Now click the puzzle piece 🧩 icon and Pin the Portal wallet:
+
+<img src="5-pin-extension.png" alt="extension loaded"/>
+
+You can now open Portal:
+
+## Sending money
+ 
+We have made a demo wallet for Jared Friedman that's already signed in and verified. Normally, users go through a regular Jumio / Onfido government-supplied ID check as part of signup, to get verified, we've saved you the time for this demo! 
 
 The account has $5.00 real USDC, and you can send the money anywhere you want. 
 
