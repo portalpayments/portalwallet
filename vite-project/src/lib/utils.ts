@@ -1,4 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
+import { log } from "../backend/functions";
 
 const WALLET_CHARACTERS_TO_SHOW = 5;
 
@@ -33,6 +34,7 @@ export const formatNumber = (
 
 export const formatUSDCBalanceString = (balanceString: string) => {
   // Balances of say 10.00 will have a balanceString of '10'
+  log(`balanceString is ${balanceString}`)
   if ( ! balanceString.includes('.' ) ) {
     return balanceString
   }
