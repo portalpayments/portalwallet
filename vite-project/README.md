@@ -1,48 +1,119 @@
-# Svelte + TS + Vite
+# Portal Wallet
 
-This template should help get you started developing with Svelte and TypeScript in Vite.
+## A crypto wallet for regular people
 
-## Recommended IDE Setup
+[![Build status](https://github.com/mikemaccana/vmwallet/actions/workflows/tests.yaml/badge.svg)](https://github.com/portalwallet/portalwallet/actions)
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+## Development
 
-## Need an official Svelte framework?
+See [coding guidelines](CODING_GUIDELINES.md).
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+## For browser work
 
-## Technical considerations
+### Start the development server
 
-**Why use this over SvelteKit?**
+`npm run dev`
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
-  `vite dev` and `vite build` wouldn't work in a SvelteKit environment, for example.
+Then in your browser DevTools console run:
 
-This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
-
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
-
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
-
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
-
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `allowJs` in the TS template?**
-
-While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```ts
-// store.ts
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
 ```
+localStorage.setItem("PORTAL_PRIVATE_KEY", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678")
+```
+
+Get your private key from **Phantom** -> ⚙️ -> **Export Private Key**
+
+## To test the Web Extension
+
+```
+npm run build
+```
+
+Then in Chrome / Edge etc, click **manage Extensions**, turn on **Developer Mode**, **Load unpacked** and pick the `dist` folder.
+
+## For tests
+
+You'll need an `.env` file with:
+
+```
+TWITTER_API_KEY_BEARER_TOKEN=somebearertoken
+PRIVATE_KEY=someprivatekeyextractedfromphantom
+```
+
+Ask your colleagues for a copy of this file (not checked into GitHub for security reasons).
+
+Install [a local validator](https://solanacookbook.com/references/local-development.html#starting-a-local-validator):
+
+```
+
+sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
+export PATH="~/.local/share/solana/install/active_release/bin:$PATH"
+
+```
+
+Then run:
+
+```
+
+npm run start-validator
+
+```
+
+## How to save Token Metadata program for use on localhost
+
+From https://solanacookbook.com/references/local-development.html#how-to-load-accounts-from-mainnet
+and https://solana.stackexchange.com/questions/1879/metaplex-create-fails-on-localhost-with-attempt-to-load-a-program-that-does-n/1887#1887
+
+```bash
+
+# Token Metadata program
+
+export METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS="metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+solana program dump -u m ${METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS} metaplex_token_metadata_program.so
+
+```
+
+## How the Portal Identity Token works
+
+### Getting verified
+
+1. There's a mint account with a small balance of Sol
+2. The mint account mints a Portal Identity Token (which is an NFT) directly to a recipient's wallet
+
+### Verifying a user
+
+1. The verifying account looks for a ATA for the portal identity token mint on the recipient account
+2. We then read the token and check:
+
+- That the token has been signed by our mint account
+- That the token is for our recipient account
+
+## Minting
+
+Each mint has a single accounts - the docs at https://solanacookbook.com/references/token.html#how-to-get-a-token-mint.
+
+New tokens are issued directly into users Associated Token Accounts. For example: some USDC is minted directly into Joe User's USDC wallet.
+
+```
+HD keypair
+  HD Wallet 1 (keypair generated from HD keypairs) [owned by system account]
+    Native Token Account
+    SPL Token account for USDC (associated with USDCs mint) [owned by HD wallet 1]
+      USDC
+    SPL Token account for an NFT (associated with the NFTs mint) [owned by HD wallet 1]
+      NFT
+  HD Wallet 2 (keypair generated from HD keypairs)
+    Native Token Account
+    SPL Token account for USDC (associated with USDCs mint)
+      USDC
+
+```
+
+## References
+
+- https://yihau.github.io/solana-web3-demo/tour/create-keypair.html
+- https://solanacookbook.com/references/keypairs-and-wallets.html#how-to-generate-a-new-keypair
+- https://solana-labs.github.io/solana-web3.js/
+- https://solana-labs.github.io/wallet-adapter/example/
+  https://solanacookbook.com/references/keypairs-and-wallets.html#how-to-generate-a-new-keypair
+- https://buildspace.so/
+- https://crypto.stackexchange.com/questions/11269/can-keys-from-bitcoins-hierarchical-deterministic-wallets-be-correlated-reduci
