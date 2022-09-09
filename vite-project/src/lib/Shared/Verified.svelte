@@ -7,6 +7,7 @@
     MIKES_WALLET,
     JOE_MCCANNS_WALLET,
     SHAQS_WALLET,
+    YCOMBINATOR_DEMO_WALLET_FOR_JARED
   } from "../../backend/constants";
   import type { Contact } from "../types";
 
@@ -18,6 +19,7 @@
     [MIKES_WALLET]: "/ProfilePics/mike.jpg",
     [JOE_MCCANNS_WALLET]: "/ProfilePics/joe.jpg",
     [SHAQS_WALLET]: "/ProfilePics/shaq.jpg",
+    [YCOMBINATOR_DEMO_WALLET_FOR_JARED]: "/ProfilePics/jared.jpg",
   };
 
   // TODO: implement
