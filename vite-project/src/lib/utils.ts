@@ -21,14 +21,10 @@ export const httpGet = async (uri: string) => {
   return response.json();
 };
 
-export const formatNumber = (
-  number: number | string,
-  isMajorUnits: boolean
+export const formatMajorUnits = (
+  number: number | string
 ) => {
   const asNumber = Number(number);
-  if (!isMajorUnits) {
-    return asNumber;
-  }
   return numberFormatter.format(asNumber);
 };
 
@@ -36,11 +32,15 @@ export const formatUSDCBalanceString = (balanceString: string) => {
   // Balances of say 10.00 will have a balanceString of '10'
   log(`balanceString is ${balanceString}`)
   if ( ! balanceString.includes('.' ) ) {
-    return balanceString
+    return [balanceString, '00']
   }
   const parts = balanceString.split(".");
   const major = parts[0];
-  const minor = parts[1].slice(0, 2);
+  let minor = parts[1].slice(0, 2);
+  // Pad minor so .30 shows as .30 not .3
+  if ( minor.length === 1 ) {
+    minor = `${minor}0`
+  } 
   return [major, minor];
 };
 

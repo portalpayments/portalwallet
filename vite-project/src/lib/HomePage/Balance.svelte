@@ -1,6 +1,6 @@
 <script lang="ts">
   import usdcSymbolUrl from "../../assets/usdc.svg";
-  import { formatNumber } from "../utils";
+  import { formatMajorUnits } from "../utils";
 
   export let major: string;
   export let minor: string;
@@ -13,8 +13,8 @@
 <dic class="balanceCard">
   <div class="balance">
     <img class="symbol" alt="USDC logo" src={SYMBOLS.usdc} />
-    <div class="major">{formatNumber(major, true)}</div>
-    <div class="minor">.{formatNumber(minor, false)}</div>
+    <div class="major">{formatMajorUnits(major)}</div>
+    <div class="minor">.{minor}</div>
   </div>
 </dic>
 
