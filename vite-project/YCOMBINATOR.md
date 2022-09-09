@@ -10,7 +10,7 @@ Normally Portal is installed through the Chrome Web Store (or Edge Web Store etc
 
 Download an unzip the the file provided. 
 
-Then in Chrome, click the three dot menu then **Manage Extensions**:
+Then in Chrome, click the three dot menu **⋮** then **Manage Extensions**:
 
 <img src="docs/0-open-extensions.png" alt="manage extensions"/>
 
@@ -18,23 +18,25 @@ Turn on **Developer Mode**
 
 <img src="docs/1-chrome-extensions.png" alt="developer mode"/>
 
-Now click **Load unpacked extension**
+Now click **Load unpacked**
 
 <img src="docs/2-developer-mode.png" alt="Load unpacked extension"/>
 
 Select the folder:
 
-<img src="3-load-unpackaged.png" alt="Load unpacked extension"/>
+<img src="docs/3-load-unpackaged.png" alt="Load unpacked extension"/>
 
 Now the extension is loaded:
 
-<img src="4-loaded.png" alt="extension loaded"/>
+<img src="docs/4-loaded.png" alt="extension loaded"/>
 
 Now click the puzzle piece 🧩 icon and Pin the Portal wallet:
 
-<img src="5-pin-extension.png" alt="extension loaded"/>
+<img src="docs/5-pin-extension.png" alt="extension loaded"/>
 
 You can now open Portal:
+
+<img src="docs/6-ready.png" alt="extension loaded"/>
 
 ## Sending money
  
