@@ -29,6 +29,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      # TODO: get rid of this when we make vite-project the top level dir
+      - run: cd vite-project
+
       # Install Solana
       - run: sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
       - run: export PATH="~/.local/share/solana/install/active_release/bin:$PATH"

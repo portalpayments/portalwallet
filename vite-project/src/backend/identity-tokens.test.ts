@@ -20,7 +20,6 @@ import {
 } from "./constants";
 import BN, { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
-import { httpGet } from "../vite-project/src/lib/utils";
 
 // Quiet utils.log() during tests
 // jest.mock("./functions", () => ({
@@ -294,6 +293,7 @@ describe(`identity tokens`, () => {
       mint: mintAddress,
       owner: alice.publicKey,
       rentExemptReserve: null,
+      tlvData: expect.anything()
     });
 
     const tokenAccountsByOwner = await getTokenAccountsByOwner(

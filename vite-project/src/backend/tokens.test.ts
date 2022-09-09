@@ -1,9 +1,10 @@
 import {
   getMint,
   getAccount,
-  Account,
-  AccountLayout,
   TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
+import type {
+  Account,
 } from "@solana/spl-token";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { USD_DECIMALS, SECONDS, ENOUGH_TO_MAKE_A_NEW_TOKEN } from "./constants";
@@ -72,6 +73,7 @@ describe("minting", () => {
         mintAuthority: testUSDCAuthority.publicKey,
         // Tokens when initially created by spl-token have no supply
         supply: 0n,
+        tlvData: expect.anything()
       });
     },
     30 * SECONDS
@@ -104,6 +106,7 @@ describe("minting", () => {
       mint: mintAccountPublicKey,
       owner: alice.publicKey,
       rentExemptReserve: null,
+      tlvData: expect.anything()
     });
 
     // TODO: not sure if we need to do this as we already have .amount above - we should check later once we have transfers working
