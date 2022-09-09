@@ -1,8 +1,10 @@
 # Portal Wallet - YCombinator Demo
 
-Hi YCombinator! We've made a quick demo of Portal for you. You can use this to send real money to identified recipients anywhere in the world instantly.
+Hi YCombinator! We've made a quick demo of Portal for you. 
 
-## Installinng the extensions
+**You can use this to send real money to identified recipients anywhere in the world instantly.**
+
+## Installing the extension
 
 Normally Portal is installed through the Chrome Web Store (or Edge Web Store etc). But for this demo we'll install it the old fashioned way.
 
