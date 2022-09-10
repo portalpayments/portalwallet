@@ -46,22 +46,7 @@
     margin-bottom: 10px;
     height: 40px;
   }
-  input {
-    border-radius: 9px;
-    padding: 0px 0px 0px 6px;
-    border: 1px solid rgba(217, 217, 217, 0.7);
-    background-color: rgba(217, 217, 217, 0.1);
-    width: 45%;
-    height: 38px;
-    font-size: 1.1rem;
-    color: var(--black);
-    font-weight: 600;
-  }
-  input:focus {
-    outline: none !important;
-    border: 2px solid rgba(65, 156, 253, 0.8);
-    box-shadow: 0 0 2px rgba(65, 156, 253, 0.3);
-  }
+
   button {
     width: 45%;
     padding: 0px 0px;
