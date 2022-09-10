@@ -61,13 +61,10 @@
     }, 1 * SECOND)}
     on:input|capture={filterInput}
   />
-  <span class="floating-label">{label}
+  <span class="floating-label"
+    >{label}
     {#if isAmount}
-      <img
-        class="inline-usdc"
-        src={USDClogo}
-        alt="usdc logo"
-      />
+      <img class="inline-usdc" src={USDClogo} alt="usdc logo" />
     {/if}
   </span>
 
@@ -80,8 +77,7 @@
   input {
     border-radius: 9px;
     padding: 12px 12px 0px 12px;
-    border: 1px solid rgba(217, 217, 217, 0.3);
-    background-color: rgba(217, 217, 217, 0.3);
+    border: 1px solid var(--mid-grey);
     font-size: 14px;
     width: 200px;
     height: 56px;
@@ -120,7 +116,7 @@
     pointer-events: none;
     color: #9d9d9d;
     left: 12px;
-    top: 12px;
+    top: 16px;
     transition: 0.2s ease all;
     font-size: 0.9rem;
   }
@@ -130,9 +126,6 @@
     transform: translateY(2px);
   }
 
-  .input-and-label {
-    position: relative;
-  }
   .input-and-label {
     position: relative;
     display: grid;

@@ -86,9 +86,8 @@
   }
 
   input:focus {
-    outline: none !important;
-    border: 2px solid rgba(65, 156, 253, 0.8);
-    box-shadow: 0 0 2px rgba(65, 156, 253, 0.3);
+    outline: none;
+    border: 2px solid --mid-blue;
   }
   input:focus ~ .floating-label,
   input:not(:focus):valid ~ .floating-label {
@@ -100,7 +99,7 @@
   .floating-label {
     position: absolute;
     pointer-events: none;
-    color: #9d9d9d;
+    color: var(--mid-grey);
     left: 15px;
     top: 10px;
     transition: 0.2s ease all;
