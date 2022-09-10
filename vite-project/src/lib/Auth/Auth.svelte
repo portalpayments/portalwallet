@@ -28,9 +28,9 @@
   {#if !$authStore.isLoggedIn}
     <div class="login">
       <img src={PortalLogoSVG} alt="Portal Logo" />
-      <div class="welcomeMessage">
+      <span class="welcome-message">
         Welcome Back <span style="font-weight:700;">{name}</span>!
-      </div>
+      </span>
       <form
         on:submit|preventDefault={() => {
           // Small trick to use an async function in a click handler
@@ -70,7 +70,7 @@
     width: 180px;
     justify-self: center;
   }
-  .welcomeMessage {
+  .welcome-message {
     font-size: 1.2rem;
     font-weight: 500;
     color: var(--black);
