@@ -41,6 +41,10 @@
   box-sizing: border-box;
 }
 
+div {
+  display: grid;
+}
+
 a,
 a:visited,
 a:hover,

@@ -115,9 +115,6 @@
 </Router>
 
 <style>
-  * {
-    display: grid;
-  }
 
   /* The entire wallet, contains the header-and-features plus the nav bar */
   main {
