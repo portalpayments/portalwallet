@@ -75,7 +75,7 @@
 
 <Router>
   <main>
-    {#if false }
+    {#if $authStore.isLoggedIn}
       <Route path="addMoneyToAccount"
         ><div class="header-and-features">
           adding money to account here
