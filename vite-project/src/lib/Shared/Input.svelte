@@ -79,15 +79,16 @@
 <style>
   input {
     border-radius: 9px;
-    padding: 10px 10px 0px 10px;
+    padding: 12px 12px 0px 12px;
     border: 1px solid rgba(217, 217, 217, 0.3);
     background-color: rgba(217, 217, 217, 0.3);
     font-size: 14px;
     width: 200px;
-    height: 35px;
+    height: 56px;
     font-size: 1.1rem;
     color: var(--black);
     font-weight: 600;
+    background-color: white;
   }
 
   .inline-usdc {
