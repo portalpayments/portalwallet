@@ -4,16 +4,12 @@
 </script>
 
 <div class="feature">
-  <div class="ContactsPage">
-    <ContactsHeading />
-    <Contacts />
-  </div>
+  <ContactsHeading />
+  <Contacts />
 </div>
 
-
 <style>
-  .ContactsPage {
-    display: grid;
+  .feature {
     grid-auto-flow: row;
     grid-template-rows: 64px 1fr;
   }
