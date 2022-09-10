@@ -38,21 +38,6 @@
     align-items: baseline;
   }
 
-  h1 {
-    font-size: 24px;
-
-    /* Colored background techique used on website */
-    color: transparent;
-    background-clip: text;
-    -webkit-background-clip: text;
-    background-image: linear-gradient(
-      350deg,
-      var(--dark-blue),
-      var(--teal),
-      var(--bright-green)
-    );
-  }
-
   .verification-status {
     display: grid;
     grid-auto-flow: row;
