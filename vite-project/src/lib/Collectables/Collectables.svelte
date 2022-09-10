@@ -62,11 +62,15 @@
   });
 </script>
 
-<div class="nfts">
-  {#each collectables as collectable}
-    <img src={collectable.image} alt={collectable.description} />
-  {/each}
-</div>
+{#if collectables.length}
+  <div class="nfts">
+    {#each collectables as collectable}
+      <img src={collectable.image} alt={collectable.description} />
+    {/each}
+  </div>
+{:else}
+  <div>No collectibles.</div>
+{/if}
 
 <style>
   .nfts {
