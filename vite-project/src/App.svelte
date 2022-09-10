@@ -111,7 +111,7 @@
         <Navbar bind:currentFeature />
       </Route>
     {:else}
-      <Route primary={false}><div class="login"><Auth /></div></Route>
+      <Route ><div class="login"><Auth /></div></Route>
     {/if}
   </main>
 </Router>

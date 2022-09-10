@@ -2,6 +2,8 @@
   import { authStore } from "../stores";
   import PortalLogoSVG from "../../assets/PortalLogo.svg";
 
+  import { useFocus } from "svelte-navigator";
+
   let password = "";
   // TODO: get name from wallet
   export let name = "Mike";
@@ -16,6 +18,8 @@
     $authStore.isLoggedIn = false;
     location.assign("/");
   }
+
+  const registerFocus = useFocus();
 </script>
 
 <div>
@@ -34,7 +38,7 @@
       >
         <div class="password-container">
           <div class="password-prompt">Enter your password</div>
-          <input type="password" bind:value={password} />
+          <input type="password" use:registerFocus bind:value={password} />
 
           <button type="submit" class="login-button">Log in</button>
         </div>
