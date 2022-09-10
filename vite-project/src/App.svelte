@@ -115,10 +115,6 @@
 </Router>
 
 <style>
-  :root {
-    --wallet-height: 600px;
-    --wallet-width: 300px;
-  }
   * {
     display: grid;
     color: black;
