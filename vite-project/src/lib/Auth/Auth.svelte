@@ -27,7 +27,7 @@
 <div>
   {#if !$authStore.isLoggedIn}
     <div class="login">
-      <img src={PortalLogoSVG} alt="Portal Logo" />
+      <img class="logo" src={PortalLogoSVG} alt="Portal Logo" />
       <span class="welcome-message">
         Welcome Back <span style="font-weight:700;">{name}</span>!
       </span>
@@ -38,7 +38,7 @@
           return false;
         }}
       >
-        <div class="passwordContainer">
+        <div class="password-container">
           <div class="password-prompt">Enter your password</div>
           <input type="password" bind:value={password} />
 
@@ -48,7 +48,7 @@
     </div>
   {:else}
     <form on:submit|preventDefault={logout}>
-      <button type="submit" class="logoutButton logout-button-topBar"
+      <button type="submit" class="logout-button logout-button-top-bar"
         >Log out</button
       >
     </form>
@@ -66,7 +66,7 @@
     /* Cool subtle background borrowed from website */
     background: radial-gradient(at 50% 50%, #ddfff6 0, #fff 80%, #fff 100%);
   }
-  .login img {
+  .logo {
     width: 180px;
     justify-self: center;
   }
@@ -91,7 +91,7 @@
     border: 2px solid rgba(65, 156, 253, 0.8);
     box-shadow: 0 0 2px rgba(65, 156, 253, 0.3);
   }
-  .passwordContainer {
+  .password-container {
     display: grid;
     gap: 10px;
     grid-auto-flow: row;
@@ -112,11 +112,11 @@
     border-radius: 24px;
     background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
   }
-  .logoutButton {
+  .logout-button {
     background-color: rgba(255, 96, 134, 0.33);
     color: rgb(255, 96, 134);
   }
-  .logout-button-topBar {
+  .logout-button-top-bar {
     padding: 8px 0px;
     background-color: transparent;
     font-size: 1rem;
