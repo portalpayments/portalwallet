@@ -74,6 +74,9 @@
 </div>
 
 <style>
+  .feature {
+    background: radial-gradient(at 50% 50%, #ffe7dd 0, #fff 80%, #fff 100%);
+  }
   .nfts {
     display: grid;
     padding: 12px;

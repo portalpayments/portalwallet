@@ -75,5 +75,6 @@
 <style>
   .feature {
     grid-template-rows: 128px 1fr 24px 2fr;
+    background: radial-gradient(at 50% 50%, #dde9ff 0, #fff 80%, #fff 100%);
   }
 </style>
