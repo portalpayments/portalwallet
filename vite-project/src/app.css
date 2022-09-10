@@ -36,6 +36,8 @@
 }
 
 *, *:before, *:after {
+  color: black;
+  background-color: white; 
   box-sizing: border-box;
 }
 

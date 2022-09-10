@@ -117,8 +117,6 @@
 <style>
   * {
     display: grid;
-    color: black;
-    background-color: white;
   }
 
   /* The entire wallet, contains the header-and-features plus the nav bar */
