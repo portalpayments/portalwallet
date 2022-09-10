@@ -119,7 +119,6 @@
     display: grid;
     color: black;
     background-color: white;
-    box-sizing: border-box;
   }
 
   /* The entire wallet, contains the header-and-features plus the nav bar */

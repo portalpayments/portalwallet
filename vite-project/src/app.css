@@ -35,6 +35,10 @@
   --link-color: var(--mid-blue);
 }
 
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
 a,
 a:visited,
 a:hover,
