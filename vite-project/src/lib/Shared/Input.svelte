@@ -61,14 +61,15 @@
     }, 1 * SECOND)}
     on:input|capture={filterInput}
   />
-  <span class="floating-label"
-    >{label}
-    {#if isAmount}<img
+  <span class="floating-label">{label}
+    {#if isAmount}
+      <img
         class="inline-usdc"
         src={USDClogo}
         alt="usdc logo"
-      />{/if}</span
-  >
+      />
+    {/if}
+  </span>
 
   {#if isAmount}
     <span class="gas-fee"> fee: 0.00025</span>
