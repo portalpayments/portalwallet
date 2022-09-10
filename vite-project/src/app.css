@@ -34,8 +34,9 @@
   --link-color: var(--mid-blue);
 }
 
-*, *:before, *:after {
-  color: var(--black);
+*,
+*:before,
+*:after {
   box-sizing: border-box;
 }
 
@@ -56,7 +57,7 @@ body {
   place-items: center;
   width: 300px;
   height: 600px;
-  background: black;
+  color: var(--black);
   text-align: center;
   background-color: white;
 }
