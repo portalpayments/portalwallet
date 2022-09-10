@@ -21,31 +21,28 @@ export const httpGet = async (uri: string) => {
   return response.json();
 };
 
-export const formatMajorUnits = (
-  number: number | string
-) => {
+export const formatMajorUnits = (number: number | string) => {
   const asNumber = Number(number);
   return numberFormatter.format(asNumber);
 };
 
-export const formatUSDCBalanceString = (balanceString: string) => {
-  // Balances of say 10.00 will have a balanceString of '10'
-  log(`balanceString is ${balanceString}`)
-  if ( ! balanceString.includes('.' ) ) {
-    return [balanceString, '00']
-  }
-  const parts = balanceString.split(".");
-  const major = parts[0];
-  let minor = parts[1].slice(0, 2);
-  // Pad minor so .30 shows as .30 not .3
-  if ( minor.length === 1 ) {
-    minor = `${minor}0`
-  } 
-  return [major, minor];
-};
-
 export const getMultiplier = (digits = 2) => {
   return Number(`10e${digits - 1}`);
+};
+
+export const amountAndDecimalsToMajorAndMinor = (
+  // Amount is astring because that's what web3.js uses
+  amount: string,
+  decimals: number
+) => {
+  const multiplier = getMultiplier(decimals);
+  const major = String(Math.floor(Number(amount) / multiplier));
+  let minor = String(Number(amount) % multiplier);
+  // Normalize '6' to be '000006' etc.
+  const minorPadded = minor.padStart(decimals, "0");
+
+  // Cut off first two decimals for USD-like resolution
+  return [major, minorPadded.slice(0, 2)];
 };
 
 export const getFormattedMajorUnits = (minorUnits: number, digits = 2) => {

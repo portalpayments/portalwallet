@@ -5,6 +5,7 @@
   import Buttons from "./Buttons.svelte";
 
   import { connectionStore, keyPairStore } from "../stores";
+  import { amountAndDecimalsToMajorAndMinor } from "../utils";
   import type { Connection, Keypair } from "@solana/web3.js";
 
   import { log, stringify } from "../../backend/functions";
@@ -12,8 +13,6 @@
   log(`Homepage loading...`);
 
   import { getUSDCAccounts } from "../../backend/vmwallet";
-
-  import { formatUSDCBalanceString } from "../utils";
 
   let connection: Connection;
   let keypair: Keypair;
@@ -34,10 +33,11 @@
     const JUST_ONE_SUPPORTED_USDC_ACCOUNT_FOR_NOW = 0;
     const usdcAccount = usdcAccounts[JUST_ONE_SUPPORTED_USDC_ACCOUNT_FOR_NOW];
 
-    const balanceString =
-      usdcAccount.account.data.parsed.info.tokenAmount.uiAmountString;
-    [major, minor] = formatUSDCBalanceString(balanceString);
-    isBalanceLoaded = true
+    const amount = usdcAccount.account.data.parsed.info.tokenAmount.amount;
+    const decimals = usdcAccount.account.data.parsed.info.tokenAmount.decimals;
+
+    [major, minor] = amountAndDecimalsToMajorAndMinor(amount, decimals);
+    isBalanceLoaded = true;
   };
 
   // Explicitly mark these values as reactive as they depend on other data
@@ -63,13 +63,6 @@
   });
 </script>
 
-<style>
-  .feature {
-    grid-template-rows: 128px 1fr 24px 2fr;
-  }
-    
-</style>
-
 <div class="feature">
   {#if isBalanceLoaded}
     <Balance {isBalanceLoaded} {major} {minor} />
@@ -79,4 +72,8 @@
   <Transactions />
 </div>
 
-
+<style>
+  .feature {
+    grid-template-rows: 128px 1fr 24px 2fr;
+  }
+</style>
