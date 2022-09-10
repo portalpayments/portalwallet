@@ -13,7 +13,7 @@
     verifyWallet,
   } from "./backend/vmwallet";
   import { log } from "./backend/functions";
-  import Auth from "./lib/Auth/Auth.svelte";
+  import Lock from "./lib/Lock/Lock.svelte";
   import Contact from "./lib/Contacts/Contact/Contact.svelte";
   import {
     connectionStore,
@@ -86,10 +86,10 @@
       <Route path="transactions"
         ><div class="header-and-features">
           Here go transactions
-          <Auth />
+          <Lock />
         </div></Route
       >
-      <Route path="logout"><Auth /></Route>
+      <Route path="logout"><Lock /></Route>
       <Route path="contacts/:address"><Contact /></Route>
       <Route primary={false}>
         <div class="header-and-features">
@@ -107,7 +107,7 @@
         </div></Route
       >
     {:else}
-      <Route><div class="login"><Auth /></div></Route>
+      <Route><div class="login"><Lock /></div></Route>
     {/if}
   </main>
 </Router>

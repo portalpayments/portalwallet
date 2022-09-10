@@ -1,7 +1,7 @@
 <script lang="ts">
   import Checkmark from "../../assets/Checkmark.svg";
   import NotificationBell from "../../assets/notification-bell.svg";
-  import Auth from "../Auth/Auth.svelte";
+  import Lock from "../Lock/Lock.svelte";
   export let name = "anonymous";
   export let isVerified = false;
 
@@ -20,7 +20,7 @@
       {/if}
     </button>
     <div class="dropdown-content {isDropdownActive ? 'active' : ''}">
-      <Auth />
+      <Lock />
     </div>
   </div>
   <button style="justify-self: end; background: none; padding: 0;">
