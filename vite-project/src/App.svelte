@@ -90,8 +90,7 @@
         </div></Route
       >
       <Route path="logout"><Auth /></Route>
-      <!-- primary=false to avoid a focus warning from the Svelte router -->
-      <Route path="contacts/:address" primary={false}><Contact /></Route>
+      <Route path="contacts/:address"><Contact /></Route>
       <Route primary={false}>
         <div class="header-and-features">
           <TopToolbar {...testUser} />
