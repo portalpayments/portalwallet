@@ -1,8 +1,6 @@
 <script lang="ts">
   import { authStore } from "../stores";
   import PortalLogoSVG from "../../assets/PortalLogo.svg";
-  import { sleep } from "../../backend/functions";
-  import { SECOND } from "../../backend/constants";
 
   let password = "";
   // TODO: get name from wallet
@@ -10,11 +8,7 @@
 
   async function login(password) {
     // TODO: implement a real check using encryption on localStorage item.
-    if (true) {
-      $authStore.isLoggedIn = true;
-    } else {
-      alert("entered password is wrong");
-    }
+    $authStore.isLoggedIn = true;
   }
 
   function logout() {
