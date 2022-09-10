@@ -61,6 +61,7 @@
 </script>
 
 <div class="feature">
+  <h1>Gallery</h1>
   {#if collectables.length}
     <div class="nfts">
       {#each collectables as collectable}
