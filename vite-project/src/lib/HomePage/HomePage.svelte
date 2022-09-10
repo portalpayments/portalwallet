@@ -18,6 +18,8 @@
   let connection: Connection;
   let keypair: Keypair;
 
+  let isBalanceLoaded = false;
+
   const updateBalance = async () => {
     if (!connection) {
       return;
@@ -35,6 +37,7 @@
     const balanceString =
       usdcAccount.account.data.parsed.info.tokenAmount.uiAmountString;
     [major, minor] = formatUSDCBalanceString(balanceString);
+    isBalanceLoaded = true
   };
 
   // Explicitly mark these values as reactive as they depend on other data
@@ -60,7 +63,20 @@
   });
 </script>
 
-<Balance {major} {minor} />
-<Buttons />
-<TransactionsHeading />
-<Transactions />
+<style>
+  .feature {
+    grid-template-rows: 128px 1fr 24px 2fr;
+  }
+    
+</style>
+
+<div class="feature">
+  {#if isBalanceLoaded}
+    <Balance {isBalanceLoaded} {major} {minor} />
+  {/if}
+  <Buttons />
+  <TransactionsHeading />
+  <Transactions />
+</div>
+
+

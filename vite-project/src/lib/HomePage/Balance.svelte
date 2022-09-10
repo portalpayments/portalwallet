@@ -2,6 +2,7 @@
   import usdcSymbolUrl from "../../assets/usdc.svg";
   import { formatMajorUnits } from "../utils";
 
+  export let isBalanceLoaded: boolean;
   export let major: string;
   export let minor: string;
 
@@ -10,23 +11,28 @@
   };
 </script>
 
-<dic class="balanceCard">
-  <div class="balance">
-    <img class="symbol" alt="USDC logo" src={SYMBOLS.usdc} />
-    <div class="major">{formatMajorUnits(major)}</div>
-    <div class="minor">.{minor}</div>
+<div class="balance">
+  <div class="symbol-major-minor">
+    {#if isBalanceLoaded}
+      <img class="symbol" alt="USDC logo" src={SYMBOLS.usdc} />
+      <div class="major">{formatMajorUnits(major)}</div>
+      <div class="minor">.{minor}</div>
+    {:else}
+      <div>...</div>
+    {/if}
   </div>
-</dic>
+</div>
 
 <style>
-  .balanceCard {
+  .balance {
     display: grid;
     grid-auto-flow: row;
     grid-template-rows: 1fr;
     align-items: center;
     justify-content: center;
   }
-  .balance {
+
+  .symbol-major-minor {
     color: var(--mid-blue);
     display: grid;
     grid-auto-flow: column;

@@ -3,10 +3,13 @@
   import ContactsHeading from "./ContactsHeading.svelte";
 </script>
 
-<div class="ContactsPage">
-  <ContactsHeading />
-  <Contacts />
+<div class="feature">
+  <div class="ContactsPage">
+    <ContactsHeading />
+    <Contacts />
+  </div>
 </div>
+
 
 <style>
   .ContactsPage {

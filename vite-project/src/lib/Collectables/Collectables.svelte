@@ -6,8 +6,6 @@
 
   import { connectionStore, keyPairStore } from "../stores";
 
-  import { Metaplex } from "@metaplex-foundation/js";
-
   import type { Connection, Keypair } from "@solana/web3.js";
 
   let connection: Connection;
@@ -62,15 +60,17 @@
   });
 </script>
 
-{#if collectables.length}
-  <div class="nfts">
-    {#each collectables as collectable}
-      <img src={collectable.image} alt={collectable.description} />
-    {/each}
-  </div>
-{:else}
-  <div>No collectibles.</div>
-{/if}
+<div class="feature">
+  {#if collectables.length}
+    <div class="nfts">
+      {#each collectables as collectable}
+        <img src={collectable.image} alt={collectable.description} />
+      {/each}
+    </div>
+  {:else}
+    <div>No collectibles.</div>
+  {/if}
+</div>
 
 <style>
   .nfts {

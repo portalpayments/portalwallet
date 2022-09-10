@@ -92,32 +92,28 @@
       <Route path="logout"><Auth /></Route>
       <!-- primary=false to avoid a focus warning from the Svelte router -->
       <Route path="contacts/:address" primary={false}><Contact /></Route>
-      
       <Route primary={false}>
         <div class="header-and-features">
           <TopToolbar {...testUser} />
           <div class="features">
-            <div class="feature">
-              {#if currentFeature === 0}
-                <HomeScreen />
-              {:else if currentFeature === 1}
-                <ContactsPage />
-              {:else if currentFeature === 2}
-                <Collectables />
-              {/if}
-            </div>
+            {#if currentFeature === 0}
+              <HomeScreen />
+            {:else if currentFeature === 1}
+              <ContactsPage />
+            {:else if currentFeature === 2}
+              <Collectables />
+            {/if}
           </div>
-        </div>
-        <Navbar bind:currentFeature />
-      </Route>
+          <Navbar bind:currentFeature />
+        </div></Route
+      >
     {:else}
-      <Route ><div class="login"><Auth /></div></Route>
+      <Route><div class="login"><Auth /></div></Route>
     {/if}
   </main>
 </Router>
 
 <style>
-
   /* The entire wallet, contains the header-and-features plus the nav bar */
   main {
     /* Required to absolutely position navbar at bottom 
@@ -131,9 +127,5 @@
     overflow: hidden;
     grid-auto-flow: row;
     grid-template-rows: 80px 1fr;
-  }
-  
-  .feature {
-    background-color: white;
   }
 </style>
