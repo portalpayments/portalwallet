@@ -35,7 +35,7 @@
 }
 
 *, *:before, *:after {
-  color: --black;
+  color: var(--black);
   box-sizing: border-box;
 }
 
