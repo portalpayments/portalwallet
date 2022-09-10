@@ -26,11 +26,8 @@
     align-items: center;
     justify-content: center;
   }
-  :root {
-    --usdc-blue: var(--mid-blue);
-  }
   .balance {
-    color: var(--usdc-blue);
+    color: var(--mid-blue);
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: max-content;
