@@ -2,7 +2,7 @@
 </script>
 
 <div class="heading">
-  <div>Contacts</div>
+  <h1>Contacts</h1>
 
   <button>+</button>
 </div>
@@ -13,7 +13,6 @@
     padding: 0 12px;
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 1fr 190px;
     align-items: center;
     font-size: 1.2rem;
     font-weight: 600;
