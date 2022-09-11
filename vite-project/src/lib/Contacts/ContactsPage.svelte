@@ -12,6 +12,8 @@
   .feature {
     grid-auto-flow: row;
     grid-template-rows: 64px 1fr;
-    background: radial-gradient(at 50% 50%, #faddff 0, #fff 80%, #fff 100%);
+
+    /* Cool subtle background borrowed from website */
+    background: radial-gradient(at 50% 50%, #d8f1ff 0, #fff 80%, #fff 100%);
   }
 </style>

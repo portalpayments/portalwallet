@@ -1,5 +1,6 @@
 <script lang="ts">
   import { log, stringify, asyncMap } from "../../backend/functions";
+  import Heading from "../Shared/Heading.svelte";
   import { getAllNftMetadatasFromAWallet } from "../../backend/identity-tokens";
   import { httpGet } from "../utils";
   import type { Collectable } from "../types";
@@ -61,7 +62,7 @@
 </script>
 
 <div class="feature">
-  <h1>Gallery</h1>
+  <Heading>Gallery</Heading>
   {#if collectables.length}
     <div class="nfts">
       {#each collectables as collectable}

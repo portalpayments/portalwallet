@@ -1,6 +1,7 @@
 <script lang="ts">
   import BackButton from "../Shared/BackButton.svelte";
   import Unverified from "../Shared/Unverified.svelte";
+  import Heading from "../Shared/Heading.svelte";
   import Verified from "../Shared/Verified.svelte";
   import { warningUnverifiedAccount } from "../constants";
   import type { Contact } from "../../lib/types";
@@ -11,7 +12,7 @@
 
 <div class="transfer-heading">
   <BackButton />
-  <h1>Transfer</h1>
+  <Heading>Transfer</Heading>
   {#if hasLoadedVerificationStateFromNetwork}
     <div class="verification-status">
       <div class="verified-header">

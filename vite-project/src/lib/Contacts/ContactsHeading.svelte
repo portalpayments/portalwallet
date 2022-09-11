@@ -1,8 +1,9 @@
 <script lang="ts">
+  import Heading from "../Shared/Heading.svelte";
 </script>
 
 <div class="heading">
-  <h1>Contacts</h1>
+  <Heading>Contacts</Heading>
 
   <button>+</button>
 </div>

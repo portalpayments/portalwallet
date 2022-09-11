@@ -1,5 +1,6 @@
 <script lang="ts">
   import SuccessfulAction from "../../assets/SuccessfulAction.svg";
+  import Heading from "../Shared/Heading.svelte";
   import { truncateWallet } from "../utils";
   import { log } from "../../backend/functions";
   import type { VerifiedClaims } from "../../backend/types";
@@ -13,7 +14,7 @@
 </script>
 
 <div class="transaction-details">
-  <h1>Transaction Complete!</h1>
+  <Heading>Transaction Complete!</Heading>
   <img
     class="success-icon"
     src={SuccessfulAction}
@@ -33,10 +34,6 @@
 </div>
 
 <style>
-  h1 {
-    font-size: 1rem;
-    margin: 0;
-  }
   .success-icon {
     width: 64px;
     justify-self: center;
