@@ -5,6 +5,7 @@
   import Collectables from "./lib/Collectables/Collectables.svelte";
   import ContactsPage from "./lib/Contacts/ContactsPage.svelte";
   import TransferPage from "./lib/Transfer/TransferPage.svelte";
+  import AddMoneyPage from "./lib/AddMoney/AddMoneyPage.svelte";
   import { Router, Route } from "svelte-navigator";
   import { getPrivateKey } from "./lib/utils";
   import {
@@ -76,19 +77,15 @@
 <Router>
   <main>
     {#if $authStore.isLoggedIn}
-      <Route path="addMoneyToAccount"
-        ><div class="header-and-features">
-          adding money to account here
-        </div></Route
-      >
-      <Route path="/transferMoney"><TransferPage /></Route>
+      <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
+      <Route path="transferMoney"><TransferPage /></Route>
 
       <Route path="transactions"
         ><div class="header-and-features">
           Here go transactions
           <Lock />
-        </div></Route
-      >
+        </div>
+      </Route>
       <Route path="logout"><Lock /></Route>
       <Route path="contacts/:address"><Contact /></Route>
       <Route primary={false}>
