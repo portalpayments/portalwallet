@@ -42,15 +42,30 @@
     let badValues = badValuesByFilters[filterField];
     target.value = removeFromString(target.value, badValues);
 
+    // 'value' is existing value
+    // 'event.data' is what the user just typed
+
+    // Stop a user from doing 123.45.67
     const ALREADY_HAS_DECIMAL_PLACE =
       filterField === "numbers" &&
       String(value).includes(".") &&
-      event.data === ".";
+      event?.data === ".";
     if (ALREADY_HAS_DECIMAL_PLACE) {
+      log(`Already has an existing decimal place`);
       target.value = target.value.replace(/.$/gi, "");
     }
-    // TODO: implement max decimal places (eg allow 12.34, stop 12.345)
-    // TODO: allow zero (someone starts typing .12, UI displays )
+
+    // Make typing '.69' look like '0.69'
+    const SENDING_MINOR_CURRENCY =
+      filterField === "numbers" &&
+      value === null &&
+      event.data &&
+      event.data.startsWith(".");
+
+    if (SENDING_MINOR_CURRENCY) {
+      log(`Typed a dot without any characters before it, adding leading zero`);
+      target.value = `0.`;
+    }
   };
 </script>
 
