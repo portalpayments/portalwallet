@@ -3,13 +3,25 @@
   import { SECOND } from "../../backend/constants";
   import { log } from "../../backend/functions";
   import USDClogo from "../../../src/assets/usdc.svg";
+  import { useFocus } from "svelte-navigator";
+  import { getFocusContext } from "./FocusContext.svelte";
 
   export let value: string | number;
   export let isAmount: boolean;
+  export let isFocused: boolean;
   export let showGasFee: boolean = false;
   export let label: string;
   export let filterField: "numbers" | "walletAddress" | null = null;
+
   export let onTypingPause: svelte.JSX.KeyboardEventHandler<HTMLInputElement> | null;
+
+  const focus = getFocusContext();
+
+  const maybeFocus = (node) => {
+    if (isFocused) {
+      focus(node);
+    }
+  };
 
   const badValuesByFilters = {
     numbers: /[^\d\.]/gi,
@@ -38,6 +50,7 @@
       target.value = target.value.replace(/.$/gi, "");
     }
     // TODO: implement max decimal places (eg allow 12.34, stop 12.345)
+    // TODO: allow zero (someone starts typing .12, UI displays )
   };
 </script>
 
@@ -46,6 +59,7 @@
     bind:value
     type="text"
     class={isAmount ? "usdc-amount" : ""}
+    use:maybeFocus
     required
     on:keyup|preventDefault={debounce((event) => {
       if (isAmount) {

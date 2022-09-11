@@ -11,6 +11,7 @@
   import Input from "../Shared/Input.svelte";
   import Modal from "../Shared/Modal.svelte";
   import RequestVerification from "./RequestVerification.svelte";
+  import FocusContext from "../Shared/FocusContext.svelte";
   import TransactionCompleted from "./TransactionCompleted.svelte";
   import { verifyWallet } from "../../backend/vmwallet";
   import { checkIfValidWalletAddress } from "../utils";
@@ -183,21 +184,25 @@
   <TransferHeading {contact} {hasLoadedVerificationStateFromNetwork} />
 
   <div class="destination-and-amount">
-    <Input
-      bind:value={destinationWalletAddress}
-      label="wallet address"
-      isAmount={false}
-      filterField={"walletAddress"}
-      onTypingPause={handleKeyupDestinationWalletAddress}
-    />
+    <FocusContext>
+      <Input
+        bind:value={destinationWalletAddress}
+        label="wallet address"
+        isFocused={true}
+        isAmount={false}
+        filterField={"walletAddress"}
+        onTypingPause={handleKeyupDestinationWalletAddress}
+      />
 
-    <Input
-      bind:value={transferAmount}
-      label="amount"
-      isAmount={true}
-      filterField={"numbers"}
-      onTypingPause={null}
-    />
+      <Input
+        bind:value={transferAmount}
+        label="amount"
+        isFocused={false}
+        isAmount={true}
+        filterField={"numbers"}
+        onTypingPause={null}
+      />
+    </FocusContext>
   </div>
 
   {#if isCurrentlyLoadingVerificationStateFromNetwork}
