@@ -6,7 +6,7 @@
   } from "../stores";
   import { PublicKey, Connection, Keypair } from "@solana/web3.js";
   import TransferHeading from "./TransferHeading.svelte";
-  import ConfirmTransferButtons from "./TransferButtons.svelte";
+  import TransferButtons from "./TransferButtons.svelte";
   import LoaderModal from "../Shared/LoaderModal.svelte";
   import Input from "../Shared/Input.svelte";
   import Modal from "../Shared/Modal.svelte";
@@ -209,7 +209,7 @@
     <LoaderModal />
   {/if}
 
-  <ConfirmTransferButtons
+  <TransferButtons
     isAnonymous={!verifiedClaims}
     {isSendButtonDisabled}
     {destinationWalletAddress}
