@@ -23,6 +23,8 @@
     identityTokenIssuerPublicKey,
   } from "./lib/stores";
 
+  const DISABLE_LOGIN_SCREEN_FOR_DEMO = true;
+
   $authStore;
 
   connectionStore.subscribe((newValue) => {
@@ -76,7 +78,7 @@
 
 <Router>
   <main>
-    {#if $authStore.isLoggedIn}
+    {#if $authStore.isLoggedIn || DISABLE_LOGIN_SCREEN_FOR_DEMO}
       <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
       <Route path="transferMoney"><TransferPage /></Route>
 
