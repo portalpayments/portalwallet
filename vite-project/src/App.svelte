@@ -101,8 +101,8 @@
             {/if}
           </div>
           <Navbar bind:currentFeature />
-        </div></Route
-      >
+        </div>
+      </Route>
     {:else}
       <Route><div class="login"><Lock /></div></Route>
     {/if}
