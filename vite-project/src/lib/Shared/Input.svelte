@@ -98,7 +98,9 @@
   </span>
 
   {#if isAmount}
-    <span class="gas-fee">Fee: 0.00025</span>
+    {#if Number(value) !== 0 && value !== null}
+      <span class="gas-fee">Fee: 0.00025</span>
+    {/if}
   {/if}
 </div>
 
