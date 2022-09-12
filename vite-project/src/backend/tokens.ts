@@ -3,6 +3,8 @@
 // MUCH BETTER explanation, but with older code samples: https://github.com/jacobcreech/Token-Creator
 
 import type { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { PublicKey as PublicKeyConstructor } from "@solana/web3.js";
+
 import {
   createMint,
   getOrCreateAssociatedTokenAccount,
@@ -11,7 +13,7 @@ import {
 } from "@solana/spl-token";
 import type { Account } from "@solana/spl-token";
 
-import { USD_DECIMALS } from "./constants";
+import { USDC_MAINNET_MINT_ACCOUNT, USD_DECIMALS } from "./constants";
 import { getABetterErrorMessage } from "./errors";
 import { log } from "./functions";
 
@@ -87,14 +89,13 @@ export const sendUSDC = async (
   amount: number
 ) => {
   try {
-
     log(`Inside sendUSDC:`, {
       senderTokenAccount: senderTokenAccount.address.toBase58(),
       recipientTokenAccount: recipientTokenAccount.address.toBase58(),
       senderPublicKey: sender.publicKey.toBase58(),
       amount,
-    })
-    
+    });
+
     const signature = await transfer(
       connection,
       sender,
@@ -147,4 +148,54 @@ export const transferPortalIdentityToken = async (
     }
     throw error;
   }
+};
+
+export const makeAccountsAndDoTransfer = async (
+  connection: Connection,
+  senderKeyPair: Keypair,
+  transferAmountInMinorUnits: number,
+  recipient: PublicKey,
+  isProduction: boolean
+) => {
+  log(`Doing transfer, will send ${transferAmountInMinorUnits} cents`);
+
+  if (!isProduction) {
+    throw new Error(`TODO: implement support for other networks`);
+  }
+
+  const usdcMintAccount = new PublicKeyConstructor(USDC_MAINNET_MINT_ACCOUNT);
+
+  const senderTokenAccount = await makeTokenAccount(
+    connection,
+    senderKeyPair,
+    usdcMintAccount,
+    senderKeyPair.publicKey
+  );
+
+  log(
+    `Made / found our USDC token account`,
+    senderTokenAccount.address.toBase58()
+  );
+
+  const recipientTokenAccount = await makeTokenAccount(
+    connection,
+    senderKeyPair,
+    usdcMintAccount,
+    recipient
+  );
+
+  log(
+    `Made / found recipient's USDC token account`,
+    recipientTokenAccount.address.toBase58()
+  );
+
+  const signature = await sendUSDC(
+    connection,
+    senderKeyPair,
+    senderTokenAccount,
+    recipientTokenAccount,
+    transferAmountInMinorUnits
+  );
+
+  return signature;
 };
