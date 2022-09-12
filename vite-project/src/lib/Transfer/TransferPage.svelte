@@ -181,15 +181,17 @@
     <LoaderModal />
   {/if}
 
-  <TransferButtons
-    isAnonymous={!verifiedClaims}
-    {isSendButtonDisabled}
-    {destinationWalletAddress}
-    {transferAmount}
-    bind:isSending
-    bind:isAskingWalletOwnerToGetVerified
-    bind:sendAnywayClicked={isSendingAnyway}
-  />
+  {#if hasLoadedVerificationStateFromNetwork}
+    <TransferButtons
+      isAnonymous={!verifiedClaims}
+      {isSendButtonDisabled}
+      {destinationWalletAddress}
+      {transferAmount}
+      bind:isSending
+      bind:isAskingWalletOwnerToGetVerified
+      bind:sendAnywayClicked={isSendingAnyway}
+    />
+  {/if}
 
   {#if isSending || isSendingAnyway}
     <Modal buttonType="transfer">
