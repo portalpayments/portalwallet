@@ -3,6 +3,7 @@
 <style>
   h1 {
     font-size: 24px;
+    margin: 0;
 
     /* Colored background techique used on website */
     color: transparent;

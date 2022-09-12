@@ -20,7 +20,7 @@
     src={SuccessfulAction}
     alt="money sent successfully"
   />
-  <div class="recipient-and-amount">
+  <span class="recipient-and-amount">
     Sent <img
       class="usdc-symbol"
       src={USDClogo}
@@ -30,7 +30,7 @@
       {verifiedClaims.familyName}{:else}{truncateWallet(
         destinationWalletAddress
       )}{/if}
-  </div>
+  </span>
 </div>
 
 <style>
@@ -51,10 +51,9 @@
     position: relative;
     display: grid;
     grid-auto-flow: row;
-    grid-template-rows: 20px 60px 1fr;
     justify-content: center;
     align-items: start;
-    gap: 24px;
+    gap: 12px;
     color: var(--black);
     font-size: 1.1rem;
   }
