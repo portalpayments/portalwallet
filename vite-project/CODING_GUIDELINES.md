@@ -22,7 +22,7 @@ If it feels like a grind:
 
 - Use real names for things. No abbreviations.
   - Abrvntns sk to rd (if that doesn't make any sense, it says 'abbreviations suck to read')
-  - If we're searching for 'wallet', then 'wlt' won't up and abbeviations are invariably used inconsistently. It's entirely possible we'll have 'wallet', 'w', 'wlt' and 'wllt' at the same time. Maybe referring to slightly different things.
+  - If we're searching for 'wallet', then 'wlt' won't show up. Abbeviations are invariably used inconsistently. It's entirely possible we'll have 'wallet', 'w', 'wlt' and 'wllt' at the same time - maybe referring to slightly different things! Avoid confusion but consistently naming things so we have one implementation of everything.
   - Let the compiler worry about saving characters. Humans are the expensive part - readable names saves them time.
 
 Give things good names. `getBanana()` will obviously return a `banana`. `checkIsBanana()` will return a boolean about whether something is a banana. `isBanana` is a boolean. `bananaById` is an Object of bananas sorted by ID.
@@ -50,7 +50,7 @@ It's ideal to hack things, just let people know why:
 
 ## Use pure functions
 
-It's much easier to read, test and refactor code that always has the same output for the same input. Use scope and closures for state rather than creating custom classes. In React, use hooks.
+It's much easier to read, test and refactor code that always has the same output for the same input. Use scope and closures for state rather than creating custom classes.
 
 ## Name values, instead of including magic numbers or strings.
 
@@ -127,4 +127,6 @@ try {
 
 # CSS Guidelines
 
-**Just use CSS grid**. There's no point bothering with margin hacks, overflow, clear: both etc. Just use grid.
+**Just use CSS grid**. There's no point bothering with margins, overflow, clear: both etc. Just use grid.
+
+**There's no need to use margins.** `div`s are configured tp display as grid by default in our CSS. If you want more space between items, increase the padding.
