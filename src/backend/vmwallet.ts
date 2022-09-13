@@ -1,6 +1,10 @@
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import type {
+  TransactionResponse,
+  ParsedTransactionWithMeta,
+} from "@solana/web3.js";
 
-import { log } from "./functions";
+import { log, stringify } from "./functions";
 import {
   LATEST_IDENTITY_TOKEN_VERSION,
   MIKES_WALLET,
@@ -177,4 +181,31 @@ export const verifyWallet = async (
   }
 
   return arweaveResponseBody.claims;
+};
+
+// https://www.quicknode.com/guides/web3-sdks/how-to-get-transaction-logs-on-solana
+export const getTransactionsForAddress = async (
+  connection: Connection,
+  address: PublicKey,
+  limit: number
+) => {
+  const confirmedSignatureInfos = await connection.getSignaturesForAddress(
+    address,
+    { limit }
+  );
+
+  log(`confirmedSignatureInfos:`, stringify(confirmedSignatureInfos));
+
+  let signatures: Array<string> = confirmedSignatureInfos.map(
+    (confirmedSignatureInfo) => confirmedSignatureInfo.signature
+  );
+  log(`signatures:`, stringify(signatures));
+
+  const transactions: Array<ParsedTransactionWithMeta> =
+    await connection.getParsedTransactions(signatures, {
+      // NOTE: we can't use commitment: finalised in on localhost validator
+      // commitment: "finalized",
+    });
+
+  return transactions;
 };

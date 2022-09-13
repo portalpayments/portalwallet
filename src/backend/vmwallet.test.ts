@@ -25,6 +25,8 @@ import {
 import { getAllNftMetadatasFromAWallet } from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
+import { getTransactionsForAddress } from "./vmwallet";
+import { log, stringify } from "./functions";
 
 dotenv.config();
 
@@ -36,7 +38,7 @@ jest.mock("./functions", () => ({
 
 const identityTokenPrivateKey = process.env.IDENTITY_TOKEN_PRIVATE_KEY;
 
-describe.skip(`mainnet integration tests`, () => {
+describe(`mainnet integration tests`, () => {
   let mainNetConnection: Connection | null = null;
   process.env.IDENTITY_TOKEN_PRIVATE_KEY;
 
@@ -250,5 +252,122 @@ describe.skip(`mainnet integration tests`, () => {
     );
 
     expect(claims).toBeNull();
+  });
+
+  test(`We can get previous transactions from Mike's wallet`, async () => {
+    const transactions = await getTransactionsForAddress(
+      mainNetConnection,
+      new PublicKey(MIKES_WALLET),
+      1
+    );
+    // Should be
+    // https://explorer.solana.com/tx/3y2nb6ToweURjrWcLaUA1aPwxURMsQR8jXx3mpa3GKqWqDD8jvCgmktqqJBNXujz6pgjb5w1D2ZKtfUbazrGSJQw
+    const mostRecentTransaction = transactions[0];
+    log(stringify(mostRecentTransaction));
+    expect(transactions[0]).toEqual({
+      blockTime: 1662985498,
+      meta: {
+        err: null,
+        fee: 5000,
+        innerInstructions: [],
+        loadedAddresses: {
+          readonly: [],
+          writable: [],
+        },
+        logMessages: [
+          "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [1]",
+          "Program log: Instruction: TransferChecked",
+          "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 6199 of 200000 compute units",
+          "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success",
+        ],
+        postBalances: [4615800, 2039280, 2039280, 146540071068, 934087680],
+        postTokenBalances: [
+          {
+            accountIndex: 1,
+            mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            owner: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
+            programId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            uiTokenAmount: {
+              amount: "10000000",
+              decimals: 6,
+              uiAmount: 10,
+              uiAmountString: "10",
+            },
+          },
+          {
+            accountIndex: 2,
+            mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            programId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            uiTokenAmount: {
+              amount: "24263485",
+              decimals: 6,
+              uiAmount: 24.263485,
+              uiAmountString: "24.263485",
+            },
+          },
+        ],
+        preBalances: [4620800, 2039280, 2039280, 146540071068, 934087680],
+        preTokenBalances: [
+          {
+            accountIndex: 1,
+            mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            owner: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
+            programId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            uiTokenAmount: {
+              amount: "9000000",
+              decimals: 6,
+              uiAmount: 9,
+              uiAmountString: "9",
+            },
+          },
+          {
+            accountIndex: 2,
+            mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            programId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            uiTokenAmount: {
+              amount: "25263485",
+              decimals: 6,
+              uiAmount: 25.263485,
+              uiAmountString: "25.263485",
+            },
+          },
+        ],
+        rewards: [],
+        status: {
+          Ok: null,
+        },
+      },
+      slot: 150330513,
+      transaction: {
+        message: {
+          header: {
+            numReadonlySignedAccounts: 0,
+            numReadonlyUnsignedAccounts: 2,
+            numRequiredSignatures: 1,
+          },
+          accountKeys: [
+            "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            "Fba13oGS69Cr49FzeNePNauYANmoiZ9qp5V3tjusfXvm",
+            "Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc",
+            "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          ],
+          recentBlockhash: "86pNq7qXLhekHFHvfH3vPx42yrDqp2Pha5scpcco8Reo",
+          instructions: [
+            {
+              accounts: [2, 3, 1, 0],
+              data: "gvPShZQhKrzGM",
+              programIdIndex: 4,
+            },
+          ],
+          indexToProgramIds: {},
+        },
+        signatures: [
+          "3y2nb6ToweURjrWcLaUA1aPwxURMsQR8jXx3mpa3GKqWqDD8jvCgmktqqJBNXujz6pgjb5w1D2ZKtfUbazrGSJQw",
+        ],
+      },
+    });
   });
 });
