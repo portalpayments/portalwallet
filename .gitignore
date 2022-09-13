@@ -2,5 +2,4 @@
 test-ledger
 .env
 *.Identifier
-vite-project/portal-wallet-ycombinator-demo.zip
 *.zip
