@@ -1,3 +1,5 @@
+import { PublicKey } from "@solana/web3.js";
+
 // Put these at the top to avoid indentation issues
 export const dirtyPhrase = `Say your prayers, little one
 Don't forget, my son
@@ -87,22 +89,22 @@ export const transactionResponseSenderComesFirst = {
     message: {
       accountKeys: [
         {
-          pubkey: MOCK_SENDER_PUBLIC_KEY,
+          pubkey: new PublicKey(MOCK_SENDER_PUBLIC_KEY),
           signer: true,
           writable: true,
         },
         {
-          pubkey: "12dDNgiaFfebHtoZo1p43gYUPpnoPbHXngMSDBUbXwtf",
+          pubkey: new PublicKey("12dDNgiaFfebHtoZo1p43gYUPpnoPbHXngMSDBUbXwtf"),
           signer: false,
           writable: true,
         },
         {
-          pubkey: "E477JFPCYqp5RyPNzeaCP1XP2ExaroBwufAwNPu17UVu",
+          pubkey: new PublicKey("E477JFPCYqp5RyPNzeaCP1XP2ExaroBwufAwNPu17UVu"),
           signer: false,
           writable: true,
         },
         {
-          pubkey: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          pubkey: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
           signer: false,
           writable: false,
         },
@@ -119,7 +121,9 @@ export const transactionResponseSenderComesFirst = {
             type: "transfer",
           },
           program: "spl-token",
-          programId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          programId: new PublicKey(
+            "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          ),
         },
       ],
       recentBlockhash: "5kVFBB8dLXho4YWUgCMP4c4Hrrrzor9RkcAciePWjgtf",
@@ -202,22 +206,22 @@ export const transactionResponseSenderComesSecond = {
     message: {
       accountKeys: [
         {
-          pubkey: MOCK_SENDER_PUBLIC_KEY,
+          pubkey: new PublicKey(MOCK_SENDER_PUBLIC_KEY),
           signer: true,
           writable: true,
         },
         {
-          pubkey: "6ZyWQ1aA8Sbsz2oFyzNWmb6ik7Wy1Qz4CYuvRqGsTzwy",
+          pubkey: new PublicKey("6ZyWQ1aA8Sbsz2oFyzNWmb6ik7Wy1Qz4CYuvRqGsTzwy"),
           signer: false,
           writable: true,
         },
         {
-          pubkey: "FQbodcdPR23po6ePZPZDkp8EWdbYb3d9m27DFH3h6N94",
+          pubkey: new PublicKey("FQbodcdPR23po6ePZPZDkp8EWdbYb3d9m27DFH3h6N94"),
           signer: false,
           writable: true,
         },
         {
-          pubkey: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          pubkey: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
           signer: false,
           writable: false,
         },
@@ -234,7 +238,9 @@ export const transactionResponseSenderComesSecond = {
             type: "transfer",
           },
           program: "spl-token",
-          programId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          programId: new PublicKey(
+            "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          ),
         },
       ],
       recentBlockhash: "78p2CW4M12K7CuZrH5YE2pT31K8oX4Q1nXew9BDAtDok",

@@ -15,8 +15,6 @@ describe(`transaction summaries`, () => {
 
     const portalTransactionSummary =
       transactionResponseToPortalTransactionSummary(
-        // TODO: our logged transaction.message seems to be missing some properties - investigate - could just be typescript types not being up to date
-        // @ts-ignore
         transactionResponseSenderComesFirst,
         new PublicKey(currentUserWallet)
       );
