@@ -60,7 +60,8 @@ transactionsStore.subscribe(async (transactions) => {
     uniqueTransactionWalletAddresses
   );
 
-  const contacts = await asyncMap(
+  // TODO - Fix 'as' - asyncMap may need some work.
+  const contacts = (await asyncMap(
     uniqueTransactionWalletAddresses,
     async (walletAddress): Promise<Contact> => {
       const verifiedClaims = await verifyWallet(
@@ -77,12 +78,11 @@ transactionsStore.subscribe(async (transactions) => {
       };
       return contact;
     }
-  );
+  )) as Array<Contact>;
 
   log(`Got contacts for transaction contacts`, stringify(contacts));
 
-  // TODO - do we need as? asyncMap may need help
-  contactsStore.set(contacts as Array<Contact>);
+  contactsStore.set(contacts);
 });
 
 // Their contacts
