@@ -7,7 +7,7 @@ export const IDENTITY_TOKEN_NAME = "Portal Identity Token";
 // with a verified Twitter handle and a Solana wallet.
 export const SHAQS_WALLET = "gacMrsrxNisAhCfgsUAVbwmTC3w9nJB6NychLAnTQFv";
 export const JOE_MCCANNS_WALLET =
-  "5CJFJoKiZ14tdsjtWgKGQVuVkYW7pcWUR4LFSvDELFod";
+  "2EfiRdR97jnSknN7KiVwGqXATvuSgGiTypMdiwXxBbxh";
 export const KEVIN_ROSES_WALLET =
   "3ikkFnEDBvUXPHfCmvXma4qBGZxMooveQ5eM6LLQgeuQ";
 
