@@ -3,18 +3,21 @@
     getFormattedMajorUnits,
     getFormattedMinorUnits,
   } from "../../lib/utils";
-  import type { Transaction, Contact } from "../../lib/types";
+  import type { TransactionSummary, Contact } from "../../lib/types";
 
   import { contactsStore } from "../stores.js";
 
-  export let transaction: Transaction;
+  export let transaction: TransactionSummary;
 
+  // Find the contact for this transaction
   let contact: Contact;
-
-  contactsStore.subscribe((newValue) => {
-    contact = newValue.find(
-      (contact) => contact.walletAddress === transaction.walletAddress
-    );
+  contactsStore.subscribe((contacts) => {
+    contact = contacts.find((contact) => {
+      if (transaction.direction === "sent") {
+        return contact.walletAddress === transaction.to;
+      }
+      return contact.walletAddress === transaction.from;
+    });
   });
 </script>
 
@@ -28,8 +31,8 @@
     {contact.verifiedClaims?.givenName}
     {contact.verifiedClaims?.familyName}
   </div>
-  <div class="amount {transaction.isReceived ? 'positive' : ''}">
-    {transaction.isReceived ? "+" : ""}
+  <div class="amount {transaction.direction === 'recieved' ? 'positive' : ''}">
+    {transaction.direction === "recieved" ? "+" : ""}
     {getFormattedMajorUnits(transaction.amount)}{getFormattedMinorUnits(
       transaction.amount
     )}

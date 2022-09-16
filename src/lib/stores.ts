@@ -7,7 +7,7 @@ import {
   SHAQS_WALLET,
   VAHEHS_WALLET,
 } from "../backend/constants";
-import type { Contact, Transaction } from "../lib/types";
+import type { Contact, TransactionSummary } from "../lib/types";
 
 // Our connection to Solana
 export const connectionStore: Writable<null | Connection> = writable(null);
@@ -15,18 +15,26 @@ export const connectionStore: Writable<null | Connection> = writable(null);
 // The active users's keypair
 export const keyPairStore: Writable<null | Keypair> = writable(null);
 
-export const transactionsStore: Writable<Array<Transaction>> = writable([
+export const transactionsStore: Writable<Array<TransactionSummary>> = writable([
   {
-    walletAddress: SHAQS_WALLET,
     date: 1662136510630,
+    status: true,
+    networkFee: 5000,
+    direction: "recieved",
     amount: 40000,
-    isReceived: true,
+    from: SHAQS_WALLET,
+    // HACK - implement real check on this wallet
+    to: "this wallet",
   },
   {
-    walletAddress: JOE_MCCANNS_WALLET,
     date: 1662136510630,
+    status: true,
+    networkFee: 5000,
+    direction: "sent",
     amount: 3000,
-    isReceived: false,
+    from: "this wallet",
+    // HACK - implement real check on this wallet
+    to: JOE_MCCANNS_WALLET,
   },
 ]);
 

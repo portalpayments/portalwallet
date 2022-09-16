@@ -9,6 +9,12 @@ import {
   transactionResponseSenderComesSecond,
 } from "./__mocks__/mocks";
 
+// Quiet utils.log() during tests
+jest.mock("./functions", () => ({
+  ...jest.requireActual("./functions"),
+  log: jest.fn(),
+}));
+
 describe(`transaction summaries`, () => {
   test(`We can produce a transaction summary from a pre-cooked transaction where the sender is first index`, async () => {
     const currentUserWallet = MOCK_SENDER_PUBLIC_KEY;

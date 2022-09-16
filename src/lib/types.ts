@@ -19,9 +19,19 @@ export interface Contact {
   verifiedClaims: VerifiedClaims;
 }
 
-export interface Transaction {
-  walletAddress: string;
+// export interface Transaction {
+//   walletAddress: string;
+//   date: number;
+//   amount: number;
+//   isReceived: boolean;
+// }
+
+export interface TransactionSummary {
   date: number;
+  status: boolean;
+  networkFee: number;
+  direction: "sent" | "recieved";
   amount: number;
-  isReceived: boolean;
+  from: string;
+  to: string;
 }

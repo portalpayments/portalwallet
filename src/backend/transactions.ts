@@ -6,6 +6,7 @@ import type {
   TransactionResponse,
   ParsedTransactionWithMeta,
 } from "@solana/web3.js";
+import type { TransactionSummary } from "src/lib/types";
 
 export const solanaBlocktimeToJSTime = (blockTime: number) => {
   return blockTime * 1000;
@@ -31,8 +32,7 @@ export const isPositive = (number: number) => {
 export const transactionResponseToPortalTransactionSummary = (
   transactionResponse: ParsedTransactionWithMeta,
   currentWallet: PublicKey
-) => {
-  log(`transactionResponse: `, stringify(transactionResponse));
+): TransactionSummary => {
   const getDifferenceByIndex = (index: number) => {
     const accountBefore = Number(
       transactionResponse.meta.preTokenBalances[index].uiTokenAmount.amount
@@ -51,8 +51,6 @@ export const transactionResponseToPortalTransactionSummary = (
       ? 0
       : 1;
 
-  log(`subjectWalletIndex is:`, subjectWalletIndex);
-
   const otherWalletIndex = flip(subjectWalletIndex);
 
   let subjectWalletDifference = getDifferenceByIndex(subjectWalletIndex);
@@ -62,11 +60,6 @@ export const transactionResponseToPortalTransactionSummary = (
     transactionResponse.meta.preTokenBalances[subjectWalletIndex].owner;
   const otherOwner =
     transactionResponse.meta.preTokenBalances[otherWalletIndex].owner;
-
-  log(`>>>`, {
-    subjectWalletDifference,
-    otherWalletDifference,
-  });
 
   let direction: "sent" | "recieved";
   if (isPositive(subjectWalletDifference)) {
