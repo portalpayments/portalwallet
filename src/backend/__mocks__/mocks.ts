@@ -1,4 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
+import { SPL_TOKEN_PROGRAM } from "../constants";
 
 // Put these at the top to avoid indentation issues
 export const dirtyPhrase = `Say your prayers, little one
@@ -104,7 +105,7 @@ export const transactionResponseSenderComesFirst = {
           writable: true,
         },
         {
-          pubkey: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
+          pubkey: new PublicKey(SPL_TOKEN_PROGRAM),
           signer: false,
           writable: false,
         },
@@ -121,9 +122,7 @@ export const transactionResponseSenderComesFirst = {
             type: "transfer",
           },
           program: "spl-token",
-          programId: new PublicKey(
-            "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-          ),
+          programId: new PublicKey(SPL_TOKEN_PROGRAM),
         },
       ],
       recentBlockhash: "5kVFBB8dLXho4YWUgCMP4c4Hrrrzor9RkcAciePWjgtf",
@@ -221,7 +220,7 @@ export const transactionResponseSenderComesSecond = {
           writable: true,
         },
         {
-          pubkey: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
+          pubkey: new PublicKey(SPL_TOKEN_PROGRAM),
           signer: false,
           writable: false,
         },
@@ -238,9 +237,7 @@ export const transactionResponseSenderComesSecond = {
             type: "transfer",
           },
           program: "spl-token",
-          programId: new PublicKey(
-            "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-          ),
+          programId: new PublicKey(SPL_TOKEN_PROGRAM),
         },
       ],
       recentBlockhash: "78p2CW4M12K7CuZrH5YE2pT31K8oX4Q1nXew9BDAtDok",
