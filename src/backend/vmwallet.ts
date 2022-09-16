@@ -1,6 +1,10 @@
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import type {
+  TransactionResponse,
+  ParsedTransactionWithMeta,
+} from "@solana/web3.js";
 
-import { log } from "./functions";
+import { log, stringify } from "./functions";
 import {
   LATEST_IDENTITY_TOKEN_VERSION,
   MIKES_WALLET,
@@ -15,6 +19,7 @@ import axios from "axios";
 import type { AxiosResponse } from "axios";
 import { getIdentityTokenFromWallet } from "./identity-tokens";
 import type { VerifiedClaims } from "./types";
+import { transactionResponseToPortalTransactionSummary } from "./transactions";
 
 export const getKeypairFromString = (privateKeyString: string) => {
   let decodedPrivateKey: Uint8Array;
@@ -177,4 +182,50 @@ export const verifyWallet = async (
   }
 
   return arweaveResponseBody.claims;
+};
+
+// https://www.quicknode.com/guides/web3-sdks/how-to-get-transaction-logs-on-solana
+export const getTransactionsForAddress = async (
+  connection: Connection,
+  address: PublicKey,
+  limit: number
+) => {
+  const confirmedSignatureInfos = await connection.getSignaturesForAddress(
+    address,
+    { limit }
+  );
+
+  log(`confirmedSignatureInfos:`, stringify(confirmedSignatureInfos));
+
+  let signatures: Array<string> = confirmedSignatureInfos.map(
+    (confirmedSignatureInfo) => confirmedSignatureInfo.signature
+  );
+  log(`signatures:`, stringify(signatures));
+
+  const transactions: Array<ParsedTransactionWithMeta> =
+    await connection.getParsedTransactions(signatures, {
+      // NOTE: we can't use commitment: finalised in on localhost validator
+      // commitment: "finalized",
+    });
+
+  return transactions;
+};
+
+export const getTransactionSummariesForAddress = async (
+  connection: Connection,
+  address: PublicKey,
+  limit: number
+) => {
+  const transactions = await getTransactionsForAddress(
+    connection,
+    address,
+    limit
+  );
+  const transactionSummaries = transactions.map((transaction) => {
+    return transactionResponseToPortalTransactionSummary(
+      transaction,
+      new PublicKey(MIKES_WALLET)
+    );
+  });
+  return transactionSummaries;
 };

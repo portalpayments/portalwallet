@@ -1,14 +1,8 @@
-import {
-  getMint,
-  getAccount,
-  TOKEN_PROGRAM_ID,
-} from "@solana/spl-token";
-import type {
-  Account,
-} from "@solana/spl-token";
+import { getMint, getAccount, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import type { Account } from "@solana/spl-token";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { USD_DECIMALS, SECONDS, ENOUGH_TO_MAKE_A_NEW_TOKEN } from "./constants";
-import { log } from "./functions";
+import { log, stringify } from "./functions";
 import {
   createMintAccount,
   mintTokens,
@@ -20,6 +14,7 @@ import {
   putSolIntoWallet,
   checkAccountExists,
   getTokenAccountsByOwner,
+  getTransactionsForAddress,
 } from "./vmwallet";
 
 const AMOUNT_OF_USDC_TO_SEND = 50;
@@ -30,7 +25,7 @@ jest.mock("./functions", () => ({
   log: jest.fn(),
 }));
 
-describe("minting", () => {
+describe("minting and USDC-like transfers", () => {
   let connection: Connection;
   let testUSDCAuthority: Keypair;
   let mintAccountPublicKey: PublicKey;
@@ -73,7 +68,7 @@ describe("minting", () => {
         mintAuthority: testUSDCAuthority.publicKey,
         // Tokens when initially created by spl-token have no supply
         supply: 0n,
-        tlvData: expect.anything()
+        tlvData: expect.anything(),
       });
     },
     30 * SECONDS
@@ -106,7 +101,7 @@ describe("minting", () => {
       mint: mintAccountPublicKey,
       owner: alice.publicKey,
       rentExemptReserve: null,
-      tlvData: expect.anything()
+      tlvData: expect.anything(),
     });
 
     // TODO: not sure if we need to do this as we already have .amount above - we should check later once we have transfers working
@@ -270,5 +265,17 @@ describe("minting", () => {
     const tokenAccount = tokenAccounts[0];
     expect(tokenAccount.mint).toEqual(mintAccountPublicKey);
     expect(tokenAccount.amount).toEqual(50n);
+  });
+
+  test(`We can get previous transactions from Alice's wallet`, async () => {
+    const transactions = await getTransactionsForAddress(
+      connection,
+      alice.publicKey,
+      5
+    );
+
+    const lastTransaction = transactions[0];
+
+    expect(lastTransaction).toBeTruthy();
   });
 });

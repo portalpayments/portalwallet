@@ -21,10 +21,13 @@ import {
   KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT,
   MIKES_WALLET,
   USDC_MAINNET_MINT_ACCOUNT,
+  YCOMBINATOR_DEMO_WALLET_FOR_JARED,
 } from "./constants";
 import { getAllNftMetadatasFromAWallet } from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
+import { getTransactionSummariesForAddress } from "./vmwallet";
+import { log, stringify } from "./functions";
 
 dotenv.config();
 
@@ -36,6 +39,9 @@ jest.mock("./functions", () => ({
 
 const identityTokenPrivateKey = process.env.IDENTITY_TOKEN_PRIVATE_KEY;
 
+// We skip these so we don't get rate limited
+// eg "Too many requests for a specific RPC call"
+// But we can run them on demand and they should pass
 describe.skip(`mainnet integration tests`, () => {
   let mainNetConnection: Connection | null = null;
   process.env.IDENTITY_TOKEN_PRIVATE_KEY;
@@ -250,5 +256,25 @@ describe.skip(`mainnet integration tests`, () => {
     );
 
     expect(claims).toBeNull();
+  });
+
+  test(`We can get previous transaction summaries from Mike's wallet`, async () => {
+    const transactionSummaries = await getTransactionSummariesForAddress(
+      mainNetConnection,
+      new PublicKey(MIKES_WALLET),
+      1
+    );
+
+    expect(transactionSummaries).toEqual([
+      {
+        amount: 1000000,
+        date: 1662985498000,
+        direction: "sent",
+        from: MIKES_WALLET,
+        networkFee: 5000,
+        status: true,
+        to: YCOMBINATOR_DEMO_WALLET_FOR_JARED,
+      },
+    ]);
   });
 });
