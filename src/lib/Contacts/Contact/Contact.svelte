@@ -3,16 +3,9 @@
 
   import ContactHeading from "./ContactHeading.svelte";
   import Transactions from "./Transactions.svelte";
-  import {
-    connectionStore,
-    keyPairStore,
-    transactionsStore,
-    identityTokenIssuerPublicKey,
-  } from "../../stores";
-  import type { PublicKey, Connection, Keypair } from "@solana/web3.js";
-  import { verifyWallet } from "../../../backend/vmwallet";
+  import { transactionsStore } from "../../stores";
   import { log, stringify } from "../../../backend/functions";
-  import type { Contact, Transaction } from "../../../lib/types";
+  import type { Contact, TransactionSummary } from "../../../lib/types";
   import SendMoney from "./SendMoney.svelte";
 
   let contact: Contact | null = null;
@@ -32,7 +25,8 @@
 
   log(`Loading send to contact screen for ${contactWalletAddress}`);
 
-  let transactions: Array<Transaction> = [];
+  // TODO: maybe filter our transactions to just the ones from this single contact?
+  let transactions: Array<TransactionSummary> = [];
 
   transactionsStore.subscribe((newValue) => {
     transactions = newValue;
