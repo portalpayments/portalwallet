@@ -1,4 +1,11 @@
 import { PublicKey } from "@solana/web3.js";
+import {
+  VAHEHS_WALLET,
+  MIKES_WALLET,
+  JOE_MCCANNS_WALLET,
+  SHAQS_WALLET,
+  YCOMBINATOR_DEMO_WALLET_FOR_JARED,
+} from "../backend/constants";
 import { log } from "../backend/functions";
 
 const WALLET_CHARACTERS_TO_SHOW = 5;
@@ -9,6 +16,15 @@ const numberFormatter = new Intl.NumberFormat("en-US", {
   // Do not show fractions - front end should only handle whole numbers
   maximumFractionDigits: 0,
 });
+
+// TODO: delete
+export const hackProfilePicsByWallet = {
+  [VAHEHS_WALLET]: "/ProfilePics/vaheh.jpg",
+  [MIKES_WALLET]: "/ProfilePics/mike.jpg",
+  [JOE_MCCANNS_WALLET]: "/ProfilePics/joe.jpg",
+  [SHAQS_WALLET]: "/ProfilePics/shaq.jpg",
+  [YCOMBINATOR_DEMO_WALLET_FOR_JARED]: "/ProfilePics/jared.jpg",
+};
 
 export const getPrivateKey = () => {
   return localStorage.getItem("PORTAL_PRIVATE_KEY");
@@ -28,6 +44,10 @@ export const formatMajorUnits = (number: number | string) => {
 
 export const getMultiplier = (digits = 2) => {
   return Number(`10e${digits - 1}`);
+};
+
+export const toUniqueStringArray = (array: Array<string>): Array<string> => {
+  return [...new Set(array)];
 };
 
 export const amountAndDecimalsToMajorAndMinor = (

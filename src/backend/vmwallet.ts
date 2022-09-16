@@ -148,7 +148,7 @@ export const getTokenAccountsByOwner = async (
 
 export const verifyWallet = async (
   connection: Connection,
-  metaplexKeypair: Keypair,
+  metaplexConnectionKeypair: Keypair,
   identityTokenIssuerPublicKey: PublicKey,
   wallet: PublicKey,
   useCache = true
@@ -165,7 +165,7 @@ export const verifyWallet = async (
 
   const identityToken = await getIdentityTokenFromWallet(
     connection,
-    metaplexKeypair,
+    metaplexConnectionKeypair,
     identityTokenIssuerPublicKey,
     wallet
   );

@@ -4,7 +4,7 @@
   import Transactions from "./Transactions.svelte";
   import Buttons from "./Buttons.svelte";
 
-  import { connectionStore, keyPairStore } from "../stores";
+  import { connectionStore, keyPairStore, transactionsStore } from "../stores";
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
   import type { Connection, Keypair } from "@solana/web3.js";
 
@@ -12,7 +12,10 @@
 
   log(`Homepage loading...`);
 
-  import { getUSDCAccounts } from "../../backend/vmwallet";
+  import {
+    getUSDCAccounts,
+    getTransactionSummariesForAddress,
+  } from "../../backend/vmwallet";
 
   let connection: Connection;
   let keypair: Keypair;
@@ -29,6 +32,14 @@
     log(`🔢 Keypair or connection have changed, updating balance`);
 
     usdcAccounts = await getUSDCAccounts(connection, keypair.publicKey);
+
+    const transactions = await getTransactionSummariesForAddress(
+      connection,
+      keypair.publicKey,
+      1 // TODO maybe 5 or whatever don't overload when testing though
+    );
+
+    transactionsStore.set(transactions);
 
     const JUST_ONE_SUPPORTED_USDC_ACCOUNT_FOR_NOW = 0;
     const usdcAccount = usdcAccounts[JUST_ONE_SUPPORTED_USDC_ACCOUNT_FOR_NOW];

@@ -95,8 +95,8 @@
 
   $: (isSending || isSendingAnyway) && doTransfer();
 
-  connectionStore.subscribe((value) => {
-    connection = value;
+  connectionStore.subscribe((newValue) => {
+    connection = newValue;
   });
 
   let keyPair: Keypair | null = null;

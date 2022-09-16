@@ -157,11 +157,11 @@ export const getFullNFTsFromWallet = async (
 
 export const getIdentityTokenFromWallet = async (
   connection: Connection,
-  metaplexKeypair: Keypair,
+  metaplexConnectionKeypair: Keypair,
   identityTokenIssuerPublicKey: PublicKey,
   wallet: PublicKey
 ) => {
-  const metaplex = await getMetaplex(connection, metaplexKeypair);
+  const metaplex = await getMetaplex(connection, metaplexConnectionKeypair);
   const nfts = await metaplex
     .nfts()
     .findAllByOwner({

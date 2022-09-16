@@ -8,67 +8,85 @@ import {
   VAHEHS_WALLET,
 } from "../backend/constants";
 import type { Contact, TransactionSummary } from "../lib/types";
+import { asyncMap, log, stringify } from "../backend/functions";
+import { verifyWallet } from "../backend/vmwallet";
+import { toUniqueStringArray } from "./utils";
+
+let connection: Connection | null;
+let keyPair: Keypair | null;
 
 // Our connection to Solana
 export const connectionStore: Writable<null | Connection> = writable(null);
+connectionStore.subscribe((newValue) => {
+  connection = newValue;
+});
 
 // The active users's keypair
 export const keyPairStore: Writable<null | Keypair> = writable(null);
+keyPairStore.subscribe((newValue) => {
+  keyPair = newValue;
+});
 
-export const transactionsStore: Writable<Array<TransactionSummary>> = writable([
-  {
-    date: 1662136510630,
-    status: true,
-    networkFee: 5000,
-    direction: "recieved",
-    amount: 40000,
-    from: SHAQS_WALLET,
-    // HACK - implement real check on this wallet
-    to: "this wallet",
-  },
-  {
-    date: 1662136510630,
-    status: true,
-    networkFee: 5000,
-    direction: "sent",
-    amount: 3000,
-    from: "this wallet",
-    // HACK - implement real check on this wallet
-    to: JOE_MCCANNS_WALLET,
-  },
-]);
+export const transactionsStore: Writable<null | Array<TransactionSummary>> =
+  writable(null);
+
+export const identityTokenIssuerPublicKey = new PublicKey(
+  identityTokenIssuerPublicKeyString
+);
+
+transactionsStore.subscribe(async (transactions) => {
+  if (!connection) {
+    throw new Error(
+      `We have transactions but no connection. This shouldn't happen!`
+    );
+  }
+
+  const transactionWalletAddresses = transactions.map((transaction) => {
+    let transactionWalletAddress: string;
+    if (transaction.direction === "sent") {
+      transactionWalletAddress = transaction.to;
+    } else {
+      transactionWalletAddress = transaction.from;
+    }
+    return transactionWalletAddress;
+  });
+
+  const uniqueTransactionWalletAddresses: Array<string> = toUniqueStringArray(
+    transactionWalletAddresses
+  );
+
+  log(
+    `We need to verify these uniqueTransactionWalletAddresses:`,
+    uniqueTransactionWalletAddresses
+  );
+
+  const contacts = await asyncMap(
+    uniqueTransactionWalletAddresses,
+    async (walletAddress): Promise<Contact> => {
+      const verifiedClaims = await verifyWallet(
+        connection,
+        keyPair,
+        identityTokenIssuerPublicKey,
+        new PublicKey(walletAddress)
+      );
+      const contact: Contact = {
+        walletAddress,
+        isNew: false,
+        isPending: false,
+        verifiedClaims,
+      };
+      return contact;
+    }
+  );
+
+  log(`Got contacts for transaction contacts`, stringify(contacts));
+
+  // TODO - do we need as? asyncMap may need help
+  contactsStore.set(contacts as Array<Contact>);
+});
 
 // Their contacts
-export const contactsStore: Writable<Array<Contact>> = writable([
-  {
-    walletAddress: SHAQS_WALLET,
-    isNew: false,
-    isPending: false,
-    verifiedClaims: {
-      type: "INDIVIDUAL",
-      givenName: "Shaquille",
-      familyName: "O'Neal",
-      imageUrl: "/ProfilePics/shaq.jpg",
-    },
-  },
-  {
-    walletAddress: JOE_MCCANNS_WALLET,
-    isNew: false,
-    isPending: false,
-    verifiedClaims: {
-      type: "INDIVIDUAL",
-      givenName: "Joseph Isaac",
-      familyName: "McCann",
-      imageUrl: "/ProfilePics/joe.jpg",
-    },
-  },
-  {
-    walletAddress: KEVIN_ROSES_WALLET,
-    isNew: false,
-    isPending: false,
-    verifiedClaims: null,
-  },
-]);
+export const contactsStore: Writable<Array<Contact>> = writable([]);
 
 // From https://svelte.dev/repl/d7b5f0d565a441cfac66e093ee6fe62d?version=3.19.1
 export const User = (function () {
@@ -79,6 +97,7 @@ export const User = (function () {
       set(null);
     },
     signin: () => {
+      // TODO: delete
       set("Chris");
     },
   };
@@ -86,7 +105,3 @@ export const User = (function () {
 
 // From https://svelte.dev/repl/cc54944f9c2f44209d6da7344ea4c101?version=3.17.2
 export const authStore = writable({ isLoggedIn: false, name: "" });
-
-export const identityTokenIssuerPublicKey = new PublicKey(
-  identityTokenIssuerPublicKeyString
-);

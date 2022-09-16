@@ -1,41 +1,56 @@
 <script lang="ts">
-  import {
-    getFormattedMajorUnits,
-    getFormattedMinorUnits,
-  } from "../../lib/utils";
+  import { amountAndDecimalsToMajorAndMinor } from "../../lib/utils";
   import type { TransactionSummary, Contact } from "../../lib/types";
 
-  import { contactsStore } from "../stores.js";
+  import { log, stringify } from "../../backend/functions";
+  import { hackProfilePicsByWallet } from "../utils";
+
+  import { contactsStore, connectionStore } from "../stores.js";
 
   export let transaction: TransactionSummary;
 
   // Find the contact for this transaction
-  let contact: Contact;
-  contactsStore.subscribe((contacts) => {
-    contact = contacts.find((contact) => {
-      if (transaction.direction === "sent") {
-        return contact.walletAddress === transaction.to;
-      }
-      return contact.walletAddress === transaction.from;
-    });
+  let contact: Contact | null = null;
+  contactsStore.subscribe(async (contacts) => {
+    let contactWalletAddress: string | null = null;
+    if (transaction.direction === "sent") {
+      contactWalletAddress = transaction.to;
+    }
+    if (transaction.direction === "recieved") {
+      contactWalletAddress = transaction.from;
+    }
+    contact = contacts.find(
+      (contact) => contact.walletAddress === contactWalletAddress
+    );
+    if (!contact) {
+      log(
+        `Contact for ${contactWalletAddress} used in this transaction hasn't yet loaded in contact store`
+      );
+    }
   });
+
+  const majorAndMinor = amountAndDecimalsToMajorAndMinor(
+    String(transaction.amount),
+    6
+  );
 </script>
 
 <div class="transaction">
-  <img
-    class="profile-pic"
-    src={contact.verifiedClaims?.imageUrl}
-    alt="wallet avatar"
-  />
-  <div class="name">
-    {contact.verifiedClaims?.givenName}
-    {contact.verifiedClaims?.familyName}
-  </div>
+  {#if contact}
+    <!-- TODO src={contact.verifiedClaims?.imageUrl} -->
+    <img
+      class="profile-pic"
+      src={hackProfilePicsByWallet[contact.walletAddress]}
+      alt="wallet avatar"
+    />
+    <div class="name">
+      {contact.verifiedClaims?.givenName}
+      {contact.verifiedClaims?.familyName}
+    </div>
+  {/if}
   <div class="amount {transaction.direction === 'recieved' ? 'positive' : ''}">
     {transaction.direction === "recieved" ? "+" : ""}
-    {getFormattedMajorUnits(transaction.amount)}{getFormattedMinorUnits(
-      transaction.amount
-    )}
+    {majorAndMinor[0]}.{majorAndMinor[1]}
   </div>
 </div>
 
