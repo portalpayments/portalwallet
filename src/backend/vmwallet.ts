@@ -19,6 +19,7 @@ import axios from "axios";
 import type { AxiosResponse } from "axios";
 import { getIdentityTokenFromWallet } from "./identity-tokens";
 import type { VerifiedClaims } from "./types";
+import { transactionResponseToPortalTransactionSummary } from "./transactions";
 
 export const getKeypairFromString = (privateKeyString: string) => {
   let decodedPrivateKey: Uint8Array;
@@ -208,4 +209,23 @@ export const getTransactionsForAddress = async (
     });
 
   return transactions;
+};
+
+export const getTransactionSummariesForAddress = async (
+  connection: Connection,
+  address: PublicKey,
+  limit: number
+) => {
+  const transactions = await getTransactionsForAddress(
+    connection,
+    address,
+    limit
+  );
+  const transactionSummaries = transactions.map((transaction) => {
+    return transactionResponseToPortalTransactionSummary(
+      transaction,
+      new PublicKey(MIKES_WALLET)
+    );
+  });
+  return transactionSummaries;
 };
