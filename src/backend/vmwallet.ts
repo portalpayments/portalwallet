@@ -21,6 +21,8 @@ import { getIdentityTokenFromWallet } from "./identity-tokens";
 import type { VerifiedClaims } from "./types";
 import { transactionResponseToPortalTransactionSummary } from "./transactions";
 
+const VERIFIED_CLAIMS_BY_ADDRESS: Record<string, VerifiedClaims> = {};
+
 export const getKeypairFromString = (privateKeyString: string) => {
   let decodedPrivateKey: Uint8Array;
   try {
@@ -148,8 +150,19 @@ export const verifyWallet = async (
   connection: Connection,
   metaplexKeypair: Keypair,
   identityTokenIssuerPublicKey: PublicKey,
-  wallet: PublicKey
+  wallet: PublicKey,
+  useCache = true
 ): Promise<VerifiedClaims | null> => {
+  const walletString = wallet.toBase58();
+
+  if (useCache) {
+    const cachedVerifiedClaims = VERIFIED_CLAIMS_BY_ADDRESS[walletString];
+    if (cachedVerifiedClaims) {
+      log(`Found verified claims for ${walletString} in cache`);
+      return cachedVerifiedClaims;
+    }
+  }
+
   const identityToken = await getIdentityTokenFromWallet(
     connection,
     metaplexKeypair,
@@ -172,7 +185,7 @@ export const verifyWallet = async (
   const arweaveResponseBody = arweaveResponse.data;
 
   // Ensure the token is actually issued for this wallet
-  if (arweaveResponseBody.issuedAgainst !== wallet.toBase58()) {
+  if (arweaveResponseBody.issuedAgainst !== walletString) {
     return null;
   }
 
@@ -181,7 +194,11 @@ export const verifyWallet = async (
     return null;
   }
 
-  return arweaveResponseBody.claims;
+  const claims = arweaveResponseBody.claims;
+
+  VERIFIED_CLAIMS_BY_ADDRESS[walletString] = claims;
+
+  return claims;
 };
 
 // https://www.quicknode.com/guides/web3-sdks/how-to-get-transaction-logs-on-solana
