@@ -5,7 +5,7 @@
   import { log, stringify } from "../../backend/functions";
   import { hackProfilePicsByWallet } from "../utils";
 
-  import { contactsStore, connectionStore } from "../stores.js";
+  import { contactsStore } from "../stores";
 
   export let transaction: TransactionSummary;
 

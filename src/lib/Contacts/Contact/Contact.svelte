@@ -1,9 +1,7 @@
 <script lang="ts">
-  import { contactsStore } from "../../../lib/stores.js";
-
   import ContactHeading from "./ContactHeading.svelte";
   import Transactions from "./Transactions.svelte";
-  import { transactionsStore } from "../../stores";
+  import { transactionsStore, contactsStore } from "../../stores";
   import { log, stringify } from "../../../backend/functions";
   import type { Contact, TransactionSummary } from "../../../lib/types";
   import SendMoney from "./SendMoney.svelte";

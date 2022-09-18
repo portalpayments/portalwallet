@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Link } from "svelte-navigator";
-  import { contactsStore } from "../stores.js";
-  import type { Contact } from "../types.js";
+  import { contactsStore } from "../stores";
+  import type { Contact } from "../types";
 
   import Unverified from "../Shared/Unverified.svelte";
   import Verified from "../Shared/Verified.svelte";
