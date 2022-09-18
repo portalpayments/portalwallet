@@ -35,10 +35,14 @@ export const identityTokenIssuerPublicKey = new PublicKey(
 );
 
 transactionsStore.subscribe(async (transactions) => {
-  if (!connection) {
-    throw new Error(
-      `We have transactions but no connection. This shouldn't happen!`
-    );
+  if (!transactions) {
+    if (connection) {
+      throw new Error(
+        `We have transactions but no connection. This shouldn't happen!`
+      );
+    }
+    log(`No transactions yet...`);
+    return;
   }
 
   const transactionWalletAddresses = transactions.map((transaction) => {
