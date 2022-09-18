@@ -38,11 +38,17 @@ export const getUSDCAccounts = async (
   publicKey: PublicKey,
   usdcMintAccount = USDC_MAINNET_MINT_ACCOUNT
 ) => {
-  let parsedTokenAccountsByOwner =
-    await connection.getParsedTokenAccountsByOwner(publicKey, {
-      mint: new PublicKey(usdcMintAccount),
-    });
-  return parsedTokenAccountsByOwner.value;
+  try {
+    let parsedTokenAccountsByOwner =
+      await connection.getParsedTokenAccountsByOwner(publicKey, {
+        mint: new PublicKey(usdcMintAccount),
+      });
+    return parsedTokenAccountsByOwner.value;
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    console.trace();
+    throw new Error(`Error in getParsedTokenAccountsByOwner: ${error.message}`);
+  }
 };
 
 export const connect = async (
