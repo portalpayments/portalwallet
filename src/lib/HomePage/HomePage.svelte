@@ -36,7 +36,7 @@
     const transactions = await getTransactionSummariesForAddress(
       connection,
       keypair.publicKey,
-      1 // TODO maybe 5 or whatever don't overload when testing though
+      5
     );
 
     transactionsStore.set(transactions);
