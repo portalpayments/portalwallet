@@ -2,12 +2,14 @@ import { transactionResponseToPortalTransactionSummary } from "./transactions";
 import {
   MOCK_SENDER_PUBLIC_KEY,
   MOCK_RECIPIENT_PUBLIC_KEY,
+  mikeSendingHimselfMoneyTransaction,
 } from "./__mocks__/mocks";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import {
   transactionResponseSenderComesFirst,
   transactionResponseSenderComesSecond,
 } from "./__mocks__/mocks";
+import { MIKES_WALLET } from "./constants";
 
 // Quiet utils.log() during tests
 jest.mock("./functions", () => ({
@@ -78,5 +80,15 @@ describe(`transaction summaries`, () => {
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
     });
+  });
+
+  test(`We ignore a transaction doing of Mike sending himself some money`, () => {
+    const portalTransactionSummary =
+      transactionResponseToPortalTransactionSummary(
+        mikeSendingHimselfMoneyTransaction,
+        new PublicKey(MIKES_WALLET)
+      );
+
+    expect(portalTransactionSummary).toEqual(null);
   });
 });

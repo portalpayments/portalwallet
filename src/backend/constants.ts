@@ -14,6 +14,8 @@ export const KEVIN_ROSES_WALLET =
 export const MIKES_WALLET = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
 export const VAHEHS_WALLET = "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG";
 
+export const MIKES_USDC_ACCOUNT = "Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc";
+
 export const SPL_TOKEN_PROGRAM = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
 
 export const YCOMBINATOR_DEMO_WALLET_FOR_JARED =

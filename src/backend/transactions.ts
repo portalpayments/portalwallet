@@ -5,6 +5,7 @@ import type {
   PublicKey,
   TransactionResponse,
   ParsedTransactionWithMeta,
+  ParsedInstruction,
 } from "@solana/web3.js";
 import type { TransactionSummary } from "src/lib/types";
 
@@ -34,6 +35,17 @@ export const transactionResponseToPortalTransactionSummary = (
   currentWallet: PublicKey
 ): TransactionSummary => {
   try {
+    const instructions = transactionResponse.transaction.message.instructions;
+    if (instructions.length === 1) {
+      const firstInstruction = instructions[0] as ParsedInstruction;
+      if (
+        firstInstruction.parsed.info.source ===
+        firstInstruction.parsed.info.destination
+      ) {
+        log(`Ignoring transaction sending money to self (probably a mistake)`);
+        return null;
+      }
+    }
     const getDifferenceByIndex = (index: number) => {
       const accountBefore = Number(
         transactionResponse.meta.preTokenBalances[index].uiTokenAmount.amount
