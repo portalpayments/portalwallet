@@ -1,4 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
+import type { writable } from "svelte/store";
 import {
   MIKES_USDC_ACCOUNT,
   MIKES_WALLET,
@@ -354,6 +355,71 @@ export const mikeSendingHimselfMoneyTransaction = {
     },
     signatures: [
       "V7jqDfAeaLniy2crKHHu18LXCivjTczDr1ciFLKNTd7aBA2BC11TrKyzrV8cf9jpgn1UiznuhkuHUJvbAifJQJ6",
+    ],
+  },
+};
+
+export const mikeSendingJaredSomeSolTransaction = {
+  blockTime: 1662733089,
+  meta: {
+    err: null,
+    fee: 5000,
+    innerInstructions: [],
+    logMessages: [
+      "Program 11111111111111111111111111111111 invoke [1]",
+      "Program 11111111111111111111111111111111 success",
+    ],
+    postBalances: [4630800, 30000000, 1],
+    postTokenBalances: [],
+    preBalances: [34635800, 0, 1],
+    preTokenBalances: [],
+    rewards: [],
+    status: {
+      Ok: null,
+    },
+  },
+  slot: 149892413,
+  transaction: {
+    message: {
+      accountKeys: [
+        {
+          pubkey: new PublicKey("5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"),
+          signer: true,
+          source: "transaction",
+          writable: true,
+        },
+        {
+          pubkey: new PublicKey("Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz"),
+          signer: false,
+          source: "transaction",
+          writable: true,
+        },
+        {
+          pubkey: new PublicKey("11111111111111111111111111111111"),
+          signer: false,
+          source: "transaction",
+          writable: false,
+        },
+      ],
+      addressTableLookups: null,
+      instructions: [
+        {
+          parsed: {
+            info: {
+              destination: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
+              lamports: 30000000,
+              source: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            },
+            type: "transfer",
+          },
+          program: "system",
+          programId: new PublicKey("11111111111111111111111111111111"),
+        },
+      ],
+      recentBlockhash: "BU6JsZVcu75QzX1PCkcemSvdJ2vNSj4zVyfbkqwoss3q",
+    },
+    signatures: [
+      "5KKQASDKTxoViRWYzN7Rf8X9n3wiiNVztpgpNG1oyyZbkNiai1JVcD4rAV2XYzFPgRP4dXQv7A3Bku68UT4j2FZk",
     ],
   },
 };

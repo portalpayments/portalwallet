@@ -46,6 +46,13 @@ export const transactionResponseToPortalTransactionSummary = (
         return null;
       }
     }
+
+    if (transactionResponse.meta.preTokenBalances.length === 0) {
+      log(`Ignoring non-token transaction`);
+      // TODO: handle native token transactions
+      return null;
+    }
+
     const getDifferenceByIndex = (index: number) => {
       const accountBefore = Number(
         transactionResponse.meta.preTokenBalances[index].uiTokenAmount.amount
@@ -108,6 +115,7 @@ export const transactionResponseToPortalTransactionSummary = (
       `Warning: could not decode transaction:`,
       stringify(transactionResponse)
     );
-    throw error;
+    // TODO: throw error;
+    return null;
   }
 };

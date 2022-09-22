@@ -45,7 +45,19 @@ transactionsStore.subscribe(async (transactions) => {
     return;
   }
 
-  const transactionWalletAddresses = transactions.map((transaction) => {
+  if (!transactions.length) {
+    return;
+  }
+
+  const cleanedTransactions = transactions.filter(
+    (transaction) => transaction !== null
+  );
+
+  if (!cleanedTransactions.length) {
+    return;
+  }
+
+  const transactionWalletAddresses = cleanedTransactions.map((transaction) => {
     let transactionWalletAddress: string;
     if (transaction.direction === "sent") {
       transactionWalletAddress = transaction.to;
