@@ -18,7 +18,7 @@ const identityTokenIssuer = getKeypairFromString(identityTokenPrivateKey);
 (async () => {
   // See https://www.npmjs.com/package/@metaplex-foundation/js
   // scroll to 'bundlrStorage'
-  const connection = await connect("mainNetBeta");
+  const connection = await connect("genesysGoMain");
   const metaplex = getMetaplex(connection, identityTokenIssuer, true);
   const bundlrStorage = metaplex.storage().driver() as BundlrStorageDriver;
 

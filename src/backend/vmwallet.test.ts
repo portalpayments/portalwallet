@@ -54,7 +54,7 @@ describe.skip(`mainnet integration tests`, () => {
   );
 
   beforeAll(async () => {
-    mainNetConnection = await connect("mainNetBeta");
+    mainNetConnection = await connect("genesysGoMain");
   });
 
   test(`We can get NFTs from Mike's real-mainnet wallet`, async () => {
