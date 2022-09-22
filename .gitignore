@@ -3,3 +3,4 @@ test-ledger
 .env
 *.Identifier
 *.zip
+dist/*
