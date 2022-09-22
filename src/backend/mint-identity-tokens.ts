@@ -69,6 +69,5 @@ export const mintAndTransferIdentityToken = async (
 
   log(`Transferred token to final destination!`, signature);
 
-  return signature
+  return signature;
 };
-
