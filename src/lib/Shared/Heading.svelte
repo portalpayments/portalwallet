@@ -4,7 +4,8 @@
   h1 {
     font-size: 24px;
     margin: 0;
-
+    display: grid;
+    align-content: center;
     /* Colored background techique used on website */
     color: transparent;
     background-clip: text;

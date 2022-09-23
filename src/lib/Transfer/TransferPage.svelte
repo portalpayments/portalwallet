@@ -152,7 +152,7 @@
   };
 </script>
 
-<div class="transfer-screen">
+<div class="transfer-page">
   <TransferHeading {contact} {hasLoadedVerificationStateFromNetwork} />
 
   <div class="destination-and-amount">
@@ -222,7 +222,7 @@
 </div>
 
 <style>
-  .transfer-screen {
+  .transfer-page {
     min-width: var(--wallet-width);
     max-width: var(--wallet-width);
     min-height: var(--wallet-height);

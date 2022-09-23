@@ -34,7 +34,6 @@
     grid-auto-rows: 48px;
     padding: 0 12px;
     gap: 6px;
-    max-height: 300px;
     overflow: hidden;
   }
 </style>

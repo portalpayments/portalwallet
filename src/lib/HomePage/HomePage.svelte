@@ -5,6 +5,7 @@
   import Buttons from "./Buttons.svelte";
 
   import { connectionStore, keyPairStore, transactionsStore } from "../stores";
+  import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../constants";
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
   import type { Connection, Keypair } from "@solana/web3.js";
 
@@ -36,7 +37,7 @@
     const transactions = await getTransactionSummariesForAddress(
       connection,
       keypair.publicKey,
-      10
+      HOW_MANY_TRANSACTIONS_TO_SHOW
     );
 
     transactionsStore.set(transactions);
@@ -85,7 +86,7 @@
 
 <style>
   .feature {
-    grid-template-rows: 128px 1fr 24px 2fr;
+    grid-template-rows: 128px 128px 24px 2fr;
     background: radial-gradient(at 50% 50%, #dde9ff 0, #fff 80%, #fff 100%);
   }
 </style>

@@ -6,6 +6,8 @@
   import ContactsPage from "./lib/Contacts/ContactsPage.svelte";
   import TransferPage from "./lib/Transfer/TransferPage.svelte";
   import AddMoneyPage from "./lib/AddMoney/AddMoneyPage.svelte";
+  import TransactionsPage from "./lib/TransactionsPage/TransactionsPage.svelte";
+
   import { Router, Route } from "svelte-navigator";
   import { getPrivateKey } from "./lib/utils";
   import {
@@ -22,6 +24,7 @@
     authStore,
     identityTokenIssuerPublicKey,
   } from "./lib/stores";
+  import Transaction from "./lib/HomePage/Transaction.svelte";
 
   const DISABLE_LOGIN_SCREEN_FOR_DEMO = true;
 
@@ -78,15 +81,12 @@
 
 <Router>
   <main>
-    {#if $authStore.isLoggedIn || DISABLE_LOGIN_SCREEN_FOR_DEMO}
+    {#if $authStore.isLoggedIn}
       <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
       <Route path="transferMoney"><TransferPage /></Route>
 
-      <Route path="transactions"
-        ><div class="header-and-features">
-          Here go transactions
-          <Lock />
-        </div>
+      <Route path="transactions">
+        <TransactionsPage />
       </Route>
       <Route path="logout"><Lock /></Route>
       <Route path="contacts/:address"><Contact /></Route>
