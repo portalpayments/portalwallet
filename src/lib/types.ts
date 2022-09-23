@@ -39,3 +39,9 @@ export interface TransactionSummary {
   from: string;
   to: string;
 }
+
+export interface TransactionsByDay {
+  isoDate: string;
+  total: number;
+  transactions: Array<TransactionSummary>;
+}

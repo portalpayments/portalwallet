@@ -62,7 +62,6 @@
 <style>
   .transaction {
     display: grid;
-    height: 64px;
     color: var(--black);
     grid-auto-flow: column;
     grid-template-columns: 42px 1fr 64px;

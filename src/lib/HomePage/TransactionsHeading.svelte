@@ -3,8 +3,6 @@
 </script>
 
 <div class="heading">
-  <div>transactions</div>
-
   <Link to="/transactions">See all</Link>
 </div>
 
@@ -14,7 +12,6 @@
     padding: 0 12px;
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 1fr 50px;
     align-items: center;
     font-size: 0.9rem;
     text-transform: uppercase;

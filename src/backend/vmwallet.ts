@@ -239,7 +239,6 @@ export const getTransactionSummariesForAddress = async (
   address: PublicKey,
   limit: number
 ) => {
-  // TODO - clarify that solan Transactions are not our TransactionSummaries
   const transactions = await getTransactionsForAddress(
     connection,
     address,

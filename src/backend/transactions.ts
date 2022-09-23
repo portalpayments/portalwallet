@@ -7,7 +7,12 @@ import type {
   ParsedTransactionWithMeta,
   ParsedInstruction,
 } from "@solana/web3.js";
-import { Currency, Direction, type TransactionSummary } from "../lib/types";
+import {
+  Currency,
+  Direction,
+  type TransactionsByDay,
+  type TransactionSummary,
+} from "../lib/types";
 
 export const solanaBlocktimeToJSTime = (blockTime: number) => {
   return blockTime * 1000;
@@ -28,6 +33,28 @@ export const flip = (number: number) => {
 
 export const isPositive = (number: number) => {
   return Math.sign(number) === 1;
+};
+
+const dateToISODate = (date: number) => {
+  return new Date(date).toISOString().slice(0, 10);
+};
+
+export const isoDateToFriendlyName = (isoDate: string) => {
+  return new Date(isoDate).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
+};
+
+const byDateNewestToOldest = (a, b) => {
+  if (a.date === b.date) {
+    return 0;
+  }
+  if (a.date < b.date) {
+    return 1;
+  }
+  return -1;
 };
 
 export const transactionResponseToPortalTransactionSummary = (
@@ -144,4 +171,45 @@ export const transactionResponseToPortalTransactionSummary = (
     // TODO: throw error;
     return null;
   }
+};
+
+export const getTransactionsByDays = (
+  transactions: Array<TransactionSummary>,
+  // We can't add, eg, 50 cents to 130 sol. So this function is for a specific currency only
+  currency: Currency
+) => {
+  transactions = transactions.filter(
+    (transaction) => transaction.currency === currency
+  );
+  transactions.sort(byDateNewestToOldest);
+
+  const transactionsByDays: Array<TransactionsByDay> = [];
+
+  const toSpendingAmount = (transaction: TransactionSummary) => {
+    if (transaction.direction === Direction.sent) {
+      return transaction.amount;
+    } else {
+      return flip(transaction.amount);
+    }
+  };
+
+  transactions.forEach((transaction) => {
+    const isoDate = dateToISODate(transaction.date);
+    const lastDay = transactionsByDays.at(-1) || null;
+    if (lastDay?.isoDate === isoDate) {
+      // Add this transaction to the existing entry for this day
+      lastDay.transactions.push(transaction);
+      // And add it to the spending total for this day
+      lastDay.total += toSpendingAmount(transaction);
+    } else {
+      // Create a new TransactionsByDay item
+      transactionsByDays.push({
+        isoDate,
+        total: toSpendingAmount(transaction),
+        transactions: [transaction],
+      });
+    }
+  });
+
+  return transactionsByDays;
 };

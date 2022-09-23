@@ -1,16 +1,27 @@
-import { transactionResponseToPortalTransactionSummary } from "./transactions";
+import {
+  flip,
+  getTransactionsByDays,
+  transactionResponseToPortalTransactionSummary,
+} from "./transactions";
 import {
   MOCK_SENDER_PUBLIC_KEY,
   MOCK_RECIPIENT_PUBLIC_KEY,
   mikeSendingHimselfMoneyTransaction,
   mikeSendingJaredSomeLamportsTransaction,
 } from "./__mocks__/mocks";
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import {
   transactionResponseSenderComesFirst,
   transactionResponseSenderComesSecond,
 } from "./__mocks__/mocks";
 import { MIKES_WALLET, YCOMBINATOR_DEMO_WALLET_FOR_JARED } from "./constants";
+import {
+  Currency,
+  type TransactionsByDay,
+  type TransactionSummary,
+} from "../lib/types";
+import { Direction } from "../lib/types";
+import { log, stringify } from "./functions";
 
 // Quiet utils.log() during tests
 jest.mock("./functions", () => ({
@@ -110,5 +121,188 @@ describe(`transaction summaries`, () => {
       status: true,
       to: YCOMBINATOR_DEMO_WALLET_FOR_JARED,
     });
+  });
+});
+
+describe(`grouping transactions`, () => {
+  test(`grouping transactions`, () => {
+    const transactions = [
+      {
+        date: 1662985498000,
+        status: true,
+        networkFee: 5000,
+        direction: 0,
+        amount: 1000000,
+        currency: 0,
+        from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
+      },
+      {
+        date: 1662741437000,
+        status: true,
+        networkFee: 5000,
+        direction: 0,
+        amount: 500000,
+        currency: 0,
+        from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+      },
+      {
+        date: 1662733089000,
+        status: true,
+        networkFee: 5000,
+        direction: 0,
+        amount: 30000000,
+        currency: 1,
+        from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
+      },
+      {
+        date: 1662657138000,
+        status: true,
+        networkFee: 5000,
+        direction: 0,
+        amount: 70000,
+        currency: 0,
+        from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+      },
+      {
+        date: 1662656099000,
+        status: true,
+        networkFee: 5000,
+        direction: 0,
+        amount: 210000,
+        currency: 0,
+        from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+      },
+      {
+        date: 1662654222000,
+        status: true,
+        networkFee: 5000,
+        direction: 0,
+        amount: 230000,
+        currency: 0,
+        from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+      },
+      {
+        date: 1662653886000,
+        status: true,
+        networkFee: 5000,
+        direction: 0,
+        amount: 210000,
+        currency: 0,
+        from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+      },
+      {
+        date: 1662643371000,
+        status: true,
+        networkFee: 5000,
+        direction: 0,
+        amount: 70000,
+        currency: 0,
+        from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+      },
+    ];
+
+    const transactionsByDays = getTransactionsByDays(
+      transactions,
+      Currency.USDC
+    );
+
+    expect(transactionsByDays).toEqual([
+      {
+        isoDate: "2022-09-12",
+        total: 1000000,
+        transactions: [
+          {
+            date: 1662985498000,
+            status: true,
+            networkFee: 5000,
+            direction: 0,
+            amount: 1000000,
+            currency: 0,
+            from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
+          },
+        ],
+      },
+      {
+        isoDate: "2022-09-09",
+        total: 500000,
+        transactions: [
+          {
+            date: 1662741437000,
+            status: true,
+            networkFee: 5000,
+            direction: 0,
+            amount: 500000,
+            currency: 0,
+            from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+          },
+        ],
+      },
+      {
+        isoDate: "2022-09-08",
+        total: 790000,
+        transactions: [
+          {
+            date: 1662657138000,
+            status: true,
+            networkFee: 5000,
+            direction: 0,
+            amount: 70000,
+            currency: 0,
+            from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+          },
+          {
+            date: 1662656099000,
+            status: true,
+            networkFee: 5000,
+            direction: 0,
+            amount: 210000,
+            currency: 0,
+            from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+          },
+          {
+            date: 1662654222000,
+            status: true,
+            networkFee: 5000,
+            direction: 0,
+            amount: 230000,
+            currency: 0,
+            from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+          },
+          {
+            date: 1662653886000,
+            status: true,
+            networkFee: 5000,
+            direction: 0,
+            amount: 210000,
+            currency: 0,
+            from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+          },
+          {
+            date: 1662643371000,
+            status: true,
+            networkFee: 5000,
+            direction: 0,
+            amount: 70000,
+            currency: 0,
+            from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+          },
+        ],
+      },
+    ]);
   });
 });
