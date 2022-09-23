@@ -19,12 +19,6 @@ export interface Contact {
   verifiedClaims: VerifiedClaims;
 }
 
-// export interface Transaction {
-//   walletAddress: string;
-//   date: number;
-//   amount: number;
-//   isReceived: boolean;
-// }
 
 export interface TransactionSummary {
   date: number;
