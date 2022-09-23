@@ -1,12 +1,7 @@
 import { writable, type Writable } from "svelte/store";
 import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
 import { identityTokenIssuerPublicKeyString } from "./constants";
-import {
-  JOE_MCCANNS_WALLET,
-  KEVIN_ROSES_WALLET,
-  SHAQS_WALLET,
-  VAHEHS_WALLET,
-} from "../backend/constants";
+import { DISABLE_LOGIN_SCREEN_FOR_DEMO } from "../backend/constants";
 import { Direction, type Contact, type TransactionSummary } from "../lib/types";
 import { asyncMap, log, stringify } from "../backend/functions";
 import { verifyWallet } from "../backend/vmwallet";
@@ -112,4 +107,8 @@ export const User = (function () {
 })();
 
 // From https://svelte.dev/repl/cc54944f9c2f44209d6da7344ea4c101?version=3.17.2
-export const authStore = writable({ isLoggedIn: false, name: "" });
+export const authStore = writable({
+  isLoggedIn: false || DISABLE_LOGIN_SCREEN_FOR_DEMO,
+  // TODO: we can probably drop this extra 'name' variable since the name of the person is stored in the identity token
+  name: "",
+});

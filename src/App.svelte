@@ -26,8 +26,6 @@
   } from "./lib/stores";
   import Transaction from "./lib/HomePage/Transaction.svelte";
 
-  const DISABLE_LOGIN_SCREEN_FOR_DEMO = true;
-
   $authStore;
 
   connectionStore.subscribe((newValue) => {
