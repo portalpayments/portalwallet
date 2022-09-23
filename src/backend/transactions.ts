@@ -7,7 +7,7 @@ import type {
   ParsedTransactionWithMeta,
   ParsedInstruction,
 } from "@solana/web3.js";
-import type { TransactionSummary } from "src/lib/types";
+import { Currency, Direction, type TransactionSummary } from "../lib/types";
 
 export const solanaBlocktimeToJSTime = (blockTime: number) => {
   return blockTime * 1000;
@@ -50,7 +50,30 @@ export const transactionResponseToPortalTransactionSummary = (
     if (transactionResponse.meta.preTokenBalances.length === 0) {
       log(`Ignoring non-token transaction`);
       // TODO: handle native token transactions
-      return null;
+      const instructions = transactionResponse.transaction.message.instructions;
+      if (instructions.length !== 1) {
+        throw new Error(`Don't know how to summarize this transaction`);
+      }
+
+      const onlyInstruction = instructions[0] as ParsedInstruction;
+
+      const direction =
+        onlyInstruction.parsed.info.source === currentWallet.toBase58()
+          ? Direction.sent
+          : Direction.recieved;
+
+      const portalTransActionSummary = {
+        date: solanaBlocktimeToJSTime(transactionResponse.blockTime),
+        status: transactionResponse.meta.err === null,
+        networkFee: transactionResponse.meta.fee,
+        direction,
+        amount: onlyInstruction.parsed.info.lamports,
+        currency: Currency.SOL,
+        from: onlyInstruction.parsed.info.source,
+        to: onlyInstruction.parsed.info.destination,
+      };
+
+      return portalTransActionSummary;
     }
 
     const getDifferenceByIndex = (index: number) => {
@@ -81,16 +104,16 @@ export const transactionResponseToPortalTransactionSummary = (
     const otherOwner =
       transactionResponse.meta.preTokenBalances[otherWalletIndex].owner;
 
-    let direction: "sent" | "recieved";
+    let direction: Direction;
     if (isPositive(subjectWalletDifference)) {
-      direction = "recieved";
+      direction = Direction.recieved;
     } else {
-      direction = "sent";
+      direction = Direction.sent;
     }
 
     let from: string;
     let to: string;
-    if (direction === "sent") {
+    if (direction === Direction.sent) {
       from = subjectOwner;
       to = otherOwner;
     } else {
@@ -98,12 +121,15 @@ export const transactionResponseToPortalTransactionSummary = (
       to = subjectOwner;
     }
 
+    const currency = Currency.USDC;
+
     const portalTransActionSummary = {
       date: solanaBlocktimeToJSTime(transactionResponse.blockTime),
       status: transactionResponse.meta.err === null,
       networkFee: transactionResponse.meta.fee,
       direction,
       amount: removeSign(subjectWalletDifference),
+      currency,
       from,
       to,
     };

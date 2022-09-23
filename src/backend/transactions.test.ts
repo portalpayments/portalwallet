@@ -3,7 +3,7 @@ import {
   MOCK_SENDER_PUBLIC_KEY,
   MOCK_RECIPIENT_PUBLIC_KEY,
   mikeSendingHimselfMoneyTransaction,
-  mikeSendingJaredSomeSolTransaction,
+  mikeSendingJaredSomeLamportsTransaction,
 } from "./__mocks__/mocks";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import {
@@ -96,10 +96,19 @@ describe(`transaction summaries`, () => {
   test(`Mike sending Jared some lamports`, () => {
     const portalTransactionSummary =
       transactionResponseToPortalTransactionSummary(
-        mikeSendingJaredSomeSolTransaction,
+        mikeSendingJaredSomeLamportsTransaction,
         new PublicKey(MIKES_WALLET)
       );
 
-    expect(portalTransactionSummary).toEqual(null);
+    expect(portalTransactionSummary).toEqual({
+      amount: 30000000,
+      currency: 1,
+      date: 1662733089000,
+      direction: 0,
+      from: MIKES_WALLET,
+      networkFee: 5000,
+      status: true,
+      to: YCOMBINATOR_DEMO_WALLET_FOR_JARED,
+    });
   });
 });

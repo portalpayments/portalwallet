@@ -3,8 +3,10 @@ import type { writable } from "svelte/store";
 import {
   MIKES_USDC_ACCOUNT,
   MIKES_WALLET,
+  SOLANA_SYSTEM_PROGRAM,
   SPL_TOKEN_PROGRAM,
   USDC_MAINNET_MINT_ACCOUNT,
+  YCOMBINATOR_DEMO_WALLET_FOR_JARED,
 } from "../constants";
 
 // Put these at the top to avoid indentation issues
@@ -359,7 +361,7 @@ export const mikeSendingHimselfMoneyTransaction = {
   },
 };
 
-export const mikeSendingJaredSomeSolTransaction = {
+export const mikeSendingJaredSomeLamportsTransaction = {
   blockTime: 1662733089,
   meta: {
     err: null,
@@ -383,19 +385,19 @@ export const mikeSendingJaredSomeSolTransaction = {
     message: {
       accountKeys: [
         {
-          pubkey: new PublicKey("5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"),
+          pubkey: new PublicKey(MIKES_WALLET),
           signer: true,
           source: "transaction",
           writable: true,
         },
         {
-          pubkey: new PublicKey("Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz"),
+          pubkey: new PublicKey(YCOMBINATOR_DEMO_WALLET_FOR_JARED),
           signer: false,
           source: "transaction",
           writable: true,
         },
         {
-          pubkey: new PublicKey("11111111111111111111111111111111"),
+          pubkey: new PublicKey(SOLANA_SYSTEM_PROGRAM),
           signer: false,
           source: "transaction",
           writable: false,
@@ -406,14 +408,14 @@ export const mikeSendingJaredSomeSolTransaction = {
         {
           parsed: {
             info: {
-              destination: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
+              destination: YCOMBINATOR_DEMO_WALLET_FOR_JARED,
               lamports: 30000000,
-              source: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+              source: MIKES_WALLET,
             },
             type: "transfer",
           },
           program: "system",
-          programId: new PublicKey("11111111111111111111111111111111"),
+          programId: new PublicKey(SOLANA_SYSTEM_PROGRAM),
         },
       ],
       recentBlockhash: "BU6JsZVcu75QzX1PCkcemSvdJ2vNSj4zVyfbkqwoss3q",

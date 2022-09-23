@@ -7,7 +7,7 @@ import {
   SHAQS_WALLET,
   VAHEHS_WALLET,
 } from "../backend/constants";
-import type { Contact, TransactionSummary } from "../lib/types";
+import { Direction, type Contact, type TransactionSummary } from "../lib/types";
 import { asyncMap, log, stringify } from "../backend/functions";
 import { verifyWallet } from "../backend/vmwallet";
 import { toUniqueStringArray } from "./utils";
@@ -49,17 +49,9 @@ transactionsStore.subscribe(async (transactions) => {
     return;
   }
 
-  const cleanedTransactions = transactions.filter(
-    (transaction) => transaction !== null
-  );
-
-  if (!cleanedTransactions.length) {
-    return;
-  }
-
-  const transactionWalletAddresses = cleanedTransactions.map((transaction) => {
+  const transactionWalletAddresses = transactions.map((transaction) => {
     let transactionWalletAddress: string;
-    if (transaction.direction === "sent") {
+    if (transaction.direction === Direction.sent) {
       transactionWalletAddress = transaction.to;
     } else {
       transactionWalletAddress = transaction.from;

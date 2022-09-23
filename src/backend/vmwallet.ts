@@ -239,16 +239,23 @@ export const getTransactionSummariesForAddress = async (
   address: PublicKey,
   limit: number
 ) => {
+  // TODO - clarify that solan Transactions are not our TransactionSummaries
   const transactions = await getTransactionsForAddress(
     connection,
     address,
     limit
   );
-  const transactionSummaries = transactions.map((transaction) => {
+  let transactionSummaries = transactions.map((transaction) => {
     return transactionResponseToPortalTransactionSummary(
       transaction,
       new PublicKey(MIKES_WALLET)
     );
   });
+
+  // We can't summarize all transactions yet
+  transactionSummaries = transactionSummaries.filter(
+    (transactionSummary) => transactionSummary !== null
+  );
+
   return transactionSummaries;
 };

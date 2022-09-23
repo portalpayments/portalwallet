@@ -19,12 +19,22 @@ export interface Contact {
   verifiedClaims: VerifiedClaims;
 }
 
+export enum Direction {
+  "sent",
+  "recieved",
+}
+
+export enum Currency {
+  "USDC",
+  "SOL",
+}
 
 export interface TransactionSummary {
   date: number;
   status: boolean;
   networkFee: number;
-  direction: "sent" | "recieved";
+  direction: Direction;
+  currency: Currency;
   amount: number;
   from: string;
   to: string;

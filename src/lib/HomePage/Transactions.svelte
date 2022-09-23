@@ -2,6 +2,7 @@
   import { transactionsStore } from "../../lib/stores";
   import TransactionComponent from "./Transaction.svelte";
   import type { TransactionSummary } from "../../lib/types";
+  import { Currency } from "../../lib/types";
   import { stringify } from "../../backend/functions";
 
   let transactions: Array<TransactionSummary> | null = null;
@@ -14,7 +15,9 @@
 <div class="transactions">
   {#if transactions}
     {#each transactions as transaction}
-      <TransactionComponent {transaction} />
+      {#if transaction.currency === Currency.USDC}
+        <TransactionComponent {transaction} />
+      {/if}
     {/each}
     {#if !transactions.length}
       <p>No transactions</p>
@@ -31,7 +34,6 @@
     grid-auto-rows: 48px;
     padding: 0 12px;
     gap: 6px;
-    height: 150px;
     max-height: 300px;
     overflow: hidden;
   }

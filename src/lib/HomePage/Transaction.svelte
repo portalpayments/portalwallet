@@ -4,19 +4,20 @@
 
   import { log, stringify } from "../../backend/functions";
   import { hackProfilePicsByWallet } from "../utils";
+  import { Direction } from "../types";
 
   import { contactsStore } from "../stores";
 
-  export let transaction: TransactionSummary;
+  export let transaction: TransactionSummary | null;
 
   // Find the contact for this transaction
   let contact: Contact | null = null;
   contactsStore.subscribe(async (contacts) => {
     let contactWalletAddress: string | null = null;
-    if (transaction.direction === "sent") {
+    if (transaction.direction === Direction.sent) {
       contactWalletAddress = transaction.to;
     }
-    if (transaction.direction === "recieved") {
+    if (transaction.direction === Direction.recieved) {
       contactWalletAddress = transaction.from;
     }
     contact = contacts.find(
@@ -48,8 +49,12 @@
       {contact.verifiedClaims?.familyName}
     </div>
   {/if}
-  <div class="amount {transaction.direction === 'recieved' ? 'positive' : ''}">
-    {transaction.direction === "recieved" ? "+" : ""}
+  <div
+    class="amount {transaction.direction === Direction.recieved
+      ? 'positive'
+      : ''}"
+  >
+    {transaction.direction === Direction.recieved ? "+" : ""}
     {majorAndMinor[0]}.{majorAndMinor[1]}
   </div>
 </div>
