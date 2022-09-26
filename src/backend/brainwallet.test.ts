@@ -56,7 +56,7 @@ describe(`restoration`, () => {
     expect(difference).toEqual(DEPOSIT);
   });
 
-  test(`custom program error`, () => {
+  test(`We turn program errors into more readable errors`, () => {
     const errorMessage = getABetterErrorMessage(
       "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x1"
     );
