@@ -6,11 +6,12 @@
   "author": "Mike MacCana <mike.maccana@gmail.com> and Vahah Hatami <vaheh.hatami@gmail.com>",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "bash make-zip-file.bash",
+    "build-vite-only": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "test": "jest",
-    "start-validator": "./start-validator.bash"
+    "start-validator": "bash start-validator.bash"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",

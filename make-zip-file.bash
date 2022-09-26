@@ -2,7 +2,7 @@
 set -euo pipefail
 ZIP_FILE_NAME="portal-wallet-ycombinator-demo.zip"
 
-npm run build;
+npm run build-vite-only;
 rm -f "${ZIP_FILE_NAME}"; 
 cd dist
 zip -r "${ZIP_FILE_NAME}" *
