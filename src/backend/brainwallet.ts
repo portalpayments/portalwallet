@@ -25,8 +25,6 @@ export const convertPhraseToSeed = async (
   return seedBytes;
 };
 
-// Causes browser to complain about 'Error: Module "events" has been externalized for browser compatibility.'
-// TODO: use events polyfill
 export const seedToKeypairs = async (entropy: Buffer, password: string) => {
   log(`👛 Making wallet with seed...`, entropy.toString());
   const mnemonic = bip39.entropyToMnemonic(entropy.toString("hex"));
