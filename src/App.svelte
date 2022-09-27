@@ -81,7 +81,7 @@
   <main>
     {#if $authStore.isLoggedIn}
       <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
-      <Route path="transferMoney"><TransferPage /></Route>
+      <Route path="sendMoney"><TransferPage /></Route>
 
       <Route path="transactions">
         <TransactionsPage />

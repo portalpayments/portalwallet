@@ -2,13 +2,13 @@
   import { Link } from "svelte-navigator";
 </script>
 
-<div class="add-and-transfer-buttons">
+<div class="add-and-send-buttons">
   <Link class="button" to="/addMoneyToAccount">add money</Link>
-  <Link class="button" to="/transferMoney">transfer</Link>
+  <Link class="button" to="/sendMoney">Send money</Link>
 </div>
 
 <style>
-  .add-and-transfer-buttons {
+  .add-and-send-buttons {
     display: grid;
     grid-auto-flow: column;
     grid-template-columns: 40% 40%;
@@ -18,7 +18,7 @@
   }
 
   /* global is needed for 'a' element under Link */
-  .add-and-transfer-buttons :global(a.button) {
+  .add-and-send-buttons :global(a.button) {
     color: white;
     font-weight: 600;
     padding: 7px 0px;
@@ -27,7 +27,7 @@
     border-radius: 24px;
     background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
   }
-  .add-and-transfer-buttons :global(a.button):active {
+  .add-and-send-buttons :global(a.button):active {
     color: #fff;
     background-color: var(--mid-blue);
   }
