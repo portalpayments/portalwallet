@@ -22,7 +22,7 @@
     color: white;
     font-weight: 600;
     padding: 7px 0px;
-    font-size: 1.1rem;
+    font-size: 14px;
 
     border-radius: 24px;
     background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));

@@ -111,3 +111,8 @@ input:focus {
   border: 2px solid var(--mid-blue);
   box-shadow: 0 0 2px rgba(65, 156, 253, 0.3);
 }
+
+.feature {
+  grid-auto-flow: row;
+  grid-template-rows: 64px 1fr;
+}

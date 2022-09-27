@@ -5,9 +5,9 @@
 </script>
 
 <div class="transactions-page">
-  <Heading>Transactions</Heading>
   <BackButton />
-  <div class="features">
+  <div class="feature">
+    <Heading>Transactions</Heading>
     <Transactions />
   </div>
 </div>
