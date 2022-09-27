@@ -78,6 +78,8 @@
 <div class="feature">
   {#if isBalanceLoaded}
     <Balance {isBalanceLoaded} {major} {minor} />
+  {:else}
+    <div>Loading...</div>
   {/if}
   <Buttons />
   <TransactionsHeading />
