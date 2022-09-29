@@ -13,6 +13,7 @@
   import RequestVerification from "./RequestVerification.svelte";
   import FocusContext from "../Shared/FocusContext.svelte";
   import TransactionCompleted from "./TransactionCompleted.svelte";
+  import TransactionFailed from './TransactionFailed.svelte';
   import { verifyWallet } from "../../backend/vmwallet";
   import { makeAccountsAndDoTransfer } from "../../backend/tokens";
   import { checkIfValidWalletAddress } from "../utils";
@@ -53,9 +54,13 @@
   let isSending = false;
   let isTransactionComplete = false;
 
+  let transactionFailed = false;
+  let error;
+
   let connection: Connection | null = null;
 
   let contact: Contact | null = null;
+  
 
   $: {
     log(`Updating contact`);
@@ -69,6 +74,7 @@
 
   const doTransfer = async () => {
     // USDC actually has 6 decimal places
+    try{
     const transferAmountInMinorUnits = Number(transferAmount) * 1e6;
 
     if (ACTUALLY_SEND_MONEY) {
@@ -91,6 +97,11 @@
     isSending = false;
     isSendingAnyway = false;
     isTransactionComplete = true;
+  }
+  catch(error){
+    transactionFailed= true;
+    error = error;
+  }
   };
 
   $: (isSending || isSendingAnyway) && doTransfer();
@@ -208,6 +219,15 @@
         {verifiedClaims}
       />
     </Modal>
+  {/if}
+
+  {#if transactionFailed}
+  <Modal buttonType="transfer">
+    <TransactionFailed {error} {destinationWalletAddress}
+    {transferAmount}
+    {verifiedClaims}/>
+  </Modal>
+  
   {/if}
 
   {#if isAskingWalletOwnerToGetVerified}
