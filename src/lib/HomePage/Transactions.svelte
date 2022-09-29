@@ -9,6 +9,7 @@
   import { Currency } from "../../lib/types";
   import type { TransactionsByDay } from "../../lib/types";
   import { stringify } from "../../backend/functions";
+  import MockedTransactionsSvg from "../Shared/MockedSVGs/MockedTransactionsSVG.svelte";
 
   let transactionsByDays: Array<TransactionsByDay>;
 
@@ -18,7 +19,6 @@
     }
   });
 </script>
-
 {#if transactionsByDays}
   {#each transactionsByDays as transactionsByDay}
     <div class="day">
@@ -50,7 +50,7 @@
     <p>No transactions</p>
   {/if}
 {:else}
-  <p>Loading...</p>
+<MockedTransactionsSvg />
 {/if}
 
 <style>
