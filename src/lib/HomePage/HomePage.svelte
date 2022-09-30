@@ -8,7 +8,7 @@
   import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../constants";
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
   import type { Connection, Keypair } from "@solana/web3.js";
-  import MockBalance from '../Shared/MockedSVGs/MockBalance.svelte'
+  import MockBalance from "../Shared/MockedSVGs/MockBalance.svelte";
   import { log, sleep, stringify } from "../../backend/functions";
 
   log(`Homepage loading...`);
@@ -33,7 +33,7 @@
     log(`🔢 Keypair or connection have changed, updating balance`);
 
     usdcAccounts = await getUSDCAccounts(connection, keypair.publicKey);
-   
+
     const transactions = await getTransactionSummariesForAddress(
       connection,
       keypair.publicKey,
