@@ -70,17 +70,17 @@
 
 <div class="feature">
   <Heading>Gallery</Heading>
-  
-  {#if collectables.length}
+
+  {#if loading}
+    <MockGallery />
+  {:else if collectables.length}
     <div class="nfts">
       {#each collectables as collectable}
         <img src={collectable.image} alt={collectable.description} />
       {/each}
     </div>
-  {:else if loading}
-  <MockGallery />
   {:else}
-  <div>No collectibles.</div>
+    <div>No collectibles.</div>
   {/if}
 </div>
 
