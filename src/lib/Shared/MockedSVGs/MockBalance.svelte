@@ -1,14 +1,12 @@
 <svg
   role="img"
-  width="300"
-  height="120"
-  aria-labelledby="loading-aria"
-  viewBox="0 0 440 180"
+  aria-labelledby="loading-aria-balance"
+  viewBox="0 0 300 120"
   preserveAspectRatio="none"
 
 >
   
-  <title id="loading-aria">Loading...</title>
+  <title id="loading-aria-balance">Loading...</title>
   <rect
     x="0"
     y="0"
@@ -19,10 +17,10 @@
   ></rect>
   <defs>
     <clipPath id="clip-path">
-        <circle cx="180" cy="70" r="28" />
-        <rect x="220" y="45" rx="5" ry="10" width="30" height="50" />
-        <circle cx="260" cy="87" r="6" />
-        <rect x="270" y="62" rx="5" ry="10" width="24" height="33" />
+        <circle cx="110" cy="70" r="28" />
+        <rect x="150" y="45" rx="5" ry="10" width="30" height="50" />
+        <circle cx="190" cy="87" r="6" />
+        <rect x="200" y="62" rx="5" ry="10" width="24" height="33" />
      
     </clipPath>
     <linearGradient id="fill">

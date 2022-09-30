@@ -9,7 +9,7 @@
   import { Currency } from "../../lib/types";
   import type { TransactionsByDay } from "../../lib/types";
   import { stringify } from "../../backend/functions";
-  import MockedTransactionsSvg from "../Shared/MockedSVGs/MockedTransactionsSVG.svelte";
+  import MockTransactionsSvg from "../Shared/MockedSVGs/MockTransactionsSVG.svelte"
 
   let transactionsByDays: Array<TransactionsByDay>;
 
@@ -50,7 +50,7 @@
     <p>No transactions</p>
   {/if}
 {:else}
-<MockedTransactionsSvg />
+<MockTransactionsSvg />
 {/if}
 
 <style>

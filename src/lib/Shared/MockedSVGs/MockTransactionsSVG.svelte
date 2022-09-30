@@ -1,10 +1,11 @@
 <svg
   role="img"
   width="300"
-  height="120"
+  height="300"
   aria-labelledby="loading-aria"
-  viewBox="0 0 440 180"
+  viewBox="0 0"
   preserveAspectRatio="none"
+  style='background: pink'
 
 >
   

@@ -81,6 +81,7 @@
     <Balance {isBalanceLoaded} {major} {minor} />
   {:else}
   <MockBalance />
+ 
   {/if}
 
   <Buttons />

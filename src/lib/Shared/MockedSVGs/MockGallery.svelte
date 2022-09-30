@@ -3,7 +3,7 @@
   width="300"
   height="400"
   aria-labelledby="loading-aria"
-  viewBox="0 0 500 500"
+  viewBox="2000 200 500 500"
   preserveAspectRatio="none"
 
 >
