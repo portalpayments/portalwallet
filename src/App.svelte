@@ -4,6 +4,7 @@
   import Navbar from "./lib/Navbar/Navbar.svelte";
   import Collectables from "./lib/Collectables/Collectables.svelte";
   import ContactsPage from "./lib/Contacts/ContactsPage.svelte";
+  import Onboarding from "./lib/Onboarding/Onboarding.svelte";
   import TransferPage from "./lib/Transfer/TransferPage.svelte";
   import AddMoneyPage from "./lib/AddMoney/AddMoneyPage.svelte";
   import TransactionsPage from "./lib/TransactionsPage/TransactionsPage.svelte";
@@ -79,32 +80,37 @@
 
 <Router>
   <main>
-    {#if $authStore.isLoggedIn}
-      <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
-      <Route path="sendMoney"><TransferPage /></Route>
+    {#if true}
+      <Onboarding />
+    {/if}
+    {#if false}
+      {#if $authStore.isLoggedIn}
+        <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
+        <Route path="sendMoney"><TransferPage /></Route>
 
-      <Route path="transactions">
-        <TransactionsPage />
-      </Route>
-      <Route path="logout"><Lock /></Route>
-      <Route path="contacts/:address"><Contact /></Route>
-      <Route primary={false}>
-        <div class="header-and-features">
-          <TopToolbar {...testUser} />
-          <div class="features">
-            {#if currentFeature === 0}
-              <HomeScreen />
-            {:else if currentFeature === 1}
-              <ContactsPage />
-            {:else if currentFeature === 2}
-              <Collectables />
-            {/if}
+        <Route path="transactions">
+          <TransactionsPage />
+        </Route>
+        <Route path="logout"><Lock /></Route>
+        <Route path="contacts/:address"><Contact /></Route>
+        <Route primary={false}>
+          <div class="header-and-features">
+            <TopToolbar {...testUser} />
+            <div class="features">
+              {#if currentFeature === 0}
+                <HomeScreen />
+              {:else if currentFeature === 1}
+                <ContactsPage />
+              {:else if currentFeature === 2}
+                <Collectables />
+              {/if}
+            </div>
+            <Navbar bind:currentFeature />
           </div>
-          <Navbar bind:currentFeature />
-        </div>
-      </Route>
-    {:else}
-      <Route><div class="login"><Lock /></div></Route>
+        </Route>
+      {:else}
+        <Route><div class="login"><Lock /></div></Route>
+      {/if}
     {/if}
   </main>
 </Router>
