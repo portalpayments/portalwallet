@@ -12,11 +12,11 @@
     y="0"
     width="100%"
     height="100%"
-    clip-path="url(#clip-path)"
+    clip-path="url(#clip-path-balance)"
     style='fill: url("#fill");'
   ></rect>
   <defs>
-    <clipPath id="clip-path">
+    <clipPath id="clip-path-balance">
         <circle cx="110" cy="70" r="28" />
         <rect x="150" y="45" rx="5" ry="10" width="30" height="50" />
         <circle cx="190" cy="87" r="6" />

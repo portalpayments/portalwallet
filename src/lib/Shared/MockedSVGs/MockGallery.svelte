@@ -3,7 +3,7 @@
   width="300"
   height="400"
   aria-labelledby="loading-aria"
-  viewBox="2000 200 500 500"
+  viewBox="0 0 500 500"
   preserveAspectRatio="none"
 
 >
@@ -13,11 +13,11 @@
     y="0"
     width="100%"
     height="100%"
-    clip-path="url(#clip-path)"
+    clip-path="url(#clip-path-gallery)"
     style='fill: url("#fill");'
   ></rect>
   <defs>
-    <clipPath id="clip-path">    
+    <clipPath id="clip-path-gallery">    
     <rect x="32" y="8" rx="15" ry="15" width="211" height="211" />
     <rect x="260" y="8" rx="15" ry="15" width="211" height="211" />
     <rect x="32" y="233" rx="15" ry="15" width="211" height="211" />

@@ -5,7 +5,6 @@
   aria-labelledby="loading-aria"
   viewBox="0 0"
   preserveAspectRatio="none"
-  style='background: pink'
 
 >
   
@@ -15,20 +14,18 @@
     y="0"
     width="100%"
     height="100%"
-    clip-path="url(#clip-path)"
+    clip-path="url(#clip-path-transactions)"
     style='fill: url("#fill");'
   ></rect>
   <defs>
-    <clipPath id="clip-path">
+    <clipPath id="clip-path-transactions">
         <rect x="103" y="24" rx="3" ry="3" width="123" height="7" />
         <rect x="102" y="142" rx="3" ry="3" width="171" height="6" />
         <circle cx="54" cy="42" r="38" />
         <circle cx="54" cy="137" r="38" />
-        <circle cx="54" cy="251" r="38" />
         <rect x="105" y="119" rx="3" ry="3" width="123" height="7" />
-        <rect x="104" y="222" rx="3" ry="3" width="123" height="7" />
         <rect x="105" y="48" rx="3" ry="3" width="171" height="6" />
-        <rect x="104" y="257" rx="3" ry="3" width="171" height="6" />
+        
     </clipPath>
     <linearGradient id="fill">
       <stop
