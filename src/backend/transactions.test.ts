@@ -43,8 +43,9 @@ describe(`transaction summaries`, () => {
       date: 1663119635000,
       status: true,
       networkFee: 5000,
-      direction: "sent",
+      direction: Direction.sent,
       amount: 50,
+      currency: Currency.USDC,
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
     });
@@ -65,8 +66,9 @@ describe(`transaction summaries`, () => {
       date: 1663120787000,
       status: true,
       networkFee: 5000,
-      direction: "sent",
+      direction: Direction.sent,
       amount: 50,
+      currency: Currency.USDC,
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
     });
@@ -87,8 +89,9 @@ describe(`transaction summaries`, () => {
       date: 1663119635000,
       status: true,
       networkFee: 5000,
-      direction: "recieved",
+      direction: Direction.recieved,
       amount: 50,
+      currency: Currency.USDC,
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
     });

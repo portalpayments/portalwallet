@@ -4,7 +4,7 @@ import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfil
 import nodePolyfills from "rollup-plugin-node-polyfills";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 
-// Config is based on metaplex + vite examle from:
+// Config is based on metaplex + vite example from:
 // https://github.com/metaplex-foundation/js-examples/tree/main/getting-started-vite
 
 // es2020 Needed for BigNumbers
@@ -34,7 +34,7 @@ export default defineConfig({
       include: [],
     },
     // false to help debug issues during alpha testing
-    // true to send demos to investors 
+    // true to send demos to investors
     minify: true,
   },
   optimizeDeps: {
