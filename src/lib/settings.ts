@@ -12,6 +12,8 @@ import localforage from "localforage";
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
 
+
+
 export const getSHA256Hash = (string: string) => {
   // Get the string as arraybuffer.
   var buffer = textEncoder.encode(string);
@@ -30,10 +32,40 @@ interface Settings {
   version: number;
 }
 
+const BITS_PER_BYTE = 8;
+
+// Use a key derivation function (rather than a hashing function) to slow down the password -> key process
+// and hence slow down brute-force attacks.
+// Was 'getDerivation' from https://medium.com/perimeterx/fun-times-with-webcrypto-part-2-encrypting-decrypting-dfb9fadba5bc
+const passwordToDerivedKey = async (password: string) => {
+  const length = 256;
+  const passwordBuffer = textEncoder.encode(password);
+
+  const importedKey = await crypto.subtle.importKey(
+    "raw",
+    passwordBuffer,
+    "PBKDF2",
+    false,
+    ["deriveBits"]
+  );
+
+  const derivedKey = await crypto.subtle.deriveBits(
+    {
+      name: "PBKDF2",
+      salt,
+      hash: "SHA-256",
+      iterations: 100_000,
+    },
+    importedKey,
+    length
+  );
+  return derivedKey;
+};
+
 export const passwordToKey = async (password: string) => {
   // From https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/importKey
   // TODO: move to https://security.stackexchange.com/questions/16354/whats-the-advantage-of-using-pbkdf2-vs-sha256-to-generate-an-aes-encryption-key
-  const rawKey = await getSHA256Hash(password);
+  const rawKey = await passwordToDerivedKey(password);
   return window.crypto.subtle.importKey("raw", rawKey, "AES-GCM", true, [
     "encrypt",
     "decrypt",
