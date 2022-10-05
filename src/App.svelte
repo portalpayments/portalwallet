@@ -7,7 +7,7 @@
   import TransferPage from "./lib/Transfer/TransferPage.svelte";
   import AddMoneyPage from "./lib/AddMoney/AddMoneyPage.svelte";
   import TransactionsPage from "./lib/TransactionsPage/TransactionsPage.svelte";
-
+  import Settings from './lib/Settings/Settings.svelte'
   import { Router, Route } from "svelte-navigator";
   import { getPrivateKey } from "./lib/utils";
   import {
@@ -87,6 +87,7 @@
         <TransactionsPage />
       </Route>
       <Route path="logout"><Lock /></Route>
+      <Route path='Settings'><Settings /></Route>
       <Route path="contacts/:address"><Contact /></Route>
       <Route primary={false}>
         <div class="header-and-features">
