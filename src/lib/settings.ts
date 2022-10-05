@@ -12,7 +12,29 @@ import localforage from "localforage";
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
 
+export const getOrSetSalt = async () => {
+  let salt: Uint8Array = await localforage.getItem("PORTAL_SALT");
+  if (salt) {
+    return salt;
+  }
+  salt = await crypto.getRandomValues(new Uint8Array(16));
+  localforage.setItem("PORTAL_SALT", salt);
+  return salt;
+};
 
+// 'Simply store the IV alongside data you encrypt.'
+// https://crypto.stackexchange.com/questions/8589/is-it-safe-to-use-a-constant-iv-for-one-off-symmetric-file-encryption
+export const getOrSetInitialisationVector = async () => {
+  let initialisationVector: Uint8Array = await localforage.getItem(
+    "PORTAL_INITIALISATION_VECTOR"
+  );
+  if (initialisationVector) {
+    return initialisationVector;
+  }
+  initialisationVector = await crypto.getRandomValues(new Uint8Array(16));
+  localforage.setItem("PORTAL_INITIALISATION_VECTOR", initialisationVector);
+  return initialisationVector;
+};
 
 export const getSHA256Hash = (string: string) => {
   // Get the string as arraybuffer.
@@ -20,19 +42,10 @@ export const getSHA256Hash = (string: string) => {
   return crypto.subtle.digest("SHA-256", buffer);
 };
 
-// 'Simply store the IV alongside data you encrypt.'
-// https://crypto.stackexchange.com/questions/8589/is-it-safe-to-use-a-constant-iv-for-one-off-symmetric-file-encryption
-// Values are from crypto.getRandomValues()
-const initialisationVector: Uint8Array = new Uint8Array([
-  165, 135, 180, 215, 162, 208, 204, 82, 185, 89, 12, 46,
-]);
-
 interface Settings {
   privateKey: Uint8Array;
   version: number;
 }
-
-const BITS_PER_BYTE = 8;
 
 // Use a key derivation function (rather than a hashing function) to slow down the password -> key process
 // and hence slow down brute-force attacks.
@@ -40,6 +53,7 @@ const BITS_PER_BYTE = 8;
 const passwordToDerivedKey = async (password: string) => {
   const length = 256;
   const passwordBuffer = textEncoder.encode(password);
+  const salt = await getOrSetSalt();
 
   const importedKey = await crypto.subtle.importKey(
     "raw",
@@ -74,6 +88,7 @@ export const passwordToKey = async (password: string) => {
 
 export const saveSettings = async (settings: Settings, password: string) => {
   const key: CryptoKey = await passwordToKey(password);
+  const initialisationVector = await getOrSetInitialisationVector();
 
   // 1. To JSON
   const jsonPlainText = stringify(settings);
@@ -89,15 +104,18 @@ export const saveSettings = async (settings: Settings, password: string) => {
     encodedText
   );
   // 4. Save to localforage
-  await localforage.setItem("PORTAL_WALLET", encrypted);
+  await localforage.setItem("PORTAL_SETTINGS", encrypted);
   return;
 };
 
 // Was getPrivateKey
 export const getSettings = async (password: string) => {
   const decryptionKey: CryptoKey = await passwordToKey(password);
+  const initialisationVector = await getOrSetInitialisationVector();
   // 4. Get from localforage
-  const encryptedData: ArrayBuffer = await localforage.getItem("PORTAL_WALLET");
+  const encryptedData: ArrayBuffer = await localforage.getItem(
+    "PORTAL_SETTINGS"
+  );
   // 3. Decrypt
   let decrypted = await crypto.subtle.decrypt(
     {
