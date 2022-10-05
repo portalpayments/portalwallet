@@ -56,7 +56,7 @@
     const testWallet = new Keypair();
     const testPrivateKey = testWallet.secretKey;
     const PASSWORD = "secret";
-    await saveSettings({ version: 1, privateKey: testPrivateKey }, PASSWORD);
+    await saveSettings({ version: 1, secretKey: testPrivateKey }, PASSWORD);
     const settings = await getSettings(PASSWORD);
     log(settings);
     log(`>>> 2`);

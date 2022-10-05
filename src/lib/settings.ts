@@ -8,6 +8,7 @@
 import { log, stringify } from "../backend/functions";
 
 import localforage from "localforage";
+import type { Settings } from "./types";
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -42,11 +43,6 @@ export const getSHA256Hash = (string: string) => {
   return crypto.subtle.digest("SHA-256", buffer);
 };
 
-interface Settings {
-  privateKey: Uint8Array;
-  version: number;
-}
-
 // Use a key derivation function (rather than a hashing function) to slow down the password -> key process
 // and hence slow down brute-force attacks.
 // Was 'getDerivation' from https://medium.com/perimeterx/fun-times-with-webcrypto-part-2-encrypting-decrypting-dfb9fadba5bc
@@ -80,13 +76,16 @@ export const passwordToKey = async (password: string) => {
   // From https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/importKey
   // TODO: move to https://security.stackexchange.com/questions/16354/whats-the-advantage-of-using-pbkdf2-vs-sha256-to-generate-an-aes-encryption-key
   const rawKey = await passwordToDerivedKey(password);
-  return window.crypto.subtle.importKey("raw", rawKey, "AES-GCM", true, [
+  return crypto.subtle.importKey("raw", rawKey, "AES-GCM", true, [
     "encrypt",
     "decrypt",
   ]);
 };
 
-export const saveSettings = async (settings: Settings, password: string) => {
+export const saveSettings = async (
+  settings: Settings,
+  password: string
+): Promise<Settings> => {
   const key: CryptoKey = await passwordToKey(password);
   const initialisationVector = await getOrSetInitialisationVector();
 
@@ -128,5 +127,10 @@ export const getSettings = async (password: string) => {
   // 2. Turn ArrayBuffer into String
   const decodedEncryptedData = textDecoder.decode(decrypted);
   // 1. Turn back into JSON
-  return decodedEncryptedData;
+  const settings = JSON.parse(decodedEncryptedData);
+
+  // Extra step: the Uint8Array gets turned into an object during save, fix the type.
+  settings.secretKey = Uint8Array.from(Object.values(settings.secretKey));
+
+  return settings;
 };
