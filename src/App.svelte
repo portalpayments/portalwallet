@@ -8,7 +8,7 @@
   import TransferPage from "./lib/Transfer/TransferPage.svelte";
   import AddMoneyPage from "./lib/AddMoney/AddMoneyPage.svelte";
   import TransactionsPage from "./lib/TransactionsPage/TransactionsPage.svelte";
-
+  import { Keypair } from "@solana/web3.js";
   import { Router, Route } from "svelte-navigator";
   import { getPrivateKey } from "./lib/utils";
   import {
@@ -25,6 +25,7 @@
     authStore,
     identityTokenIssuerPublicKey,
   } from "./lib/stores";
+  import { getSettings, saveSettings } from "./lib/settings";
   import Transaction from "./lib/HomePage/Transaction.svelte";
 
   $authStore;
@@ -50,6 +51,16 @@
 
   let testUser: null | User = null;
   (async () => {
+    // TEST
+    log(`>>> 1`);
+    const testWallet = new Keypair();
+    const testPrivateKey = testWallet.secretKey;
+    const PASSWORD = "secret";
+    await saveSettings({ version: 1, privateKey: testPrivateKey }, PASSWORD);
+    const settings = await getSettings(PASSWORD);
+    log(settings);
+    log(`>>> 2`);
+
     // Connect to Solana
     const newConnection = await connect("genesysGoMain");
     connectionStore.set(newConnection);
