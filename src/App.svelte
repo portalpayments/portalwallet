@@ -51,16 +51,6 @@
 
   let testUser: null | User = null;
   (async () => {
-    // TEST
-    log(`>>> 1`);
-    const testWallet = new Keypair();
-    const testPrivateKey = testWallet.secretKey;
-    const PASSWORD = "secret";
-    await saveSettings({ version: 1, secretKey: testPrivateKey }, PASSWORD);
-    const settings = await getSettings(PASSWORD);
-    log(settings);
-    log(`>>> 2`);
-
     // Connect to Solana
     const newConnection = await connect("genesysGoMain");
     connectionStore.set(newConnection);
@@ -91,37 +81,35 @@
 
 <Router>
   <main>
-    {#if true}
+    {#if false}
       <Onboarding />
     {/if}
-    {#if false}
-      {#if $authStore.isLoggedIn}
-        <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
-        <Route path="sendMoney"><TransferPage /></Route>
+    {#if $authStore.isLoggedIn}
+      <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
+      <Route path="sendMoney"><TransferPage /></Route>
 
-        <Route path="transactions">
-          <TransactionsPage />
-        </Route>
-        <Route path="logout"><Lock /></Route>
-        <Route path="contacts/:address"><Contact /></Route>
-        <Route primary={false}>
-          <div class="header-and-features">
-            <TopToolbar {...testUser} />
-            <div class="features">
-              {#if currentFeature === 0}
-                <HomeScreen />
-              {:else if currentFeature === 1}
-                <ContactsPage />
-              {:else if currentFeature === 2}
-                <Collectables />
-              {/if}
-            </div>
-            <Navbar bind:currentFeature />
+      <Route path="transactions">
+        <TransactionsPage />
+      </Route>
+      <Route path="logout"><Lock /></Route>
+      <Route path="contacts/:address"><Contact /></Route>
+      <Route primary={false}>
+        <div class="header-and-features">
+          <TopToolbar {...testUser} />
+          <div class="features">
+            {#if currentFeature === 0}
+              <HomeScreen />
+            {:else if currentFeature === 1}
+              <ContactsPage />
+            {:else if currentFeature === 2}
+              <Collectables />
+            {/if}
           </div>
-        </Route>
-      {:else}
-        <Route><div class="login"><Lock /></div></Route>
-      {/if}
+          <Navbar bind:currentFeature />
+        </div>
+      </Route>
+    {:else}
+      <Route><div class="login"><Lock /></div></Route>
     {/if}
   </main>
 </Router>
