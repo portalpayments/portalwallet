@@ -2,6 +2,7 @@ import { Connection, Keypair } from "@solana/web3.js";
 import { convertPhraseToSeed, seedToKeypairs } from "./brainwallet";
 import { DEPOSIT, NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN } from "./constants";
 import { getABetterErrorMessage } from "./errors";
+import { log, stringify } from "./functions";
 import { createMintAccount } from "./tokens";
 import { connect, getAccountBalance, putSolIntoWallet } from "./vmwallet";
 import { expectedCleanedPhrase } from "./__mocks__/mocks";
@@ -21,6 +22,7 @@ jest.mock("./functions", () => ({
 describe(`restoration`, () => {
   let connection: Connection;
   let keypairs: Array<Keypair>;
+  let restoredKeypairs: Array<Keypair>;
   beforeAll(async () => {
     connection = await connect("localhost");
   });
@@ -41,7 +43,21 @@ describe(`restoration`, () => {
   });
 
   test(`wallets can be restored using their seed phrases`, async () => {
+    // Lets re-make the keypairs from the seed
+    const seed = await convertPhraseToSeed(expectedCleanedPhrase, fullName);
+    restoredKeypairs = await seedToKeypairs(seed, password);
+
+    const originalWallet = keypairs[0];
+    const restoredWallet = restoredKeypairs[0];
+    expect(restoredWallet.secretKey).toEqual(originalWallet.secretKey);
+    expect(restoredWallet.publicKey.toBase58()).toEqual(
+      originalWallet.publicKey.toBase58()
+    );
+  });
+
+  test(`wallets can be deposited into`, async () => {
     const firstWallet = keypairs[0];
+
     const balanceBefore = await getAccountBalance(
       connection,
       firstWallet.publicKey
@@ -53,6 +69,7 @@ describe(`restoration`, () => {
     );
 
     const difference = balanceAfter - balanceBefore;
+
     expect(difference).toEqual(DEPOSIT);
   });
 
