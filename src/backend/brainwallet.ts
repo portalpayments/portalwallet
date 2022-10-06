@@ -7,11 +7,11 @@ import { scrypt } from "./node-functions";
 import * as bip39 from "bip39";
 
 // TODO: use browser version of scrypt
-export const convertPhraseToSeed = async (
+export const personalPhraseToSeed = async (
   phrase: string,
   birthday: string
 ): Promise<Buffer> => {
-  log(`🌱 Making seed...`);
+  log(`🌱 Converting personal phrase to seed...`);
   // Use scrypt
   // See https://crypto.stackexchange.com/questions/24514/deterministically-generate-a-rsa-public-private-key-pair-from-a-passphrase-with
 
