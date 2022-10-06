@@ -118,3 +118,4 @@ export const authStore = writable({
 export const walletBalanceAccount = writable({
   balanceInSol: false
 })
+

@@ -87,7 +87,7 @@
         <TransactionsPage />
       </Route>
       <Route path="logout"><Lock /></Route>
-      <Route path='Settings'><Settings /></Route>
+      <Route path='settings'><Settings /></Route>
       <Route path="contacts/:address"><Contact /></Route>
       <Route primary={false}>
         <div class="header-and-features">

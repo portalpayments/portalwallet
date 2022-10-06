@@ -3,7 +3,12 @@
 </script>
 
 <div class="back-button">
-  <Link to="/">‹</Link>
+  <Link to="/">‹<span style="font-size: 1.5rem; margin-left: 5px; font-weight:600; color: transparent; background-clip: text; -webkit-background-clip: text; background-image: linear-gradient(
+    350deg,
+    var(--dark-blue),
+    var(--teal),
+    var(--bright-green)
+  ); "><slot/></span></Link>
 </div>
 
 <style>
