@@ -17,7 +17,7 @@ const numberFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 0,
 });
 
-// TODO: delete
+// TODO: delete and pit real selfies into Arweave
 export const hackProfilePicsByWallet = {
   [VAHEHS_WALLET]: "/ProfilePics/vaheh.jpg",
   [MIKES_WALLET]: "/ProfilePics/mike.jpg",
