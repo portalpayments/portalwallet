@@ -80,7 +80,7 @@
 
 <Router>
   <main>
-    {#if true}
+    {#if false}
       <Onboarding />
     {/if}
     {#if $authStore.isLoggedIn}
