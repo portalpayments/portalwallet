@@ -25,7 +25,7 @@
   {#if !$authStore.isLoggedIn}
     <div class="login">
       <img class="logo" src={PortalLogoSVG} alt="Portal Logo" />
-      <span class="welcome-message"> Welcome Back! </span>
+      <span class="welcome-message">Welcome Back!</span>
       <form
         on:submit|preventDefault={() => {
           // Small trick to use an async function in a click handler
