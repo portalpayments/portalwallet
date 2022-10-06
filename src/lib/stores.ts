@@ -1,11 +1,11 @@
 import { writable, type Writable } from "svelte/store";
 import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
 import { identityTokenIssuerPublicKeyString } from "./constants";
-import { DISABLE_LOGIN_SCREEN_FOR_DEMO } from "../backend/constants";
 import { Direction, type Contact, type TransactionSummary } from "../lib/types";
 import { asyncMap, log, stringify } from "../backend/functions";
 import { verifyWallet } from "../backend/vmwallet";
 import { toUniqueStringArray } from "./utils";
+import { getSettings } from "./settings";
 
 let connection: Connection | null;
 let keyPair: Keypair | null;
@@ -96,7 +96,7 @@ export const authStore = writable({
   isLoggedIn: false,
 });
 
-//Storing the state of the wallet balance account
+// Storing the state of the wallet balance account
 export const walletBalanceAccount = writable({
-  balanceInSol: false,
+  isShowingBalanceInSol: false,
 });

@@ -10,7 +10,8 @@
   let isDropdownActive = false;
 
   const toggleAccount = () => {
-    $walletBalanceAccount.balanceInSol = !$walletBalanceAccount.balanceInSol;
+    $walletBalanceAccount.isShowingBalanceInSol =
+      !$walletBalanceAccount.isShowingBalanceInSol;
     isDropdownActive = !isDropdownActive;
   };
 </script>
@@ -28,7 +29,7 @@
     </button>
     <div class="dropdown-content {isDropdownActive ? 'active' : ''}">
       <div class="toolbar-button">
-        {#if $walletBalanceAccount.balanceInSol}
+        {#if $walletBalanceAccount.isShowingBalanceInSol}
           <button class="button" on:click={toggleAccount}>USDC account</button>
         {:else}
           <button class="button" on:click={toggleAccount}>sol account</button>
