@@ -91,21 +91,6 @@ transactionsStore.subscribe(async (transactions) => {
 // Their contacts
 export const contactsStore: Writable<Array<Contact>> = writable([]);
 
-// From https://svelte.dev/repl/d7b5f0d565a441cfac66e093ee6fe62d?version=3.19.1
-export const User = (function () {
-  const { subscribe, set } = writable("init");
-  return {
-    subscribe,
-    signout: () => {
-      set(null);
-    },
-    signin: () => {
-      // TODO: delete
-      set("Chris");
-    },
-  };
-})();
-
 // From https://svelte.dev/repl/cc54944f9c2f44209d6da7344ea4c101?version=3.17.2
 export const authStore = writable({
   isLoggedIn: false,
