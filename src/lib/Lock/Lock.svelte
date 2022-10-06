@@ -5,8 +5,6 @@
   import { useFocus } from "svelte-navigator";
 
   let password = "";
-  // TODO: get name from wallet
-  export let name = "Mike";
 
   async function login(password) {
     // TODO: implement a real check using encryption on localStorage item.
