@@ -19,7 +19,7 @@
     {#if isBalanceLoaded}
       {#if $walletBalanceAccount.isShowingBalanceInSol}
         <!-- TODO load sol account balance here @MikeMacCana -->
-        <img class="symbol" alt="USDC logo" src={SYMBOLS.sol} />
+        <img class="symbol" alt="Sol logo" src={SYMBOLS.sol} />
         <div class="major">{0}</div>
         <div class="minor">.{0}</div>
       {:else}
