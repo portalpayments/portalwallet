@@ -47,7 +47,7 @@
   {:else}
     <form on:submit|preventDefault={logout}>
       <button type="submit" class="logout-button logout-button-top-bar"
-        >Log out</button
+        >log out</button
       >
     </form>
   {/if}

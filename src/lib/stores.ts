@@ -112,3 +112,9 @@ export const authStore = writable({
   // TODO: we can probably drop this extra 'name' variable since the name of the person is stored in the identity token
   name: "",
 });
+
+
+//Storing the state of the wallet balance account
+export const walletBalanceAccount = writable({
+  balanceInSol: false
+})

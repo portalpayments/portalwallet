@@ -1,6 +1,8 @@
 <script lang="ts">
   import usdcSymbolUrl from "../../assets/usdc.svg";
+  import solSymbol from '../../assets/solana.svg';
   import { formatMajorUnits } from "../utils";
+  import {walletBalanceAccount} from '../stores';
 
   export let isBalanceLoaded: boolean;
   export let major: string;
@@ -8,15 +10,23 @@
 
   const SYMBOLS = {
     usdc: usdcSymbolUrl,
+    sol: solSymbol,
   };
 </script>
 
 <div class="balance">
   <div class="symbol-major-minor">
     {#if isBalanceLoaded}
+    {#if $walletBalanceAccount.balanceInSol}
+    <!-- TODO load sol account balance here @MikeMacCana -->
+      <img class="symbol" alt="USDC logo" src={SYMBOLS.sol} />
+      <div class="major">{0}</div>
+      <div class="minor">.{0}</div>
+      {:else}
       <img class="symbol" alt="USDC logo" src={SYMBOLS.usdc} />
       <div class="major">{formatMajorUnits(major)}</div>
       <div class="minor">.{minor}</div>
+      {/if}
     {:else}
       <div>...</div>
     {/if}
