@@ -1,4 +1,4 @@
-import { Connection, PublicKey } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import {
   getOrCreateAssociatedTokenAccount,
   TOKEN_PROGRAM_ID,
@@ -9,6 +9,7 @@ import {
   getKeypairFromEnvFile,
   getKeypairFromString,
   getUSDCAccounts,
+  putSolIntoWallet,
   verifyWallet,
 } from "./vmwallet";
 
@@ -16,10 +17,12 @@ import {
   AGIZA_NFT_ADDRESS,
   AGIZA_NFT_ASSOCIATED_TOKEN_ACCOUNT,
   ARTIST,
+  DEPOSIT,
   JOE_MCCANNS_WALLET,
   KIMZO_NFT_ADDRESS,
   KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT,
   MIKES_WALLET,
+  NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN,
   SECONDS,
   SHAQS_WALLET,
   USDC_MAINNET_MINT_ACCOUNT,
@@ -30,6 +33,8 @@ import * as dotenv from "dotenv";
 import { getTransactionSummariesForAddress } from "./vmwallet";
 import { log, stringify } from "./functions";
 import { Currency, Direction } from "../lib/types";
+import { getABetterErrorMessage } from "./errors";
+import { createMintAccount } from "./tokens";
 
 dotenv.config();
 
@@ -40,6 +45,59 @@ jest.mock("./functions", () => ({
 }));
 
 const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;
+
+describe(`basic wallet functionality on local validator`, () => {
+  let connection: Connection | null = null;
+
+  beforeAll(async () => {
+    connection = await connect("localhost");
+  });
+
+  test(`wallets can be deposited into`, async () => {
+    const firstWallet = new Keypair();
+    await putSolIntoWallet(connection, firstWallet.publicKey, DEPOSIT);
+    const balanceBefore = await getAccountBalance(
+      connection,
+      firstWallet.publicKey
+    );
+
+    await putSolIntoWallet(connection, firstWallet.publicKey, DEPOSIT);
+    const balanceAfter = await getAccountBalance(
+      connection,
+      firstWallet.publicKey
+    );
+
+    const difference = balanceAfter - balanceBefore;
+
+    expect(difference).toEqual(DEPOSIT);
+  });
+
+  test(`We turn program errors into more readable errors`, () => {
+    const errorMessage = getABetterErrorMessage(
+      "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x1"
+    );
+    expect(errorMessage).toEqual("Insufficient funds");
+  });
+
+  test(`produces a good error when not enough funds to make a new token`, async () => {
+    const testUSDCAuthority = new Keypair();
+    await putSolIntoWallet(
+      connection,
+      testUSDCAuthority.publicKey,
+      NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN
+    );
+
+    expect(
+      createMintAccount(
+        connection,
+        testUSDCAuthority,
+        testUSDCAuthority.publicKey
+      )
+    ).rejects.toThrow(
+      "failed to send transaction: Transaction simulation failed: Attempt to debit an account but found no record of a prior credit."
+    );
+  });
+});
 
 describe(`mainnet integration tests`, () => {
   let mainNetConnection: Connection | null = null;
