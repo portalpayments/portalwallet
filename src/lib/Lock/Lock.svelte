@@ -14,7 +14,6 @@
   }
 
   function logout() {
-    $authStore.name = "";
     $authStore.isLoggedIn = false;
     location.assign("/");
   }
@@ -26,9 +25,7 @@
   {#if !$authStore.isLoggedIn}
     <div class="login">
       <img class="logo" src={PortalLogoSVG} alt="Portal Logo" />
-      <span class="welcome-message">
-        Welcome Back <span style="font-weight:700;">{name}</span>!
-      </span>
+      <span class="welcome-message"> Welcome Back! </span>
       <form
         on:submit|preventDefault={() => {
           // Small trick to use an async function in a click handler
