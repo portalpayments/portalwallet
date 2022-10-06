@@ -20,14 +20,16 @@ import {
   KIMZO_NFT_ADDRESS,
   KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT,
   MIKES_WALLET,
+  SECONDS,
+  SHAQS_WALLET,
   USDC_MAINNET_MINT_ACCOUNT,
-  YCOMBINATOR_DEMO_WALLET_FOR_JARED,
 } from "./constants";
 import { getAllNftMetadatasFromAWallet } from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
 import { getTransactionSummariesForAddress } from "./vmwallet";
 import { log, stringify } from "./functions";
+import { Currency, Direction } from "../lib/types";
 
 dotenv.config();
 
@@ -39,10 +41,7 @@ jest.mock("./functions", () => ({
 
 const identityTokenPrivateKey = process.env.IDENTITY_TOKEN_PRIVATE_KEY;
 
-// We skip these so we don't get rate limited
-// eg "Too many requests for a specific RPC call"
-// But we can run them on demand and they should pass
-describe.skip(`mainnet integration tests`, () => {
+describe(`mainnet integration tests`, () => {
   let mainNetConnection: Connection | null = null;
   process.env.IDENTITY_TOKEN_PRIVATE_KEY;
 
@@ -57,75 +56,79 @@ describe.skip(`mainnet integration tests`, () => {
     mainNetConnection = await connect("genesysGoMain");
   });
 
-  test(`We can get NFTs from Mike's real-mainnet wallet`, async () => {
-    if (!mainNetConnection) {
-      throw new Error(`Couldn't get a connection, can't continue`);
-    }
-    const nfts = await getAllNftMetadatasFromAWallet(
-      mainNetConnection,
-      identityTokenIssuerKeypair,
-      mikePublicKey
-    );
+  test(
+    `We can get NFTs from Mike's real-mainnet wallet`,
+    async () => {
+      if (!mainNetConnection) {
+        throw new Error(`Couldn't get a connection, can't continue`);
+      }
+      const nfts = await getAllNftMetadatasFromAWallet(
+        mainNetConnection,
+        identityTokenIssuerKeypair,
+        mikePublicKey
+      );
 
-    const kimzo = nfts.find((nft) => nft.name === "Kimzo");
-    const agiza = nfts.find((nft) => nft.name === "Agiza");
+      const kimzo = nfts.find((nft) => nft.name === "Kimzo");
+      const agiza = nfts.find((nft) => nft.name === "Agiza");
 
-    expect(kimzo).toMatchObject({
-      model: "metadata",
-      address: new Pda("57Xq2KebNs2UdpMhekf2JJjjzHv3ijV7H9DiG5UD2FEU", 255),
-      mintAddress: KIMZO_NFT_ADDRESS,
-      updateAuthorityAddress: ARTIST,
-      json: null,
-      jsonLoaded: false,
-      name: "Kimzo",
-      symbol: "",
-      uri: "https://arweave.net/wkFGaLHMKsAZ7he_XvK3uQXTy3j0kUYiwng1mELmNVk",
-      isMutable: true,
-      primarySaleHappened: true,
-      sellerFeeBasisPoints: 1000,
-      editionNonce: 255,
-      creators: [
-        {
-          address: ARTIST,
-          verified: true,
-          share: 100,
-        },
-      ],
-      tokenStandard: 0,
-      collection: null,
-      collectionDetails: null,
-      uses: null,
-    });
+      expect(kimzo).toMatchObject({
+        model: "metadata",
+        address: new Pda("57Xq2KebNs2UdpMhekf2JJjjzHv3ijV7H9DiG5UD2FEU", 255),
+        mintAddress: KIMZO_NFT_ADDRESS,
+        updateAuthorityAddress: ARTIST,
+        json: null,
+        jsonLoaded: false,
+        name: "Kimzo",
+        symbol: "",
+        uri: "https://arweave.net/wkFGaLHMKsAZ7he_XvK3uQXTy3j0kUYiwng1mELmNVk",
+        isMutable: true,
+        primarySaleHappened: true,
+        sellerFeeBasisPoints: 1000,
+        editionNonce: 255,
+        creators: [
+          {
+            address: ARTIST,
+            verified: true,
+            share: 100,
+          },
+        ],
+        tokenStandard: 0,
+        collection: null,
+        collectionDetails: null,
+        uses: null,
+      });
 
-    expect(agiza).toMatchObject({
-      model: "metadata",
-      // https://solscan.io/token/8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk
-      address: new Pda("2TQ464nFCwPs45wYsXXYpkhY7wgUyEVzpecWp1RBMeDU", 255),
-      mintAddress: AGIZA_NFT_ADDRESS,
-      updateAuthorityAddress: ARTIST,
-      json: null,
-      jsonLoaded: false,
-      name: "Agiza",
-      symbol: "",
-      // JSON containing the NFT
-      uri: "https://arweave.net/buMXtKDU0stCY8fM8qyENwLlTgqpXyypdojPQ3mWWhU",
-      isMutable: true,
-      primarySaleHappened: true,
-      sellerFeeBasisPoints: 1000,
-      editionNonce: 254,
-      creators: [
-        {
-          address: ARTIST,
-          verified: true,
-          share: 100,
-        },
-      ],
-      tokenStandard: 0,
-      collection: null,
-      collectionDetails: null,
-      uses: null,
-    });
-  });
+      expect(agiza).toMatchObject({
+        model: "metadata",
+        // https://solscan.io/token/8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk
+        address: new Pda("2TQ464nFCwPs45wYsXXYpkhY7wgUyEVzpecWp1RBMeDU", 255),
+        mintAddress: AGIZA_NFT_ADDRESS,
+        updateAuthorityAddress: ARTIST,
+        json: null,
+        jsonLoaded: false,
+        name: "Agiza",
+        symbol: "",
+        // JSON containing the NFT
+        uri: "https://arweave.net/buMXtKDU0stCY8fM8qyENwLlTgqpXyypdojPQ3mWWhU",
+        isMutable: true,
+        primarySaleHappened: true,
+        sellerFeeBasisPoints: 1000,
+        editionNonce: 254,
+        creators: [
+          {
+            address: ARTIST,
+            verified: true,
+            share: 100,
+          },
+        ],
+        tokenStandard: 0,
+        collection: null,
+        collectionDetails: null,
+        uses: null,
+      });
+    },
+    10 * SECONDS
+  );
 
   test(`We can find the Associated Token Account for the Agiza girl mint`, async () => {
     if (!mainNetConnection) {
@@ -238,12 +241,12 @@ describe.skip(`mainnet integration tests`, () => {
     });
   });
 
-  test(`We can not verify Joe McCann's wallet`, async () => {
+  test(`We can not verify Shaq's wallet`, async () => {
     if (!mainNetConnection) {
       throw new Error(`Couldn't get a connection, can't continue`);
     }
     if (!identityTokenPrivateKey) {
-      throw new Error(`IDENTITY_TOKEN_PRIVATE_KEY isn't  set in .env file`);
+      throw new Error(`IDENTITY_TOKEN_PRIVATE_KEY isn't set in .env file`);
     }
 
     const identityTokenIssuer = getKeypairFromString(identityTokenPrivateKey);
@@ -252,7 +255,7 @@ describe.skip(`mainnet integration tests`, () => {
       mainNetConnection,
       identityTokenIssuer,
       identityTokenIssuer.publicKey,
-      new PublicKey(JOE_MCCANNS_WALLET)
+      new PublicKey(SHAQS_WALLET)
     );
 
     expect(claims).toBeNull();
@@ -265,16 +268,26 @@ describe.skip(`mainnet integration tests`, () => {
       1
     );
 
-    expect(transactionSummaries).toEqual([
-      {
-        amount: 1000000,
-        date: 1662985498000,
-        direction: "sent",
-        from: MIKES_WALLET,
-        networkFee: 5000,
-        status: true,
-        to: YCOMBINATOR_DEMO_WALLET_FOR_JARED,
-      },
-    ]);
+    const lastTransaction = transactionSummaries[0];
+
+    const currency = lastTransaction.currency;
+
+    // We can't do expect.any(Currency)
+    // - this will fail with
+    // TypeError: Right-hand side of 'instanceof' is not callable'
+    // So check the value is in the enum (as an Object)'s values
+    const knownCurrencies = Object.values(Currency);
+    expect(knownCurrencies.includes(currency));
+
+    expect(lastTransaction).toEqual({
+      amount: expect.any(Number),
+      date: expect.any(Number),
+      currency: expect.any(Number),
+      direction: Direction.sent,
+      from: MIKES_WALLET,
+      networkFee: 5000,
+      status: true,
+      to: expect.any(String),
+    });
   });
 });

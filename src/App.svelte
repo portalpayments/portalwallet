@@ -4,10 +4,12 @@
   import Navbar from "./lib/Navbar/Navbar.svelte";
   import Collectables from "./lib/Collectables/Collectables.svelte";
   import ContactsPage from "./lib/Contacts/ContactsPage.svelte";
+  import Onboarding from "./lib/Onboarding/Onboarding.svelte";
   import TransferPage from "./lib/Transfer/TransferPage.svelte";
   import AddMoneyPage from "./lib/AddMoney/AddMoneyPage.svelte";
   import TransactionsPage from "./lib/TransactionsPage/TransactionsPage.svelte";
   import Settings from './lib/Settings/Settings.svelte'
+  import { Keypair } from "@solana/web3.js";
   import { Router, Route } from "svelte-navigator";
   import { getPrivateKey } from "./lib/utils";
   import {
@@ -24,6 +26,7 @@
     authStore,
     identityTokenIssuerPublicKey,
   } from "./lib/stores";
+  import { getSettings, saveSettings } from "./lib/settings";
   import Transaction from "./lib/HomePage/Transaction.svelte";
 
   $authStore;
@@ -79,6 +82,9 @@
 
 <Router>
   <main>
+    {#if false}
+      <Onboarding />
+    {/if}
     {#if $authStore.isLoggedIn}
       <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
       <Route path="sendMoney"><TransferPage /></Route>
