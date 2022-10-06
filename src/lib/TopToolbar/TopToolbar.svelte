@@ -3,17 +3,16 @@
   import NotificationBell from "../../assets/notification-bell.svg";
   import Lock from "../Lock/Lock.svelte";
   import { Link } from "svelte-navigator";
-  import {walletBalanceAccount} from '../stores'
+  import { walletBalanceAccount } from "../stores";
   export let name = "anonymous";
   export let isVerified = false;
 
   let isDropdownActive = false;
 
-
-  const toggleAccount = ()=>{
+  const toggleAccount = () => {
     $walletBalanceAccount.balanceInSol = !$walletBalanceAccount.balanceInSol;
-    isDropdownActive = !isDropdownActive
-  }
+    isDropdownActive = !isDropdownActive;
+  };
 </script>
 
 <div class="header">
@@ -28,14 +27,14 @@
       {/if}
     </button>
     <div class="dropdown-content {isDropdownActive ? 'active' : ''}">
-     <div class="toolbar-button">
-      {#if $walletBalanceAccount.balanceInSol}
-      <button class="button" on:click={toggleAccount}>USDC account</button> 
-      {:else}
-      <button class="button" on:click={toggleAccount}>sol account</button>
-      {/if}
-      <Link class="button" to="/settings">settings</Link>
-     </div>
+      <div class="toolbar-button">
+        {#if $walletBalanceAccount.balanceInSol}
+          <button class="button" on:click={toggleAccount}>USDC account</button>
+        {:else}
+          <button class="button" on:click={toggleAccount}>sol account</button>
+        {/if}
+        <Link class="button" to="/settings">settings</Link>
+      </div>
       <Lock />
     </div>
   </div>
@@ -118,7 +117,7 @@
   .dropdown-content.active {
     display: grid;
   }
- 
+
   .toolbar-button :global(a.button) {
     color: #2d5177;
     font-weight: 600;
@@ -129,7 +128,7 @@
     color: #fff;
     background-color: var(--mid-blue);
   }
-  button{
+  button {
     color: #2d5177;
     font-weight: 600;
     padding: 8px 0px;
