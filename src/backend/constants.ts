@@ -3,8 +3,6 @@ import { BN as BigNumber } from "bn.js";
 
 export const IDENTITY_TOKEN_NAME = "Portal Identity Token";
 
-export const DISABLE_LOGIN_SCREEN_FOR_DEMO = true;
-
 // Shaq is one of the only people I know
 // with a verified Twitter handle and a Solana wallet.
 export const SHAQS_WALLET = "gacMrsrxNisAhCfgsUAVbwmTC3w9nJB6NychLAnTQFv";

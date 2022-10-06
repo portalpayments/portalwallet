@@ -39,17 +39,17 @@ jest.mock("./functions", () => ({
   log: jest.fn(),
 }));
 
-const identityTokenPrivateKey = process.env.IDENTITY_TOKEN_PRIVATE_KEY;
+const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;
 
 describe(`mainnet integration tests`, () => {
   let mainNetConnection: Connection | null = null;
-  process.env.IDENTITY_TOKEN_PRIVATE_KEY;
+  process.env.IDENTITY_TOKEN_SECRET_KEY;
 
-  const mikeKeypair = getKeypairFromEnvFile("MIKES_PRIVATE_KEY");
+  const mikeKeypair = getKeypairFromEnvFile("MIKES_SECRET_KEY");
   const mikePublicKey = mikeKeypair.publicKey;
 
   const identityTokenIssuerKeypair = getKeypairFromEnvFile(
-    "IDENTITY_TOKEN_PRIVATE_KEY"
+    "IDENTITY_TOKEN_SECRET_KEY"
   );
 
   beforeAll(async () => {
@@ -220,11 +220,11 @@ describe(`mainnet integration tests`, () => {
     if (!mainNetConnection) {
       throw new Error(`Couldn't get a connection, can't continue`);
     }
-    if (!identityTokenPrivateKey) {
-      throw new Error(`IDENTITY_TOKEN_PRIVATE_KEY isn't  set in .env file`);
+    if (!identityTokenSecretKey) {
+      throw new Error(`IDENTITY_TOKEN_SECRET_KEY isn't  set in .env file`);
     }
 
-    const identityTokenIssuer = getKeypairFromString(identityTokenPrivateKey);
+    const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
 
     const claims = await verifyWallet(
       mainNetConnection,
@@ -245,11 +245,11 @@ describe(`mainnet integration tests`, () => {
     if (!mainNetConnection) {
       throw new Error(`Couldn't get a connection, can't continue`);
     }
-    if (!identityTokenPrivateKey) {
-      throw new Error(`IDENTITY_TOKEN_PRIVATE_KEY isn't set in .env file`);
+    if (!identityTokenSecretKey) {
+      throw new Error(`IDENTITY_TOKEN_SECRET_KEY isn't set in .env file`);
     }
 
-    const identityTokenIssuer = getKeypairFromString(identityTokenPrivateKey);
+    const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
 
     const claims = await verifyWallet(
       mainNetConnection,

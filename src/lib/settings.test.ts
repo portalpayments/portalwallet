@@ -15,7 +15,7 @@ jest.mock("localforage", () => ({
 
 describe(`settings`, () => {
   const wallet = new Keypair();
-  const privateKey = wallet.secretKey;
+  const secretKey = wallet.secretKey;
   const PASSWORD = "swag";
 
   beforeAll(() => {
@@ -24,7 +24,7 @@ describe(`settings`, () => {
   });
 
   test(`Can save settings successfully`, async () => {
-    await saveSettings({ version: 1, secretKey: privateKey }, PASSWORD);
+    await saveSettings({ version: 1, secretKey: secretKey }, PASSWORD);
   });
 
   test(`Can get settings successfully`, async () => {

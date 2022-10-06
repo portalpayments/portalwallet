@@ -26,8 +26,8 @@ export const hackProfilePicsByWallet = {
   [YCOMBINATOR_DEMO_WALLET_FOR_JARED]: "/ProfilePics/jared.jpg",
 };
 
-export const getPrivateKey = () => {
-  return localStorage.getItem("PORTAL_PRIVATE_KEY");
+export const getSecretKey = () => {
+  return localStorage.getItem("PORTAL_SECRET_KEY");
 };
 
 export const httpGet = async (uri: string) => {

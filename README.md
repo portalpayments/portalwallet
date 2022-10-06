@@ -17,7 +17,7 @@ See [coding guidelines](CODING_GUIDELINES.md).
 Then in your browser DevTools console run:
 
 ```
-localStorage.setItem("PORTAL_PRIVATE_KEY", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678")
+localStorage.setItem("PORTAL_SECRET_KEY", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678")
 ```
 
 Get your private key from **Phantom** -> ⚙️ -> **Export Private Key**
@@ -36,7 +36,7 @@ You'll need an `.env` file with:
 
 ```
 TWITTER_API_KEY_BEARER_TOKEN=somebearertoken
-PRIVATE_KEY=someprivatekeyextractedfromphantom
+SECRET_KEY=someprivatekeyextractedfromphantom
 ```
 
 Ask your colleagues for a copy of this file (not checked into GitHub for security reasons).

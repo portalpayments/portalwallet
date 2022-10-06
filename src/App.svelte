@@ -8,10 +8,10 @@
   import TransferPage from "./lib/Transfer/TransferPage.svelte";
   import AddMoneyPage from "./lib/AddMoney/AddMoneyPage.svelte";
   import TransactionsPage from "./lib/TransactionsPage/TransactionsPage.svelte";
-  import Settings from './lib/Settings/Settings.svelte'
+  import Settings from "./lib/Settings/Settings.svelte";
   import { Keypair } from "@solana/web3.js";
   import { Router, Route } from "svelte-navigator";
-  import { getPrivateKey } from "./lib/utils";
+  import { getSecretKey } from "./lib/utils";
   import {
     getKeypairFromString,
     connect,
@@ -26,8 +26,6 @@
     authStore,
     identityTokenIssuerPublicKey,
   } from "./lib/stores";
-  import { getSettings, saveSettings } from "./lib/settings";
-  import Transaction from "./lib/HomePage/Transaction.svelte";
 
   $authStore;
 
@@ -57,8 +55,8 @@
     connectionStore.set(newConnection);
 
     // Get our Private Key from LocalStorage
-    const privateKey = getPrivateKey();
-    const newKeyPair = await getKeypairFromString(privateKey);
+    const secretKey = getSecretKey();
+    const newKeyPair = await getKeypairFromString(secretKey);
     keyPairStore.set(newKeyPair);
 
     // Get identity from the portal Identity Token
@@ -82,7 +80,7 @@
 
 <Router>
   <main>
-    {#if false}
+    {#if true}
       <Onboarding />
     {/if}
     {#if $authStore.isLoggedIn}
@@ -93,7 +91,7 @@
         <TransactionsPage />
       </Route>
       <Route path="logout"><Lock /></Route>
-      <Route path='Settings'><Settings /></Route>
+      <Route path="Settings"><Settings /></Route>
       <Route path="contacts/:address"><Contact /></Route>
       <Route primary={false}>
         <div class="header-and-features">

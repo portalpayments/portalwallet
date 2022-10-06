@@ -107,7 +107,7 @@ export const saveSettings = async (
   return;
 };
 
-// Was getPrivateKey
+// Was getSecretKey
 export const getSettings = async (password: string) => {
   const decryptionKey: CryptoKey = await passwordToKey(password);
   const initialisationVector = await getOrSetInitialisationVector();

@@ -108,13 +108,12 @@ export const User = (function () {
 
 // From https://svelte.dev/repl/cc54944f9c2f44209d6da7344ea4c101?version=3.17.2
 export const authStore = writable({
-  isLoggedIn: false || DISABLE_LOGIN_SCREEN_FOR_DEMO,
+  isLoggedIn: false,
   // TODO: we can probably drop this extra 'name' variable since the name of the person is stored in the identity token
   name: "",
 });
 
-
 //Storing the state of the wallet balance account
 export const walletBalanceAccount = writable({
-  balanceInSol: false
-})
+  balanceInSol: false,
+});

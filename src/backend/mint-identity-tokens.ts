@@ -12,13 +12,13 @@ import { PublicKey } from "@solana/web3.js";
 
 dotenv.config();
 
-const identityTokenPrivateKey = process.env.IDENTITY_TOKEN_PRIVATE_KEY;
+const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;
 
-if (!identityTokenPrivateKey) {
-  throw new Error(`Please set IDENTITY_TOKEN_PRIVATE_KEY in .env file`);
+if (!identityTokenSecretKey) {
+  throw new Error(`Please set IDENTITY_TOKEN_SECRET_KEY in .env file`);
 }
 
-const identityTokenIssuer = getKeypairFromString(identityTokenPrivateKey);
+const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
 
 export const mintAndTransferIdentityToken = async (
   wallet: string,

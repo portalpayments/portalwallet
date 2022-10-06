@@ -125,6 +125,10 @@ try {
 }
 ```
 
+## Use `secretKey` do not use `privateKey`
+
+Solana uses `secretKey` and the terms is more indicative of it's value than `privateKey`.
+
 # CSS Guidelines
 
 **Just use CSS grid**. There's no point bothering with margins, overflow, clear: both etc. Just use grid.

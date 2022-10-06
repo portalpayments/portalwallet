@@ -23,14 +23,14 @@ import { transactionResponseToPortalTransactionSummary } from "./transactions";
 
 const VERIFIED_CLAIMS_BY_ADDRESS: Record<string, VerifiedClaims> = {};
 
-export const getKeypairFromString = (privateKeyString: string) => {
-  let decodedPrivateKey: Uint8Array;
+export const getKeypairFromString = (secretKeyString: string) => {
+  let decodedSecretKey: Uint8Array;
   try {
-    decodedPrivateKey = base58.decode(privateKeyString);
+    decodedSecretKey = base58.decode(secretKeyString);
   } catch (throwObject) {
     throw new Error("Invalid private key! See README.md");
   }
-  return Keypair.fromSecretKey(decodedPrivateKey);
+  return Keypair.fromSecretKey(decodedSecretKey);
 };
 
 export const getUSDCAccounts = async (
@@ -107,13 +107,13 @@ export const putSolIntoWallet = async (
 
 export const getKeypairFromEnvFile = (envFileKey: string) => {
   // From https://yihau.github.io/solana-web3-demo/tour/create-keypair.html
-  const privateKeyFromEnvFile = process.env[envFileKey];
-  if (!privateKeyFromEnvFile) {
+  const secretKeyFromEnvFile = process.env[envFileKey];
+  if (!secretKeyFromEnvFile) {
     throw new Error(
       `Please add '${envFileKey}' to your .env file with a private key extracted from Phantom etc.`
     );
   }
-  const keyPair = getKeypairFromString(privateKeyFromEnvFile);
+  const keyPair = getKeypairFromString(secretKeyFromEnvFile);
   return keyPair;
 };
 
