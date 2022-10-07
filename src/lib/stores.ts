@@ -1,4 +1,4 @@
-import { get, writable, type Writable } from "svelte/store";
+import { get as getFromStore, writable, type Writable } from "svelte/store";
 import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
 import { identityTokenIssuerPublicKeyString } from "./constants";
 import { Direction, type Contact, type TransactionSummary } from "../lib/types";
@@ -74,7 +74,7 @@ transactionsStore.subscribe(async (transactions) => {
   );
 
   // TODO - Fix 'as' - asyncMap may need some work.
-  const secretKey = get(authStore).secretKey;
+  const secretKey = getFromStore(authStore).secretKey;
   if (!secretKey) {
     throw new Error(`Couldn't get the secret key from the auth store!`);
   }
