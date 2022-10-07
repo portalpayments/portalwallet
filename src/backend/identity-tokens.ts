@@ -32,6 +32,7 @@ export const getMetaplex = (
   keypair: Keypair,
   isProduction: boolean = false
 ) => {
+  debugger;
   if (isProduction) {
     return Metaplex.make(connection)
       .use(keypairIdentity(keypair))
@@ -113,8 +114,7 @@ export const getTokenMetaData = (
 export const getFullNFTsFromWallet = async (
   keypair: Keypair,
   connection: Connection,
-  address: PublicKey,
-  name: string
+  address: PublicKey
 ) => {
   const metaplex = new Metaplex(connection);
   metaplex.use(keypairIdentity(keypair));
@@ -161,6 +161,10 @@ export const getIdentityTokenFromWallet = async (
   identityTokenIssuerPublicKey: PublicKey,
   wallet: PublicKey
 ) => {
+  log(
+    `About to get metaplex, metaplexConnectionKeypair is`,
+    metaplexConnectionKeypair
+  );
   const metaplex = await getMetaplex(connection, metaplexConnectionKeypair);
   const nfts = await metaplex
     .nfts()
@@ -171,10 +175,9 @@ export const getIdentityTokenFromWallet = async (
 
   const identityToken = nfts.find((nft) => {
     // Quick note we need to toBase58() both addresses for the comparison to work.
-    return (
-      nft?.creators?.[0]?.address.toBase58() ===
-      identityTokenIssuerPublicKey.toBase58()
-    );
+    const tokenCreator = nft?.creators?.[0]?.address.toBase58();
+    const portalCompany = identityTokenIssuerPublicKey.toBase58();
+    return tokenCreator === portalCompany;
   });
 
   if (!identityToken) {

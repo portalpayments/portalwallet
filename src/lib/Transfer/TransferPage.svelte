@@ -1,7 +1,7 @@
 <script lang="ts">
   import {
     connectionStore,
-    keyPairStore,
+    authStore,
     identityTokenIssuerPublicKey,
   } from "../stores";
   import { PublicKey, Connection, Keypair } from "@solana/web3.js";
@@ -101,8 +101,10 @@
 
   let keyPair: Keypair | null = null;
 
-  keyPairStore.subscribe((value) => {
-    keyPair = value;
+  authStore.subscribe((newValue) => {
+    if (newValue.secretKey) {
+      keyPair = Keypair.fromSecretKey(newValue.secretKey);
+    }
   });
 
   const handleKeyupDestinationWalletAddress = async () => {

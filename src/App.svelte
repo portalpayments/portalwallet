@@ -11,23 +11,24 @@
   import Settings from "./lib/Settings/Settings.svelte";
   import { Keypair } from "@solana/web3.js";
   import { Router, Route } from "svelte-navigator";
-  import { getSecretKey } from "./lib/utils";
-  import {
-    getKeypairFromString,
-    connect,
-    verifyWallet,
-  } from "./backend/vmwallet";
+  import { connect, verifyWallet } from "./backend/vmwallet";
   import { log } from "./backend/functions";
   import Lock from "./lib/Lock/Lock.svelte";
   import Contact from "./lib/Contacts/Contact/Contact.svelte";
   import {
     connectionStore,
-    keyPairStore,
     authStore,
     identityTokenIssuerPublicKey,
   } from "./lib/stores";
 
   $authStore;
+
+  interface User {
+    name: string;
+    isVerified: boolean;
+  }
+
+  let user: null | User = null;
 
   connectionStore.subscribe((newValue) => {
     if (newValue) {
@@ -35,47 +36,45 @@
     }
   });
 
-  keyPairStore.subscribe((newValue) => {
-    if (newValue) {
-      log(`🔑Got keys.`);
+  authStore.subscribe(async (newValue) => {
+    if (newValue.secretKey) {
+      log(`🔑Got secret key.`);
+      // Connect to Solana
+      const newConnection = await connect("genesysGoMain");
+      connectionStore.set(newConnection);
+
+      if (!newValue.secretKey) {
+        throw new Error(`Couldn't get the secret key from the auth store!`);
+      }
+      const keypair = Keypair.fromSecretKey(newValue.secretKey);
+
+      if (!keypair) {
+        throw new Error(`Could not get keypair from secret key`);
+      }
+
+      // Get identity from the portal Identity Token
+      const verifiedClaims = await verifyWallet(
+        newConnection,
+        keypair,
+        identityTokenIssuerPublicKey,
+        keypair.publicKey
+      );
+
+      if (verifiedClaims) {
+        user = {
+          name: `${verifiedClaims.givenName} ${verifiedClaims.familyName}`,
+          isVerified: true,
+        };
+        return;
+      }
+      user = {
+        name: "Anonymous",
+        isVerified: false,
+      };
     }
   });
 
   let currentFeature: number = 0;
-
-  interface User {
-    name: string;
-    isVerified: boolean;
-  }
-
-  let testUser: null | User = null;
-  (async () => {
-    // Connect to Solana
-    const newConnection = await connect("genesysGoMain");
-    connectionStore.set(newConnection);
-
-    // Get our Private Key from LocalStorage
-    const secretKey = getSecretKey();
-    const newKeyPair = await getKeypairFromString(secretKey);
-    keyPairStore.set(newKeyPair);
-
-    // Get identity from the portal Identity Token
-    const verifiedClaims = await verifyWallet(
-      newConnection,
-      newKeyPair,
-      identityTokenIssuerPublicKey,
-      newKeyPair.publicKey
-    );
-
-    if (verifiedClaims) {
-      testUser = {
-        name: `${verifiedClaims.givenName} ${verifiedClaims.familyName}`,
-        isVerified: true,
-      };
-      return;
-    }
-    testUser = { name: "Anonymous", isVerified: false };
-  })();
 </script>
 
 <Router>
@@ -95,7 +94,7 @@
       <Route path="contacts/:address"><Contact /></Route>
       <Route primary={false}>
         <div class="header-and-features">
-          <TopToolbar {...testUser} />
+          <TopToolbar {...user} />
           <div class="features">
             {#if currentFeature === 0}
               <HomeScreen />

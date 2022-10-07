@@ -7,6 +7,7 @@
 
 import { log, stringify } from "../backend/functions";
 
+import base58 from "bs58";
 import localforage from "localforage";
 import type { Settings } from "./types";
 
@@ -103,27 +104,55 @@ export const saveSettings = async (
     encodedText
   );
   // 4. Save to localforage
-  await localforage.setItem("PORTAL_SETTINGS", encrypted);
+  log(`Saving PORTAL_SETTINGS...`);
+  const result = await localforage.setItem("PORTAL_SETTINGS", encrypted);
+  log(`Saved PORTAL_SETTINGS result is`, result);
   return;
 };
 
+globalThis.saveSettingsHack = async (
+  secretKeyString: string,
+  password: string
+) => {
+  const secretKey = base58.decode(secretKeyString);
+  await saveSettings(
+    {
+      version: 1,
+      secretKey,
+    },
+    password
+  );
+};
+
 // Was getSecretKey
-export const getSettings = async (password: string) => {
+export const getSettings = async (password: string): Promise<Settings> => {
   const decryptionKey: CryptoKey = await passwordToKey(password);
   const initialisationVector = await getOrSetInitialisationVector();
   // 4. Get from localforage
-  const encryptedData: ArrayBuffer = await localforage.getItem(
-    "PORTAL_SETTINGS"
-  );
+  const encryptedData: ArrayBuffer | null =
+    (await localforage.getItem("PORTAL_SETTINGS")) || null;
+  if (!encryptedData) {
+    log(`No data is stored in 'PORTAL_SETTINGS' key`);
+    return null;
+  }
   // 3. Decrypt
-  let decrypted = await crypto.subtle.decrypt(
-    {
-      name: "AES-GCM",
-      iv: initialisationVector,
-    },
-    decryptionKey,
-    encryptedData
-  );
+  let decrypted: ArrayBuffer | null;
+  try {
+    decrypted = await crypto.subtle.decrypt(
+      {
+        name: "AES-GCM",
+        iv: initialisationVector,
+      },
+      decryptionKey,
+      encryptedData
+    );
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    // Original error is 'Unsupported state or unable to authenticate data'
+    // but that's vague.
+    log(error.message);
+    throw new Error("Bad password");
+  }
   // 2. Turn ArrayBuffer into String
   const decodedEncryptedData = textDecoder.decode(decrypted);
   // 1. Turn back into JSON
@@ -131,6 +160,5 @@ export const getSettings = async (password: string) => {
 
   // Extra step: the Uint8Array gets turned into an object during save, fix the type.
   settings.secretKey = Uint8Array.from(Object.values(settings.secretKey));
-
   return settings;
 };

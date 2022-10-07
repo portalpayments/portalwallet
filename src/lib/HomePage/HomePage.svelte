@@ -4,10 +4,11 @@
   import Transactions from "./Transactions.svelte";
   import Buttons from "./Buttons.svelte";
 
-  import { connectionStore, keyPairStore, transactionsStore } from "../stores";
+  import { connectionStore, authStore, transactionsStore } from "../stores";
   import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../constants";
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
   import type { Connection, Keypair } from "@solana/web3.js";
+  import { Keypair as KeypairConstructor } from "@solana/web3.js";
 
   import { log, stringify } from "../../backend/functions";
 
@@ -67,9 +68,9 @@
     }
   });
 
-  keyPairStore.subscribe((newValue) => {
-    if (newValue) {
-      keypair = newValue;
+  authStore.subscribe((newValue) => {
+    if (newValue.secretKey) {
+      keypair = KeypairConstructor.fromSecretKey(newValue.secretKey);
       updateBalance();
     }
   });

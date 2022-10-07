@@ -5,9 +5,10 @@
   import { httpGet } from "../utils";
   import type { Collectable } from "../types";
 
-  import { connectionStore, keyPairStore } from "../stores";
+  import { connectionStore, authStore } from "../stores";
 
   import type { Connection, Keypair } from "@solana/web3.js";
+  import { Keypair as KeypairConstructor } from "@solana/web3.js";
 
   let connection: Connection;
   let keypair: Keypair;
@@ -53,9 +54,9 @@
     }
   });
 
-  keyPairStore.subscribe((newValue) => {
-    if (newValue) {
-      keypair = newValue;
+  authStore.subscribe((newValue) => {
+    if (newValue.secretKey) {
+      keypair = KeypairConstructor.fromSecretKey(newValue.secretKey);
       updateCollectables();
     }
   });

@@ -178,7 +178,7 @@ describe(`identity tokens`, () => {
   });
 
   test(`We can retrieve the NFT we just minted`, async () => {
-    const metaplex = await getMetaplex(connection, testIdentityTokenIssuer);
+    const metaplex = getMetaplex(connection, testIdentityTokenIssuer);
     if (!mintAddress) {
       throw new Error(`Couldn't get a mint address`);
     }
@@ -293,7 +293,7 @@ describe(`identity tokens`, () => {
       mint: mintAddress,
       owner: alice.publicKey,
       rentExemptReserve: null,
-      tlvData: expect.anything()
+      tlvData: expect.anything(),
     });
 
     const tokenAccountsByOwner = await getTokenAccountsByOwner(

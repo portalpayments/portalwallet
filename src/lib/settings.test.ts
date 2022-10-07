@@ -16,11 +16,17 @@ jest.mock("localforage", () => ({
 describe(`settings`, () => {
   const wallet = new Keypair();
   const secretKey = wallet.secretKey;
-  const PASSWORD = "swag";
+  const PASSWORD = "unit testing password";
+  const INCORRECT_PASSWORD = "incorrect password";
 
   beforeAll(() => {
     // Enable webcrypto in node, so we can test things that use browser crypto
     global.crypto = new Crypto();
+  });
+
+  test(`Returns null when settings don't exist`, async () => {
+    const settings = await getSettings(PASSWORD);
+    expect(settings).toBe(null);
   });
 
   test(`Can save settings successfully`, async () => {
@@ -31,5 +37,10 @@ describe(`settings`, () => {
     const settings = await getSettings(PASSWORD);
     expect(settings.version).toEqual(1);
     expect(settings.secretKey).toEqual(wallet.secretKey);
+  });
+
+  test(`Throws an error when the password is bad`, async () => {
+    const settingsPromise = getSettings(INCORRECT_PASSWORD);
+    await expect(settingsPromise).rejects.toThrow("Bad password");
   });
 });

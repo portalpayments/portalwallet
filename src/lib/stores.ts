@@ -1,4 +1,4 @@
-import { writable, type Writable } from "svelte/store";
+import { get, writable, type Writable } from "svelte/store";
 import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
 import { identityTokenIssuerPublicKeyString } from "./constants";
 import { Direction, type Contact, type TransactionSummary } from "../lib/types";
@@ -16,18 +16,28 @@ connectionStore.subscribe((newValue) => {
   connection = newValue;
 });
 
-// The active users's keypair
-export const keyPairStore: Writable<null | Keypair> = writable(null);
-keyPairStore.subscribe((newValue) => {
-  keyPair = newValue;
-});
-
 export const transactionsStore: Writable<null | Array<TransactionSummary>> =
   writable(null);
 
 export const identityTokenIssuerPublicKey = new PublicKey(
   identityTokenIssuerPublicKeyString
 );
+
+interface Auth {
+  isLoggedIn: boolean;
+  secretKey: null | Uint8Array;
+}
+
+// From https://svelte.dev/repl/cc54944f9c2f44209d6da7344ea4c101?version=3.17.2
+export const authStore: Writable<Auth> = writable({
+  isLoggedIn: false,
+  secretKey: null,
+});
+
+// Storing the state of the wallet balance account
+export const walletBalanceAccount = writable({
+  isShowingBalanceInSol: false,
+});
 
 transactionsStore.subscribe(async (transactions) => {
   if (!transactions) {
@@ -64,6 +74,11 @@ transactionsStore.subscribe(async (transactions) => {
   );
 
   // TODO - Fix 'as' - asyncMap may need some work.
+  const secretKey = get(authStore).secretKey;
+  if (!secretKey) {
+    throw new Error(`Couldn't get the secret key from the auth store!`);
+  }
+
   const contacts = (await asyncMap(
     uniqueTransactionWalletAddresses,
     async (walletAddress): Promise<Contact> => {
@@ -90,13 +105,3 @@ transactionsStore.subscribe(async (transactions) => {
 
 // Their contacts
 export const contactsStore: Writable<Array<Contact>> = writable([]);
-
-// From https://svelte.dev/repl/cc54944f9c2f44209d6da7344ea4c101?version=3.17.2
-export const authStore = writable({
-  isLoggedIn: false,
-});
-
-// Storing the state of the wallet balance account
-export const walletBalanceAccount = writable({
-  isShowingBalanceInSol: false,
-});
