@@ -51,7 +51,7 @@
   let testUser: null | User = null;
   (async () => {
     // Connect to Solana
-    const newConnection = await connect("genesysGoMain");
+    const newConnection = await connect("mainNetBeta");
     connectionStore.set(newConnection);
 
     // Get our Private Key from LocalStorage
