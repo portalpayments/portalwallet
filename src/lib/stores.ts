@@ -40,8 +40,8 @@ export const walletBalanceAccount = writable({
   isShowingBalanceInSol: false,
 });
 
-transactionsStore.subscribe(async (transactions) => {
-  if (!transactions) {
+transactionsStore.subscribe(async (transactionSummaries) => {
+  if (!transactionSummaries) {
     if (connection) {
       throw new Error(
         `We have transactions but no connection. This shouldn't happen!`
@@ -51,11 +51,11 @@ transactionsStore.subscribe(async (transactions) => {
     return;
   }
 
-  if (!transactions.length) {
+  if (!transactionSummaries.length) {
     return;
   }
 
-  const transactionWalletAddresses = transactions.map((transaction) => {
+  const transactionWalletAddresses = transactionSummaries.map((transaction) => {
     let transactionWalletAddress: string;
     if (transaction.direction === Direction.sent) {
       transactionWalletAddress = transaction.to;
