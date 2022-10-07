@@ -8,8 +8,8 @@
   import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../constants";
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
   import type { Connection, Keypair } from "@solana/web3.js";
-
-  import { log, stringify } from "../../backend/functions";
+  import MockBalance from "../Shared/MockedSVGs/MockBalance.svelte";
+  import { log, sleep, stringify } from "../../backend/functions";
 
   log(`Homepage loading...`);
 
@@ -79,8 +79,9 @@
   {#if isBalanceLoaded}
     <Balance {isBalanceLoaded} {major} {minor} />
   {:else}
-    <div>Loading...</div>
+    <MockBalance />
   {/if}
+
   <Buttons />
   <TransactionsHeading />
   <Transactions />

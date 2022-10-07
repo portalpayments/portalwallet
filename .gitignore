@@ -4,3 +4,4 @@ test-ledger
 *.Identifier
 *.zip
 dist/*
+*.DS_Store
