@@ -21,20 +21,13 @@
     showRecoveryPhrase = false;
   };
 
-  const copyPhrase = (text) => {
-    var type = "text/plain";
-    var blob = new Blob([text], { type });
-    var data = [new ClipboardItem({ [type]: blob })];
-
-    navigator.clipboard.write(data).then(
-      function () {
-        /* success */
-        console.log("copied svg to clipboard");
-      },
-      function () {
-        /* failure */
-      }
-    );
+  const copyPhrase = () => {
+    //src https://developer.mozilla.org/en-US/docs/Web/API/Navigator/clipboard
+    navigator.clipboard.writeText(personalRecoveryPhrase).then(() => {
+      // Alert the user that the action took place.
+      // Nobody likes hidden stuff being done under the hood!
+      alert("Copied to clipboard");
+    });
   };
 </script>
 
@@ -42,29 +35,26 @@
 
 <div class="personal-recovery-phrase">
   {#if recoveryPhraseblurred}
-    <button on:click={showPhrase}>
+    <button on:click={showPhrase} class="showHideRecoveryPhraseButton">
       <img src={Show} alt="Show recovery Phrase" />
     </button>
   {:else}
-    <button on:click={hidePhrase}>
+    <button on:click={hidePhrase} class="showHideRecoveryPhraseButton">
       <img src={Blur} alt="hide recovery phrase" />
     </button>
     <div>
-      <!-- TODO fix button collisiions -->
-      <button
-        on:click={() => copyPhrase(personalRecoveryPhrase)}
-        style="bottom: -65px"
-      >
+      <button on:click={copyPhrase} class="copyToClipboardButton">
         <img
           src={CopyToClipboard}
-          style="width: 15px"
+          style="width: 15px; vertical-align: bottom;margin-right: 5px;"
           alt="copy phrase to clipboard"
-        />
+        />copy
       </button>
     </div>
   {/if}
   <div class={recoveryPhraseblurred ? "blurred" : ""}>
     {personalRecoveryPhrase}
+    <!-- TODO fix button collisions -->
   </div>
 </div>
 
@@ -106,12 +96,25 @@
     background-color: transparent;
     width: 24px;
   }
-  button {
+  .showHideRecoveryPhraseButton {
     background-color: transparent;
     position: absolute;
     z-index: 55;
     /* eyeballed */
     left: 240px;
     top: 5px;
+  }
+  .copyToClipboardButton {
+    display: block;
+    width: 100px;
+    color: #9d9d9d;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background-color: transparent;
+    position: absolute;
+    z-index: 55;
+    /* eyeballed */
+    left: 190px;
+    bottom: 5px;
   }
 </style>

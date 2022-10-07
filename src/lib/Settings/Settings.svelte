@@ -9,7 +9,7 @@
   import PrivateKey from "./privateKey.svelte";
 
   //   Toggle isVerified to view different scenarios
-  export let isVerified = true;
+  export let isVerified = false;
   export let name: string | null = "Don Juan";
   export let walletAddress = "6yzxysyashdhsanenr78jen9sanenr78jen9";
 
@@ -27,9 +27,8 @@
     showRecoveryPhrase: boolean = false,
     showPrivateKey: boolean = false
   ) => {
-    //  TODO make this secure. This is not a good way of storing the recovery phrase
+    //  TODO make this secure. Get the private key and personal recovery phrase on demand
     if (password === "password" && showRecoveryPhrase) {
-      console.log("Im IN!");
       personalRecoveryPhrase =
         "When I was 6 my parents got my brother Finian a train for Christmas";
       isModalOpen = false;
@@ -90,12 +89,6 @@
       <div class={isVerified ? "address small-font" : "address"}>
         {truncateWallet(walletAddress)}
       </div>
-      {#if !isVerified}
-        <button
-          on:click={initiateVerificationProcess}
-          class="getVerified-button">get verified</button
-        >
-      {/if}
     </div>
   </div>
   <div>
@@ -116,6 +109,13 @@
       bind:isModalOpen
     />
   </div>
+  {#if !isVerified}
+    <div>
+      <button on:click={initiateVerificationProcess} class="getVerified-button"
+        >get verified</button
+      >
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -124,7 +124,7 @@
     width: var(--wallet-width);
     height: var(--wallet-height);
     grid-auto-flow: row;
-    grid-template-rows: 64px 80px 170px 1fr;
+    grid-template-rows: 64px 80px 170px 1fr 1fr;
     grid-template-columns: var(--wallet-width);
     gap: 20px;
     justify-content: center;
@@ -189,12 +189,13 @@
     background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
   }
   .getVerified-button {
-    width: 90%;
+    width: auto;
     margin-top: 5px;
-    padding: 5px 10px;
+    padding: 8px 25px;
     color: #fff;
     font-weight: 600;
-    font-size: 1rem;
+    margin: auto;
+    font-size: 1.3rem;
     border-radius: 24px;
     background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
   }

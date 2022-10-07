@@ -35,22 +35,30 @@
 
 <div class="privateKey">
   {#if privateKeyBlurred}
-    <button on:click={showKey}>
+    <button on:click={showKey} class="showHidePrivateKeyButton">
       <img src={Show} alt="Show private key" />
     </button>
   {:else}
-    <button on:click={hideKey}>
+    <button on:click={hideKey} class="showHidePrivateKeyButton">
       <img src={Blur} alt="hide private key" />
     </button>
-    <button on:click={copyPhrase} style="bottom: -65px">
-      <img
-        src={CopyToClipboard}
-        style="width: 15px"
-        alt="copy phrase to clipboard"
-      />
-    </button>
+    <div>
+      <button
+        on:click={copyPhrase}
+        style="bottom: -65px"
+        class="copyToClipboardButton"
+      >
+        <img
+          src={CopyToClipboard}
+          style="width: 15px; vertical-align: bottom;margin-right: 5px;"
+          alt="copy phrase to clipboard"
+        /> copy
+      </button>
+    </div>
   {/if}
-  <div class={privateKeyBlurred ? "blurred" : ""}>{privateKey}</div>
+  <div class={privateKeyBlurred ? "blurred" : ""}>
+    {privateKey}
+  </div>
 </div>
 
 <style>
@@ -93,12 +101,26 @@
     background-color: transparent;
     width: 24px;
   }
-  button {
+  .showHidePrivateKeyButton {
     background-color: transparent;
     position: absolute;
     z-index: 55;
     /* eyeballed */
     left: 240px;
     top: 5px;
+  }
+  .copyToClipboardButton {
+    display: block;
+    width: 100px;
+    color: #9d9d9d;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background-color: transparent;
+    position: absolute;
+    z-index: 55;
+    /* eyeballed */
+    left: 190px;
+    top: 58px;
+    height: 25px;
   }
 </style>
