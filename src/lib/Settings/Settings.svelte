@@ -8,6 +8,7 @@
   import Modal from "../Shared/Modal.svelte";
   import PrivateKey from "./privateKey.svelte";
 
+  // TODO - Mike modify dependending on whether we have a token
   //   Toggle isVerified to view different scenarios
   export let isVerified = false;
   export let name: string | null = "Don Juan";

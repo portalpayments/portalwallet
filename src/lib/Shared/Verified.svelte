@@ -3,13 +3,6 @@
   import Checkmark from "../../assets/Checkmark.svg";
   import { LabelColor } from "../constants";
   import { hackProfilePicsByWallet } from "../utils";
-  import {
-    VAHEHS_WALLET,
-    MIKES_WALLET,
-    JOE_MCCANNS_WALLET,
-    SHAQS_WALLET,
-    YCOMBINATOR_DEMO_WALLET_FOR_JARED,
-  } from "../../backend/constants";
   import type { Contact } from "../types";
 
   export let contact: Contact;
