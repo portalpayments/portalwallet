@@ -160,10 +160,6 @@ export const getIdentityTokenFromWallet = async (
   identityTokenIssuerPublicKey: PublicKey,
   wallet: PublicKey
 ) => {
-  log(
-    `About to get metaplex, metaplexConnectionKeypair is`,
-    metaplexConnectionKeypair
-  );
   const metaplex = getMetaplex(connection, metaplexConnectionKeypair);
   const nfts = await metaplex
     .nfts()

@@ -218,12 +218,9 @@ export const getTransactionsForAddress = async (
     { limit }
   );
 
-  log(`confirmedSignatureInfos:`, stringify(confirmedSignatureInfos));
-
   let signatures: Array<string> = confirmedSignatureInfos.map(
     (confirmedSignatureInfo) => confirmedSignatureInfo.signature
   );
-  log(`signatures:`, stringify(signatures));
 
   const transactions: Array<ParsedTransactionWithMeta> =
     await connection.getParsedTransactions(signatures, {
