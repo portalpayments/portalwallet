@@ -5,7 +5,7 @@ export enum LabelColor {
   Red = "red",
 }
 
-export const HOW_MANY_TRANSACTIONS_TO_SHOW = 1;
+export const HOW_MANY_TRANSACTIONS_TO_SHOW = 10;
 
 // TODO: this is extracted from the private key in the backend .env file
 export const identityTokenIssuerPublicKeyString =
