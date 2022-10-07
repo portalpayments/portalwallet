@@ -75,8 +75,7 @@ export const transactionResponseToPortalTransactionSummary = (
     }
 
     if (transactionResponse.meta.preTokenBalances.length === 0) {
-      log(`Ignoring non-token transaction`);
-      // TODO: handle native token transactions
+      log(`Handing Sol transaction`);
       const instructions = transactionResponse.transaction.message.instructions;
       if (instructions.length !== 1) {
         throw new Error(`Don't know how to summarize this transaction`);
