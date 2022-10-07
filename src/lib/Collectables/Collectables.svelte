@@ -4,6 +4,7 @@
   import { getAllNftMetadatasFromAWallet } from "../../backend/identity-tokens";
   import { httpGet } from "../utils";
   import type { Collectable } from "../types";
+  import MockGallery from "../Shared/MockedSVGs/MockGallery.svelte";
 
   import { connectionStore, authStore } from "../stores";
 
@@ -12,10 +13,11 @@
 
   let connection: Connection;
   let keypair: Keypair;
-
+  let loading = false;
   let collectables: Array<Collectable> = [];
 
   const updateCollectables = async () => {
+    loading = true;
     if (!connection) {
       return;
     }
@@ -28,6 +30,7 @@
       keypair,
       keypair.publicKey
     );
+
     collectables = (await asyncMap(allNftsFromAWallet, async (nft) => {
       const data = await httpGet(nft.uri);
       const firstFile = data?.properties?.files?.[0];
@@ -41,10 +44,13 @@
       };
     })) as Array<Collectable>;
     // Filter out non-collectible NFTs
+
     collectables = collectables.filter((collectable) => {
       return Boolean(collectable.image);
     });
+
     log("collectables", stringify(collectables));
+    loading = false;
   };
 
   connectionStore.subscribe((newValue) => {
@@ -64,7 +70,10 @@
 
 <div class="feature">
   <Heading>Gallery</Heading>
-  {#if collectables.length}
+
+  {#if loading}
+    <MockGallery />
+  {:else if collectables.length}
     <div class="nfts">
       {#each collectables as collectable}
         <img src={collectable.image} alt={collectable.description} />

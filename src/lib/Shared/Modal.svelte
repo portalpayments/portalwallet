@@ -38,10 +38,11 @@
     box-sizing: border-box;
     transition: all 0.3s ease-out;
     border-radius: 6px;
-
     display: grid;
     grid-auto-flow: row;
     gap: 6px;
+    /* eyeballing */
+    top: 25%;
   }
 
   /* TODO - close buttons generally not used on mobile amnd this is too small */
