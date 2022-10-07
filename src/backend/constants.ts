@@ -71,6 +71,8 @@ export const URLS = {
   // The SSC DAO network handles both https and wss connections. It provides unlimited data, global DNS load balancing for the lowest latency possible, backed by 300+ bare metal servers in 9 countries across 3 different continents. Additionally, the SSC DAO network has the full ledger history back to the genesis block.
   genesysGoMain: "https://ssc-dao.genesysgo.net/",
   genesysGoDevNet: "https://devnet.genesysgo.net/",
+  // https://www.ankr.com/rpc/solana
+  ankrMainNet: "https://rpc.ankr.com/solana",
 };
 
 export const USD_DECIMALS = 2;

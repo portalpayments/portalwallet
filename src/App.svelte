@@ -40,7 +40,7 @@
     if (newValue.secretKey) {
       log(`🔑Got secret key.`);
       // Connect to Solana
-      const newConnection = await connect("genesysGoMain");
+      const newConnection = await connect("ankrMainNet");
       connectionStore.set(newConnection);
 
       if (!newValue.secretKey) {
