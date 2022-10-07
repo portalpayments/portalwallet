@@ -55,6 +55,8 @@ transactionsStore.subscribe(async (transactionSummaries) => {
     return;
   }
 
+  log(`${transactionSummaries.length} transactionSummaries.`);
+
   const transactionWalletAddresses = transactionSummaries.map((transaction) => {
     let transactionWalletAddress: string;
     if (transaction.direction === Direction.sent) {

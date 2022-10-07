@@ -218,9 +218,15 @@ export const getTransactionsForAddress = async (
     { limit }
   );
 
+  log(
+    `Got ${confirmedSignatureInfos.length} confirmedSignatureInfos with a limit of ${limit}`
+  );
+
   let signatures: Array<string> = confirmedSignatureInfos.map(
     (confirmedSignatureInfo) => confirmedSignatureInfo.signature
   );
+
+  log(`Got ${signatures.length} signatures`);
 
   const transactions: Array<ParsedTransactionWithMeta> =
     await connection.getParsedTransactions(signatures, {
@@ -236,16 +242,16 @@ export const getTransactionSummariesForAddress = async (
   address: PublicKey,
   limit: number
 ) => {
-  const transactions = await getTransactionsForAddress(
+  const rawTransactions = await getTransactionsForAddress(
     connection,
     address,
     limit
   );
-  let transactionSummaries = transactions.map((transaction) => {
-    return transactionResponseToPortalTransactionSummary(
-      transaction,
-      new PublicKey(MIKES_WALLET)
-    );
+  log(
+    `In getTransactionSummariesForAddress, limit was ${limit}, got ${rawTransactions.length} rawTransactions`
+  );
+  let transactionSummaries = rawTransactions.map((transaction) => {
+    return transactionResponseToPortalTransactionSummary(transaction, address);
   });
 
   // We can't summarize all transactions yet

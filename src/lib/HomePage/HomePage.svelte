@@ -31,7 +31,6 @@
     if (!keypair) {
       return;
     }
-    log(`🔢 Keypair or connection have changed, updating balance`);
 
     usdcAccounts = await getUSDCAccounts(connection, keypair.publicKey);
 
@@ -63,6 +62,7 @@
 
   connectionStore.subscribe((newValue) => {
     if (newValue) {
+      log(`🔌 connection has changed, updating balance`);
       connection = newValue;
       updateBalance();
     }
@@ -70,6 +70,7 @@
 
   authStore.subscribe((newValue) => {
     if (newValue.secretKey) {
+      log(`🗝️ secretKey has changed, updating balance`);
       keypair = KeypairConstructor.fromSecretKey(newValue.secretKey);
       updateBalance();
     }

@@ -24,7 +24,6 @@
     if (!keypair) {
       return;
     }
-    log(`🖼️ Keypair or connection have changed, updating collectables`);
     const allNftsFromAWallet = await getAllNftMetadatasFromAWallet(
       connection,
       keypair,
@@ -56,12 +55,14 @@
   connectionStore.subscribe((newValue) => {
     if (newValue) {
       connection = newValue;
+      log(`🔌 connection has changed, updating collectibles`);
       updateCollectables();
     }
   });
 
   authStore.subscribe((newValue) => {
     if (newValue.secretKey) {
+      log(`🗝️ secretKey has changed, updating collectibles`);
       keypair = KeypairConstructor.fromSecretKey(newValue.secretKey);
       updateCollectables();
     }
