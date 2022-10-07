@@ -13,11 +13,11 @@
 
   let connection: Connection;
   let keypair: Keypair;
-  let loading = false;
+  let isLoading = false;
   let collectables: Array<Collectable> = [];
 
   const updateCollectables = async () => {
-    loading = true;
+    isLoading = true;
     if (!connection) {
       return;
     }
@@ -50,7 +50,7 @@
     });
 
     log("collectables", stringify(collectables));
-    loading = false;
+    isLoading = false;
   };
 
   connectionStore.subscribe((newValue) => {
@@ -71,7 +71,7 @@
 <div class="feature">
   <Heading>Gallery</Heading>
 
-  {#if loading}
+  {#if isLoading}
     <MockGallery />
   {:else if collectables.length}
     <div class="nfts">
