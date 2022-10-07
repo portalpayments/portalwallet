@@ -32,7 +32,6 @@ export const getMetaplex = (
   keypair: Keypair,
   isProduction: boolean = false
 ) => {
-  debugger;
   if (isProduction) {
     return Metaplex.make(connection)
       .use(keypairIdentity(keypair))
@@ -165,7 +164,7 @@ export const getIdentityTokenFromWallet = async (
     `About to get metaplex, metaplexConnectionKeypair is`,
     metaplexConnectionKeypair
   );
-  const metaplex = await getMetaplex(connection, metaplexConnectionKeypair);
+  const metaplex = getMetaplex(connection, metaplexConnectionKeypair);
   const nfts = await metaplex
     .nfts()
     .findAllByOwner({

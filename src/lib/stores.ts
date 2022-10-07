@@ -1,5 +1,6 @@
 import { get as getFromStore, writable, type Writable } from "svelte/store";
 import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
+import { Keypair as KeypairConstructor } from "@solana/web3.js";
 import { identityTokenIssuerPublicKeyString } from "./constants";
 import { Direction, type Contact, type TransactionSummary } from "../lib/types";
 import { asyncMap, log, stringify } from "../backend/functions";
@@ -78,6 +79,8 @@ transactionsStore.subscribe(async (transactions) => {
   if (!secretKey) {
     throw new Error(`Couldn't get the secret key from the auth store!`);
   }
+
+  keyPair = KeypairConstructor.fromSecretKey(secretKey);
 
   const contacts = (await asyncMap(
     uniqueTransactionWalletAddresses,
