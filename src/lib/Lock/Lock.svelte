@@ -13,7 +13,9 @@
 
   const login = async function (password) {
     if (!password.length) {
-      throw new Error(`Type a password`);
+      isBadPassword = true;
+      await sleep(1 * SECOND);
+      isBadPassword = false;
     }
     let settings: Settings;
     try {
