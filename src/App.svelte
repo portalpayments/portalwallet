@@ -51,7 +51,7 @@
   let testUser: null | User = null;
   (async () => {
     // Connect to Solana
-    const newConnection = await connect("mainNetBeta");
+    const newConnection = await connect("ankrMainNet");
     connectionStore.set(newConnection);
 
     // Get our Private Key from LocalStorage

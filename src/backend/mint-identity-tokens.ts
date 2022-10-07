@@ -26,7 +26,7 @@ export const mintAndTransferIdentityToken = async (
   familyName: string
 ) => {
   log(`🏦 Minting identity tokens`);
-  const connection = await connect("mainNetBeta");
+  const connection = await connect("ankrMainNet");
 
   const tokenCreateOutput = await mintIdentityToken(
     connection,
