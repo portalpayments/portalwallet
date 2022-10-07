@@ -35,13 +35,13 @@
 
     usdcAccounts = await getUSDCAccounts(connection, keypair.publicKey);
 
-    const transactions = await getTransactionSummariesForAddress(
+    const transactionSummaries = await getTransactionSummariesForAddress(
       connection,
       keypair.publicKey,
       HOW_MANY_TRANSACTIONS_TO_SHOW
     );
 
-    transactionsStore.set(transactions);
+    transactionsStore.set(transactionSummaries);
 
     const JUST_ONE_SUPPORTED_USDC_ACCOUNT_FOR_NOW = 0;
     const usdcAccount = usdcAccounts[JUST_ONE_SUPPORTED_USDC_ACCOUNT_FOR_NOW];
