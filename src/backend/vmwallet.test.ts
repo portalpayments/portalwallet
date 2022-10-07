@@ -328,21 +328,24 @@ describe(`mainnet integration tests`, () => {
 
     const lastTransaction = transactionSummaries[0];
 
-    const currency = lastTransaction.currency;
-
     // We can't do expect.any(Currency)
     // - this will fail with
     // TypeError: Right-hand side of 'instanceof' is not callable'
     // So check the value is in the enum (as an Object)'s values
+    const currency = lastTransaction.currency;
     const knownCurrencies = Object.values(Currency);
     expect(knownCurrencies.includes(currency));
+
+    const direction = lastTransaction.direction;
+    const knownDirections = Object.values(Direction);
+    expect(knownDirections.includes(direction));
 
     expect(lastTransaction).toEqual({
       amount: expect.any(Number),
       date: expect.any(Number),
       currency: expect.any(Number),
-      direction: Direction.sent,
-      from: MIKES_WALLET,
+      direction: expect.any(Number),
+      from: expect.any(String),
       networkFee: 5000,
       status: true,
       to: expect.any(String),
