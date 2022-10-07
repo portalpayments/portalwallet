@@ -19,7 +19,11 @@
     try {
       settings = await getSettings(password);
     } catch (thrownObject) {
-      const error = thrownObject as Error;
+      // TODO: we're basically assuming all getSettings() failures are a bad password
+      // The other option is: we simply don't have settings get
+      // We should check localforage for PORTAL_SETTINSG and show the onboarding UI
+      // if it doesn't exist.
+      // const error = thrownObject as Error;
       isBadPassword = true;
       await sleep(1 * SECOND);
       isBadPassword = false;
