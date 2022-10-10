@@ -100,9 +100,8 @@
     background-color: transparent;
     position: absolute;
     z-index: 55;
-    /* eyeballed */
-    left: 240px;
-    top: 5px;
+    right: 6px;
+    top: 6px;
   }
   .copyToClipboardButton {
     display: block;
@@ -113,8 +112,7 @@
     background-color: transparent;
     position: absolute;
     z-index: 55;
-    /* eyeballed */
-    left: 190px;
-    bottom: 5px;
+    right: 6px;
+    top: 6px;
   }
 </style>
