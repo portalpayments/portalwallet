@@ -42,15 +42,13 @@
     <button on:click={hidePhrase} class="show-hide-recovery-phrase">
       <img src={Blur} alt="hide recovery phrase" />
     </button>
-    <div>
-      <button on:click={copyPhrase} class="copy-to-clipboard">
-        <img
-          src={CopyToClipboard}
-          style="width: 15px; vertical-align: bottom;margin-right: 5px;"
-          alt="copy phrase to clipboard"
-        />copy
-      </button>
-    </div>
+    <button on:click={copyPhrase} class="copy-to-clipboard">
+      <img
+        src={CopyToClipboard}
+        style="width: 15px; vertical-align: bottom;margin-right: 5px;"
+        alt="copy phrase to clipboard"
+      />copy
+    </button>
   {/if}
   <div class={recoveryPhraseblurred ? "blurred" : ""}>
     {personalRecoveryPhrase}
