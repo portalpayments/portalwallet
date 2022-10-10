@@ -3,12 +3,7 @@
 </script>
 
 <div class="back-button">
-  <Link to="/">‹<span style="font-size: 1.5rem; margin-left: 5px; font-weight:600; color: transparent; background-clip: text; -webkit-background-clip: text; background-image: linear-gradient(
-    350deg,
-    var(--dark-blue),
-    var(--teal),
-    var(--bright-green)
-  ); "><slot/></span></Link>
+  <Link to="/">‹<span><slot /></span></Link>
 </div>
 
 <style>
@@ -30,5 +25,20 @@
     color: #3a3a3a;
     font-size: 2rem;
     font-weight: 400;
+  }
+
+  span {
+    font-size: 1.5rem;
+    margin-left: 5px;
+    font-weight: 600;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    background-image: linear-gradient(
+      350deg,
+      var(--dark-blue),
+      var(--teal),
+      var(--bright-green)
+    );
   }
 </style>
