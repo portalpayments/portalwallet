@@ -35,15 +35,15 @@
 
 <div class="personal-recovery-phrase">
   {#if recoveryPhraseblurred}
-    <button on:click={showPhrase} class="showHideRecoveryPhraseButton">
+    <button on:click={showPhrase} class="show-hide-recovery-phrase">
       <img src={Show} alt="Show recovery Phrase" />
     </button>
   {:else}
-    <button on:click={hidePhrase} class="showHideRecoveryPhraseButton">
+    <button on:click={hidePhrase} class="show-hide-recovery-phrase">
       <img src={Blur} alt="hide recovery phrase" />
     </button>
     <div>
-      <button on:click={copyPhrase} class="copyToClipboardButton">
+      <button on:click={copyPhrase} class="copy-to-clipboard">
         <img
           src={CopyToClipboard}
           style="width: 15px; vertical-align: bottom;margin-right: 5px;"
@@ -96,14 +96,14 @@
     background-color: transparent;
     width: 24px;
   }
-  .showHideRecoveryPhraseButton {
+  .show-hide-recovery-phrase {
     background-color: transparent;
     position: absolute;
     z-index: 55;
     right: 6px;
     top: 6px;
   }
-  .copyToClipboardButton {
+  .copy-to-clipboard {
     display: block;
     width: 100px;
     color: #9d9d9d;

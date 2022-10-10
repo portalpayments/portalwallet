@@ -46,7 +46,7 @@
       <button
         on:click={copyPhrase}
         style="bottom: -65px"
-        class="copyToClipboardButton"
+        class="copy-to-clipboard"
       >
         <img
           src={CopyToClipboard}
@@ -109,7 +109,7 @@
     left: 240px;
     top: 5px;
   }
-  .copyToClipboardButton {
+  .copy-to-clipboard {
     display: block;
     width: 100px;
     color: #9d9d9d;
