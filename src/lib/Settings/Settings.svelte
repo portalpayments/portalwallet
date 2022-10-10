@@ -1,12 +1,12 @@
 <script lang="ts">
   import BackButton from "../Shared/BackButton.svelte";
+
   import MockProfilePhoto from "../../assets/Collectables/baycMockNFT.jpg";
   import AnonymousPhoto from "../../assets/anonymous.svg";
   import Checkmark from "../../assets/Checkmark.svg";
   import { truncateWallet } from "../utils";
-  import PersonalRecoveryPhrase from "./personalRecoveryPhrase.svelte";
   import Modal from "../Shared/Modal.svelte";
-  import PrivateKey from "./privateKey.svelte";
+  import BlurredText from "./BlurredText.svelte";
 
   // TODO - Mike modify dependending on whether we have a token
   //   Toggle isVerified to view different scenarios
@@ -14,11 +14,15 @@
   export let name: string | null = "Don Juan";
   export let walletAddress = "6yzxysyashdhsanenr78jen9sanenr78jen9";
 
-  let personalRecoveryPhrase = "";
-  let privateKey = "";
+  const MOCK_PERSONAL_RECOVERY_PHRASE_FOR_BLURRING =
+    "I am a mocked phrase to show as blurred text before the preal personal recovery phrase has been decrypted";
+
+  const MOCK_PRIVATE_KEY_FOR_BLURRING =
+    "1234567890123456789012345678901234567890123";
+
   let enteredPassword = "";
-  let recoveryPhraseblurred = true;
-  let privateKeyBlurred = true;
+  let isRecoveryPhraseBlurred = true;
+  let isPrivateKeyBlurred = true;
   let isModalOpen = false;
   let showRecoveryPhrase = false;
   let showPrivateKey = false;
@@ -30,19 +34,14 @@
   ) => {
     //  TODO make this secure. Get the private key and personal recovery phrase on demand
     if (password === "password" && showRecoveryPhrase) {
-      personalRecoveryPhrase =
-        "When I was 6 my parents got my brother Finian a train for Christmas";
       isModalOpen = false;
-      recoveryPhraseblurred = false;
+      isRecoveryPhraseBlurred = false;
     }
     if (password === "password" && showPrivateKey) {
-      privateKey = "KQ3cGFBdjJuRsB7U1K4to6cTGBPhgukqPgsi5pryr8v";
       isModalOpen = false;
-      privateKeyBlurred = false;
+      isPrivateKeyBlurred = false;
     }
     if (password !== "password") {
-      console.log("Im in else");
-      personalRecoveryPhrase = "null";
       alert("Entered password is wrong");
     }
   };
@@ -78,11 +77,12 @@
     <img
       src={isVerified ? MockProfilePhoto : AnonymousPhoto}
       class="profile-pic"
+      alt="profile-pic"
     />
     <div class="name-address-verification-status">
       <div class="name">
         {#if isVerified}
-          {name}<img src={Checkmark} class="checkmark" />
+          {name}<img src={Checkmark} class="checkmark" alt="" />
         {:else}
           anonymous
         {/if}
@@ -92,24 +92,14 @@
       </div>
     </div>
   </div>
-  <div>
-    <PersonalRecoveryPhrase
-      bind:showRecoveryPhrase
-      bind:recoveryPhraseblurred
-      bind:enteredPassword
-      bind:personalRecoveryPhrase
-      bind:isModalOpen
-    />
-  </div>
-  <div>
-    <PrivateKey
-      bind:showPrivateKey
-      bind:privateKeyBlurred
-      bind:enteredPassword
-      bind:privateKey
-      bind:isModalOpen
-    />
-  </div>
+
+  <BlurredText
+    text={MOCK_PERSONAL_RECOVERY_PHRASE_FOR_BLURRING}
+    heading="Personal recovery phrase"
+  />
+
+  <BlurredText text={MOCK_PRIVATE_KEY_FOR_BLURRING} heading="Private Key" />
+
   {#if !isVerified}
     <div>
       <button on:click={initiateVerificationProcess} class="getVerified-button"
@@ -122,11 +112,11 @@
 <style>
   .settings {
     display: grid;
+    padding: 0 6px;
     width: var(--wallet-width);
     height: var(--wallet-height);
     grid-auto-flow: row;
-    grid-template-rows: 64px 80px 170px 1fr 1fr;
-    grid-template-columns: var(--wallet-width);
+    grid-template-rows: 64px 80px 1fr 1fr;
     gap: 20px;
     justify-content: center;
     align-items: start;

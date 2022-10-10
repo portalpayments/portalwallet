@@ -1,4 +1,8 @@
-<h1><slot /></h1>
+<script lang="ts">
+  export let size: "large" | "medium" = "large";
+</script>
+
+<h1 class={size}><slot /></h1>
 
 <style>
   h1 {
@@ -16,5 +20,10 @@
       var(--teal),
       var(--bright-green)
     );
+  }
+
+  .medium {
+    font-size: 20px;
+    text-align: left;
   }
 </style>
