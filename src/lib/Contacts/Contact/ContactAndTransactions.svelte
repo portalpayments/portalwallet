@@ -1,12 +1,13 @@
 <script lang="ts">
-  import ContactHeading from "./ContactHeading.svelte";
   import Transactions from "./Transactions.svelte";
   import { transactionsStore, contactsStore } from "../../stores";
   import { log, stringify } from "../../../backend/functions";
-  import type { Contact, TransactionSummary } from "../../../lib/types";
+  import type { Contact as ContactType, TransactionSummary } from "../../types";
   import SendMoney from "./SendMoney.svelte";
+  import Contact from "../../Shared/Contact.svelte";
+  import BackButton from "../../Shared/BackButton.svelte";
 
-  let contact: Contact | null = null;
+  let contact: ContactType | null = null;
 
   // Use the wallet address to determine the wallet to use
   let contactWalletAddress: string = window.location.href.split("/").pop();
@@ -23,18 +24,29 @@
 
   log(`Loading send to contact screen for ${contactWalletAddress}`);
 
-  // TODO: maybe filter our transactions to just the ones from this single contact?
-  let transactions: Array<TransactionSummary> = [];
+  let filteredTransactions: Array<TransactionSummary> = [];
 
   transactionsStore.subscribe((newValue) => {
-    transactions = newValue;
+    // Filter our transactions to just the ones from this single contact
+    filteredTransactions = newValue.filter((transaction) => {
+      if (
+        transaction.from === contactWalletAddress ||
+        transaction.to === contactWalletAddress
+      ) {
+        return true;
+      }
+      return false;
+    });
   });
 </script>
 
-<div class="contactPage">
+<div class="contact-page">
   {#if contact}
-    <ContactHeading {contact} />
-    <Transactions {transactions} />
+    <div class="heading">
+      <BackButton />
+      <Contact {contact} />
+    </div>
+    <Transactions transactions={filteredTransactions} />
     <SendMoney {contact} />
   {:else}
     Loading contact
@@ -42,7 +54,7 @@
 </div>
 
 <style>
-  .contactPage {
+  .contact-page {
     height: var(--wallet-height);
     width: var(--wallet-width);
     display: grid;

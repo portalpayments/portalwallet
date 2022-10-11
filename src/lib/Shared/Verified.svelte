@@ -29,6 +29,7 @@
 <style>
   .profile-pic {
     border-radius: 50%;
+    aspect-ratio: 1 / 1;
   }
   .verified-checkmark {
     height: 18px;
@@ -40,6 +41,7 @@
   .recipient-info {
     display: grid;
     justify-content: start;
+    text-align: left;
   }
 
   .badges-and-labels {

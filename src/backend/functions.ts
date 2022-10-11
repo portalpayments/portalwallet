@@ -50,6 +50,9 @@ export const stringify = (object: any): string => {
 };
 
 export const isEmpty = (object: any): boolean => {
+  if (object === undefined || object === null) {
+    return true;
+  }
   return Object.keys(object).length === 0;
 };
 

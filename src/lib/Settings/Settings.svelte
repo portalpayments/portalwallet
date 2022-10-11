@@ -1,24 +1,20 @@
 <script lang="ts">
   import BackButton from "../Shared/BackButton.svelte";
-
-  import MockProfilePhoto from "../../assets/Collectables/baycMockNFT.jpg";
-  import AnonymousPhoto from "../../assets/anonymous.svg";
-  import Checkmark from "../../assets/Checkmark.svg";
-  import { truncateWallet } from "../utils";
+  import Verified from "../Shared/Verified.svelte";
+  import Unverified from "../Shared/Unverified.svelte";
+  import { identityTokenIssuerPublicKeyString } from "../constants";
+  import type { Contact as ContactType } from "../types";
+  import { get as getFromStore, writable, type Writable } from "svelte/store";
+  import { Keypair, PublicKey } from "@solana/web3.js";
+  import { log, isEmpty } from "../../backend/functions";
+  import { authStore, connectionStore } from "../../lib/stores";
   import Modal from "../Shared/Modal.svelte";
   import BlurredText from "./BlurredText.svelte";
-
-  // TODO - Mike modify dependending on whether we have a token
-  //   Toggle isVerified to view different scenarios
-  export let isVerified = false;
-  export let name: string | null = "Don Juan";
-  export let walletAddress = "6yzxysyashdhsanenr78jen9sanenr78jen9";
+  import Contact from "../Shared/Contact.svelte";
+  import { connect, verifyWallet } from "../../backend/vmwallet";
 
   const MOCK_PERSONAL_RECOVERY_PHRASE_FOR_BLURRING =
-    "I am a mocked phrase to show as blurred text before the preal personal recovery phrase has been decrypted";
-
-  const MOCK_PRIVATE_KEY_FOR_BLURRING =
-    "1234567890123456789012345678901234567890123";
+    "I am a mocked phrase to show as blurred text before the real personal recovery phrase has been decrypted";
 
   let enteredPassword = "";
   let isRecoveryPhraseBlurred = true;
@@ -49,6 +45,42 @@
   const initiateVerificationProcess = () => {
     console.log("initiating verification process");
   };
+
+  let user: ContactType | null = null;
+
+  let secretKeyText: string | null = null;
+
+  (async () => {
+    authStore.subscribe(async (newValue) => {
+      if (newValue.secretKey) {
+        log(`🔑Got secret key.`);
+
+        // Connect to Solana
+        const connection = getFromStore(connectionStore);
+
+        if (!newValue.secretKey) {
+          throw new Error(`Couldn't get the secret key from the auth store!`);
+        }
+        const keypair = Keypair.fromSecretKey(newValue.secretKey);
+
+        secretKeyText = keypair.secretKey.toString();
+
+        const claims = await verifyWallet(
+          connection,
+          keypair,
+          new PublicKey(identityTokenIssuerPublicKeyString),
+          keypair.publicKey
+        );
+
+        user = {
+          walletAddress: keypair.publicKey.toBase58(),
+          isNew: false,
+          isPending: false,
+          verifiedClaims: claims,
+        };
+      }
+    });
+  })();
 </script>
 
 <div class="settings">
@@ -66,32 +98,15 @@
         on:click={() =>
           checkPassword(enteredPassword, showRecoveryPhrase, showPrivateKey)}
         >submit</button
-      ></Modal
-    >
+      >
+    </Modal>
   {/if}
 
   <div>
     <BackButton>Home</BackButton>
   </div>
-  <div class="user-details">
-    <img
-      src={isVerified ? MockProfilePhoto : AnonymousPhoto}
-      class="profile-pic"
-      alt="profile-pic"
-    />
-    <div class="name-address-verification-status">
-      <div class="name">
-        {#if isVerified}
-          {name}<img src={Checkmark} class="checkmark" alt="" />
-        {:else}
-          anonymous
-        {/if}
-      </div>
-      <div class={isVerified ? "address small-font" : "address"}>
-        {truncateWallet(walletAddress)}
-      </div>
-    </div>
-  </div>
+
+  <Contact contact={user} />
 
   <BlurredText
     text={MOCK_PERSONAL_RECOVERY_PHRASE_FOR_BLURRING}
@@ -100,17 +115,20 @@
   />
 
   <BlurredText
-    text={MOCK_PRIVATE_KEY_FOR_BLURRING}
-    heading="Private Key"
-    description="private key"
+    text={secretKeyText}
+    heading="Secret Key"
+    description="secret key"
   />
 
-  {#if !isVerified}
-    <div>
-      <button on:click={initiateVerificationProcess} class="get-verified-button"
-        >get verified</button
-      >
-    </div>
+  {#if user}
+    {#if isEmpty(user.verifiedClaims)}
+      <div>
+        <button
+          on:click={initiateVerificationProcess}
+          class="get-verified-button">get verified</button
+        >
+      </div>
+    {/if}
   {/if}
 </div>
 
@@ -127,50 +145,7 @@
     align-items: start;
     background: radial-gradient(at 50% 50%, #dde9ff 0, #fff 80%, #fff 100%);
   }
-  .profile-pic {
-    border-radius: 60%;
-  }
 
-  img {
-    width: 80px;
-    height: 80px;
-  }
-  .user-details {
-    display: grid;
-    grid-auto-flow: column;
-    grid-template-columns: 100px 1fr;
-    padding: 0 0 0 10px;
-  }
-  .name-address-verification-status {
-    display: grid;
-    grid-auto-flow: row;
-    grid-template-rows: auto 32px;
-    justify-self: start;
-    font-size: 1.4rem;
-    align-self: center;
-  }
-  .name {
-    display: block;
-    text-align: left;
-    font-weight: 600;
-  }
-  .checkmark {
-    width: 24px;
-    height: 24px;
-    align-self: end;
-    display: inline;
-    vertical-align: bottom;
-    margin-left: 5px;
-  }
-
-  .address {
-    justify-self: start;
-    align-self: center;
-  }
-
-  .small-font {
-    font-size: 1rem;
-  }
   .enter-password-button {
     width: 70%;
     position: relative;

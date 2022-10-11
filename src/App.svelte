@@ -14,7 +14,7 @@
   import { connect, verifyWallet } from "./backend/vmwallet";
   import { log } from "./backend/functions";
   import Lock from "./lib/Lock/Lock.svelte";
-  import Contact from "./lib/Contacts/Contact/Contact.svelte";
+  import Contact from "./lib/Contacts/Contact/ContactAndTransactions.svelte";
   import {
     connectionStore,
     authStore,
