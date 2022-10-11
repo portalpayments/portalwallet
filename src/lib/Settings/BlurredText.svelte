@@ -20,8 +20,6 @@
   const copyPhrase = async () => {
     //src https://developer.mozilla.org/en-US/docs/Web/API/Navigator/clipboard
     await navigator.clipboard.writeText(text);
-    // Alert the user that the action took place.
-    // Nobody likes hidden stuff being done under the hood!
     alert("Copied to clipboard");
   };
 </script>

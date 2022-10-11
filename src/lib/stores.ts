@@ -76,7 +76,6 @@ transactionsStore.subscribe(async (transactionSummaries) => {
     uniqueTransactionWalletAddresses
   );
 
-  // TODO - Fix 'as' - asyncMap may need some work.
   const secretKey = getFromStore(authStore).secretKey;
   if (!secretKey) {
     throw new Error(`Couldn't get the secret key from the auth store!`);
@@ -84,6 +83,7 @@ transactionsStore.subscribe(async (transactionSummaries) => {
 
   keyPair = KeypairConstructor.fromSecretKey(secretKey);
 
+  // TODO - Fix 'as' - asyncMap may need some work.
   const contacts = (await asyncMap(
     uniqueTransactionWalletAddresses,
     async (walletAddress): Promise<Contact> => {
