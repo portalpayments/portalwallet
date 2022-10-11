@@ -20,7 +20,7 @@ Then in your browser DevTools console run:
 saveSettingsHack("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678", "password")
 ```
 
-Get your private key from **Phantom** -> ⚙️ -> **Export Private Key**
+Get your secret key from **Phantom** -> ⚙️ -> **Export Private Key**
 
 ## To test the Web Extension
 

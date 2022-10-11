@@ -2,7 +2,7 @@
   import { Link } from "svelte-navigator";
 </script>
 
-<div class="back-button">
+<div class="back-button colorful-text">
   <Link to="/">‹<span><slot /></span></Link>
 </div>
 
@@ -31,14 +31,5 @@
     font-size: 1.5rem;
     margin-left: 5px;
     font-weight: 600;
-    color: transparent;
-    background-clip: text;
-    -webkit-background-clip: text;
-    background-image: linear-gradient(
-      350deg,
-      var(--dark-blue),
-      var(--teal),
-      var(--bright-green)
-    );
   }
 </style>

@@ -12,7 +12,7 @@
   import BlurredText from "./BlurredText.svelte";
   import Contact from "../Shared/Contact.svelte";
   import { connect, verifyWallet } from "../../backend/vmwallet";
-
+  import base58 from "bs58";
   const MOCK_PERSONAL_RECOVERY_PHRASE_FOR_BLURRING =
     "I am a mocked phrase to show as blurred text before the real personal recovery phrase has been decrypted";
 
@@ -63,21 +63,23 @@
         }
         const keypair = Keypair.fromSecretKey(newValue.secretKey);
 
-        secretKeyText = keypair.secretKey.toString();
+        secretKeyText = base58.encode(keypair.secretKey);
 
-        const claims = await verifyWallet(
-          connection,
-          keypair,
-          new PublicKey(identityTokenIssuerPublicKeyString),
-          keypair.publicKey
-        );
+        if (connection) {
+          const claims = await verifyWallet(
+            connection,
+            keypair,
+            new PublicKey(identityTokenIssuerPublicKeyString),
+            keypair.publicKey
+          );
 
-        user = {
-          walletAddress: keypair.publicKey.toBase58(),
-          isNew: false,
-          isPending: false,
-          verifiedClaims: claims,
-        };
+          user = {
+            walletAddress: keypair.publicKey.toBase58(),
+            isNew: false,
+            isPending: false,
+            verifiedClaims: claims,
+          };
+        }
       }
     });
   })();
@@ -120,15 +122,12 @@
     description="secret key"
   />
 
-  {#if user}
-    {#if isEmpty(user.verifiedClaims)}
-      <div>
-        <button
-          on:click={initiateVerificationProcess}
-          class="get-verified-button">get verified</button
-        >
-      </div>
-    {/if}
+  {#if isEmpty(user?.verifiedClaims)}
+    <div>
+      <button on:click={initiateVerificationProcess} class="get-verified-button"
+        >get verified</button
+      >
+    </div>
   {/if}
 </div>
 

@@ -1,8 +1,9 @@
 <script lang="ts">
   export let size: "large" | "medium" = "large";
+  export let isColorful = true;
 </script>
 
-<h1 class={size}><slot /></h1>
+<h1 class="{size} {isColorful ? 'colorful-text' : ''}"><slot /></h1>
 
 <style>
   h1 {
@@ -10,16 +11,6 @@
     margin: 0;
     display: grid;
     align-content: center;
-    /* Colored background techique used on website */
-    color: transparent;
-    background-clip: text;
-    -webkit-background-clip: text;
-    background-image: linear-gradient(
-      350deg,
-      var(--dark-blue),
-      var(--teal),
-      var(--bright-green)
-    );
   }
 
   .medium {

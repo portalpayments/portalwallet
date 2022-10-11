@@ -7,7 +7,7 @@
   export let text: string;
   export let heading: string;
   export let isShown = false;
-  export let description: string = "recovery phrase" || "private key";
+  export let description: string = "recovery phrase" || "secret key";
 
   const showText = () => {
     isShown = true;
@@ -25,7 +25,7 @@
 </script>
 
 <div class="blurred-text">
-  <Heading size="medium">{heading}</Heading>
+  <Heading size="medium" isColorful={false}>{heading}</Heading>
   <div class="copy-paste-area">
     <div class="buttons">
       {#if isShown}

@@ -12,6 +12,7 @@ import {
   putSolIntoWallet,
   verifyWallet,
 } from "./vmwallet";
+import base58 from "bs58";
 
 import {
   AGIZA_NFT_ADDRESS,
@@ -96,6 +97,12 @@ describe(`basic wallet functionality on local validator`, () => {
     ).rejects.toThrow(
       "failed to send transaction: Transaction simulation failed: Attempt to debit an account but found no record of a prior credit."
     );
+  });
+
+  test(`We can show a secretKey as an 88 character string`, () => {
+    const wallet = new Keypair();
+    const secretKeyString = base58.encode(wallet.secretKey);
+    expect(secretKeyString).toHaveLength(88);
   });
 });
 

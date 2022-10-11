@@ -28,7 +28,7 @@ export const getKeypairFromString = (secretKeyString: string) => {
   try {
     decodedSecretKey = base58.decode(secretKeyString);
   } catch (throwObject) {
-    throw new Error("Invalid private key! See README.md");
+    throw new Error("Invalid secret key! See README.md");
   }
   return Keypair.fromSecretKey(decodedSecretKey);
 };
