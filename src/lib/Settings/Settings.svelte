@@ -96,13 +96,18 @@
   <BlurredText
     text={MOCK_PERSONAL_RECOVERY_PHRASE_FOR_BLURRING}
     heading="Personal recovery phrase"
+    description="recovery phrase"
   />
 
-  <BlurredText text={MOCK_PRIVATE_KEY_FOR_BLURRING} heading="Private Key" />
+  <BlurredText
+    text={MOCK_PRIVATE_KEY_FOR_BLURRING}
+    heading="Private Key"
+    description="private key"
+  />
 
   {#if !isVerified}
     <div>
-      <button on:click={initiateVerificationProcess} class="getVerified-button"
+      <button on:click={initiateVerificationProcess} class="get-verified-button"
         >get verified</button
       >
     </div>
@@ -179,7 +184,7 @@
     border-radius: 24px;
     background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
   }
-  .getVerified-button {
+  .get-verified-button {
     width: auto;
     margin-top: 5px;
     padding: 8px 25px;

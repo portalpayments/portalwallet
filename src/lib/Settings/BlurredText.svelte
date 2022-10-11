@@ -7,6 +7,7 @@
   export let text: string;
   export let heading: string;
   export let isShown = false;
+  export let description: string = "recovery phrase" || "private key";
 
   const showText = () => {
     isShown = true;
@@ -31,16 +32,16 @@
     <div class="buttons">
       {#if isShown}
         <button on:click={copyPhrase} class="copy-to-clipboard">
-          <img src={CopyToClipboard} alt="copy phrase to clipboard" />copy
+          <img
+            src={CopyToClipboard}
+            alt="copy {description} to clipboard"
+          />copy
         </button>
       {/if}
-      <button
-        on:click={isShown ? hideText : showText}
-        class="show-hide-recovery-phrase"
-      >
+      <button on:click={isShown ? hideText : showText} class="show-hide-text">
         <img
           src={isShown ? Blur : Show}
-          alt="{isShown ? 'Blur' : 'Show'} recovery phrase"
+          alt="{isShown ? 'Blur' : 'Show'} {description}"
         />
       </button>
     </div>
