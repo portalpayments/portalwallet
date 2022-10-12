@@ -371,7 +371,6 @@ describe(`mainnet integration tests`, () => {
     );
 
     const firstTransaction = transactions[0];
-    log(stringify(firstTransaction));
 
     expect(firstTransaction).toEqual({
       blockTime: 1665584732,
