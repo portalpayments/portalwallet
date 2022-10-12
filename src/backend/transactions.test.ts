@@ -9,7 +9,13 @@ import {
   mikeSendingHimselfMoneyTransaction,
   mikeSendingJaredSomeLamportsTransaction,
 } from "./__mocks__/mocks";
-import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  Transaction,
+  type ParsedTransactionWithMeta,
+} from "@solana/web3.js";
 import {
   transactionResponseSenderComesFirst,
   transactionResponseSenderComesSecond,
@@ -21,7 +27,7 @@ import {
   type TransactionSummary,
 } from "../lib/types";
 import { Direction } from "../lib/types";
-import { log, stringify } from "./functions";
+import { hexToUtf8, log, stringify } from "./functions";
 
 // Quiet utils.log() during tests
 jest.mock("./functions", () => ({
@@ -40,6 +46,7 @@ describe(`transaction summaries`, () => {
       );
 
     expect(portalTransactionSummary).toEqual({
+      id: "2PF9JkUYfARqWbxFv5fBNLK7VhQ9NTsSA5QYcUUNDTQZyX4JATE8TjnLBhoaMNsZ1F1ETUxmM8LUygqRUBtbhgFS",
       date: 1663119635000,
       status: true,
       networkFee: 5000,
@@ -63,6 +70,7 @@ describe(`transaction summaries`, () => {
       );
 
     expect(portalTransactionSummary).toEqual({
+      id: "3VsPLbEgjT2YTGp6PWXBDDc6kMFd4UwLHNWWNzjvf1QMutAihtDYzmfUY6Wdr2MffBDmNhP1YPR681d9Y9CgXe2V",
       date: 1663120787000,
       status: true,
       networkFee: 5000,
@@ -86,6 +94,7 @@ describe(`transaction summaries`, () => {
       );
 
     expect(portalTransactionSummary).toEqual({
+      id: "2PF9JkUYfARqWbxFv5fBNLK7VhQ9NTsSA5QYcUUNDTQZyX4JATE8TjnLBhoaMNsZ1F1ETUxmM8LUygqRUBtbhgFS",
       date: 1663119635000,
       status: true,
       networkFee: 5000,
@@ -97,10 +106,11 @@ describe(`transaction summaries`, () => {
     });
   });
 
-  test(`We ignore a transaction doing of Mike sending himself some money`, () => {
+  test(`We ignore a transaction of Mike sending himself some money`, () => {
     const portalTransactionSummary =
+      // TODO: 'as' shouldn't be necessary, we should tweak our test data
       transactionResponseToPortalTransactionSummary(
-        mikeSendingHimselfMoneyTransaction,
+        mikeSendingHimselfMoneyTransaction as ParsedTransactionWithMeta,
         new PublicKey(MIKES_WALLET)
       );
 
@@ -109,12 +119,14 @@ describe(`transaction summaries`, () => {
 
   test(`Mike sending Jared some lamports`, () => {
     const portalTransactionSummary =
+      // TODO: 'as' shouldn't be necessary, we should tweak our test data
       transactionResponseToPortalTransactionSummary(
-        mikeSendingJaredSomeLamportsTransaction,
+        mikeSendingJaredSomeLamportsTransaction as ParsedTransactionWithMeta,
         new PublicKey(MIKES_WALLET)
       );
 
     expect(portalTransactionSummary).toEqual({
+      id: "5KKQASDKTxoViRWYzN7Rf8X9n3wiiNVztpgpNG1oyyZbkNiai1JVcD4rAV2XYzFPgRP4dXQv7A3Bku68UT4j2FZk",
       amount: 30000000,
       currency: 1,
       date: 1662733089000,
@@ -131,6 +143,7 @@ describe(`grouping transactions`, () => {
   test(`grouping transactions`, () => {
     const transactions = [
       {
+        id: "1",
         date: 1662985498000,
         status: true,
         networkFee: 5000,
@@ -141,6 +154,7 @@ describe(`grouping transactions`, () => {
         to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
       },
       {
+        id: "2",
         date: 1662741437000,
         status: true,
         networkFee: 5000,
@@ -151,6 +165,7 @@ describe(`grouping transactions`, () => {
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
       },
       {
+        id: "3",
         date: 1662733089000,
         status: true,
         networkFee: 5000,
@@ -161,6 +176,7 @@ describe(`grouping transactions`, () => {
         to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
       },
       {
+        id: "4",
         date: 1662657138000,
         status: true,
         networkFee: 5000,
@@ -171,6 +187,7 @@ describe(`grouping transactions`, () => {
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
       },
       {
+        id: "5",
         date: 1662656099000,
         status: true,
         networkFee: 5000,
@@ -181,6 +198,7 @@ describe(`grouping transactions`, () => {
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
       },
       {
+        id: "6",
         date: 1662654222000,
         status: true,
         networkFee: 5000,
@@ -191,6 +209,7 @@ describe(`grouping transactions`, () => {
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
       },
       {
+        id: "7",
         date: 1662653886000,
         status: true,
         networkFee: 5000,
@@ -201,6 +220,7 @@ describe(`grouping transactions`, () => {
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
       },
       {
+        id: "8",
         date: 1662643371000,
         status: true,
         networkFee: 5000,
@@ -223,6 +243,7 @@ describe(`grouping transactions`, () => {
         total: 1000000,
         transactions: [
           {
+            id: "1",
             date: 1662985498000,
             status: true,
             networkFee: 5000,
@@ -239,6 +260,7 @@ describe(`grouping transactions`, () => {
         total: 500000,
         transactions: [
           {
+            id: "2",
             date: 1662741437000,
             status: true,
             networkFee: 5000,
@@ -255,6 +277,7 @@ describe(`grouping transactions`, () => {
         total: 790000,
         transactions: [
           {
+            id: "4",
             date: 1662657138000,
             status: true,
             networkFee: 5000,
@@ -265,6 +288,7 @@ describe(`grouping transactions`, () => {
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
           },
           {
+            id: "5",
             date: 1662656099000,
             status: true,
             networkFee: 5000,
@@ -275,6 +299,7 @@ describe(`grouping transactions`, () => {
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
           },
           {
+            id: "6",
             date: 1662654222000,
             status: true,
             networkFee: 5000,
@@ -285,6 +310,7 @@ describe(`grouping transactions`, () => {
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
           },
           {
+            id: "7",
             date: 1662653886000,
             status: true,
             networkFee: 5000,
@@ -295,6 +321,7 @@ describe(`grouping transactions`, () => {
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
           },
           {
+            id: "8",
             date: 1662643371000,
             status: true,
             networkFee: 5000,

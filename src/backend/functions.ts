@@ -98,3 +98,12 @@ export function hasOwnProperty<X extends {}, Y extends PropertyKey>(
 }
 
 export const log = console.log.bind(console);
+
+// From https://stackoverflow.com/questions/60504945/javascript-encode-decode-utf8-to-hex-and-hex-to-utf8
+export const hexToUtf8 = function (string) {
+  return decodeURIComponent(
+    string
+      .replace(/\s+/g, "") // remove spaces
+      .replace(/[0-9a-f]{2}/g, "%$&") // add '%' before each 2 characters
+  );
+};
