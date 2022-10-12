@@ -1,9 +1,6 @@
-import { log, stringify } from "./functions";
+import { log, stringify, hexToUtf8, instructionDataToNote } from "./functions";
 import type {
-  Connection,
-  Keypair,
   PublicKey,
-  TransactionResponse,
   ParsedTransactionWithMeta,
   ParsedInstruction,
 } from "@solana/web3.js";
@@ -13,6 +10,8 @@ import {
   type TransactionsByDay,
   type TransactionSummary,
 } from "../lib/types";
+
+import { NOTE_PROGRAM } from "../lib/constants";
 
 export const solanaBlocktimeToJSTime = (blockTime: number) => {
   return blockTime * 1000;
@@ -64,6 +63,7 @@ export const transactionResponseToPortalTransactionSummary = (
   // https://docs.solana.com/terminology#transaction-id
   // The first signature in a transaction, which can be used to uniquely identify the transaction across the complete ledger.
   const id = transactionResponse.transaction.signatures[0];
+  let note: string | null = null;
   try {
     const instructions = transactionResponse.transaction.message.instructions;
     if (instructions.length === 1) {
@@ -81,7 +81,22 @@ export const transactionResponseToPortalTransactionSummary = (
       log(`Handing Sol transaction`);
       const instructions = transactionResponse.transaction.message.instructions;
       if (instructions.length !== 1) {
-        throw new Error(`Don't know how to summarize this transaction ${id}`);
+        const secondInstruction = instructions[1];
+
+        const secondInstructionProgram = secondInstruction.programId.toBase58();
+
+        if (secondInstructionProgram !== NOTE_PROGRAM) {
+          throw new Error(`Don't know how to summarize this transaction ${id}`);
+        }
+
+        // OK this is just sending Sol with a note
+
+        // @ts-ignore this definitely exists, see sendingLamportsWithNoteTransaction
+        const instructionData = secondInstruction.data;
+
+        const noteData = instructionDataToNote(instructionData);
+
+        note = noteData;
       }
 
       const onlyInstruction = instructions[0] as ParsedInstruction;
@@ -107,6 +122,7 @@ export const transactionResponseToPortalTransactionSummary = (
         currency: Currency.SOL,
         from: onlyInstruction.parsed.info.source,
         to: onlyInstruction.parsed.info.destination,
+        note,
       };
 
       return portalTransActionSummary;
@@ -169,6 +185,7 @@ export const transactionResponseToPortalTransactionSummary = (
       currency,
       from,
       to,
+      note,
     };
 
     return portalTransActionSummary;
@@ -178,7 +195,8 @@ export const transactionResponseToPortalTransactionSummary = (
       `Warning: could not decode transaction ID: ${id} - see the block explorer for more info.`
     );
     // TODO: throw error;
-    return null;
+    throw error;
+    // return null;
   }
 };
 

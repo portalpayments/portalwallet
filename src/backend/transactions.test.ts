@@ -8,6 +8,7 @@ import {
   MOCK_RECIPIENT_PUBLIC_KEY,
   mikeSendingHimselfMoneyTransaction,
   mikeSendingJaredSomeLamportsTransaction,
+  sendingLamportsWithNoteTransaction,
 } from "./__mocks__/mocks";
 import {
   Connection,
@@ -20,7 +21,11 @@ import {
   transactionResponseSenderComesFirst,
   transactionResponseSenderComesSecond,
 } from "./__mocks__/mocks";
-import { MIKES_WALLET, YCOMBINATOR_DEMO_WALLET_FOR_JARED } from "./constants";
+import {
+  JOHN_TESTUSER_DEMO_WALLET,
+  MIKES_WALLET,
+  YCOMBINATOR_DEMO_WALLET_FOR_JARED,
+} from "./constants";
 import {
   Currency,
   type TransactionsByDay,
@@ -28,6 +33,7 @@ import {
 } from "../lib/types";
 import { Direction } from "../lib/types";
 import { hexToUtf8, log, stringify } from "./functions";
+import { identityTokenIssuerPublicKeyString } from "../lib/constants";
 
 // Quiet utils.log() during tests
 jest.mock("./functions", () => ({
@@ -141,7 +147,7 @@ describe(`transaction summaries`, () => {
 
 describe(`grouping transactions`, () => {
   test(`grouping transactions`, () => {
-    const transactions = [
+    const transactionSummaries = [
       {
         id: "1",
         date: 1662985498000,
@@ -233,7 +239,7 @@ describe(`grouping transactions`, () => {
     ];
 
     const transactionsByDays = getTransactionsByDays(
-      transactions,
+      transactionSummaries,
       Currency.USDC
     );
 
@@ -344,5 +350,27 @@ describe(`notes`, () => {
       `54657374206e6f746520746f20726563697069656e742066726f6d204d696b65`
     );
     expect(note).toEqual("Test note to recipient from Mike");
+  });
+
+  test(`We can extract a note out of a transaction`, async () => {
+    const portalTransactionSummary =
+      // TODO: 'as' shouldn't be necessary, we should tweak our test data
+      transactionResponseToPortalTransactionSummary(
+        sendingLamportsWithNoteTransaction as ParsedTransactionWithMeta,
+        new PublicKey(JOHN_TESTUSER_DEMO_WALLET)
+      );
+
+    expect(portalTransactionSummary).toEqual({
+      amount: 100000000,
+      currency: 1,
+      date: 1665584732000,
+      direction: 1,
+      from: "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+      id: "PdX96DWpeMRqjxP7tQHU7aVMkjongnQz7mmkLPmvtezvWoJzqnVfJpYu3xxmRWSTngKDQ9A7a4UP4s4Tj463jr4",
+      networkFee: 5000,
+      status: true,
+      to: "8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7",
+      note: "Test note to recipient from Mike",
+    });
   });
 });

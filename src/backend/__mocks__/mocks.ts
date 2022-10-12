@@ -425,3 +425,83 @@ export const mikeSendingJaredSomeLamportsTransaction = {
     ],
   },
 };
+export const sendingLamportsWithNoteTransaction = {
+  blockTime: 1665584732,
+  meta: {
+    err: null,
+    fee: 5000,
+    innerInstructions: [],
+    logMessages: [
+      "Program 11111111111111111111111111111111 invoke [1]",
+      "Program 11111111111111111111111111111111 success",
+      "Program noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93 invoke [1]",
+      "Program noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93 consumed 486 of 400000 compute units",
+      "Program noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93 success",
+    ],
+    postBalances: [364512941, 100000000, 1, 1141440],
+    postTokenBalances: [],
+    preBalances: [464517941, 0, 1, 1141440],
+    preTokenBalances: [],
+    rewards: [],
+    status: {
+      Ok: null,
+    },
+  },
+  slot: 154968700,
+  transaction: {
+    message: {
+      accountKeys: [
+        {
+          pubkey: new PublicKey("FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9"),
+          signer: true,
+          source: "transaction",
+          writable: true,
+        },
+        {
+          pubkey: new PublicKey("8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7"),
+          signer: false,
+          source: "transaction",
+          writable: true,
+        },
+        {
+          pubkey: new PublicKey("11111111111111111111111111111111"),
+          signer: false,
+          source: "transaction",
+          writable: false,
+        },
+        {
+          pubkey: new PublicKey("noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93"),
+          signer: false,
+          source: "transaction",
+          writable: false,
+        },
+      ],
+      addressTableLookups: null,
+      instructions: [
+        {
+          parsed: {
+            info: {
+              destination: "8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7",
+              lamports: 100000000,
+              source: "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+            },
+            type: "transfer",
+          },
+          program: "system",
+          programId: new PublicKey("11111111111111111111111111111111"),
+        },
+        {
+          accounts: ["FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9"],
+          data: "6gSyHNFjBXyEDMuyiCeg8zGC2Rm353osfgQBegM11Qe8",
+          programId: new PublicKey(
+            "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93"
+          ),
+        },
+      ],
+      recentBlockhash: "2USXPRQx9uvLHByd18QqdyXHYPuogwgDRdoqyeadmSfU",
+    },
+    signatures: [
+      "PdX96DWpeMRqjxP7tQHU7aVMkjongnQz7mmkLPmvtezvWoJzqnVfJpYu3xxmRWSTngKDQ9A7a4UP4s4Tj463jr4",
+    ],
+  },
+};

@@ -1,4 +1,7 @@
 // Generic JavaScript functions for browser and node
+const decoder = new TextDecoder("utf-8");
+
+import base58 from "bs58";
 
 // TODO: can be replaced with https://developer.mozilla.org/en-US/docs/Web/API/structuredClone
 // once we upgrade to node 18 and later (we could also use a polyfill if we wanted)
@@ -106,4 +109,9 @@ export const hexToUtf8 = function (string) {
       .replace(/\s+/g, "") // remove spaces
       .replace(/[0-9a-f]{2}/g, "%$&") // add '%' before each 2 characters
   );
+};
+
+export const instructionDataToNote = (string: string) => {
+  const binaryArray = base58.decode(string);
+  return decoder.decode(Buffer.from(binaryArray));
 };

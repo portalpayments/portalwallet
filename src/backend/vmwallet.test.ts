@@ -8,6 +8,7 @@ import {
   getAccountBalance,
   getKeypairFromEnvFile,
   getKeypairFromString,
+  getTransactionsForAddress,
   getUSDCAccounts,
   putSolIntoWallet,
   verifyWallet,
@@ -24,6 +25,7 @@ import {
   KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT,
   MIKES_WALLET,
   NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN,
+  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET,
   SECONDS,
   SHAQS_WALLET,
   USDC_MAINNET_MINT_ACCOUNT,
@@ -40,10 +42,10 @@ import { createMintAccount } from "./tokens";
 dotenv.config();
 
 // Quiet functions.log() during tests
-jest.mock("./functions", () => ({
-  ...jest.requireActual("./functions"),
-  log: jest.fn(),
-}));
+// jest.mock("./functions", () => ({
+//   ...jest.requireActual("./functions"),
+//   log: jest.fn(),
+// }));
 
 const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;
 
@@ -118,7 +120,7 @@ describe(`mainnet integration tests`, () => {
   );
 
   beforeAll(async () => {
-    mainNetConnection = await connect("genesysGoMain");
+    mainNetConnection = await connect("ankrMainNet");
   });
 
   test(
@@ -356,6 +358,96 @@ describe(`mainnet integration tests`, () => {
       networkFee: 5000,
       status: true,
       to: expect.any(String),
+    });
+  });
+
+  test(`We can get transactions with a note attached`, async () => {
+    const transactions = await getTransactionsForAddress(
+      mainNetConnection,
+      new PublicKey(PORTAL_IDENTITY_TOKEN_ISSUER_WALLET),
+      1
+    );
+
+    const firstTransaction = transactions[0];
+    log(stringify(firstTransaction));
+
+    expect(firstTransaction).toEqual({
+      blockTime: 1665584732,
+      meta: {
+        err: null,
+        fee: 5000,
+        innerInstructions: [],
+        logMessages: [
+          "Program 11111111111111111111111111111111 invoke [1]",
+          "Program 11111111111111111111111111111111 success",
+          "Program noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93 invoke [1]",
+          "Program noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93 consumed 486 of 400000 compute units",
+          "Program noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93 success",
+        ],
+        postBalances: [364512941, 100000000, 1, 1141440],
+        postTokenBalances: [],
+        preBalances: [464517941, 0, 1, 1141440],
+        preTokenBalances: [],
+        rewards: [],
+        status: {
+          Ok: null,
+        },
+      },
+      slot: 154968700,
+      transaction: {
+        message: {
+          accountKeys: [
+            {
+              pubkey: "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+              signer: true,
+              source: "transaction",
+              writable: true,
+            },
+            {
+              pubkey: "8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7",
+              signer: false,
+              source: "transaction",
+              writable: true,
+            },
+            {
+              pubkey: "11111111111111111111111111111111",
+              signer: false,
+              source: "transaction",
+              writable: false,
+            },
+            {
+              pubkey: "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93",
+              signer: false,
+              source: "transaction",
+              writable: false,
+            },
+          ],
+          addressTableLookups: null,
+          instructions: [
+            {
+              parsed: {
+                info: {
+                  destination: "8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7",
+                  lamports: 100000000,
+                  source: "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+                },
+                type: "transfer",
+              },
+              program: "system",
+              programId: "11111111111111111111111111111111",
+            },
+            {
+              accounts: ["FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9"],
+              data: "6gSyHNFjBXyEDMuyiCeg8zGC2Rm353osfgQBegM11Qe8",
+              programId: "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93",
+            },
+          ],
+          recentBlockhash: "2USXPRQx9uvLHByd18QqdyXHYPuogwgDRdoqyeadmSfU",
+        },
+        signatures: [
+          "PdX96DWpeMRqjxP7tQHU7aVMkjongnQz7mmkLPmvtezvWoJzqnVfJpYu3xxmRWSTngKDQ9A7a4UP4s4Tj463jr4",
+        ],
+      },
     });
   });
 });
