@@ -336,3 +336,13 @@ describe(`grouping transactions`, () => {
     ]);
   });
 });
+
+describe(`notes`, () => {
+  test(`We can read a raw note`, () => {
+    // Copied from https://explorer.solana.com/tx/PdX96DWpeMRqjxP7tQHU7aVMkjongnQz7mmkLPmvtezvWoJzqnVfJpYu3xxmRWSTngKDQ9A7a4UP4s4Tj463jr4
+    const note = hexToUtf8(
+      `54657374206e6f746520746f20726563697069656e742066726f6d204d696b65`
+    );
+    expect(note).toEqual("Test note to recipient from Mike");
+  });
+});
