@@ -35,6 +35,7 @@ export enum Currency {
 }
 
 export interface TransactionSummary {
+  id: string;
   date: number;
   status: boolean;
   networkFee: number;

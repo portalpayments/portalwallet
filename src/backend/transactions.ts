@@ -62,6 +62,10 @@ export const transactionResponseToPortalTransactionSummary = (
   currentWallet: PublicKey
 ): TransactionSummary => {
   try {
+    // https://docs.solana.com/terminology#transaction-id
+    // The first signature in a transaction, which can be used to uniquely identify the transaction across the complete ledger.
+    const id = transactionResponse.transaction.signatures[0];
+
     const instructions = transactionResponse.transaction.message.instructions;
     if (instructions.length === 1) {
       const firstInstruction = instructions[0] as ParsedInstruction;
@@ -89,6 +93,7 @@ export const transactionResponseToPortalTransactionSummary = (
           : Direction.recieved;
 
       const portalTransActionSummary = {
+        id,
         date: solanaBlocktimeToJSTime(transactionResponse.blockTime),
         status: transactionResponse.meta.err === null,
         networkFee: transactionResponse.meta.fee,
@@ -150,6 +155,7 @@ export const transactionResponseToPortalTransactionSummary = (
     const currency = Currency.USDC;
 
     const portalTransActionSummary = {
+      id,
       date: solanaBlocktimeToJSTime(transactionResponse.blockTime),
       status: transactionResponse.meta.err === null,
       networkFee: transactionResponse.meta.fee,
