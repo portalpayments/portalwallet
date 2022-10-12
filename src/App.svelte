@@ -31,14 +31,18 @@
 
   let user: null | User = null;
 
+  const IS_INVESTOR_DEMO = false;
+
   // Hack for demo wallet
   (async () => {
-    await saveSettingsHack(
-      // Secret key for JOHN_TESTUSER_DEMO_WALLET
-      "HyLLb7PQd5uWz9m8ME7j177gDDJeLwPuYSApd1FhbHB4f1udTJ5thfSXnm2MXsdHGYp7DTLGgZsxdAqtoEohmsu",
-      "password"
-    );
-    log(`Demo wallet for test user has been set up`);
+    if (IS_INVESTOR_DEMO) {
+      await saveSettingsHack(
+        // Secret key for JOHN_TESTUSER_DEMO_WALLET
+        "HyLLb7PQd5uWz9m8ME7j177gDDJeLwPuYSApd1FhbHB4f1udTJ5thfSXnm2MXsdHGYp7DTLGgZsxdAqtoEohmsu",
+        "password"
+      );
+      log(`Demo wallet for test user has been set up`);
+    }
   })();
 
   connectionStore.subscribe((newValue) => {
