@@ -230,7 +230,7 @@ export const getTransactionsForAddress = async (
 
   const transactions: Array<ParsedTransactionWithMeta> =
     await connection.getParsedTransactions(signatures, {
-      // NOTE: we can't use commitment: finalised in on localhost validator
+      // NOTE: we can't use commitment: finalised in our localhost validator
       // commitment: "finalized",
     });
 
