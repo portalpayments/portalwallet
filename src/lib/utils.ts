@@ -5,6 +5,7 @@ import {
   JOE_MCCANNS_WALLET,
   SHAQS_WALLET,
   YCOMBINATOR_DEMO_WALLET_FOR_JARED,
+  JOHN_TESTUSER_DEMO_WALLET,
 } from "../backend/constants";
 import { log } from "../backend/functions";
 
@@ -17,13 +18,14 @@ const numberFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 0,
 });
 
-// TODO: delete and pit real selfies into Arweave
+// TODO: delete and put real selfies into Arweave
 export const hackProfilePicsByWallet = {
   [VAHEHS_WALLET]: "/ProfilePics/vaheh.jpg",
   [MIKES_WALLET]: "/ProfilePics/mike.jpg",
   [JOE_MCCANNS_WALLET]: "/ProfilePics/joe.jpg",
   [SHAQS_WALLET]: "/ProfilePics/shaq.jpg",
   [YCOMBINATOR_DEMO_WALLET_FOR_JARED]: "/ProfilePics/jared.jpg",
+  [JOHN_TESTUSER_DEMO_WALLET]: "/ProfilePics/test-user.jpg",
 };
 
 export const httpGet = async (uri: string) => {

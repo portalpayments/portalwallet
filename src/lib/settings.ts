@@ -110,7 +110,8 @@ export const saveSettings = async (
   return;
 };
 
-globalThis.saveSettingsHack = async (
+// TODO: a quick hack until we get on onboarding UI complete
+export const saveSettingsHack = async (
   secretKeyString: string,
   password: string
 ) => {
@@ -123,6 +124,8 @@ globalThis.saveSettingsHack = async (
     password
   );
 };
+
+globalThis.saveSettingsHack = saveSettingsHack;
 
 // Was getSecretKey
 export const getSettings = async (password: string): Promise<Settings> => {

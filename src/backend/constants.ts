@@ -24,6 +24,9 @@ export const YCOMBINATOR_DEMO_WALLET_FOR_JARED =
 export const PORTAL_IDENTITY_TOKEN_ISSUER_WALLET =
   "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9";
 
+export const JOHN_TESTUSER_DEMO_WALLET =
+  "8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7";
+
 // Artist that made Agiza and Kimzo
 export const ARTIST = new PublicKey(
   "9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX"
