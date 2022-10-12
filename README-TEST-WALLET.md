@@ -1,12 +1,12 @@
-# Portal Wallet - YCombinator Demo
+# Portal Wallet - Investor Demo
 
-Hi YCombinator! We've made a quick demo of Portal for you.
+Hi potential Investor! We've made a quick demo of Portal for you.
 
 **You can use this to send real money to identified recipients anywhere in the world instantly.**
 
 ## Installing the extension
 
-Normally Portal is installed through the Chrome Web Store (or Edge Web Store etc). But for this demo we'll install it the old fashioned way.
+Normally Portal is installed through the Chrome Web Store (or Edge Web Store etc). But for this demo we'll install it outside the store`.
 
 Download an unzip the the file provided.
 
@@ -40,9 +40,9 @@ You can now open Portal:
 
 ## Sending money
 
-We have made a demo wallet for Jared Friedman that's already signed in and verified. Normally, users go through a regular Jumio / Onfido government-supplied ID check as part of signup, to get verified, we've saved you the time for this demo!
+We have made a demo wallet for John Testuser that's already signed in and verified. Normally, users go through a regular Onfido government-supplied ID check as part of signup, to get verified, we've saved you the time for this demo!
 
-The account has $10.00 real USDC, and you can send the money anywhere you want.
+The password is `password`. The account has **$10.00 real USDC**, and you can **send the money anywhere you want**.
 
 **Some things to try**
 
