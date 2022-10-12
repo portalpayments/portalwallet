@@ -1,11 +1,8 @@
 import { log } from "./functions";
-import {
-  JOE_MCCANNS_WALLET,
-  MINUTE,
-  MINUTES,
-  YCOMBINATOR_DEMO_WALLET_FOR_JARED,
-} from "./constants";
+import { JOHN_TESTUSER_DEMO_WALLET, MINUTES } from "./constants";
 import { mintAndTransferIdentityToken } from "./mint-identity-tokens";
+
+log(`Running token minter...`);
 
 describe(`mint an identity token`, () => {
   // Only needed for the YC demo
@@ -14,10 +11,11 @@ describe(`mint an identity token`, () => {
   test.skip(
     `can mint a real identity token for demo purposes`,
     async () => {
+      log(`🎫 Minting identity token...`);
       const transactionId = await mintAndTransferIdentityToken(
-        JOE_MCCANNS_WALLET,
-        "Joseph Isaac",
-        "McCann"
+        JOHN_TESTUSER_DEMO_WALLET,
+        "John",
+        "Testuser"
       );
       log(transactionId);
 
