@@ -5,7 +5,7 @@ import { mintAndTransferIdentityToken } from "./mint-identity-tokens";
 log(`Running token minter...`);
 
 describe(`mint an identity token`, () => {
-  // Only needed for the YC demo
+  // Only needed for the investor demo
   // (would normally be a script but I couldn't get ts-node
   // to work properly)
   test.skip(

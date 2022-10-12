@@ -350,6 +350,7 @@ describe(`mainnet integration tests`, () => {
     expect(knownDirections.includes(direction));
 
     expect(lastTransaction).toEqual({
+      id: expect.any(String),
       amount: expect.any(Number),
       date: expect.any(Number),
       currency: expect.any(Number),
@@ -358,6 +359,7 @@ describe(`mainnet integration tests`, () => {
       networkFee: 5000,
       status: true,
       to: expect.any(String),
+      note: null,
     });
   });
 
@@ -398,25 +400,31 @@ describe(`mainnet integration tests`, () => {
         message: {
           accountKeys: [
             {
-              pubkey: "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+              pubkey: new PublicKey(
+                "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9"
+              ),
               signer: true,
               source: "transaction",
               writable: true,
             },
             {
-              pubkey: "8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7",
+              pubkey: new PublicKey(
+                "8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7"
+              ),
               signer: false,
               source: "transaction",
               writable: true,
             },
             {
-              pubkey: "11111111111111111111111111111111",
+              pubkey: new PublicKey("11111111111111111111111111111111"),
               signer: false,
               source: "transaction",
               writable: false,
             },
             {
-              pubkey: "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93",
+              pubkey: new PublicKey(
+                "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93"
+              ),
               signer: false,
               source: "transaction",
               writable: false,
@@ -434,12 +442,16 @@ describe(`mainnet integration tests`, () => {
                 type: "transfer",
               },
               program: "system",
-              programId: "11111111111111111111111111111111",
+              programId: new PublicKey("11111111111111111111111111111111"),
             },
             {
-              accounts: ["FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9"],
+              accounts: [
+                new PublicKey("FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9"),
+              ],
               data: "6gSyHNFjBXyEDMuyiCeg8zGC2Rm353osfgQBegM11Qe8",
-              programId: "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93",
+              programId: new PublicKey(
+                "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93"
+              ),
             },
           ],
           recentBlockhash: "2USXPRQx9uvLHByd18QqdyXHYPuogwgDRdoqyeadmSfU",
