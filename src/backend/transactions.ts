@@ -61,11 +61,10 @@ export const transactionResponseToPortalTransactionSummary = (
   transactionResponse: ParsedTransactionWithMeta,
   currentWallet: PublicKey
 ): TransactionSummary => {
+  // https://docs.solana.com/terminology#transaction-id
+  // The first signature in a transaction, which can be used to uniquely identify the transaction across the complete ledger.
+  const id = transactionResponse.transaction.signatures[0];
   try {
-    // https://docs.solana.com/terminology#transaction-id
-    // The first signature in a transaction, which can be used to uniquely identify the transaction across the complete ledger.
-    const id = transactionResponse.transaction.signatures[0];
-
     const instructions = transactionResponse.transaction.message.instructions;
     if (instructions.length === 1) {
       const firstInstruction = instructions[0] as ParsedInstruction;
@@ -82,7 +81,7 @@ export const transactionResponseToPortalTransactionSummary = (
       log(`Handing Sol transaction`);
       const instructions = transactionResponse.transaction.message.instructions;
       if (instructions.length !== 1) {
-        throw new Error(`Don't know how to summarize this transaction`);
+        throw new Error(`Don't know how to summarize this transaction ${id}`);
       }
 
       const onlyInstruction = instructions[0] as ParsedInstruction;
@@ -91,6 +90,12 @@ export const transactionResponseToPortalTransactionSummary = (
         onlyInstruction.parsed.info.source === currentWallet.toBase58()
           ? Direction.sent
           : Direction.recieved;
+
+      const amount = onlyInstruction.parsed.info.lamports;
+      if (!amount) {
+        // Probably a createWallet instruction, see https://explorer.solana.com/tx/3DbFFLeUbUGFiQ7oyi3uZddD8qnsvE94VVv8HpNkYozUrKE1ordD74LWXH8di5ywKbCKMBNBYYTRM5Ur8q13fvY6
+        throw new Error(`Don't know how to summarize this transaction ${id}`);
+      }
 
       const portalTransActionSummary = {
         id,
@@ -170,8 +175,7 @@ export const transactionResponseToPortalTransactionSummary = (
   } catch (thrownObject) {
     const error = thrownObject as Error;
     log(
-      `Warning: could not decode transaction:`,
-      stringify(transactionResponse)
+      `Warning: could not decode transaction ID: ${id} - see the block explorer for more info.`
     );
     // TODO: throw error;
     return null;
