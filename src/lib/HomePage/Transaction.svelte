@@ -44,9 +44,14 @@
       src={hackProfilePicsByWallet[contact.walletAddress]}
       alt="wallet avatar"
     />
-    <div class="name">
-      {contact.verifiedClaims?.givenName}
-      {contact.verifiedClaims?.familyName}
+    <div class="name-and-memo">
+      <div class="name">
+        {contact.verifiedClaims?.givenName}
+        {contact.verifiedClaims?.familyName}
+      </div>
+      {#if transaction.memo}
+        <div class="memo">{transaction.memo}</div>
+      {/if}
     </div>
   {/if}
   <div
@@ -77,8 +82,12 @@
     width: 100%;
   }
 
-  .name {
+  .name-and-memo {
     text-align: left;
+  }
+
+  .memo {
+    font-size: 14px;
   }
 
   .amount {
