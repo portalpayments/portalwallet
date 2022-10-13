@@ -158,6 +158,7 @@ export const makeAccountsAndDoTransfer = async (
   senderKeyPair: Keypair,
   transferAmountInMinorUnits: number,
   recipient: PublicKey,
+  memo: string,
   isProduction: boolean
 ) => {
   log(`Doing transfer, will send ${transferAmountInMinorUnits} cents`);
@@ -197,7 +198,8 @@ export const makeAccountsAndDoTransfer = async (
     senderKeyPair,
     senderTokenAccount,
     recipientTokenAccount,
-    transferAmountInMinorUnits
+    transferAmountInMinorUnits,
+    memo
   );
 
   return signature;

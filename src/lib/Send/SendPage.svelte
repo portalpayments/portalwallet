@@ -40,7 +40,7 @@
 
   let destinationWalletAddress: string | null = null;
   let transferAmount: number | null = null;
-  // let transferAmount: number | null = null;
+  let memo: string | null = null;
 
   let hasLoadedVerificationStateFromNetwork = false;
   let isCurrentlyLoadingVerificationStateFromNetwork = false;
@@ -85,6 +85,7 @@
           keyPair,
           transferAmountInMinorUnits,
           new PublicKey(contact.walletAddress),
+          memo,
           true
         );
 
@@ -184,6 +185,15 @@
         isFocused={false}
         isAmount={true}
         filterField={"numbers"}
+        onTypingPause={null}
+      />
+
+      <Input
+        bind:value={memo}
+        label="memo"
+        isFocused={false}
+        isAmount={false}
+        filterField={null}
         onTypingPause={null}
       />
     </FocusContext>
