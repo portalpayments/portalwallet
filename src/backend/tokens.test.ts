@@ -199,7 +199,8 @@ describe("minting and USDC-like transfers", () => {
       alice,
       alicesTokenAccount,
       bobsTokenAccount,
-      AMOUNT_OF_USDC_TO_SEND
+      AMOUNT_OF_USDC_TO_SEND,
+      "Cinema tickets"
     );
 
     expect(signature);

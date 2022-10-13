@@ -3,11 +3,11 @@
 // MUCH BETTER explanation, but with older code samples: https://github.com/jacobcreech/Token-Creator
 
 import type {
+  ConfirmOptions,
   Connection,
   Keypair,
   PublicKey,
-  TransactionResponse,
-  ParsedTransactionWithMeta,
+  Signer,
 } from "@solana/web3.js";
 import { PublicKey as PublicKeyConstructor } from "@solana/web3.js";
 
@@ -22,6 +22,7 @@ import type { Account } from "@solana/spl-token";
 import { USDC_MAINNET_MINT_ACCOUNT, USD_DECIMALS } from "./constants";
 import { getABetterErrorMessage } from "./errors";
 import { log, stringify } from "./functions";
+import { transferWithMemo } from "./transfer-with-memo";
 
 // Mint accounts hold information about the token such as how many decimals the token has and who can mint new tokens, and is  is later used to mint tokens to a token account and create the initial supply.
 export const createMintAccount = async (
@@ -92,7 +93,8 @@ export const sendUSDC = async (
   sender: Keypair,
   senderTokenAccount: Account,
   recipientTokenAccount: Account,
-  amount: number
+  amount: number,
+  memo: null | string = null
 ) => {
   try {
     log(`Inside sendUSDC:`, {
@@ -102,18 +104,13 @@ export const sendUSDC = async (
       amount,
     });
 
-    const signature = await transfer(
+    const signature = await transferWithMemo(
       connection,
-      sender,
       senderTokenAccount.address,
       recipientTokenAccount.address,
-      sender.publicKey,
+      sender,
       amount,
-      [],
-      {
-        // https://solanacookbook.com/guides/retrying-transactions.html#facts
-        maxRetries: 6,
-      }
+      memo
     );
 
     return signature;
