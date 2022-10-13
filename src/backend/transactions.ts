@@ -63,7 +63,7 @@ export const summarizeTransaction = (
   // https://docs.solana.com/terminology#transaction-id
   // The first signature in a transaction, which can be used to uniquely identify the transaction across the complete ledger.
   const id = transactionResponse?.transaction?.signatures?.[0];
-  let note: string | null = null;
+  let memo: string | null = null;
   try {
     const instructions = transactionResponse.transaction.message.instructions;
     if (instructions.length === 1) {
@@ -122,7 +122,7 @@ export const summarizeTransaction = (
         currency: Currency.SOL,
         from: onlyInstruction.parsed.info.source,
         to: onlyInstruction.parsed.info.destination,
-        note,
+        memo,
       };
 
       return portalTransActionSummary;
