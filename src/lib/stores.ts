@@ -103,10 +103,9 @@ transactionsStore.subscribe(async (transactionSummaries) => {
     }
   )) as Array<Contact>;
 
-  log(`Got contacts for transaction contacts`, stringify(contacts));
+  log(`Got contacts used in transactions`, stringify(contacts));
 
   contactsStore.set(contacts);
 });
 
-// Their contacts
 export const contactsStore: Writable<Array<Contact>> = writable([]);
