@@ -102,7 +102,10 @@ export const sendUSDC = async (
       recipientTokenAccount: recipientTokenAccount.address.toBase58(),
       senderPublicKey: sender.publicKey.toBase58(),
       amount,
+      memo,
     });
+
+    log(typeof memo);
 
     const signature = await transferWithMemo(
       connection,
