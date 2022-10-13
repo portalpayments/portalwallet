@@ -106,16 +106,18 @@
 
 <style>
   input {
-    border-radius: 9px;
+    border-radius: 0;
     padding: 12px 12px 0px 12px;
-    border: 1px solid var(--mid-grey);
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid var(--mid-grey);
     font-size: 14px;
-    width: 200px;
+    width: 100%;
     height: 56px;
-    font-size: 1.1rem;
+    font-size: 18px;
     color: var(--black);
     font-weight: 600;
-    background-color: white;
   }
 
   .inline-usdc {
@@ -131,8 +133,9 @@
   }
   input:focus ~ .floating-label,
   input:not(:focus):valid ~ .floating-label {
-    top: -1px;
-    font-size: 0.7rem;
+    top: 6px;
+    font-size: 12px;
+    line-height: 12px;
     opacity: 1;
   }
 
@@ -149,7 +152,7 @@
     left: 12px;
     top: 16px;
     transition: 0.2s ease all;
-    font-size: 0.9rem;
+    font-size: 16px;
   }
 
   .floating-label .inline-usdc {
