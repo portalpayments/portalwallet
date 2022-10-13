@@ -4,7 +4,7 @@
   import { log } from "../../backend/functions";
   import type { VerifiedClaims } from "../../backend/types";
   import USDClogo from "../../assets/usdc.svg";
-  export let error: string | null = null;
+  export let errorMessage: string | null = null;
   export let verifiedClaims: VerifiedClaims;
   export let destinationWalletAddress: string | null;
   export let transferAmount: number | null;
@@ -15,8 +15,8 @@
 <div class="transaction-details">
   <h1>Transfer unsuccessful</h1>
   <img class="fail-icon" src={FailedAction} alt="money could not be sent" />
-  <span class="recipient-and-amount">
-    <p>{error}</p>
+  <div class="recipient-and-amount">
+    <p>{errorMessage}</p>
     Failed to send<img
       class="usdc-symbol"
       src={USDClogo}
@@ -26,7 +26,7 @@
       {verifiedClaims.familyName}{:else}{truncateWallet(
         destinationWalletAddress
       )}{/if}
-  </span>
+  </div>
 </div>
 
 <style>

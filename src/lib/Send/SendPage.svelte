@@ -56,7 +56,7 @@
   let isTransactionComplete = false;
 
   let transactionFailed = false;
-  let error;
+  let errorMessage: string | null = null;
 
   let connection: Connection | null = null;
 
@@ -98,9 +98,10 @@
       isSending = false;
       isSendingAnyway = false;
       isTransactionComplete = true;
-    } catch (error) {
+    } catch (thrownObject) {
+      const error = thrownObject as Error;
       transactionFailed = true;
-      error = error;
+      errorMessage = error.message;
     }
   };
 
@@ -235,7 +236,7 @@
   {#if transactionFailed}
     <Modal buttonType="transfer">
       <TransactionFailed
-        {error}
+        {errorMessage}
         {destinationWalletAddress}
         {transferAmount}
         {verifiedClaims}
