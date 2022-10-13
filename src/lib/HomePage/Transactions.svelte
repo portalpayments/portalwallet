@@ -64,6 +64,9 @@
   .day {
     padding: 12px;
     gap: 6px;
+    /* 24px for the heading line, auto for rest */
+    grid-template-rows: 24px auto;
+    align-content: start;
   }
 
   .day-summary {
@@ -73,7 +76,8 @@
 
   .day-name {
     text-align: left;
-    font-size: 16px;
+    /* 16px can't quite fit 'Wednesday October 12' */
+    font-size: 14px;
     text-transform: uppercase;
     font-weight: 600;
     color: #7d7d7d;
