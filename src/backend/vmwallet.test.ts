@@ -99,7 +99,7 @@ describe(`basic wallet functionality on local validator`, () => {
   test(`We can show a secretKey as an 87-88 character string`, () => {
     const wallet = new Keypair();
     const secretKeyString = base58.encode(wallet.secretKey);
-    expect(secretKeyString.length).toBeGreaterThan(87);
+    expect(secretKeyString.length).toBeGreaterThan(86);
     expect(secretKeyString.length).toBeLessThan(89);
   });
 });
