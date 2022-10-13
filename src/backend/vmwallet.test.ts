@@ -41,12 +41,6 @@ import { createMintAccount } from "./tokens";
 
 dotenv.config();
 
-// Quiet functions.log() during tests
-// jest.mock("./functions", () => ({
-//   ...jest.requireActual("./functions"),
-//   log: jest.fn(),
-// }));
-
 const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;
 
 describe(`basic wallet functionality on local validator`, () => {
@@ -101,10 +95,12 @@ describe(`basic wallet functionality on local validator`, () => {
     );
   });
 
-  test(`We can show a secretKey as an 88 character string`, () => {
+  // Yes it varies, run the test 10 x it will go between 87-88 characters
+  test(`We can show a secretKey as an 87-88 character string`, () => {
     const wallet = new Keypair();
     const secretKeyString = base58.encode(wallet.secretKey);
-    expect(secretKeyString).toHaveLength(87);
+    expect(secretKeyString.length).toBeGreaterThan(87);
+    expect(secretKeyString.length).toBeLessThan(89);
   });
 });
 

@@ -10,12 +10,6 @@ const lastName = `Cottoneye`;
 const fullName = `${firstName} ${lastName}`;
 const password = `${new Date().toString()}`;
 
-// Quiet utils.log() during tests
-jest.mock("./functions", () => ({
-  ...jest.requireActual("./functions"),
-  log: jest.fn(),
-}));
-
 describe(`restoration`, () => {
   let connection: Connection;
   let keypairs: Array<Keypair>;

@@ -19,12 +19,6 @@ import {
 
 const AMOUNT_OF_USDC_TO_SEND = 50;
 
-// Quiet functions.log() during tests
-jest.mock("./functions", () => ({
-  ...jest.requireActual("./functions"),
-  log: jest.fn(),
-}));
-
 describe("minting and USDC-like transfers", () => {
   let connection: Connection;
   let testUSDCAuthority: Keypair;

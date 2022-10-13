@@ -21,12 +21,6 @@ import {
 import BN, { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
 
-// Quiet utils.log() during tests
-// jest.mock("./functions", () => ({
-//   ...jest.requireActual("./functions"),
-//   log: jest.fn(),
-// }));
-
 describe(`identity tokens`, () => {
   let connection: Connection;
   const alice = new Keypair();
