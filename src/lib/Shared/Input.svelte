@@ -40,7 +40,9 @@
   const filterInput = (event) => {
     let target = event.target;
     let badValues = badValuesByFilters[filterField];
-    target.value = removeFromString(target.value, badValues);
+    if (badValues) {
+      target.value = removeFromString(target.value, badValues);
+    }
 
     // 'value' is existing value
     // 'event.data' is what the user just typed
