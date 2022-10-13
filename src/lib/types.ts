@@ -44,7 +44,7 @@ export interface TransactionSummary {
   amount: number;
   from: string;
   to: string;
-  note: string | null;
+  memo: string | null;
 }
 
 export interface TransactionsByDay {

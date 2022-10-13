@@ -355,7 +355,7 @@ describe(`mainnet integration tests`, () => {
       networkFee: 5000,
       status: true,
       to: expect.any(String),
-      note: null,
+      memo: null,
     });
   });
 

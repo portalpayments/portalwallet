@@ -54,7 +54,7 @@ describe(`transaction summaries`, () => {
       currency: Currency.USDC,
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
-      note: null,
+      memo: null,
     });
   });
 
@@ -78,7 +78,7 @@ describe(`transaction summaries`, () => {
       currency: Currency.USDC,
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
-      note: null,
+      memo: null,
     });
   });
 
@@ -102,7 +102,7 @@ describe(`transaction summaries`, () => {
       currency: Currency.USDC,
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
-      note: null,
+      memo: null,
     });
   });
 
@@ -135,7 +135,7 @@ describe(`transaction summaries`, () => {
       networkFee: 5000,
       status: true,
       to: YCOMBINATOR_DEMO_WALLET_FOR_JARED,
-      note: null,
+      memo: null,
     });
   });
 });
@@ -153,7 +153,7 @@ describe(`grouping transactions`, () => {
         currency: 0,
         from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
         to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
-        note: null,
+        memo: null,
       },
       {
         id: "2",
@@ -165,7 +165,7 @@ describe(`grouping transactions`, () => {
         currency: 0,
         from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-        note: null,
+        memo: null,
       },
       {
         id: "3",
@@ -177,7 +177,7 @@ describe(`grouping transactions`, () => {
         currency: 1,
         from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
         to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
-        note: null,
+        memo: null,
       },
       {
         id: "4",
@@ -189,7 +189,7 @@ describe(`grouping transactions`, () => {
         currency: 0,
         from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-        note: null,
+        memo: null,
       },
       {
         id: "5",
@@ -201,7 +201,7 @@ describe(`grouping transactions`, () => {
         currency: 0,
         from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-        note: null,
+        memo: null,
       },
       {
         id: "6",
@@ -213,7 +213,7 @@ describe(`grouping transactions`, () => {
         currency: 0,
         from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-        note: null,
+        memo: null,
       },
       {
         id: "7",
@@ -225,7 +225,7 @@ describe(`grouping transactions`, () => {
         currency: 0,
         from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-        note: null,
+        memo: null,
       },
       {
         id: "8",
@@ -237,7 +237,7 @@ describe(`grouping transactions`, () => {
         currency: 0,
         from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-        note: null,
+        memo: null,
       },
     ];
 
@@ -261,7 +261,7 @@ describe(`grouping transactions`, () => {
             currency: 0,
             from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
             to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
-            note: null,
+            memo: null,
           },
         ],
       },
@@ -279,7 +279,7 @@ describe(`grouping transactions`, () => {
             currency: 0,
             from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-            note: null,
+            memo: null,
           },
         ],
       },
@@ -297,7 +297,7 @@ describe(`grouping transactions`, () => {
             currency: 0,
             from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-            note: null,
+            memo: null,
           },
           {
             id: "5",
@@ -309,7 +309,7 @@ describe(`grouping transactions`, () => {
             currency: 0,
             from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-            note: null,
+            memo: null,
           },
           {
             id: "6",
@@ -321,7 +321,7 @@ describe(`grouping transactions`, () => {
             currency: 0,
             from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-            note: null,
+            memo: null,
           },
           {
             id: "7",
@@ -333,7 +333,7 @@ describe(`grouping transactions`, () => {
             currency: 0,
             from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-            note: null,
+            memo: null,
           },
           {
             id: "8",
@@ -345,7 +345,7 @@ describe(`grouping transactions`, () => {
             currency: 0,
             from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-            note: null,
+            memo: null,
           },
         ],
       },
