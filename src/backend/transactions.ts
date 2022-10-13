@@ -85,6 +85,8 @@ export const summarizeTransaction = (
 
         const secondInstructionProgram = secondInstruction.programId.toBase58();
 
+        // The 'Note program' is exactly like the 'memo program'
+        // Just run by someone else.
         if (secondInstructionProgram !== NOTE_PROGRAM) {
           throw new Error(`Don't know how to summarize this transaction ${id}`);
         }
@@ -96,7 +98,7 @@ export const summarizeTransaction = (
 
         const noteData = instructionDataToNote(instructionData);
 
-        note = noteData;
+        memo = noteData;
       }
 
       const onlyInstruction = instructions[0] as ParsedInstruction;
@@ -185,7 +187,7 @@ export const summarizeTransaction = (
       currency,
       from,
       to,
-      note,
+      memo,
     };
 
     return portalTransActionSummary;

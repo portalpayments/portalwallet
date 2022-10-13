@@ -380,7 +380,7 @@ describe(`notes`, () => {
       networkFee: 5000,
       status: true,
       to: "8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7",
-      note: "Test note to recipient from Mike",
+      memo: "Test note to recipient from Mike",
     });
   });
 });
