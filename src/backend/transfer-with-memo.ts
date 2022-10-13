@@ -72,7 +72,8 @@ export async function transferWithMemo(
 
   // 'memo' is added by us
   // See https://solana.stackexchange.com/questions/3789/how-do-i-add-a-note-memo-to-my-solana-transactions-using-web3-js
-  if (memo) {
+  // Don't bother adding if memo is an empty string
+  if (memo && memo.length) {
     await transaction.add(
       new TransactionInstruction({
         keys: [
