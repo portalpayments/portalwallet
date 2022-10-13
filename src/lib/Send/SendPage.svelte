@@ -40,6 +40,7 @@
 
   let destinationWalletAddress: string | null = null;
   let transferAmount: number | null = null;
+  // let transferAmount: number | null = null;
 
   let hasLoadedVerificationStateFromNetwork = false;
   let isCurrentlyLoadingVerificationStateFromNetwork = false;
