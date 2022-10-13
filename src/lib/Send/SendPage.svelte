@@ -5,8 +5,8 @@
     identityTokenIssuerPublicKey,
   } from "../stores";
   import { PublicKey, Connection, Keypair } from "@solana/web3.js";
-  import TransferHeading from "./TransferHeading.svelte";
-  import TransferButtons from "./TransferButtons.svelte";
+  import SendHeading from "./SendHeading.svelte";
+  import SendButtons from "./SendButtons.svelte";
   import LoaderModal from "../Shared/LoaderModal.svelte";
   import Input from "../Shared/Input.svelte";
   import Modal from "../Shared/Modal.svelte";
@@ -165,7 +165,7 @@
 </script>
 
 <div class="transfer-page">
-  <TransferHeading {contact} {hasLoadedVerificationStateFromNetwork} />
+  <SendHeading {contact} {hasLoadedVerificationStateFromNetwork} />
 
   <div class="destination-and-amount">
     <FocusContext>
@@ -194,7 +194,7 @@
   {/if}
 
   {#if hasLoadedVerificationStateFromNetwork}
-    <TransferButtons
+    <SendButtons
       isAnonymous={!verifiedClaims}
       {isSendButtonDisabled}
       {destinationWalletAddress}

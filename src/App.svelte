@@ -5,7 +5,7 @@
   import Collectables from "./lib/Collectables/Collectables.svelte";
   import ContactsPage from "./lib/Contacts/ContactsPage.svelte";
   import Onboarding from "./lib/Onboarding/Onboarding.svelte";
-  import TransferPage from "./lib/Transfer/TransferPage.svelte";
+  import SendPage from "./lib/Send/SendPage.svelte";
   import AddMoneyPage from "./lib/AddMoney/AddMoneyPage.svelte";
   import TransactionsPage from "./lib/TransactionsPage/TransactionsPage.svelte";
   import Settings from "./lib/Settings/Settings.svelte";
@@ -99,7 +99,7 @@
     {/if}
     {#if $authStore.isLoggedIn}
       <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
-      <Route path="sendMoney"><TransferPage /></Route>
+      <Route path="sendMoney"><SendPage /></Route>
 
       <Route path="transactions">
         <TransactionsPage />
