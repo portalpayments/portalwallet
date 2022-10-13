@@ -13,7 +13,7 @@
   import RequestVerification from "./RequestVerification.svelte";
   import FocusContext from "../Shared/FocusContext.svelte";
   import TransactionCompleted from "./TransactionCompleted.svelte";
-  import TransactionFailed from './TransactionFailed.svelte';
+  import TransactionFailed from "./TransactionFailed.svelte";
   import { verifyWallet } from "../../backend/vmwallet";
   import { makeAccountsAndDoTransfer } from "../../backend/tokens";
   import { checkIfValidWalletAddress } from "../utils";
@@ -60,7 +60,6 @@
   let connection: Connection | null = null;
 
   let contact: Contact | null = null;
-  
 
   $: {
     log(`Updating contact`);
@@ -74,34 +73,33 @@
 
   const doTransfer = async () => {
     // USDC actually has 6 decimal places
-    try{
-    const transferAmountInMinorUnits = Number(transferAmount) * 1e6;
+    try {
+      const transferAmountInMinorUnits = Number(transferAmount) * 1e6;
 
-    if (ACTUALLY_SEND_MONEY) {
-      log(`Doing transfer, will send ${transferAmountInMinorUnits} cents`);
+      if (ACTUALLY_SEND_MONEY) {
+        log(`Doing transfer, will send ${transferAmountInMinorUnits} cents`);
 
-      const signature = await makeAccountsAndDoTransfer(
-        connection,
-        keyPair,
-        transferAmountInMinorUnits,
-        new PublicKey(contact.walletAddress),
-        true
-      );
+        const signature = await makeAccountsAndDoTransfer(
+          connection,
+          keyPair,
+          transferAmountInMinorUnits,
+          new PublicKey(contact.walletAddress),
+          true
+        );
 
-      log(`Finished transfer, signature was`, signature);
-    } else {
-      log(`ACTUALLY_SEND_MONEY is false, skipping transfer`);
-      await sleep(1 * SECOND);
+        log(`Finished transfer, signature was`, signature);
+      } else {
+        log(`ACTUALLY_SEND_MONEY is false, skipping transfer`);
+        await sleep(1 * SECOND);
+      }
+
+      isSending = false;
+      isSendingAnyway = false;
+      isTransactionComplete = true;
+    } catch (error) {
+      transactionFailed = true;
+      error = error;
     }
-
-    isSending = false;
-    isSendingAnyway = false;
-    isTransactionComplete = true;
-  }
-  catch(error){
-    transactionFailed= true;
-    error = error;
-  }
   };
 
   $: (isSending || isSendingAnyway) && doTransfer();
@@ -224,12 +222,14 @@
   {/if}
 
   {#if transactionFailed}
-  <Modal buttonType="transfer">
-    <TransactionFailed {error} {destinationWalletAddress}
-    {transferAmount}
-    {verifiedClaims}/>
-  </Modal>
-  
+    <Modal buttonType="transfer">
+      <TransactionFailed
+        {error}
+        {destinationWalletAddress}
+        {transferAmount}
+        {verifiedClaims}
+      />
+    </Modal>
   {/if}
 
   {#if isAskingWalletOwnerToGetVerified}
