@@ -168,7 +168,7 @@
 <div class="transfer-page">
   <SendHeading {contact} {hasLoadedVerificationStateFromNetwork} />
 
-  <div class="destination-and-amount">
+  <div class="inputs">
     <FocusContext>
       <Input
         bind:value={destinationWalletAddress}
@@ -270,14 +270,15 @@
     /* Cool subtle background borrowed from website */
     background: radial-gradient(at 50% 50%, #ddfff6 0, #fff 80%, #fff 100%);
   }
-  .destination-and-amount {
+  .inputs {
     display: grid;
     grid-auto-flow: row;
     grid-template-rows: 1fr;
     justify-content: center;
     align-self: center;
     width: 100%;
-    gap: 15px;
+    gap: 12px;
+    padding: 12px;
   }
 
   .transferring-wait {

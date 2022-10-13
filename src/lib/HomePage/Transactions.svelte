@@ -21,32 +21,34 @@
 </script>
 
 {#if transactionsByDays}
-  {#each transactionsByDays as transactionsByDay}
-    <div class="day">
-      <div class="day-summary">
-        <div class="day-name">
-          {isoDateToFriendlyName(transactionsByDay.isoDate)}
+  <div class="days">
+    {#each transactionsByDays as transactionsByDay}
+      <div class="day">
+        <div class="day-summary">
+          <div class="day-name">
+            {isoDateToFriendlyName(transactionsByDay.isoDate)}
+          </div>
+
+          <div class="day-total">
+            <!-- TODO: clean up this code -->
+            {amountAndDecimalsToMajorAndMinor(
+              String(transactionsByDay.total),
+              6
+            )[0]}.{amountAndDecimalsToMajorAndMinor(
+              String(transactionsByDay.total),
+              6
+            )[1]}
+          </div>
         </div>
 
-        <div class="day-total">
-          <!-- TODO: clean up this code -->
-          {amountAndDecimalsToMajorAndMinor(
-            String(transactionsByDay.total),
-            6
-          )[0]}.{amountAndDecimalsToMajorAndMinor(
-            String(transactionsByDay.total),
-            6
-          )[1]}
+        <div class="transactions">
+          {#each transactionsByDay.transactions as transaction}
+            <TransactionComponent {transaction} />
+          {/each}
         </div>
       </div>
-
-      <div class="transactions">
-        {#each transactionsByDay.transactions as transaction}
-          <TransactionComponent {transaction} />
-        {/each}
-      </div>
-    </div>
-  {/each}
+    {/each}
+  </div>
   {#if !transactionsByDays.length}
     <p>No transactions</p>
   {/if}
@@ -59,6 +61,10 @@
     display: grid;
     grid-auto-flow: row;
     gap: 6px;
+  }
+
+  .days {
+    align-content: start;
   }
 
   .day {
