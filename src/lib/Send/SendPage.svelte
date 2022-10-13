@@ -190,7 +190,7 @@
 
       <Input
         bind:value={memo}
-        label="memo"
+        label="Message to recipient (optional)"
         isFocused={false}
         isAmount={false}
         filterField={null}
