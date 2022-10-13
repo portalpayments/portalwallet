@@ -12,16 +12,7 @@
   const sendMoney = () => {
     if (contact.walletAddress && sendAmount > 0) {
       log("Sending amount " + sendAmount + " To " + contact.walletAddress);
-      // const now = new Date().valueOf();
-      // TODO add to transactions
-      //   transactions.push({
-      //     date: now,
-      //     amount: sendAmount,
-      //     isReceived: false,
-      //   });
-
-      //   sendAmount = null;
-      //   transactions = transactions;
+      throw new Error(`Not implemented`);
     }
   };
 </script>
