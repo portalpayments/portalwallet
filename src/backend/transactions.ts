@@ -11,7 +11,7 @@ import {
   type TransactionSummary,
 } from "../lib/types";
 
-import { NOTE_PROGRAM } from "../lib/constants";
+import { NOTE_PROGRAM } from "./constants";
 
 export const solanaBlocktimeToJSTime = (blockTime: number) => {
   return blockTime * 1000;

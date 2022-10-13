@@ -97,7 +97,7 @@ export const putSolIntoWallet = async (
 
   const latestBlockHash = await connection.getLatestBlockhash();
 
-  //wait for airdrop confirmation
+  // Wait for airdrop confirmation
   await connection.confirmTransaction({
     blockhash: latestBlockHash.blockhash,
     lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,

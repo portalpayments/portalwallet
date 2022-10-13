@@ -129,3 +129,9 @@ export const ONE = new BigNumber(1);
 export const SOLANA_SYSTEM_PROGRAM = new PublicKey(
   "11111111111111111111111111111111"
 );
+
+// The standard Solana SPL MEMO program
+export const MEMO_PROGRAM = "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr";
+
+// Similar to MEMO but added by Glow
+export const NOTE_PROGRAM = "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93";
