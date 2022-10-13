@@ -26,7 +26,7 @@ export const mintAndTransferIdentityToken = async (
   familyName: string
 ) => {
   log(`🏦 Minting identity tokens`);
-  const connection = await connect("genesysGoMain");
+  const connection = await connect("quickNodeMainNetBeta");
 
   const tokenCreateOutput = await mintIdentityToken(
     connection,

@@ -55,7 +55,7 @@
     if (newValue.secretKey) {
       log(`🔑Got secret key.`);
       // Connect to Solana
-      const newConnection = await connect("ankrMainNet");
+      const newConnection = await connect("quickNodeMainNetBeta");
       connectionStore.set(newConnection);
 
       if (!newValue.secretKey) {
