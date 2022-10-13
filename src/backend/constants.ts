@@ -66,15 +66,20 @@ export const URLS = {
   mainNetBeta: clusterApiUrl("mainnet-beta"),
   testNet: clusterApiUrl("testnet"),
   // From https://www.quicknode.com/endpoints/49328
+  // Maybe bad? 'Error in getParsedTokenAccountsByOwner: 404 : Not Found' when I use
   quickNodeDevNet:
     "https://red-aged-dream.solana-devnet.quiknode.pro/cb0472330c14ad913e8a4430c70c182570f96047/",
   quickNodeMainNetBeta:
     "https://proportionate-greatest-needle.solana-mainnet.quiknode.pro/fb71de8318add2dc1fad7fa6ddf10501d3dc8071/",
   // From https://shdw.genesysgo.com/genesysgo/the-genesysgo-rpc-network
   // The SSC DAO network handles both https and wss connections. It provides unlimited data, global DNS load balancing for the lowest latency possible, backed by 300+ bare metal servers in 9 countries across 3 different continents. Additionally, the SSC DAO network has the full ledger history back to the genesis block.
+  //
+  // Maybe bad? Fucking around using internal Cloudflare certs on the internet
   genesysGoMain: "https://ssc-dao.genesysgo.net/",
   genesysGoDevNet: "https://devnet.genesysgo.net/",
   // https://www.ankr.com/rpc/solana
+  //
+  // Maybe bad? Got 'Node is behind by 214 slots'
   ankrMainNet: "https://rpc.ankr.com/solana",
 };
 
