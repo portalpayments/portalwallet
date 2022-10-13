@@ -7,7 +7,6 @@ import {
   type ConfirmOptions,
   type TransactionSignature,
   TransactionInstruction,
-  SystemProgram,
   Keypair,
 } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
@@ -79,7 +78,7 @@ export async function transferWithMemo(
         keys: [
           { pubkey: ownerAndPayer.publicKey, isSigner: true, isWritable: true },
         ],
-        data: Buffer.from("Data to send in transaction", "utf-8"),
+        data: Buffer.from(memo, "utf-8"),
         programId: new PublicKey(MEMO_PROGRAM),
       })
     );
