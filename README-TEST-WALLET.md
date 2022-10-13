@@ -30,7 +30,7 @@ Now the extension is loaded:
 
 <img src="docs/installation/4-loaded.png" alt="extension loaded"/>
 
-Now click the puzzle piece 🧩 icon and Pin the Portal wallet:
+Now click the puzzle piece 🧩 icon and Pin the Portal:
 
 <img src="docs/installation/5-pin-extension.png" alt="extension loaded"/>
 
