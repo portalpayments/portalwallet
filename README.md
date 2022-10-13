@@ -73,8 +73,8 @@ export METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS="metaqbxxUerdq28cj1RbAWkYQm3ybzjb
 solana program dump -u m ${METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS} metaplex_token_metadata_program.so
 
 
-export NOTE_PROGRAM_ADDRESS="noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93"
-solana program dump -u m ${NOTE_PROGRAM_ADDRESS} note_program.so
+export MEMO_PROGRAM_ADDRESS="MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
+solana program dump -u m ${MEMO_PROGRAM_ADDRESS} memo_program.so
 
 ```
 
