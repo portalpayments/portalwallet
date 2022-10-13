@@ -1,7 +1,7 @@
 import {
   flip,
   getTransactionsByDays,
-  transactionResponseToPortalTransactionSummary,
+  summarizeTransaction,
 } from "./transactions";
 import {
   MOCK_SENDER_PUBLIC_KEY,
@@ -39,11 +39,10 @@ describe(`transaction summaries`, () => {
   test(`We can produce a transaction summary from a pre-cooked transaction where the sender is first index`, async () => {
     const currentUserWallet = MOCK_SENDER_PUBLIC_KEY;
 
-    const portalTransactionSummary =
-      transactionResponseToPortalTransactionSummary(
-        transactionResponseSenderComesFirst,
-        new PublicKey(currentUserWallet)
-      );
+    const portalTransactionSummary = summarizeTransaction(
+      transactionResponseSenderComesFirst,
+      new PublicKey(currentUserWallet)
+    );
 
     expect(portalTransactionSummary).toEqual({
       id: "2PF9JkUYfARqWbxFv5fBNLK7VhQ9NTsSA5QYcUUNDTQZyX4JATE8TjnLBhoaMNsZ1F1ETUxmM8LUygqRUBtbhgFS",
@@ -62,13 +61,12 @@ describe(`transaction summaries`, () => {
   test(`We can produce a transaction summary from a pre-cooked transaction where the sender isn't first`, async () => {
     const currentUserWallet = MOCK_SENDER_PUBLIC_KEY;
 
-    const portalTransactionSummary =
-      transactionResponseToPortalTransactionSummary(
-        // TODO: our logged transaction.message seems to be missing some properties - investigate - could just be typescript types not being up to date
-        // @ts-ignore
-        transactionResponseSenderComesSecond,
-        new PublicKey(currentUserWallet)
-      );
+    const portalTransactionSummary = summarizeTransaction(
+      // TODO: our logged transaction.message seems to be missing some properties - investigate - could just be typescript types not being up to date
+      // @ts-ignore
+      transactionResponseSenderComesSecond,
+      new PublicKey(currentUserWallet)
+    );
 
     expect(portalTransactionSummary).toEqual({
       id: "3VsPLbEgjT2YTGp6PWXBDDc6kMFd4UwLHNWWNzjvf1QMutAihtDYzmfUY6Wdr2MffBDmNhP1YPR681d9Y9CgXe2V",
@@ -87,13 +85,12 @@ describe(`transaction summaries`, () => {
   test(`We can produce a transaction summary from a pre-cooked transaction where the sender is first index from recipient's point of view`, async () => {
     const currentUserWallet = MOCK_RECIPIENT_PUBLIC_KEY;
 
-    const portalTransactionSummary =
-      transactionResponseToPortalTransactionSummary(
-        // TODO: our logged transaction.message seems to be missing some properties - investigate - could just be typescript types not being up to date
-        // @ts-ignore
-        transactionResponseSenderComesFirst,
-        new PublicKey(currentUserWallet)
-      );
+    const portalTransactionSummary = summarizeTransaction(
+      // TODO: our logged transaction.message seems to be missing some properties - investigate - could just be typescript types not being up to date
+      // @ts-ignore
+      transactionResponseSenderComesFirst,
+      new PublicKey(currentUserWallet)
+    );
 
     expect(portalTransactionSummary).toEqual({
       id: "2PF9JkUYfARqWbxFv5fBNLK7VhQ9NTsSA5QYcUUNDTQZyX4JATE8TjnLBhoaMNsZ1F1ETUxmM8LUygqRUBtbhgFS",
@@ -112,7 +109,7 @@ describe(`transaction summaries`, () => {
   test(`We ignore a transaction of Mike sending himself some money`, () => {
     const portalTransactionSummary =
       // TODO: 'as' shouldn't be necessary, we should tweak our test data
-      transactionResponseToPortalTransactionSummary(
+      summarizeTransaction(
         mikeSendingHimselfMoneyTransaction as ParsedTransactionWithMeta,
         new PublicKey(MIKES_WALLET)
       );
@@ -123,7 +120,7 @@ describe(`transaction summaries`, () => {
   test(`Mike sending Jared some lamports`, () => {
     const portalTransactionSummary =
       // TODO: 'as' shouldn't be necessary, we should tweak our test data
-      transactionResponseToPortalTransactionSummary(
+      summarizeTransaction(
         mikeSendingJaredSomeLamportsTransaction as ParsedTransactionWithMeta,
         new PublicKey(MIKES_WALLET)
       );
@@ -368,7 +365,7 @@ describe(`notes`, () => {
   test(`We can extract a note out of a transaction`, async () => {
     const portalTransactionSummary =
       // TODO: 'as' shouldn't be necessary, we should tweak our test data
-      transactionResponseToPortalTransactionSummary(
+      summarizeTransaction(
         sendingLamportsWithNoteTransaction as ParsedTransactionWithMeta,
         new PublicKey(JOHN_TESTUSER_DEMO_WALLET)
       );

@@ -19,7 +19,7 @@ import axios from "axios";
 import type { AxiosResponse } from "axios";
 import { getIdentityTokenFromWallet } from "./identity-tokens";
 import type { VerifiedClaims } from "./types";
-import { transactionResponseToPortalTransactionSummary } from "./transactions";
+import { summarizeTransaction } from "./transactions";
 
 const VERIFIED_CLAIMS_BY_ADDRESS: Record<string, VerifiedClaims> = {};
 
@@ -251,7 +251,7 @@ export const getTransactionSummariesForAddress = async (
     `In getTransactionSummariesForAddress, limit was ${limit}, got ${rawTransactions.length} rawTransactions`
   );
   let transactionSummaries = rawTransactions.map((transaction) => {
-    return transactionResponseToPortalTransactionSummary(transaction, address);
+    return summarizeTransaction(transaction, address);
   });
 
   // We can't summarize all transactions yet

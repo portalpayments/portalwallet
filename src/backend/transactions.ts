@@ -56,13 +56,13 @@ const byDateNewestToOldest = (a, b) => {
   return -1;
 };
 
-export const transactionResponseToPortalTransactionSummary = (
+export const summarizeTransaction = (
   transactionResponse: ParsedTransactionWithMeta,
   currentWallet: PublicKey
 ): TransactionSummary => {
   // https://docs.solana.com/terminology#transaction-id
   // The first signature in a transaction, which can be used to uniquely identify the transaction across the complete ledger.
-  const id = transactionResponse.transaction.signatures[0];
+  const id = transactionResponse?.transaction?.signatures?.[0];
   let note: string | null = null;
   try {
     const instructions = transactionResponse.transaction.message.instructions;
@@ -192,11 +192,10 @@ export const transactionResponseToPortalTransactionSummary = (
   } catch (thrownObject) {
     const error = thrownObject as Error;
     log(
-      `Warning: could not decode transaction ID: ${id} - see the block explorer for more info.`
+      `Warning: could not summarize transaction ID: ${id} - see the block explorer for more info.`
     );
-    // TODO: throw error;
-    throw error;
-    // return null;
+    // TODO: throw error (once we can handle more types of transactions)
+    return null;
   }
 };
 
