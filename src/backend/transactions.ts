@@ -11,7 +11,7 @@ import {
   type TransactionSummary,
 } from "../lib/types";
 
-import { NOTE_PROGRAM } from "./constants";
+import { MEMO_PROGRAM, NOTE_PROGRAM } from "./constants";
 
 export const solanaBlocktimeToJSTime = (blockTime: number) => {
   return blockTime * 1000;
@@ -77,29 +77,42 @@ export const summarizeTransaction = (
       }
     }
 
-    if (transactionResponse.meta.preTokenBalances.length === 0) {
-      log(`Handing Sol transaction`);
-      const instructions = transactionResponse.transaction.message.instructions;
-      if (instructions.length !== 1) {
-        const secondInstruction = instructions[1];
+    if (instructions.length !== 1) {
+      const secondInstruction = instructions[1];
 
-        const secondInstructionProgram = secondInstruction.programId.toBase58();
+      const secondInstructionProgram = secondInstruction.programId.toBase58();
 
-        // The 'Note program' is exactly like the 'memo program'
-        // Just run by someone else.
-        if (secondInstructionProgram !== NOTE_PROGRAM) {
-          throw new Error(`Don't know how to summarize this transaction ${id}`);
-        }
+      // The 'Note program' is exactly like the 'memo program'
+      // Just run by someone else.
+      if (secondInstructionProgram === MEMO_PROGRAM) {
+        // OK this is just sending Sol with a memo
 
+        // @ts-ignore this definitely exists, see sendingLamportsWithNoteTransaction
+        memo = secondInstruction.parsed;
+      }
+
+      // The 'Note program' is exactly like the 'memo program'
+      // Just run by someone else.
+      if (secondInstructionProgram === NOTE_PROGRAM) {
         // OK this is just sending Sol with a note
 
         // @ts-ignore this definitely exists, see sendingLamportsWithNoteTransaction
         const instructionData = secondInstruction.data;
 
         const noteData = instructionDataToNote(instructionData);
-
         memo = noteData;
       }
+
+      if (!memo) {
+        throw new Error(
+          `Don't know how to summarize this transaction - second instruction isn't a memo or note`
+        );
+      }
+    }
+
+    if (transactionResponse.meta.preTokenBalances.length === 0) {
+      log(`Handing Sol transaction`);
+      const instructions = transactionResponse.transaction.message.instructions;
 
       const onlyInstruction = instructions[0] as ParsedInstruction;
 

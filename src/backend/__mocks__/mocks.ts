@@ -1,6 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 import type { writable } from "svelte/store";
 import {
+  MEMO_PROGRAM,
   MIKES_USDC_ACCOUNT,
   MIKES_WALLET,
   SOLANA_SYSTEM_PROGRAM,
@@ -502,6 +503,146 @@ export const sendingLamportsWithNoteTransaction = {
     },
     signatures: [
       "PdX96DWpeMRqjxP7tQHU7aVMkjongnQz7mmkLPmvtezvWoJzqnVfJpYu3xxmRWSTngKDQ9A7a4UP4s4Tj463jr4",
+    ],
+  },
+};
+
+export const transactionWithMemo = {
+  blockTime: 1665683493,
+  meta: {
+    err: null,
+    fee: 5000,
+    innerInstructions: [],
+    logMessages: [
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [1]",
+      "Program log: Instruction: Transfer",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 4644 of 400000 compute units",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success",
+      "Program MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr invoke [1]",
+      "Program log: Signed by 5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+      'Program log: Memo (len 10): "basketball"',
+      "Program MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr consumed 18677 of 395356 compute units",
+      "Program MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr success",
+    ],
+    postBalances: [2506520, 2039280, 2039280, 521498880, 934087680],
+    postTokenBalances: [
+      {
+        accountIndex: 1,
+        mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        owner: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+        programId: SPL_TOKEN_PROGRAM,
+        uiTokenAmount: {
+          amount: "7430220",
+          decimals: 6,
+          uiAmount: 7.43022,
+          uiAmountString: "7.43022",
+        },
+      },
+      {
+        accountIndex: 2,
+        mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        programId: SPL_TOKEN_PROGRAM,
+        uiTokenAmount: {
+          amount: "12863485",
+          decimals: 6,
+          uiAmount: 12.863485,
+          uiAmountString: "12.863485",
+        },
+      },
+    ],
+    preBalances: [2511520, 2039280, 2039280, 521498880, 934087680],
+    preTokenBalances: [
+      {
+        accountIndex: 1,
+        mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        owner: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+        programId: SPL_TOKEN_PROGRAM,
+        uiTokenAmount: {
+          amount: "7220220",
+          decimals: 6,
+          uiAmount: 7.22022,
+          uiAmountString: "7.22022",
+        },
+      },
+      {
+        accountIndex: 2,
+        mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        programId: SPL_TOKEN_PROGRAM,
+        uiTokenAmount: {
+          amount: "13073485",
+          decimals: 6,
+          uiAmount: 13.073485,
+          uiAmountString: "13.073485",
+        },
+      },
+    ],
+    rewards: [],
+    status: {
+      Ok: null,
+    },
+  },
+  slot: 155156751,
+  transaction: {
+    message: {
+      accountKeys: [
+        {
+          pubkey: new PublicKey("5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"),
+          signer: true,
+          source: "transaction",
+          writable: true,
+        },
+        {
+          pubkey: new PublicKey("Bz2GC7qwvrQDLnhHvysYpbGsLPMtJmC4bWQZQqs9Hb8N"),
+          signer: false,
+          source: "transaction",
+          writable: true,
+        },
+        {
+          pubkey: new PublicKey("Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc"),
+          signer: false,
+          source: "transaction",
+          writable: true,
+        },
+        {
+          pubkey: new PublicKey(MEMO_PROGRAM),
+          signer: false,
+          source: "transaction",
+          writable: false,
+        },
+        {
+          pubkey: new PublicKey(SPL_TOKEN_PROGRAM),
+          signer: false,
+          source: "transaction",
+          writable: false,
+        },
+      ],
+      addressTableLookups: null,
+      instructions: [
+        {
+          parsed: {
+            info: {
+              amount: "210000",
+              authority: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+              destination: "Bz2GC7qwvrQDLnhHvysYpbGsLPMtJmC4bWQZQqs9Hb8N",
+              source: "Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc",
+            },
+            type: "transfer",
+          },
+          program: "spl-token",
+          programId: new PublicKey(SPL_TOKEN_PROGRAM),
+        },
+        {
+          parsed: "basketball",
+          program: "spl-memo",
+          programId: new PublicKey(MEMO_PROGRAM),
+        },
+      ],
+      recentBlockhash: "BtkKAM3cfvNfjWM3rR2DkRvM4cW6zRsTGYhyKzZJuABk",
+    },
+    signatures: [
+      "3JRTJXcdu17Br4wFG2RmrYWyueEjHTQXPY8kt9rzM9AM7outauUNLcxAs5yjSFsEvaXbwa4fJVwPyG5srgK8cySM",
     ],
   },
 };

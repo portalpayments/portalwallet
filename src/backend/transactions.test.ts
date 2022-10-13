@@ -9,6 +9,7 @@ import {
   mikeSendingHimselfMoneyTransaction,
   mikeSendingJaredSomeLamportsTransaction,
   sendingLamportsWithNoteTransaction,
+  transactionWithMemo,
 } from "./__mocks__/mocks";
 import {
   Connection,
@@ -353,7 +354,26 @@ describe(`grouping transactions`, () => {
   });
 });
 
-describe(`notes`, () => {
+describe(`memos and notes`, () => {
+  test(`We can read a transaction with a memo`, () => {
+    const summary = summarizeTransaction(
+      transactionWithMemo,
+      new PublicKey(MIKES_WALLET)
+    );
+    expect(summary).toEqual({
+      amount: 210000,
+      currency: 0,
+      date: 1665683493000,
+      direction: 0,
+      from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+      id: "3JRTJXcdu17Br4wFG2RmrYWyueEjHTQXPY8kt9rzM9AM7outauUNLcxAs5yjSFsEvaXbwa4fJVwPyG5srgK8cySM",
+      memo: "basketball",
+      networkFee: 5000,
+      status: true,
+      to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+    });
+  });
+
   test(`We can read a raw note`, () => {
     // Copied from https://explorer.solana.com/tx/PdX96DWpeMRqjxP7tQHU7aVMkjongnQz7mmkLPmvtezvWoJzqnVfJpYu3xxmRWSTngKDQ9A7a4UP4s4Tj463jr4
     const note = hexToUtf8(
