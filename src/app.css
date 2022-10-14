@@ -114,8 +114,10 @@ input:focus {
 }
 
 .feature {
+  overflow-y: hide;
   grid-auto-flow: row;
   grid-template-rows: 64px 1fr;
+  height: var(--wallet-height);
 }
 
 .colorful-text {
