@@ -1,5 +1,10 @@
 import type { VerifiedClaims } from "../backend/types";
 
+export interface User {
+  name: string;
+  isVerified: boolean;
+}
+
 export interface Settings {
   secretKey: Uint8Array;
   version: number;

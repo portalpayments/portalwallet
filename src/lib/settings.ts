@@ -127,6 +127,11 @@ export const saveSettingsHack = async (
 
 globalThis.saveSettingsHack = saveSettingsHack;
 
+export const checkIfOnboarded = async () => {
+  const settings = await localforage.getItem("PORTAL_SETTINGS");
+  return Boolean(settings);
+};
+
 // Was getSecretKey
 export const getSettings = async (password: string): Promise<Settings> => {
   const decryptionKey: CryptoKey = await passwordToKey(password);

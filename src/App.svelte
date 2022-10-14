@@ -13,6 +13,7 @@
   import { Router, Route } from "svelte-navigator";
   import { connect, verifyWallet } from "./backend/vmwallet";
   import { log } from "./backend/functions";
+  import type { User } from "./lib/types";
   import Lock from "./lib/Lock/Lock.svelte";
   import Contact from "./lib/Contacts/Contact/ContactAndTransactions.svelte";
   import {
@@ -20,30 +21,15 @@
     authStore,
     identityTokenIssuerPublicKey,
   } from "./lib/stores";
-  import { saveSettingsHack } from "./lib/settings";
+  import { checkIfOnboarded } from "./lib/settings";
 
   $authStore;
 
-  interface User {
-    name: string;
-    isVerified: boolean;
-  }
-
   let user: null | User = null;
 
-  const IS_INVESTOR_DEMO = false;
+  let isOnboarded: null | Boolean = null;
 
-  // Hack for demo wallet
-  (async () => {
-    if (IS_INVESTOR_DEMO) {
-      await saveSettingsHack(
-        // Secret key for JOHN_TESTUSER_DEMO_WALLET
-        "HyLLb7PQd5uWz9m8ME7j177gDDJeLwPuYSApd1FhbHB4f1udTJ5thfSXnm2MXsdHGYp7DTLGgZsxdAqtoEohmsu",
-        "password"
-      );
-      log(`Demo wallet for test user has been set up`);
-    }
-  })();
+  let currentFeature: number = 0;
 
   connectionStore.subscribe((newValue) => {
     if (newValue) {
@@ -89,15 +75,20 @@
     }
   });
 
-  let currentFeature: number = 0;
+  (async () => {
+    isOnboarded = await checkIfOnboarded();
+    log(`isOnboarded is`, isOnboarded);
+  })();
 </script>
 
 <Router>
   <main>
-    {#if false}
+    <!-- isOnboarded is null when we haven't loaded localForage yet. After this isOnboarded will be true or false. -->
+    {#if isOnboarded === null}
+      Loading...
+    {:else if !isOnboarded}
       <Onboarding />
-    {/if}
-    {#if $authStore.isLoggedIn}
+    {:else if $authStore.isLoggedIn}
       <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
       <Route path="sendMoney"><SendPage /></Route>
 
