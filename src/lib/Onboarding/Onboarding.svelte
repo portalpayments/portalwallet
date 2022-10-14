@@ -2,6 +2,9 @@
   import Logo from "../../assets/PortalLogo.svg";
   import BackButton from "../Shared/BackButton.svelte";
   import { log } from "../../backend/functions";
+  import { SECOND } from "../../backend/constants";
+  import { checkIfSecretKeyIsValid } from "../settings";
+  import { debounce } from "lodash";
 
   enum Steps {
     Welcome,
@@ -13,6 +16,17 @@
   const stepCount = Object.keys(Steps).length / 2;
 
   let currentStep = Steps.Welcome;
+
+  let secretKeyToImport: string | null = null;
+  let secretKeyToImportIsValid: Boolean | null = null;
+
+  const checkSecretKey = (event) => {
+    // null while we check...
+    secretKeyToImportIsValid = null;
+    const suggestedSecretKey = event.target.value;
+    // Now set the actual value
+    secretKeyToImportIsValid = checkIfSecretKeyIsValid(suggestedSecretKey);
+  };
 
   const move = (isForward: boolean) => {
     log(`Moving ${isForward ? "forwward" : "back"}`);
@@ -46,15 +60,41 @@
             class="next-previous">Next</button
           >
         {/if}
+
         {#if index === Steps.SecretKey}
           <h1>Import your secret key</h1>
+          <p>
+            Paste your secret key (sometimes called 'private key') into the box
+            below.
+          </p>
+          <textarea
+            class="secret-key"
+            placeholder="Secret key"
+            bind:value={secretKeyToImport}
+            on:input|preventDefault={debounce(checkSecretKey, 1 * SECOND)}
+          />
+          {#if secretKeyToImportIsValid !== null}
+            {#if secretKeyToImportIsValid === true}
+              <p>✅ Secret key is valid!</p>
+            {/if}
+            {#if secretKeyToImportIsValid === false}
+              <p>🤔 This is not a valid secret key!</p>
+            {/if}
+          {/if}
+
           <BackButton />
           <button
             type="button"
-            on:click={() => move(true)}
-            class="next-previous">Next</button
+            on:click={() => {
+              if (secretKeyToImportIsValid) {
+                move(true);
+              }
+            }}
+            class="next-previous {secretKeyToImportIsValid ? '' : 'disabled'}"
+            >Next</button
           >
         {/if}
+
         {#if index === Steps.Verify}
           <h1>Get verified</h1>
           <BackButton />
@@ -121,5 +161,19 @@
     width: 100%;
     border-radius: 24px;
     background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
+  }
+
+  button.next-previous.disabled {
+    background: gray;
+    color: #b5b5b5;
+  }
+
+  .secret-key {
+    border-radius: 7px;
+    width: 100%;
+    background-color: white;
+    padding: 6px;
+    height: 150px;
+    color: var(--black);
   }
 </style>

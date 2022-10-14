@@ -6,7 +6,7 @@
 // See https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/deriveKey
 
 import { log, stringify } from "../backend/functions";
-
+import { Keypair } from "@solana/web3.js";
 import base58 from "bs58";
 import localforage from "localforage";
 import type { Settings } from "./types";
@@ -130,6 +130,16 @@ globalThis.saveSettingsHack = saveSettingsHack;
 export const checkIfOnboarded = async () => {
   const settings = await localforage.getItem("PORTAL_SETTINGS");
   return Boolean(settings);
+};
+
+export const checkIfSecretKeyIsValid = (string: string) => {
+  try {
+    const secretKey = base58.decode(string);
+    Keypair.fromSecretKey(secretKey);
+    return true;
+  } catch (thrownObject) {
+    return false;
+  }
 };
 
 // Was getSecretKey
