@@ -1,6 +1,5 @@
 <script lang="ts">
   import Checkmark from "../../assets/Checkmark.svg";
-  import NotificationBell from "../../assets/notification-bell.svg";
   import Lock from "../Lock/Lock.svelte";
   import { Link } from "svelte-navigator";
   import { walletBalanceAccount } from "../stores";
@@ -39,17 +38,13 @@
       <Lock />
     </div>
   </div>
-  <button style="justify-self: end; background: none; padding: 0;">
-    <img src={NotificationBell} alt="Notifications" class="bell-icon" />
-  </button>
 </div>
 
 <style>
   .header {
     display: grid;
     grid-auto-flow: column;
-    padding: 0px 10px 0px 10px;
-    grid-template-columns: 1fr 50px;
+    padding: 0px 12px;
     align-items: center;
     justify-items: start;
     gap: 4px;
@@ -68,10 +63,7 @@
     height: 18px;
     vertical-align: middle;
   }
-  .bell-icon {
-    filter: invert(37%) sepia(30%) saturate(2457%) hue-rotate(184deg)
-      brightness(97%) contrast(87%);
-  }
+
   /* From https://www.w3schools.com/howto/howto_js_dropdown.asp*/
 
   .drop-button-active {
