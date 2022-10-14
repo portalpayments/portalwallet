@@ -1,10 +1,9 @@
 <script lang="ts">
   import Logo from "../../assets/PortalLogo.svg";
   import BackButton from "../Shared/BackButton.svelte";
-  import Input from "../Shared/Input.svelte";
   import TextArea from "../Shared/TextArea.svelte";
+  import Password from "../Shared/Password.svelte";
   import { log } from "../../backend/functions";
-  import { SECOND } from "../../backend/constants";
   import {
     checkIfSecretKeyIsValid,
     saveSettingsForOnboarding,
@@ -110,13 +109,7 @@
             using it.
           </p>
 
-          <input
-            type="password"
-            title="password"
-            placeholder=""
-            bind:value={passwordToSet}
-            class="password"
-          />
+          <Password bind:value={passwordToSet} />
 
           <button
             type="button"

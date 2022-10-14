@@ -89,12 +89,7 @@
   {#if isModalOpen}
     <Modal buttonType="transfer">
       <div>enter your password</div>
-      <input
-        type="password"
-        style="margin-top: 15px;"
-        bind:value={enteredPassword}
-        required
-      />
+      <Password bind:value={enteredPassword} required={true} />
       <button
         class="enter-password-button"
         on:click={() =>
