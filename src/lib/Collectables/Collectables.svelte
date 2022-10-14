@@ -101,5 +101,6 @@
     height: 100%;
     border-radius: 10px;
     object-fit: cover;
+    background-color: var(--light-grey);
   }
 </style>
