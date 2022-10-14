@@ -1,15 +1,20 @@
 <script lang="ts">
   import Logo from "../../assets/PortalLogo.svg";
   import BackButton from "../Shared/BackButton.svelte";
+  import Input from "../Shared/Input.svelte";
   import { log } from "../../backend/functions";
   import { SECOND } from "../../backend/constants";
-  import { checkIfSecretKeyIsValid } from "../settings";
+  import {
+    checkIfSecretKeyIsValid,
+    saveSettingsForOnboarding,
+    checkIfOnboarded,
+  } from "../settings";
   import { debounce } from "lodash";
 
   enum Steps {
     Welcome,
     SecretKey,
-    Verify,
+    Password,
     Done,
   }
 
@@ -19,6 +24,9 @@
 
   let secretKeyToImport: string | null = null;
   let secretKeyToImportIsValid: Boolean | null = null;
+  let passwordToSet: string | null = null;
+
+  let isOnboarded = false;
 
   const checkSecretKey = (event) => {
     // null while we check...
@@ -62,6 +70,7 @@
         {/if}
 
         {#if index === Steps.SecretKey}
+          <BackButton />
           <h1>Import your secret key</h1>
           <p>
             Paste your secret key (sometimes called 'private key') into the box
@@ -82,7 +91,6 @@
             {/if}
           {/if}
 
-          <BackButton />
           <button
             type="button"
             on:click={() => {
@@ -95,18 +103,35 @@
           >
         {/if}
 
-        {#if index === Steps.Verify}
-          <h1>Get verified</h1>
+        {#if index === Steps.Password}
           <BackButton />
+          <h1>Set an unlock phrase</h1>
+          <p>Set an unlock phrase. This will be used for....</p>
+
+          <Input
+            bind:value={passwordToSet}
+            label="unlock password"
+            isFocused={false}
+            isAmount={false}
+            filterField={null}
+            onTypingPause={null}
+          />
+
           <button
             type="button"
-            on:click={() => move(true)}
-            class="next-previous">Next</button
+            on:click={async () => {
+              log(`Setting PORTAL_SETTINGS`);
+              await saveSettingsForOnboarding(secretKeyToImport, passwordToSet);
+              isOnboarded = await checkIfOnboarded();
+              move(true);
+            }}
+            class="next-previous {isOnboarded ? '' : 'disabled'}"
+            >Apply settings</button
           >
         {/if}
         {#if index === Steps.Done}
           <BackButton />
-          <h1>done</h1>
+          <h1>You're now ready to use Portal.</h1>
           <button
             type="button"
             on:click={() => move(true)}

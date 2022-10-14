@@ -110,8 +110,8 @@ export const saveSettings = async (
   return;
 };
 
-// TODO: a quick hack until we get on onboarding UI complete
-export const saveSettingsHack = async (
+// TODO: maybe merge with saveSettings()?
+export const saveSettingsForOnboarding = async (
   secretKeyString: string,
   password: string
 ) => {
@@ -124,8 +124,6 @@ export const saveSettingsHack = async (
     password
   );
 };
-
-globalThis.saveSettingsHack = saveSettingsHack;
 
 export const checkIfOnboarded = async () => {
   const settings = await localforage.getItem("PORTAL_SETTINGS");
