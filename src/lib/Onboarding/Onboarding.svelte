@@ -2,6 +2,7 @@
   import Logo from "../../assets/PortalLogo.svg";
   import BackButton from "../Shared/BackButton.svelte";
   import Input from "../Shared/Input.svelte";
+  import TextArea from "../Shared/TextArea.svelte";
   import { log } from "../../backend/functions";
   import { SECOND } from "../../backend/constants";
   import {
@@ -9,7 +10,6 @@
     saveSettingsForOnboarding,
     checkIfOnboarded,
   } from "../settings";
-  import { debounce } from "lodash";
   import Heading from "../Shared/Heading.svelte";
 
   enum Steps {
@@ -35,6 +35,9 @@
     const suggestedSecretKey = event.target.value;
     // Now set the actual value
     secretKeyToImportIsValid = checkIfSecretKeyIsValid(suggestedSecretKey);
+    if (secretKeyToImportIsValid) {
+      secretKeyToImport = suggestedSecretKey;
+    }
   };
 
   const move = (isForward: boolean) => {
@@ -77,12 +80,7 @@
             Paste your secret key (sometimes called 'private key') into the box
             below.
           </p>
-          <textarea
-            class="secret-key"
-            placeholder="Secret key"
-            bind:value={secretKeyToImport}
-            on:input|preventDefault={debounce(checkSecretKey, 1 * SECOND)}
-          />
+          <TextArea placeholder="Secret key" onInputDelay={checkSecretKey} />
           {#if secretKeyToImportIsValid !== null}
             {#if secretKeyToImportIsValid === true}
               <p>✅ Secret key is valid!</p>
@@ -195,14 +193,5 @@
   button.next-previous.disabled {
     background: gray;
     color: #b5b5b5;
-  }
-
-  .secret-key {
-    border-radius: 7px;
-    width: 100%;
-    background-color: white;
-    padding: 6px;
-    height: 150px;
-    color: var(--black);
   }
 </style>
