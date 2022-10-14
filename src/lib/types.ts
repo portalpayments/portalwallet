@@ -57,14 +57,3 @@ export interface TransactionsByDay {
   total: number;
   transactions: Array<TransactionSummary>;
 }
-
-// From https://github.com/squelix/svelte-portfolio/blob/213edd42797625a537f4f167bd934c2e99ee503c/src/models/forms/svelte-html-props.interface.ts
-export type EventHandler<
-  E extends Event = Event,
-  T extends EventTarget = HTMLElement
-> = (event: E & { currentTarget: EventTarget & T }) => any;
-
-export type MouseEventHandler<T extends EventTarget> = EventHandler<
-  MouseEvent,
-  T
->;

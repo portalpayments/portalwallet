@@ -1,10 +1,9 @@
 <script lang="ts">
   import { Link } from "svelte-navigator";
-  import type { MouseEventHandler } from "../types";
 
-  // https://stackoverflow.com/questions/74069649/how-do-i-set-the-correct-type-for-a-click-handler-when-using-svelte-with-typescr
-  // export let clickHandler: null | MouseEventHandler<HTMLButtonElement> = null;
-  export let clickHandler: null | MouseEventHandler<HTMLButtonElement> = null;
+  // https://stackoverflow.com/questions/74069649/how-do-i-set-the-correct-type-for-a-click-handler-when-using-svelte-with-typescr/74070095#74070095
+  export let clickHandler: null | svelte.JSX.MouseEventHandler<HTMLButtonElement> =
+    null;
 </script>
 
 <div class="back-button colorful-text">
