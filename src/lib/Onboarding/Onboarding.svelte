@@ -10,6 +10,7 @@
     checkIfOnboarded,
   } from "../settings";
   import { debounce } from "lodash";
+  import Heading from "../Shared/Heading.svelte";
 
   enum Steps {
     Welcome,
@@ -70,8 +71,8 @@
         {/if}
 
         {#if index === Steps.SecretKey}
-          <BackButton />
-          <h1>Import your secret key</h1>
+          <BackButton clickHandler={() => move(false)} />
+          <Heading>Import your secret key</Heading>
           <p>
             Paste your secret key (sometimes called 'private key') into the box
             below.
@@ -104,17 +105,19 @@
         {/if}
 
         {#if index === Steps.Password}
-          <BackButton />
-          <h1>Set an unlock phrase</h1>
-          <p>Set an unlock phrase. This will be used for....</p>
+          <BackButton clickHandler={() => move(false)} />
+          <Heading>Set an unlock phrase</Heading>
+          <p>
+            Set an unlock phrase. This will be used to unlock your wallet before
+            using it.
+          </p>
 
-          <Input
+          <input
+            type="password"
+            title="password"
+            placeholder=""
             bind:value={passwordToSet}
-            label="unlock password"
-            isFocused={false}
-            isAmount={false}
-            filterField={null}
-            onTypingPause={null}
+            class="password"
           />
 
           <button
@@ -125,16 +128,17 @@
               isOnboarded = await checkIfOnboarded();
               move(true);
             }}
-            class="next-previous {isOnboarded ? '' : 'disabled'}"
-            >Apply settings</button
+            class="next-previous {passwordToSet?.length ? '' : 'disabled'}"
+            >Save settings</button
           >
         {/if}
         {#if index === Steps.Done}
-          <BackButton />
-          <h1>You're now ready to use Portal.</h1>
+          <BackButton clickHandler={() => move(false)} />
+          <Heading>You're now ready to use Portal.</Heading>
+          <p>Log in and go!</p>
           <button
             type="button"
-            on:click={() => move(true)}
+            on:click={() => window.location.reload()}
             class="next-previous">Finish</button
           >
         {/if}

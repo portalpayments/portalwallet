@@ -1,9 +1,25 @@
 <script lang="ts">
   import { Link } from "svelte-navigator";
+  import type { MouseEventHandler } from "../types";
+
+  // https://stackoverflow.com/questions/74069649/how-do-i-set-the-correct-type-for-a-click-handler-when-using-svelte-with-typescr
+  // export let clickHandler: null | MouseEventHandler<HTMLButtonElement> = null;
+  export let clickHandler: null | MouseEventHandler<HTMLButtonElement> = null;
 </script>
 
 <div class="back-button colorful-text">
-  <Link to="/">‹<span><slot /></span></Link>
+  {#if !clickHandler}
+    <Link to="/">‹<span><slot /></span></Link>
+  {:else}
+    <button
+      on:click|preventDefault={(event) => {
+        if (clickHandler) {
+          clickHandler(event);
+        }
+      }}
+      >‹<span><slot /></span>
+    </button>
+  {/if}
 </div>
 
 <style>
@@ -18,7 +34,8 @@
   }
 
   /* global is needed for 'a' element under Link */
-  .back-button :global(a) {
+  .back-button :global(a),
+  .back-button button {
     text-decoration: none;
     background-color: transparent;
     display: inline-block;
