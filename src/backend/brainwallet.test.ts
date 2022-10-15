@@ -1,5 +1,9 @@
 import type { Connection, Keypair } from "@solana/web3.js";
-import { personalPhraseToSeed, seedToKeypairs } from "./brainwallet";
+import {
+  personalPhraseToEntopy,
+  mnemonicToKeypairs,
+  entropyToMnemonic,
+} from "./brainwallet";
 import { DEPOSIT } from "./constants";
 import { connect, getAccountBalance, putSolIntoWallet } from "./vmwallet";
 import { expectedCleanedPersonalPhrase } from "./__mocks__/mocks";
@@ -19,11 +23,12 @@ describe(`restoration`, () => {
   });
 
   test(`wallets can be created`, async () => {
-    const seed = await personalPhraseToSeed(
+    const entropy = await personalPhraseToEntopy(
       expectedCleanedPersonalPhrase,
       fullName
     );
-    keypairs = await seedToKeypairs(seed, password);
+    const mnemonic = entropyToMnemonic(entropy);
+    keypairs = await mnemonicToKeypairs(mnemonic, password);
 
     // IMPORTANT: if we don't deposit any Sol the wallet won't exist
     const firstWallet = keypairs[0];
@@ -38,11 +43,12 @@ describe(`restoration`, () => {
 
   test(`wallets can be restored using their seed phrases`, async () => {
     // Lets re-make the keypairs from the seed
-    const seed = await personalPhraseToSeed(
+    const entropy = await personalPhraseToEntopy(
       expectedCleanedPersonalPhrase,
       fullName
     );
-    restoredKeypairs = await seedToKeypairs(seed, password);
+    const mnemonic = entropyToMnemonic(entropy);
+    restoredKeypairs = await mnemonicToKeypairs(mnemonic, password);
 
     const originalWallet = keypairs[0];
     const restoredWallet = restoredKeypairs[0];

@@ -7,7 +7,7 @@ import { scrypt } from "./node-functions";
 import * as bip39 from "bip39";
 
 // TODO: use browser version of scrypt
-export const personalPhraseToSeed = async (
+export const personalPhraseToEntopy = async (
   phrase: string,
   password: string
 ): Promise<Buffer> => {
@@ -15,19 +15,26 @@ export const personalPhraseToSeed = async (
   // Use scrypt
   // See https://crypto.stackexchange.com/questions/24514/deterministically-generate-a-rsa-public-private-key-pair-from-a-passphrase-with
 
-  // Will be a Buffer, see https://nodejs.org/docs/latest-v16.x/api/crypto.html#cryptoscryptpassword-salt-keylen-options-callback
-  let seedBytes = (await scrypt(
+  // Also called the 'seed'. Will be a Buffer, see https://nodejs.org/docs/latest-v16.x/api/crypto.html#cryptoscryptpassword-salt-keylen-options-callback
+  let entropy = (await scrypt(
     phrase,
     password,
     SOLANA_SEED_SIZE_BYTES
   )) as Buffer;
 
-  return seedBytes;
+  return entropy;
 };
 
-export const seedToKeypairs = async (entropy: Buffer, password: string) => {
-  log(`👛 Making wallet with seed...`, entropy.toString());
+export const entropyToMnemonic = (entropy: Buffer) => {
+  log(`👛 Making wallet with entropy...`, entropy.toString());
   const mnemonic = bip39.entropyToMnemonic(entropy.toString("hex"));
+  return mnemonic;
+};
+
+export const mnemonicToKeypairs = async (
+  mnemonic: string,
+  password: string
+) => {
   // The keypair is the (parent) wallet!
   // See https://github.com/solana-labs/solana/blob/master/web3.js/examples/get_account_info.js
   log(`🤯 Mnemonic is:`, mnemonic);

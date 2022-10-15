@@ -6,8 +6,10 @@ export interface User {
 }
 
 export interface Settings {
-  secretKey: Uint8Array;
   version: number;
+  secretKey: Uint8Array;
+  personalPhrase: string | null;
+  mnemonic: string | null;
 }
 
 export interface Creator {

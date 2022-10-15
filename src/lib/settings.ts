@@ -87,6 +87,7 @@ export const saveSettings = async (
   settings: Settings,
   password: string
 ): Promise<Settings> => {
+  log(`Setting PORTAL_SETTINGS`);
   const key: CryptoKey = await passwordToKey(password);
   const initialisationVector = await getOrSetInitialisationVector();
 
@@ -104,25 +105,9 @@ export const saveSettings = async (
     encodedText
   );
   // 4. Save to localforage
-  log(`Saving PORTAL_SETTINGS...`);
   const result = await localforage.setItem("PORTAL_SETTINGS", encrypted);
   log(`Saved PORTAL_SETTINGS result is`, result);
   return;
-};
-
-// TODO: maybe merge with saveSettings()?
-export const saveSettingsForOnboarding = async (
-  secretKeyString: string,
-  password: string
-) => {
-  const secretKey = base58.decode(secretKeyString);
-  await saveSettings(
-    {
-      version: 1,
-      secretKey,
-    },
-    password
-  );
 };
 
 export const checkIfOnboarded = async () => {

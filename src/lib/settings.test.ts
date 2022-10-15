@@ -30,7 +30,15 @@ describe(`settings`, () => {
   });
 
   test(`Can save settings successfully`, async () => {
-    await saveSettings({ version: 1, secretKey: secretKey }, PASSWORD);
+    await saveSettings(
+      {
+        version: 1,
+        secretKey: secretKey,
+        mnemonic: null,
+        personalPhrase: null,
+      },
+      PASSWORD
+    );
   });
 
   test(`Can get settings successfully`, async () => {

@@ -5,8 +5,14 @@
   import Password from "../Shared/Password.svelte";
   import { log } from "../../backend/functions";
   import {
+    personalPhraseToEntopy,
+    entropyToMnemonic,
+    mnemonicToKeypairs,
+  } from "../../backend/brainwallet";
+  import base58 from "bs58";
+  import {
     checkIfSecretKeyIsValid,
-    saveSettingsForOnboarding,
+    saveSettings,
     checkIfOnboarded,
   } from "../settings";
   import Heading from "../Shared/Heading.svelte";
@@ -19,10 +25,9 @@
 
   let secretKeyToImport: string | null = null;
   let personalPhraseToUse: string | null = null;
+  let passwordToUse: string | null = null;
+
   let isSuggestedSecretValid: Boolean | null = null;
-
-  let passwordToSet: string | null = null;
-
   let isPersonalPhraseSecure: Boolean | null = null;
 
   let isOnboarded = false;
@@ -80,10 +85,11 @@
       <div class="step {stepNumber}">
         {#if stepName === "first"}
           <img class="logo" src={Logo} alt="Portal logo" />
-          <h1>
-            Welcome to Portal. This process will import your wallet, and verify
-            your identity so other people can pay you.
-          </h1>
+          <p>
+            Portal allows you to send money directly to anyone instantly, using
+            crypto.
+          </p>
+
           <div class="buttons">
             <button
               type="button"
@@ -134,6 +140,55 @@
               >Next</button
             >
           {:else}
+            <Heading>Set a password</Heading>
+            <p>This will be used to unlock your wallet before using it.</p>
+
+            <Password bind:value={passwordToUse} />
+
+            <button
+              type="button"
+              on:click={async () => {
+                move(true);
+              }}
+              class="next {passwordToUse?.length ? '' : 'disabled'}"
+              >Set password</button
+            >
+          {/if}
+        {/if}
+
+        {#if stepName === "third"}
+          <BackButton clickHandler={() => move(false)} />
+          {#if restoringOrMakingNewWallet === "restoring"}
+            <Heading>Set an unlock phrase</Heading>
+            <p>
+              Set an unlock phrase. This will be used to unlock your wallet
+              before using it.
+            </p>
+
+            <Password bind:value={passwordToUse} />
+
+            <button
+              type="button"
+              on:click={async () => {
+                const secretKey = base58.decode(secretKeyToImport);
+                await saveSettings(
+                  {
+                    version: 1,
+                    secretKey,
+                    personalPhrase: null,
+                    // it's not possible to recover a mnemonic from a secret key
+                    // (since the mnemonic was used to create the entropy used for the secret)
+                    mnemonic: null,
+                  },
+                  passwordToUse
+                );
+                isOnboarded = await checkIfOnboarded();
+                move(true);
+              }}
+              class="next {passwordToUse?.length ? '' : 'disabled'}"
+              >Save settings</button
+            >
+          {:else}
             <Heading>Set a Personal Phrase</Heading>
             <div class="help">
               <p>
@@ -141,19 +196,17 @@
                   >personal phrase</strong
                 >.
               </p>
+              <TextArea
+                placeholder="When I was six my brother Finian got a train set for Christmas."
+                onInputDelay={checkPersonalPhrase}
+              />
               <p>
-                <strong>Pick something only you would know</strong> - a personal
-                memory is good.
+                <strong>Pick something only you know</strong> - a personal memory
+                is good.
               </p>
-              <p>
-                <strong>Don't use published works</strong> like song lyrics, or parts
-                of books.
-              </p>
+              <p>Don't use song lyrics, books, or other public writing.</p>
             </div>
-            <TextArea
-              placeholder="When I was six my brother Finian got a train set for Christmas."
-              onInputDelay={checkPersonalPhrase}
-            />
+
             {#if isPersonalPhraseSecure !== null}
               {#if isPersonalPhraseSecure === true}
                 <p>
@@ -168,8 +221,32 @@
 
             <button
               type="button"
-              on:click={() => {
+              on:click={async () => {
                 if (isPersonalPhraseSecure) {
+                  const entropy = await personalPhraseToEntopy(
+                    personalPhraseToUse,
+                    passwordToUse
+                  );
+                  const mnemonic = entropyToMnemonic(entropy);
+                  const keypairs = await mnemonicToKeypairs(
+                    mnemonic,
+                    passwordToUse
+                  );
+
+                  const firstWallet = keypairs[0];
+
+                  const secretKey = firstWallet.secretKey;
+                  await saveSettings(
+                    {
+                      version: 1,
+                      secretKey,
+                      personalPhrase: personalPhraseToUse,
+                      mnemonic,
+                    },
+                    passwordToUse
+                  );
+
+                  isOnboarded = await checkIfOnboarded();
                   move(true);
                 }
               }}
@@ -177,29 +254,6 @@
               >Next</button
             >
           {/if}
-        {/if}
-
-        {#if stepName === "third"}
-          <BackButton clickHandler={() => move(false)} />
-          <Heading>Set an unlock phrase</Heading>
-          <p>
-            Set an unlock phrase. This will be used to unlock your wallet before
-            using it.
-          </p>
-
-          <Password bind:value={passwordToSet} />
-
-          <button
-            type="button"
-            on:click={async () => {
-              log(`Setting PORTAL_SETTINGS`);
-              await saveSettingsForOnboarding(secretKeyToImport, passwordToSet);
-              isOnboarded = await checkIfOnboarded();
-              move(true);
-            }}
-            class="next {passwordToSet?.length ? '' : 'disabled'}"
-            >Save settings</button
-          >
         {/if}
         {#if stepName === "final"}
           <BackButton clickHandler={() => move(false)} />
@@ -221,16 +275,10 @@
     width: 80%;
   }
 
-  h1 {
-    font-size: 14px;
-    line-height: 18px;
-    font-weight: 400;
-  }
-
   p {
-    font-size: 12px;
-    line-height: 16px;
-    text-align: left;
+    font-size: 14x;
+    line-height: 18px;
+    text-align: center;
   }
 
   .letterbox {
