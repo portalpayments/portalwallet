@@ -192,26 +192,20 @@
             <Heading>Set a Personal Phrase</Heading>
             <div class="help">
               <p>
-                If you lose your devices, you can access your wallet using your <strong
-                  >personal phrase</strong
-                >.
+                If you lose your devices, you can access your wallet using this
+                phrase.
               </p>
               <TextArea
                 placeholder="When I was six my brother Finian got a train set for Christmas."
                 onInputDelay={checkPersonalPhrase}
               />
-              <p>
-                <strong>Pick something only you know</strong> - a personal memory
-                is good.
-              </p>
-              <p>Don't use song lyrics, books, or other public writing.</p>
             </div>
 
             {#if isPersonalPhraseSecure !== null}
               {#if isPersonalPhraseSecure === true}
                 <p>
-                  ✅ That can work as work as a personal phrase. We'll make sure
-                  you remember it!
+                  ✅ That works as a personal phrase. We'll test you every so
+                  often to help you remember it.
                 </p>
               {/if}
               {#if isPersonalPhraseSecure === false}
