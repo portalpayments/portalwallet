@@ -11,19 +11,11 @@
   } from "../settings";
   import Heading from "../Shared/Heading.svelte";
 
-  enum Steps {
-    Welcome, // Pick I have a wallet / make a wallet
-    SecretKeyOrMnemonicOrPhrase, // Make a wallet - select a personal phrase
-    Password,
-    Done,
-  }
-
   const MINIMUM_LENGTH = 30;
 
-  // Enums lengths is always doubled. Just how TS works.
-  const stepCount = Object.keys(Steps).length / 2;
-
-  let currentStep = Steps.Welcome;
+  const steps = ["first", "second", "third", "fourth"];
+  const stepCount = steps.length;
+  let currentStep = 0;
 
   let secretKeyToImport: string | null = null;
   let personalPhraseToUse: string | null = null;
@@ -84,9 +76,9 @@
     style="width:{stepCount * 300}px; transform: translateX(-{currentStep *
       300}px);"
   >
-    {#each { length: stepCount } as _, index}
-      <div class="step {Steps[index].toLowerCase()}">
-        {#if index === Steps.Welcome}
+    {#each steps as stepName, stepNumber}
+      <div class="step {stepNumber}">
+        {#if stepName === "first"}
           <img class="logo" src={Logo} alt="Portal logo" />
           <h1>
             Welcome to Portal. This process will import your wallet, and verify
@@ -113,7 +105,7 @@
           </div>
         {/if}
 
-        {#if index === Steps.SecretKeyOrMnemonicOrPhrase}
+        {#if stepName === "second"}
           <BackButton clickHandler={() => move(false)} />
           {#if restoringOrMakingNewWallet === "restoring"}
             <Heading>Import your secret key</Heading>
@@ -187,7 +179,7 @@
           {/if}
         {/if}
 
-        {#if index === Steps.Password}
+        {#if stepName === "third"}
           <BackButton clickHandler={() => move(false)} />
           <Heading>Set an unlock phrase</Heading>
           <p>
@@ -209,7 +201,7 @@
             >Save settings</button
           >
         {/if}
-        {#if index === Steps.Done}
+        {#if stepName === "final"}
           <BackButton clickHandler={() => move(false)} />
           <Heading>You're now ready to use Portal.</Heading>
           <p>Log in and go!</p>
