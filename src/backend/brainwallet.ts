@@ -9,7 +9,7 @@ import * as bip39 from "bip39";
 // TODO: use browser version of scrypt
 export const personalPhraseToSeed = async (
   phrase: string,
-  birthday: string
+  password: string
 ): Promise<Buffer> => {
   log(`🌱 Converting personal phrase to seed...`);
   // Use scrypt
@@ -18,7 +18,7 @@ export const personalPhraseToSeed = async (
   // Will be a Buffer, see https://nodejs.org/docs/latest-v16.x/api/crypto.html#cryptoscryptpassword-salt-keylen-options-callback
   let seedBytes = (await scrypt(
     phrase,
-    birthday,
+    password,
     SOLANA_SEED_SIZE_BYTES
   )) as Buffer;
 
