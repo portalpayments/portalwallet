@@ -21,6 +21,7 @@
 
 <style>
   .password {
+    width: 100%;
     transition: all 200ms ease-out;
   }
 

@@ -12,30 +12,57 @@
   import Heading from "../Shared/Heading.svelte";
 
   enum Steps {
-    Welcome,
-    SecretKey,
+    Welcome, // Pick I have a wallet / make a wallet
+    SecretKeyOrMnemonicOrPhrase, // Make a wallet - select a personal phrase
     Password,
     Done,
   }
 
+  const MINIMUM_LENGTH = 30;
+
+  // Enums lengths is always doubled. Just how TS works.
   const stepCount = Object.keys(Steps).length / 2;
 
   let currentStep = Steps.Welcome;
 
   let secretKeyToImport: string | null = null;
-  let secretKeyToImportIsValid: Boolean | null = null;
+  let personalPhraseToUse: string | null = null;
+  let isSuggestedSecretValid: Boolean | null = null;
+
   let passwordToSet: string | null = null;
+
+  let isPersonalPhraseSecure: Boolean | null = null;
 
   let isOnboarded = false;
 
+  let restoringOrMakingNewWallet: "restoring" | "makingNewWallet" = "restoring";
+
   const checkSecretKey = (event) => {
     // null while we check...
-    secretKeyToImportIsValid = null;
+    isSuggestedSecretValid = null;
     const suggestedSecretKey = event.target.value;
     // Now set the actual value
-    secretKeyToImportIsValid = checkIfSecretKeyIsValid(suggestedSecretKey);
-    if (secretKeyToImportIsValid) {
+    isSuggestedSecretValid = checkIfSecretKeyIsValid(suggestedSecretKey);
+    if (isSuggestedSecretValid) {
       secretKeyToImport = suggestedSecretKey;
+    }
+  };
+
+  const checkIfPersonalPhraseIsSecure = (personalPhrase) => {
+    return personalPhrase.length > MINIMUM_LENGTH;
+  };
+
+  const checkPersonalPhrase = (event) => {
+    // null while we check...
+    isPersonalPhraseSecure = null;
+    const suggestedPersonalPhrase = event.target.value;
+
+    isPersonalPhraseSecure = checkIfPersonalPhraseIsSecure(
+      suggestedPersonalPhrase
+    );
+    log(`Finished checking, isPersonalPhraseSecure:`, isPersonalPhraseSecure);
+    if (isPersonalPhraseSecure) {
+      personalPhraseToUse = suggestedPersonalPhrase;
     }
   };
 
@@ -65,40 +92,99 @@
             Welcome to Portal. This process will import your wallet, and verify
             your identity so other people can pay you.
           </h1>
-          <button
-            type="button"
-            on:click={() => move(true)}
-            class="next-previous">Next</button
-          >
+          <div class="buttons">
+            <button
+              type="button"
+              on:click={() => {
+                restoringOrMakingNewWallet = "restoring";
+                move(true);
+              }}
+              class="subtle">I already have a wallet</button
+            >
+
+            <button
+              type="button"
+              on:click={() => {
+                restoringOrMakingNewWallet = "makingNewWallet";
+                move(true);
+              }}
+              class="next">Make a new wallet</button
+            >
+          </div>
         {/if}
 
-        {#if index === Steps.SecretKey}
+        {#if index === Steps.SecretKeyOrMnemonicOrPhrase}
           <BackButton clickHandler={() => move(false)} />
-          <Heading>Import your secret key</Heading>
-          <p>
-            Paste your secret key (sometimes called 'private key') into the box
-            below.
-          </p>
-          <TextArea placeholder="Secret key" onInputDelay={checkSecretKey} />
-          {#if secretKeyToImportIsValid !== null}
-            {#if secretKeyToImportIsValid === true}
-              <p>✅ Secret key is valid!</p>
+          {#if restoringOrMakingNewWallet === "restoring"}
+            <Heading>Import your secret key</Heading>
+            <p>
+              Paste your secret key (sometimes called 'private key') into the
+              box below.
+            </p>
+            <TextArea placeholder="Secret key" onKeyUpDelay={checkSecretKey} />
+            {#if isSuggestedSecretValid !== null}
+              {#if isSuggestedSecretValid === true}
+                <p>✅ Secret key is valid!</p>
+              {/if}
+              {#if isSuggestedSecretValid === false}
+                <p>🤔 This is not a valid secret key!</p>
+              {/if}
             {/if}
-            {#if secretKeyToImportIsValid === false}
-              <p>🤔 This is not a valid secret key!</p>
-            {/if}
-          {/if}
 
-          <button
-            type="button"
-            on:click={() => {
-              if (secretKeyToImportIsValid) {
-                move(true);
-              }
-            }}
-            class="next-previous {secretKeyToImportIsValid ? '' : 'disabled'}"
-            >Next</button
-          >
+            <button
+              type="button"
+              on:click={() => {
+                if (isSuggestedSecretValid) {
+                  move(true);
+                }
+              }}
+              class="next {isSuggestedSecretValid ? '' : 'disabled'}"
+              >Next</button
+            >
+          {:else}
+            <Heading>Set a Personal Phrase</Heading>
+            <div class="help">
+              <p>
+                If you lose your devices, you can access your wallet using your <strong
+                  >personal phrase</strong
+                >.
+              </p>
+              <p>
+                <strong>Pick something only you would know</strong> - a personal
+                memory is good.
+              </p>
+              <p>
+                <strong>Don't use published works</strong> like song lyrics, or parts
+                of books.
+              </p>
+            </div>
+            <TextArea
+              placeholder="When I was six my brother Finian got a train set for Christmas."
+              onInputDelay={checkPersonalPhrase}
+            />
+            {#if isPersonalPhraseSecure !== null}
+              {#if isPersonalPhraseSecure === true}
+                <p>
+                  ✅ That can work as work as a personal phrase. We'll make sure
+                  you remember it!
+                </p>
+              {/if}
+              {#if isPersonalPhraseSecure === false}
+                <p>🤔 That's too simple.</p>
+              {/if}
+            {/if}
+
+            <button
+              type="button"
+              on:click={() => {
+                if (isPersonalPhraseSecure) {
+                  move(true);
+                }
+              }}
+              class="next {isPersonalPhraseSecure ? '' : 'disabled'}"
+              >Next</button
+            >
+          {/if}
         {/if}
 
         {#if index === Steps.Password}
@@ -119,7 +205,7 @@
               isOnboarded = await checkIfOnboarded();
               move(true);
             }}
-            class="next-previous {passwordToSet?.length ? '' : 'disabled'}"
+            class="next {passwordToSet?.length ? '' : 'disabled'}"
             >Save settings</button
           >
         {/if}
@@ -130,7 +216,7 @@
           <button
             type="button"
             on:click={() => window.location.reload()}
-            class="next-previous">Finish</button
+            class="next">Finish</button
           >
         {/if}
       </div>
@@ -149,6 +235,12 @@
     font-weight: 400;
   }
 
+  p {
+    font-size: 12px;
+    line-height: 16px;
+    text-align: left;
+  }
+
   .letterbox {
     overflow: hidden;
     width: var(--wallet-width);
@@ -164,26 +256,36 @@
     width: var(--wallet-width);
     height: var(--wallet-height);
     padding: 12px;
-    gap: 48px;
     justify-items: center;
     align-items: center;
     /* Required so backbutton will be positioned relative to this step */
     position: relative;
   }
 
+  .buttons {
+    width: 100%;
+  }
+
   /* TODO: make some kind of utility class to use for primary buttons and link buttons */
-  button.next-previous {
+  button.next {
     color: white;
     font-weight: 600;
-    padding: 7px 0px;
+    padding: 6px 24px;
     font-size: 14px;
     height: 36px;
-    width: 100%;
     border-radius: 24px;
     background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
   }
 
-  button.next-previous.disabled {
+  button.subtle {
+    padding: 12px;
+    background-color: transparent;
+    border: none;
+    color: var(--black);
+    font-size: 14px;
+  }
+
+  button.next.disabled {
     background: gray;
     color: #b5b5b5;
   }
