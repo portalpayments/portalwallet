@@ -4,7 +4,7 @@ import {
   mnemonicToKeypairs,
   entropyToMnemonic,
 } from "./brainwallet";
-import { DEPOSIT } from "./constants";
+import { DEPOSIT, SECONDS } from "./constants";
 import { connect, getAccountBalance, putSolIntoWallet } from "./vmwallet";
 import { expectedCleanedPersonalPhrase } from "./__mocks__/mocks";
 
@@ -22,39 +22,47 @@ describe(`restoration`, () => {
     connection = await connect("localhost");
   });
 
-  test(`wallets can be created`, async () => {
-    const entropy = await personalPhraseToEntopy(
-      expectedCleanedPersonalPhrase,
-      fullName
-    );
-    const mnemonic = entropyToMnemonic(entropy);
-    keypairs = await mnemonicToKeypairs(mnemonic, password);
+  test(
+    `wallets can be created`,
+    async () => {
+      const entropy = await personalPhraseToEntopy(
+        expectedCleanedPersonalPhrase,
+        fullName
+      );
+      const mnemonic = entropyToMnemonic(entropy);
+      keypairs = await mnemonicToKeypairs(mnemonic, password);
 
-    // IMPORTANT: if we don't deposit any Sol the wallet won't exist
-    const firstWallet = keypairs[0];
-    await putSolIntoWallet(connection, firstWallet.publicKey, DEPOSIT);
+      // IMPORTANT: if we don't deposit any Sol the wallet won't exist
+      const firstWallet = keypairs[0];
+      await putSolIntoWallet(connection, firstWallet.publicKey, DEPOSIT);
 
-    const accountBalance = await getAccountBalance(
-      connection,
-      firstWallet.publicKey
-    );
-    expect(accountBalance).toEqual(DEPOSIT);
-  });
+      const accountBalance = await getAccountBalance(
+        connection,
+        firstWallet.publicKey
+      );
+      expect(accountBalance).toEqual(DEPOSIT);
+    },
+    15 * SECONDS
+  );
 
-  test(`wallets can be restored using their seed phrases`, async () => {
-    // Lets re-make the keypairs from the seed
-    const entropy = await personalPhraseToEntopy(
-      expectedCleanedPersonalPhrase,
-      fullName
-    );
-    const mnemonic = entropyToMnemonic(entropy);
-    restoredKeypairs = await mnemonicToKeypairs(mnemonic, password);
+  test(
+    `wallets can be restored using their seed phrases`,
+    async () => {
+      // Lets re-make the keypairs from the seed
+      const entropy = await personalPhraseToEntopy(
+        expectedCleanedPersonalPhrase,
+        fullName
+      );
+      const mnemonic = entropyToMnemonic(entropy);
+      restoredKeypairs = await mnemonicToKeypairs(mnemonic, password);
 
-    const originalWallet = keypairs[0];
-    const restoredWallet = restoredKeypairs[0];
-    expect(restoredWallet.secretKey).toEqual(originalWallet.secretKey);
-    expect(restoredWallet.publicKey.toBase58()).toEqual(
-      originalWallet.publicKey.toBase58()
-    );
-  });
+      const originalWallet = keypairs[0];
+      const restoredWallet = restoredKeypairs[0];
+      expect(restoredWallet.secretKey).toEqual(originalWallet.secretKey);
+      expect(restoredWallet.publicKey.toBase58()).toEqual(
+        originalWallet.publicKey.toBase58()
+      );
+    },
+    15 * SECONDS
+  );
 });

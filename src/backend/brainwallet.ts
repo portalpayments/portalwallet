@@ -3,22 +3,32 @@ import { Keypair } from "@solana/web3.js";
 import { derivePath } from "ed25519-hd-key";
 import { SOLANA_SEED_SIZE_BYTES } from "./constants";
 import { log } from "./functions";
-import { scrypt } from "./node-functions";
+
 import * as bip39 from "bip39";
 
-// TODO: use browser version of scrypt
+// @ts-ignore
+import { async as scriptAsync } from "scryptsy";
+
+// Also called the 'seed'.
 export const personalPhraseToEntopy = async (
   phrase: string,
   password: string
 ): Promise<Buffer> => {
   log(`🌱 Converting personal phrase to seed...`);
-  // Use scrypt
-  // See https://crypto.stackexchange.com/questions/24514/deterministically-generate-a-rsa-public-private-key-pair-from-a-passphrase-with
 
-  // Also called the 'seed'. Will be a Buffer, see https://nodejs.org/docs/latest-v16.x/api/crypto.html#cryptoscryptpassword-salt-keylen-options-callback
-  let entropy = (await scrypt(
+  // scryptsy is an ascrypt implementation that works in both the browser and node
+
+  const numberOfInterations = 16384;
+  // Values from https://www.npmjs.com/package/scryptsy#scryptkey-salt-n-r-p-keylenbytes-progresscallback
+  const memory = 8;
+  const parellisation = 8;
+  // @ts-ignore - ypes are out of date I think
+  let entropy = (await scriptAsync(
     phrase,
     password,
+    numberOfInterations,
+    memory,
+    parellisation,
     SOLANA_SEED_SIZE_BYTES
   )) as Buffer;
 
