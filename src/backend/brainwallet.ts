@@ -6,6 +6,12 @@ import { log } from "./functions";
 
 import * as bip39 from "bip39";
 
+if (!globalThis.setImmediate) {
+  // Fixes 'ReferenceError: setImmediate is not defined' when running in browser
+  // @ts-ignore
+  globalThis.setImmediate = (func: Function) => setTimeout(func, 0);
+}
+
 // @ts-ignore
 import { async as scriptAsync } from "scryptsy";
 
