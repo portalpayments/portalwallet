@@ -220,6 +220,7 @@
               type="button"
               on:click={async () => {
                 if (isPersonalPhraseSecure) {
+                  log(`Making wallet (this will take a moment)....`);
                   const entropy = await personalPhraseToEntopy(
                     personalPhraseToUse,
                     passwordToUse

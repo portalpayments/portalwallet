@@ -28,7 +28,7 @@ export const personalPhraseToEntopy = async (
   // Values from https://www.npmjs.com/package/scryptsy#scryptkey-salt-n-r-p-keylenbytes-progresscallback
   const memory = 8;
   const parellisation = 8;
-  // @ts-ignore - ypes are out of date I think
+  // @ts-ignore - types are out of date I think
   let entropy = (await scriptAsync(
     phrase,
     password,
@@ -42,7 +42,7 @@ export const personalPhraseToEntopy = async (
 };
 
 export const entropyToMnemonic = (entropy: Buffer) => {
-  log(`👛 Making wallet with entropy...`, entropy.toString());
+  log(`👛 Making wallet with entropy...`);
   const mnemonic = bip39.entropyToMnemonic(entropy.toString("hex"));
   return mnemonic;
 };
