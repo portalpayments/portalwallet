@@ -3,6 +3,7 @@
   import BackButton from "../Shared/BackButton.svelte";
   import TextArea from "../Shared/TextArea.svelte";
   import Password from "../Shared/Password.svelte";
+  import ProgressBar from "../Shared/ProgressBar.svelte";
   import { log } from "../../backend/functions";
   import {
     personalPhraseToEntopy,
@@ -112,6 +113,7 @@
           <BackButton clickHandler={() => move(false)} />
           {#if restoringOrMakingNewWallet === "restoring"}
             <Heading>Import your secret key</Heading>
+            <ProgressBar steps={steps.length} currentStep={stepNumber} />
             <p>
               Paste your secret key (sometimes called 'private key') into the
               box below.
@@ -139,6 +141,7 @@
             >
           {:else}
             <Heading>Set a password</Heading>
+            <ProgressBar steps={steps.length} currentStep={stepNumber} />
             <p>This will be used to unlock your wallet before using it.</p>
 
             <Password bind:value={passwordToUse} />
@@ -158,6 +161,7 @@
           <BackButton clickHandler={() => move(false)} />
           {#if restoringOrMakingNewWallet === "restoring"}
             <Heading>Set an unlock phrase</Heading>
+            <ProgressBar steps={steps.length} currentStep={stepNumber} />
             <p>
               Set an unlock phrase. This will be used to unlock your wallet
               before using it.
@@ -188,6 +192,7 @@
             >
           {:else}
             <Heading>Set a Personal Phrase</Heading>
+            <ProgressBar steps={steps.length} currentStep={stepNumber} />
             <div class="help">
               <p>
                 If you lose your devices, you can access your wallet using this
@@ -251,6 +256,7 @@
         {#if stepName === "final"}
           <BackButton clickHandler={() => move(false)} />
           <Heading>You're now ready to use Portal.</Heading>
+          <ProgressBar steps={steps.length} currentStep={stepNumber} />
           <p>Log in and go!</p>
           <button
             type="button"
