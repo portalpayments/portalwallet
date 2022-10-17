@@ -37,11 +37,6 @@
       return;
     }
   };
-
-  const logout = function () {
-    $authStore.isLoggedIn = false;
-    location.assign("/");
-  };
 </script>
 
 <div>
@@ -68,11 +63,7 @@
         >
       </div>
     </div>
-  {:else}
-    <button type="button" on:click|preventDefault={logout} class="logout"
-      >Log out</button
-    >
-  {/if}
+  {:else}{/if}
 </div>
 
 <style>
@@ -116,12 +107,5 @@
     color: #fff;
     border-radius: 24px;
     background: var(--blue-green-gradient);
-  }
-
-  button.logout {
-    color: var(--dark-blue);
-    padding: 24px 0px 8px 0px;
-    background-color: transparent;
-    font-size: 1rem;
   }
 </style>

@@ -113,7 +113,9 @@
         </div>
       </Route>
     {:else}
-      <Route><div class="login"><Lock /></div></Route>
+      <Route>
+        <Lock />
+      </Route>
     {/if}
   </main>
 </Router>

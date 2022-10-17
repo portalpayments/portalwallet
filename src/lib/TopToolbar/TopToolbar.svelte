@@ -1,6 +1,6 @@
 <script lang="ts">
   import Checkmark from "../../assets/Checkmark.svg";
-  import Lock from "../Lock/Lock.svelte";
+  import { authStore } from "../stores";
   import { Link } from "svelte-navigator";
   import { walletBalanceAccount } from "../stores";
   export let name = "anonymous";
@@ -12,6 +12,11 @@
     $walletBalanceAccount.isShowingBalanceInSol =
       !$walletBalanceAccount.isShowingBalanceInSol;
     isDropdownActive = !isDropdownActive;
+  };
+
+  const logout = function () {
+    $authStore.isLoggedIn = false;
+    location.assign("/");
   };
 </script>
 
@@ -34,8 +39,10 @@
           <button class="button" on:click={toggleAccount}>Sol account</button>
         {/if}
         <Link class="button" to="/settings">Settings</Link>
+        <button type="button" on:click|preventDefault={logout} class="logout"
+          >Log out</button
+        >
       </div>
-      <Lock />
     </div>
   </div>
 </div>
@@ -117,15 +124,22 @@
     padding: 8px 0px;
     font-size: 1rem;
   }
+
   .toolbar-button :global(a.button):active {
     color: #fff;
     background-color: var(--mid-blue);
   }
+
   button {
     color: var(--dark-blue);
     font-weight: 600;
     padding: 8px 0px;
     font-size: 1rem;
     background-color: transparent;
+  }
+
+  button.logout {
+    padding: 24px 0px 8px 0px;
+    font-size: 1rem;
   }
 </style>
