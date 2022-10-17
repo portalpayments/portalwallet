@@ -9,6 +9,7 @@
   type="password"
   placeholder={placeHolder}
   bind:value
+  required
   class="password {isBadPassword ? 'bad-password' : ''}"
   on:keydown={(event) => {
     if (onEnter) {

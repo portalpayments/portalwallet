@@ -11,6 +11,7 @@
   import Modal from "../Shared/Modal.svelte";
   import BlurredText from "./BlurredText.svelte";
   import Contact from "../Shared/Contact.svelte";
+  import Password from "../Shared/Password.svelte";
   import { connect, verifyWallet } from "../../backend/vmwallet";
   import base58 from "bs58";
   const MOCK_PERSONAL_RECOVERY_PHRASE_FOR_BLURRING =
@@ -89,7 +90,7 @@
   {#if isModalOpen}
     <Modal buttonType="transfer">
       <div>enter your password</div>
-      <Password bind:value={enteredPassword} required={true} />
+      <Password bind:value={enteredPassword} />
       <button
         class="enter-password-button"
         on:click={() =>
