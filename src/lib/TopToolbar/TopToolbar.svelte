@@ -31,9 +31,9 @@
         {#if $walletBalanceAccount.isShowingBalanceInSol}
           <button class="button" on:click={toggleAccount}>USDC account</button>
         {:else}
-          <button class="button" on:click={toggleAccount}>sol account</button>
+          <button class="button" on:click={toggleAccount}>Sol account</button>
         {/if}
-        <Link class="button" to="/settings">settings</Link>
+        <Link class="button" to="/settings">Settings</Link>
       </div>
       <Lock />
     </div>
