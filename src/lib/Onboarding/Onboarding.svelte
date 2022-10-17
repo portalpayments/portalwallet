@@ -85,10 +85,7 @@
       <div class="step {stepNumber}">
         {#if stepName === "first"}
           <img class="logo" src={Logo} alt="Portal logo" />
-          <p>
-            Portal allows you to send money directly to anyone instantly, using
-            crypto.
-          </p>
+          <p>Send money directly to anyone instantly.</p>
 
           <div class="buttons">
             <button
