@@ -69,8 +69,8 @@
       </div>
     </div>
   {:else}
-    <button type="button" on:click|preventDefault={logout} class="logout-button"
-      >log out</button
+    <button type="button" on:click|preventDefault={logout} class="logout"
+      >Log out</button
     >
   {/if}
 </div>
@@ -118,10 +118,9 @@
     background: var(--blue-green-gradient);
   }
 
-  .logout-button {
-    background-color: rgba(255, 96, 134, 0.33);
-    color: rgb(255, 96, 134);
-    padding: 8px 0px;
+  button.logout {
+    color: var(--dark-blue);
+    padding: 24px 0px 8px 0px;
     background-color: transparent;
     font-size: 1rem;
   }
