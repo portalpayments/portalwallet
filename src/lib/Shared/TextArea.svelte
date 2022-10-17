@@ -34,6 +34,7 @@
     background-color: white;
     padding: 6px;
     height: 150px;
+    resize: none;
     color: var(--black);
   }
 

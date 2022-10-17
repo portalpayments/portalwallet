@@ -40,6 +40,8 @@
       return;
     }
 
+    log(`Updating balance...`);
+
     usdcAccounts = await getUSDCAccounts(connection, keypair.publicKey);
 
     if (!usdcAccounts.length) {

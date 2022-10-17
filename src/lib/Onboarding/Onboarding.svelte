@@ -191,7 +191,7 @@
               >Save settings</button
             >
           {:else}
-            <Heading>Set a Personal Phrase</Heading>
+            <Heading>Set Personal Phrase</Heading>
             <ProgressBar steps={steps.length} currentStep={stepNumber} />
             <div class="help">
               <p>
