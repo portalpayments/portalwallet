@@ -24,6 +24,7 @@
   .password {
     width: 100%;
     transition: all 200ms ease-out;
+    text-align: center;
   }
 
   .bad-password {
