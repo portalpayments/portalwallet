@@ -1,7 +1,5 @@
 <script lang="ts">
   import BackButton from "../Shared/BackButton.svelte";
-  import Verified from "../Shared/Verified.svelte";
-  import Unverified from "../Shared/Unverified.svelte";
   import { identityTokenIssuerPublicKeyString } from "../constants";
   import type { Contact as ContactType } from "../types";
   import { get as getFromStore, writable, type Writable } from "svelte/store";
@@ -43,8 +41,9 @@
     }
   };
 
-  const initiateVerificationProcess = () => {
-    console.log("initiating verification process");
+  const startVerification = () => {
+    // TODO: implement
+    log("initiating verification process");
   };
 
   let user: ContactType | null = null;
@@ -120,7 +119,7 @@
 
   {#if isEmpty(user?.verifiedClaims)}
     <div>
-      <button on:click={initiateVerificationProcess} class="get-verified-button"
+      <button on:click={startVerification} class="get-verified-button"
         >get verified</button
       >
     </div>
