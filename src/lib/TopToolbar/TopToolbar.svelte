@@ -53,7 +53,7 @@
     background: rgba(61, 101, 245, 0.2);
     padding: 5px 10px 5px 10px;
     border-radius: 21px;
-    color: #2d5177;
+    color: var(--dark-blue);
     cursor: pointer;
     font-weight: 600;
     border: 0;
@@ -70,7 +70,7 @@
     background: rgba(61, 101, 245, 0.2);
     padding: 5px 10px 5px 10px;
     border-radius: 14px;
-    color: #2d5177;
+    color: var(--dark-blue);
     font-weight: 600;
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
@@ -112,7 +112,7 @@
   }
 
   .toolbar-button :global(a.button) {
-    color: #2d5177;
+    color: var(--dark-blue);
     font-weight: 600;
     padding: 8px 0px;
     font-size: 1rem;
@@ -122,7 +122,7 @@
     background-color: var(--mid-blue);
   }
   button {
-    color: #2d5177;
+    color: var(--dark-blue);
     font-weight: 600;
     padding: 8px 0px;
     font-size: 1rem;
