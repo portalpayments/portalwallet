@@ -11,7 +11,7 @@
 
 <style>
   .progress-bar {
-    background-color: var(--light-grey);
+    background-color: var(--very-light-grey);
     height: 6px;
     width: 100%;
   }
