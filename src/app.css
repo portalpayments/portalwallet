@@ -34,6 +34,13 @@
   --bright-green: #6ed199;
   --teal: #3797bc;
   --link-color: var(--mid-blue);
+
+  /* Blue green gradient */
+  --blue-green-gradient: linear-gradient(
+    45deg,
+    var(--mid-blue),
+    var(--bright-green)
+  );
 }
 
 *,
@@ -131,4 +138,9 @@ input:focus {
     var(--teal),
     var(--bright-green)
   );
+}
+
+.small-caps {
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }

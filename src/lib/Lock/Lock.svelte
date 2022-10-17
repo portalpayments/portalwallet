@@ -117,7 +117,7 @@
     background-color: var(--mid-blue);
     color: #fff;
     border-radius: 24px;
-    background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
+    background: var(--blue-green-gradient);
   }
   .logout-button {
     background-color: rgba(255, 96, 134, 0.33);

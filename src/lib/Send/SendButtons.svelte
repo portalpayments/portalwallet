@@ -76,12 +76,12 @@
   }
 
   .request-verification {
-    background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
+    background: var(--blue-green-gradient);
   }
   .send-anyway {
     background-color: #9d9d9d;
   }
   .send {
-    background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
+    background: var(--blue-green-gradient);
   }
 </style>

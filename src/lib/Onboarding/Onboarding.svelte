@@ -103,7 +103,7 @@
                 restoringOrMakingNewWallet = "makingNewWallet";
                 move(true);
               }}
-              class="next">Make a new wallet</button
+              class="next small-caps ">Make a new wallet</button
             >
           </div>
         {/if}
@@ -133,8 +133,9 @@
                   move(true);
                 }
               }}
-              class="next {isSuggestedSecretValid ? '' : 'disabled'}"
-              >Next</button
+              class="next small-caps  {isSuggestedSecretValid
+                ? ''
+                : 'disabled'}">Next</button
             >
           {:else}
             <Heading>Set a password</Heading>
@@ -147,7 +148,7 @@
               on:click={async () => {
                 move(true);
               }}
-              class="next {passwordToUse?.length ? '' : 'disabled'}"
+              class="next small-caps  {passwordToUse?.length ? '' : 'disabled'}"
               >Set password</button
             >
           {/if}
@@ -182,7 +183,7 @@
                 isOnboarded = await checkIfOnboarded();
                 move(true);
               }}
-              class="next {passwordToUse?.length ? '' : 'disabled'}"
+              class="next small-caps  {passwordToUse?.length ? '' : 'disabled'}"
               >Save settings</button
             >
           {:else}
@@ -241,8 +242,9 @@
                   move(true);
                 }
               }}
-              class="next {isPersonalPhraseSecure ? '' : 'disabled'}"
-              >Next</button
+              class="next small-caps  {isPersonalPhraseSecure
+                ? ''
+                : 'disabled'}">Next</button
             >
           {/if}
         {/if}
@@ -253,7 +255,7 @@
           <button
             type="button"
             on:click={() => window.location.reload()}
-            class="next">Finish</button
+            class="next small-caps ">Finish</button
           >
         {/if}
       </div>
@@ -267,7 +269,9 @@
   }
 
   p {
-    font-size: 14x;
+    /* Eyeball, it just looks nicer if we don't use full width */
+    width: 198px;
+    font-size: 14px;
     line-height: 18px;
     text-align: center;
   }
@@ -305,9 +309,7 @@
     height: 36px;
     border-radius: 24px;
     font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
+    background: var(--blue-green-gradient);
   }
 
   button.subtle {

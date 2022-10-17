@@ -25,7 +25,7 @@
     font-size: 14px;
 
     border-radius: 24px;
-    background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
+    background: var(--blue-green-gradient);
   }
   .add-and-send-buttons :global(a.button):active {
     color: #fff;

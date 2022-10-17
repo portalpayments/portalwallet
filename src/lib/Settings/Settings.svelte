@@ -151,7 +151,7 @@
     font-weight: 600;
     font-size: 1.1rem;
     border-radius: 24px;
-    background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
+    background: var(--blue-green-gradient);
   }
   .get-verified-button {
     width: auto;
@@ -162,6 +162,6 @@
     margin: auto;
     font-size: 1.3rem;
     border-radius: 24px;
-    background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
+    background: var(--blue-green-gradient);
   }
 </style>
