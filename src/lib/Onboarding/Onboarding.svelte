@@ -302,9 +302,11 @@
     color: white;
     font-weight: 600;
     padding: 6px 24px;
-    font-size: 14px;
     height: 36px;
     border-radius: 24px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     background: linear-gradient(45deg, var(--mid-blue), var(--bright-green));
   }
 
