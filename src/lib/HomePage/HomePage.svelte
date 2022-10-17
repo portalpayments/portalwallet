@@ -24,6 +24,14 @@
 
   let isBalanceLoaded = false;
 
+  // Explicitly mark these values as reactive as they depend on other data
+  // being updated (they're derived from usdcAccounts)
+  let major: string | null;
+  $: major = null;
+  let minor: string | null;
+  $: minor = null;
+  $: usdcAccounts = [];
+
   const updateBalance = async () => {
     if (!connection) {
       return;
@@ -51,14 +59,6 @@
     [major, minor] = amountAndDecimalsToMajorAndMinor(amount, decimals);
     isBalanceLoaded = true;
   };
-
-  // Explicitly mark these values as reactive as they depend on other data
-  // being updated (they're derived from usdcAccounts)
-  let major: string | null;
-  $: major = null;
-  let minor: string | null;
-  $: minor = null;
-  $: usdcAccounts = [];
 
   connectionStore.subscribe((newValue) => {
     if (newValue) {
