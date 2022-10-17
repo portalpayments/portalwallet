@@ -42,6 +42,10 @@
 
     usdcAccounts = await getUSDCAccounts(connection, keypair.publicKey);
 
+    if (!usdcAccounts.length) {
+      throw new Error(`No USDC accounts on ${keypair.publicKey.toBase58()}`);
+    }
+
     const transactionSummaries = await getTransactionSummariesForAddress(
       connection,
       keypair.publicKey,
