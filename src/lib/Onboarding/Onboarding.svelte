@@ -116,7 +116,7 @@
         {#if stepName === "second"}
           <BackButton clickHandler={() => move(false)} />
           {#if restoringOrMakingNewWallet === "restoring"}
-            <Heading>Import your secret key</Heading>
+            <Heading>Import secret key</Heading>
             <ProgressBar steps={steps.length} currentStep={stepNumber} />
 
             <div class="content">
