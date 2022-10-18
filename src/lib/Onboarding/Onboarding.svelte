@@ -294,17 +294,6 @@
 </div>
 
 <style>
-  /* You can't have step.1 - CSS won't allow it */
-  .step.second,
-  .step.third {
-    /* Heading, progress bar, content, next button */
-    grid-template-rows: 104px 6px 1fr 100px;
-  }
-
-  .step.final {
-    grid-template-rows: 1fr 100px;
-  }
-
   .logo {
     width: 80%;
   }
@@ -339,6 +328,17 @@
     align-items: center;
     /* Required so backbutton will be positioned relative to this step */
     position: relative;
+  }
+
+  /* You can't have step.1 - CSS won't allow it */
+  .step.second,
+  .step.third {
+    /* Heading, progress bar, content, next button */
+    grid-template-rows: 104px 6px 1fr 100px;
+  }
+
+  .step.final {
+    grid-template-rows: 1fr 100px;
   }
 
   .buttons {
