@@ -1,6 +1,6 @@
 <script lang="ts">
   import { authStore } from "../stores";
-  import PortalLogoSVG from "../../assets/PortalLogo.svg";
+  import PortalLogoSVG from "../../assets/portal-logo.svg";
   import Password from "../Shared/Password.svelte";
   import { getSettings } from "../settings";
   import type { Settings } from "../types";

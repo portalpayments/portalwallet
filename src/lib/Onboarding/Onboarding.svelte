@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Logo from "../../assets/PortalLogo.svg";
+  import Logo from "../../assets/portal-logo.svg";
   import BackButton from "../Shared/BackButton.svelte";
   import TextArea from "../Shared/TextArea.svelte";
   import Password from "../Shared/Password.svelte";
