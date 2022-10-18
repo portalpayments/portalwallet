@@ -1,6 +1,6 @@
 <script lang="ts">
-  import usdcSymbolUrl from "../../assets/usdc.svg";
-  import solSymbol from "../../assets/solana.svg";
+  import usdcSymbolURL from "../../assets/usdc.svg";
+  import solSymbolURL from "../../assets/solana.svg";
   import { formatMajorUnits } from "../utils";
   import { walletBalanceAccount } from "../stores";
 
@@ -9,8 +9,8 @@
   export let minor: string;
 
   const SYMBOLS = {
-    usdc: usdcSymbolUrl,
-    sol: solSymbol,
+    usdc: usdcSymbolURL,
+    sol: solSymbolURL,
   };
 </script>
 

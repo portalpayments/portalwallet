@@ -3,6 +3,9 @@
   import { authStore } from "../stores";
   import { Link } from "svelte-navigator";
   import { walletBalanceAccount } from "../stores";
+  import usdcSymbolURL from "../../assets/usdc.svg";
+  import solSymbolURL from "../../assets/solana.svg";
+
   export let name = "anonymous";
   export let isVerified = false;
 
@@ -21,29 +24,35 @@
 </script>
 
 <div class="header">
-  <div class="dropdown">
-    <button
-      class={!isDropdownActive ? "drop-button" : "drop-button-active "}
-      on:click={() => (isDropdownActive = !isDropdownActive)}
-    >
-      {name}
-      {#if isVerified}
-        <img src={Checkmark} alt="Verified" />
-      {/if}
-    </button>
-    <div class="dropdown-content {isDropdownActive ? 'active' : ''}">
-      <div class="toolbar-button">
-        {#if $walletBalanceAccount.isShowingBalanceInSol}
-          <button class="button" on:click={toggleAccount}>USDC account</button>
-        {:else}
-          <button class="button" on:click={toggleAccount}>Sol account</button>
-        {/if}
-        <Link class="button" to="/settings">Settings</Link>
-        <button type="button" on:click|preventDefault={logout} class="logout"
-          >Log out</button
-        >
-      </div>
+  <button
+    class={!isDropdownActive ? "drop-button" : "drop-button-active "}
+    on:click={() => (isDropdownActive = !isDropdownActive)}
+  >
+    {name}
+    {#if isVerified}
+      <img src={Checkmark} alt="Verified" />
+    {/if}
+  </button>
+  <div class="menu {isDropdownActive ? 'active' : ''}">
+    <div class="common">
+      <button
+        class="button {$walletBalanceAccount.isShowingBalanceInSol && 'active'}"
+        on:click={toggleAccount}
+      >
+        <img src={usdcSymbolURL} alt="USDC logo" />USDC account</button
+      >
+      <button
+        class="button {$walletBalanceAccount.isShowingBalanceInSol || 'active'}"
+        on:click={toggleAccount}
+      >
+        <img src={solSymbolURL} alt="Sol logo" />
+        Sol account
+      </button>
+      <Link class="button" to="/settings">Settings</Link>
     </div>
+    <button type="button" on:click|preventDefault={logout} class="logout"
+      >Log out</button
+    >
   </div>
 </div>
 
@@ -90,56 +99,65 @@
     vertical-align: middle;
   }
 
-  /* The container <div> - needed to position the dropdown content */
-  .dropdown {
-    position: relative;
-    display: grid;
-    height: 32px;
-    font-size: 10pt;
-    line-height: 10pt;
-  }
+  .menu {
+    /* Off screen by Default */
+    transform: translateX(-100%);
+    transition: all 200ms ease-in-out;
 
-  .dropdown-content {
-    /* Hidden by Default */
-    display: none;
-    /* 32px from it's nearest positioned ancestor */
     position: absolute;
-    top: 32px;
-
-    width: 100%;
-    border-bottom-right-radius: 14px;
-    border-bottom-left-radius: 14px;
-    background-color: #fff;
+    top: 0;
+    left: 0;
+    width: calc(var(--wallet-width) * 0.7);
+    height: var(--wallet-height);
+    overflow: hidden;
+    grid-auto-flow: row;
+    background-color: var(--white);
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    font-size: 1rem;
+    z-index: 2;
+    grid-template-rows: 1fr 48px;
   }
-  .dropdown-content.active {
+
+  /* On screen when active */
+  .menu.active {
+    transform: translateX(0);
+  }
+
+  .menu .common {
+    justify-content: start;
+    align-content: start;
+    padding: 8px;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .menu :global(a.button),
+  .menu button {
     display: grid;
-  }
-
-  .toolbar-button :global(a.button) {
-    color: var(--dark-blue);
+    grid-auto-flow: column;
+    text-align: left;
+    padding: 8px;
     font-weight: 600;
-    padding: 8px 0px;
-    font-size: 1rem;
+    font-size: 16px;
+    color: var(--white);
+    background-color: transparent;
+    padding: 8px;
   }
 
-  .toolbar-button :global(a.button):active {
-    color: #fff;
+  .menu :global(a.button):active {
+    color: var(--white);
     background-color: var(--mid-blue);
   }
 
-  button {
-    color: var(--dark-blue);
-    font-weight: 600;
-    padding: 8px 0px;
-    font-size: 1rem;
-    background-color: transparent;
+  button.active {
+    background-color: var(--very-light-grey);
   }
 
   button.logout {
     padding: 24px 0px 8px 0px;
     font-size: 1rem;
+  }
+
+  button img {
+    width: 12px;
   }
 </style>
