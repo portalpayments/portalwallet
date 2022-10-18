@@ -126,7 +126,7 @@
               </p>
               <TextArea
                 placeholder="Secret key"
-                onKeyUpDelay={checkSecretKey}
+                onInputDelay={checkSecretKey}
               />
               {#if isSuggestedSecretValid !== null}
                 {#if isSuggestedSecretValid === true}
