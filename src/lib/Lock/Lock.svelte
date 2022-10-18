@@ -59,11 +59,11 @@
           on:click|preventDefault={() => {
             login(password);
           }}
-          class="login-button">Log in</button
+          class="primary small-caps login-button">Log in</button
         >
       </div>
     </div>
-  {:else}{/if}
+  {/if}
 </div>
 
 <style>
@@ -92,20 +92,5 @@
     gap: 10px;
     grid-auto-flow: row;
     grid-template-rows: 30px 1fr 1fr;
-  }
-
-  button {
-    width: 100%;
-    padding: 8px 0px;
-    margin: auto;
-    font-weight: 600;
-    font-size: 1.1rem;
-  }
-
-  .login-button {
-    background-color: var(--mid-blue);
-    color: #fff;
-    border-radius: 24px;
-    background: var(--blue-green-gradient);
   }
 </style>

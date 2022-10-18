@@ -13,6 +13,13 @@
     align-content: center;
   }
 
+  .large {
+    font-size: 24px;
+    line-height: 28px;
+    text-align: left;
+    padding-bottom: 8px;
+  }
+
   .medium {
     font-size: 20px;
     text-align: left;

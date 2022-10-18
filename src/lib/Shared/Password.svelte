@@ -1,8 +1,17 @@
 <script lang="ts">
+  import { debounce } from "lodash";
+
   export let placeHolder: string | null = null;
   export let value: string;
   export let onEnter: Function | null = null;
   export let isBadPassword = false;
+  export let onInputDelay: Function | null = null;
+
+  const runInputDelayIfExists = (event) => {
+    if (onInputDelay) {
+      onInputDelay(event);
+    }
+  };
 </script>
 
 <input
@@ -18,13 +27,13 @@
       }
     }
   }}
+  on:input|preventDefault={debounce(runInputDelayIfExists)}
 />
 
 <style>
   .password {
     width: 100%;
     transition: all 200ms ease-out;
-    text-align: center;
   }
 
   .bad-password {
@@ -33,6 +42,10 @@
     backface-visibility: hidden;
     perspective: 1000px;
     background-color: var(--error-pink);
+  }
+
+  input {
+    color: var(--actually-dark-grey);
   }
 
   @keyframes shake {

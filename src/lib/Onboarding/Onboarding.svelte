@@ -19,7 +19,8 @@
   } from "../settings";
   import Heading from "../Shared/Heading.svelte";
 
-  const MINIMUM_LENGTH = 30;
+  const MINIMUM_PASSWORD_LENGTH = 8;
+  const MINIMUM_PERSONAL_PHRASE_LENGTH = 30;
 
   const steps = ["first", "second", "third", "final"];
   const stepCount = steps.length;
@@ -30,6 +31,7 @@
   let passwordToUse: string | null = null;
 
   let isSuggestedSecretValid: Boolean | null = null;
+  let isPasswordSecure: Boolean | null = null;
   let isPersonalPhraseSecure: Boolean | null = null;
 
   let isOnboarded = false;
@@ -48,21 +50,29 @@
     }
   };
 
-  const checkIfPersonalPhraseIsSecure = (personalPhrase) => {
-    return personalPhrase.length > MINIMUM_LENGTH;
-  };
-
   const checkPersonalPhrase = (event) => {
     // null while we check...
     isPersonalPhraseSecure = null;
     const suggestedPersonalPhrase = event.target.value;
 
-    isPersonalPhraseSecure = checkIfPersonalPhraseIsSecure(
-      suggestedPersonalPhrase
-    );
+    isPersonalPhraseSecure =
+      suggestedPersonalPhrase.length > MINIMUM_PERSONAL_PHRASE_LENGTH;
     log(`Finished checking, isPersonalPhraseSecure:`, isPersonalPhraseSecure);
     if (isPersonalPhraseSecure) {
       personalPhraseToUse = suggestedPersonalPhrase;
+    }
+  };
+
+  const checkPassword = (event) => {
+    // null while we check...
+    log(`Checking password...`);
+    isPasswordSecure = null;
+    const suggestedPassword = event.target.value;
+
+    isPasswordSecure = suggestedPassword.length > MINIMUM_PASSWORD_LENGTH;
+    log(`Finished checking, isPasswordSecure:`, isPasswordSecure);
+    if (isPasswordSecure) {
+      personalPhraseToUse = suggestedPassword;
     }
   };
 
@@ -87,21 +97,11 @@
     {#each steps as stepName, stepNumber}
       <div class="step {stepName}">
         {#if stepName === "first"}
-          <img class="logo" src={Logo} alt="Portal logo" />
-
           <div class="content">
-            <p>Send money directly to anyone instantly.</p>
+            <img class="logo" src={Logo} alt="Portal logo" />
+            <p>Send money directly to anyone, instantly.</p>
           </div>
           <div class="buttons">
-            <button
-              type="button"
-              on:click={() => {
-                restoringOrMakingNewWallet = "restoring";
-                move(true);
-              }}
-              class="subtle">I already have a wallet</button
-            >
-
             <button
               type="button"
               on:click={() => {
@@ -110,30 +110,40 @@
               }}
               class="next small-caps ">Make a new wallet</button
             >
+
+            <button
+              type="button"
+              on:click={() => {
+                restoringOrMakingNewWallet = "restoring";
+                move(true);
+              }}
+              class="subtle">I already have a wallet</button
+            >
           </div>
         {/if}
 
         {#if stepName === "second"}
           <BackButton clickHandler={() => move(false)} />
           {#if restoringOrMakingNewWallet === "restoring"}
-            <Heading>Import secret key</Heading>
             <ProgressBar steps={steps.length} currentStep={stepNumber} />
 
             <div class="content">
+              <Heading size="large">Import secret key</Heading>
               <p>
-                Paste your secret key (sometimes called 'private key') into the
-                box below.
+                Paste your secret key below. Some apps call the secret key a
+                'private key'.
               </p>
               <TextArea
                 placeholder="Secret key"
                 onInputDelay={checkSecretKey}
               />
+
               {#if isSuggestedSecretValid !== null}
                 {#if isSuggestedSecretValid === true}
-                  <p>✅ Secret key is valid!</p>
+                  <p class="subtle">✅ Secret key is valid!</p>
                 {/if}
                 {#if isSuggestedSecretValid === false}
-                  <p>🤔 This is not a valid secret key!</p>
+                  <p class="subtle">🤔 This is not a valid secret key!</p>
                 {/if}
               {/if}
             </div>
@@ -150,20 +160,31 @@
                 : 'disabled'}">Next</button
             >
           {:else}
-            <Heading>Set a password</Heading>
             <ProgressBar steps={steps.length} currentStep={stepNumber} />
             <div class="content">
-              <p>This will be used to unlock your wallet before using it.</p>
+              <Heading>Set a password</Heading>
 
-              <Password bind:value={passwordToUse} />
+              <Password
+                bind:value={passwordToUse}
+                onInputDelay={checkPassword}
+              />
+
+              {#if isPasswordSecure !== null}
+                {#if isPasswordSecure === true}
+                  <p class="subtle">✅ That's a good password.</p>
+                {/if}
+                {#if isPasswordSecure === false}
+                  <p class="subtle">🤔 That's too simple.</p>
+                {/if}
+              {/if}
             </div>
             <button
               type="button"
               on:click={async () => {
                 move(true);
               }}
-              class="next small-caps  {passwordToUse?.length ? '' : 'disabled'}"
-              >Set password</button
+              class="next small-caps  {isPasswordSecure ? '' : 'disabled'}"
+              >Next</button
             >
           {/if}
         {/if}
@@ -171,15 +192,23 @@
         {#if stepName === "third"}
           <BackButton clickHandler={() => move(false)} />
           {#if restoringOrMakingNewWallet === "restoring"}
-            <Heading>Set an unlock phrase</Heading>
             <ProgressBar steps={steps.length} currentStep={stepNumber} />
             <div class="content">
-              <p>
-                Set an unlock phrase. This will be used to unlock your wallet
-                before using it.
-              </p>
+              <Heading>Set a password</Heading>
 
-              <Password bind:value={passwordToUse} />
+              <Password
+                bind:value={passwordToUse}
+                onInputDelay={checkPassword}
+              />
+
+              {#if isPasswordSecure !== null}
+                {#if isPasswordSecure === true}
+                  <p class="subtle">✅ That's a good password.</p>
+                {/if}
+                {#if isPasswordSecure === false}
+                  <p class="subtle">🤔 That's too simple.</p>
+                {/if}
+              {/if}
             </div>
 
             <button
@@ -201,12 +230,12 @@
                 move(true);
               }}
               class="next small-caps  {passwordToUse?.length ? '' : 'disabled'}"
-              >Save settings</button
+              >Open wallet</button
             >
           {:else}
-            <Heading>Set Recovery Phrase</Heading>
             <ProgressBar steps={steps.length} currentStep={stepNumber} />
             <div class="content">
+              <Heading>Set Recovery Phrase</Heading>
               <p>
                 If you lose your devices, you can access your wallet using this
                 phrase.
@@ -218,13 +247,13 @@
 
               {#if isPersonalPhraseSecure !== null}
                 {#if isPersonalPhraseSecure === true}
-                  <p>
+                  <p class="subtle">
                     ✅ Excellent. We'll test you occasionally to help you
                     remember the recovery phrase.
                   </p>
                 {/if}
                 {#if isPersonalPhraseSecure === false}
-                  <p>🤔 That's too simple.</p>
+                  <p class="subtle">🤔 That's too simple.</p>
                 {/if}
               {/if}
             </div>
@@ -274,11 +303,12 @@
               {#if isBuildingWallet}
                 Making wallet <Circle color="var(--white)" size={12} />
               {:else}
-                Next
+                Make wallet
               {/if}
             </button>
           {/if}
         {/if}
+        <!-- Remove entire step.... -->
         {#if stepName === "final"}
           <BackButton clickHandler={() => move(false)} />
           <Heading>You're now ready to use Portal.</Heading>
@@ -294,21 +324,6 @@
 </div>
 
 <style>
-  .logo {
-    width: 80%;
-  }
-
-  .content {
-    /* Eyeball, it just looks nicer if we don't use full width */
-    width: 198px;
-  }
-
-  p {
-    font-size: 14px;
-    line-height: 18px;
-    text-align: center;
-  }
-
   .letterbox {
     overflow: hidden;
     width: var(--wallet-width);
@@ -323,21 +338,47 @@
   .step {
     width: var(--wallet-width);
     height: var(--wallet-height);
-    padding: 12px;
+    padding: 24px;
     justify-items: center;
     align-items: center;
     /* Required so backbutton will be positioned relative to this step */
     position: relative;
   }
 
-  /* You can't have step.1 - CSS won't allow it */
-  .step.second,
-  .step.third {
-    /* Heading, progress bar, content, next button */
-    grid-template-rows: 104px 6px 1fr 100px;
+  .logo {
+    width: 80%;
   }
 
-  .step.final {
+  .content {
+    gap: 8px;
+  }
+
+  p {
+    font-size: 18px;
+    line-height: 22px;
+    text-align: left;
+  }
+
+  p.subtle {
+    font-size: 14px;
+    line-height: 18px;
+    margin: 0;
+  }
+
+  .step.first .content {
+    /* 5c */
+    /* TODO: eyeball, probably better way of doing this */
+    transform: translateX(24px);
+    font-weight: 600;
+    color: var(--actually-dark-grey);
+  }
+
+  .step.first .buttons {
+    justify-content: center;
+  }
+
+  /* You can't have step.1 - CSS won't allow it */
+  .step.third .step.final {
     grid-template-rows: 1fr 100px;
   }
 
@@ -350,9 +391,9 @@
     color: white;
     font-weight: 600;
     padding: 6px 24px;
-    height: 36px;
+    height: 42px;
     border-radius: 24px;
-    font-size: 12px;
+    font-size: 14px;
     background: var(--blue-green-gradient);
   }
 
@@ -361,12 +402,11 @@
     background-color: transparent;
     border: none;
     color: var(--black);
-    font-size: 14px;
+    font-size: 16px;
   }
 
   button.next.disabled {
-    background: gray;
-    color: #b5b5b5;
+    opacity: 0.5;
   }
 
   button.building-wallet {

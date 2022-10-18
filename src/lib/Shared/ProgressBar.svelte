@@ -13,11 +13,14 @@
   .progress-bar {
     background-color: var(--very-light-grey);
     height: 6px;
+    border-radius: 3px;
     width: 100%;
+    align-self: start;
   }
 
   .progress {
     background: var(--blue-green-gradient);
     height: 100%;
+    border-radius: 3px;
   }
 </style>

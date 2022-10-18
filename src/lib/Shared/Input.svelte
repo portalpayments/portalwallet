@@ -118,7 +118,7 @@
     width: 100%;
     height: 56px;
     font-size: 18px;
-    color: var(--black);
+    color: var(--actually-dark-grey);
     font-weight: 600;
   }
 

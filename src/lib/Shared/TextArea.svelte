@@ -35,11 +35,12 @@
     padding: 6px;
     height: 150px;
     resize: none;
-    color: var(--black);
+    color: var(--actually-dark-grey);
   }
 
   textarea:focus {
     outline: none;
+    /* TODO: gradient for border? */
     border: 2px solid var(--mid-blue);
     box-shadow: 0 0 2px rgb(65 156 253 / 30%);
   }
