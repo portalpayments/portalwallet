@@ -134,12 +134,7 @@ input:focus {
   color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
-  background-image: linear-gradient(
-    350deg,
-    var(--dark-blue),
-    var(--teal),
-    var(--bright-green)
-  );
+  background-image: var(--blue-green-gradient);
 }
 
 .small-caps {
