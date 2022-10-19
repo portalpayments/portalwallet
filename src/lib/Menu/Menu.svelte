@@ -17,12 +17,16 @@
   const toggleAccount = () => {
     $walletBalanceAccount.isShowingBalanceInSol =
       !$walletBalanceAccount.isShowingBalanceInSol;
-    isMenuActive = !isMenuActive;
+    isMenuActive = false;
   };
 
   const logout = function () {
     $authStore.isLoggedIn = false;
     location.assign("/");
+  };
+
+  const closeMenu = () => {
+    isMenuActive = false;
   };
 </script>
 
@@ -37,31 +41,41 @@
     {/if}
   </button>
   <div class="menu {isMenuActive ? 'active' : ''}">
+    <button class="close" on:click={() => closeMenu()}>×</button>
     <div class="common">
       <button
-        type={$walletBalanceAccount.isShowingBalanceInSol ? "" : "active"}
+        type="button"
+        class="with-icon {$walletBalanceAccount.isShowingBalanceInSol
+          ? ''
+          : 'active'}"
         on:click={toggleAccount}
       >
         <img src={usdcIconURL} alt="USDC account" />USDC account</button
       >
       <button
         type="button"
-        class={$walletBalanceAccount.isShowingBalanceInSol ? "active" : ""}
+        class="with-icon {$walletBalanceAccount.isShowingBalanceInSol
+          ? 'active'
+          : ''}"
         on:click={toggleAccount}
       >
         <img src={solIconURL} alt="Sol account" />
         Sol account
       </button>
-      <Link class="button" to="/settings">
+      <Link class="button with-icon" to="/settings">
         <img src={settingsIconURL} alt="Settings" />
         Settings
       </Link>
-      <Link class="button" to="mailto:info@getportal.app">
+      <Link class="button with-icon" to="mailto:info@getportal.app">
         <img src={helpIconURL} alt="Help" />
         Help
       </Link>
     </div>
-    <button type="button" on:click|preventDefault={logout} class="logout">
+    <button
+      type="button"
+      class="logout with-icon"
+      on:click|preventDefault={logout}
+    >
       <img src={logoutIconURL} alt="Log out" />
       Log out
     </button>
@@ -130,6 +144,14 @@
     grid-template-rows: 1fr 48px;
   }
 
+  .menu button.close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    color: var(--black);
+  }
+
   /* On screen when active */
   .menu.active {
     transform: translateX(0);
@@ -143,8 +165,8 @@
     gap: 8px;
   }
 
-  .menu :global(a.button),
-  .menu button {
+  button.with-icon,
+  :global(a.button.with-icon) {
     display: grid;
     grid-auto-flow: column;
     grid-template-columns: 12px 1fr;
@@ -160,8 +182,7 @@
     padding: 8px;
   }
 
-  :global(a.button) img,
-  button img {
+  .with-icon img {
     width: 12px;
   }
 
@@ -172,15 +193,5 @@
 
   button.active {
     background-color: var(--very-light-grey);
-  }
-
-  button.logout {
-    padding: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    font-size: 12px;
-    color: var(--black);
-    align-content: end;
-    background-color: transparent;
   }
 </style>
