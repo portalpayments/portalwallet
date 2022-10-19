@@ -1,6 +1,6 @@
 <script lang="ts">
-  import usdcSymbolURL from "../../assets/usdc.svg";
-  import solSymbolURL from "../../assets/solana.svg";
+  import usdcSymbolURL from "../../assets/Icons/usdc.svg";
+  import solSymbolURL from "../../assets/Icons/solana.svg";
   import { formatMajorUnits } from "../utils";
   import { walletBalanceAccount } from "../stores";
 

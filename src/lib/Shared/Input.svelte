@@ -2,7 +2,7 @@
   import { debounce } from "lodash";
   import { SECOND } from "../../backend/constants";
   import { log } from "../../backend/functions";
-  import USDClogo from "../../../src/assets/usdc.svg";
+  import USDClogo from "../../../src/assets/Icons/usdc.svg";
   import { useFocus } from "svelte-navigator";
   import { getFocusContext } from "./FocusContext.svelte";
 

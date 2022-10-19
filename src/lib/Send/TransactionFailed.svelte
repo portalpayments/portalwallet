@@ -3,7 +3,7 @@
   import { truncateWallet } from "../utils";
   import { log } from "../../backend/functions";
   import type { VerifiedClaims } from "../../backend/types";
-  import USDClogo from "../../assets/usdc.svg";
+  import USDClogo from "../../assets/Icons/usdc.svg";
   export let errorMessage: string | null = null;
   export let verifiedClaims: VerifiedClaims;
   export let destinationWalletAddress: string | null;

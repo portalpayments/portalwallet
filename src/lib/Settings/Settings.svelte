@@ -2,7 +2,7 @@
   import BackButton from "../Shared/BackButton.svelte";
   import { identityTokenIssuerPublicKeyString } from "../constants";
   import type { Contact as ContactType } from "../types";
-  import { get as getFromStore, writable, type Writable } from "svelte/store";
+  import { get as getFromStore } from "svelte/store";
   import { Keypair, PublicKey } from "@solana/web3.js";
   import { log, isEmpty } from "../../backend/functions";
   import { authStore, connectionStore } from "../../lib/stores";

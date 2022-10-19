@@ -1,6 +1,6 @@
 <script lang="ts">
   import HomeScreen from "./lib/HomePage/HomePage.svelte";
-  import TopToolbar from "./lib/TopToolbar/TopToolbar.svelte";
+  import Menu from "./lib/Menu/Menu.svelte";
   import Navbar from "./lib/Navbar/Navbar.svelte";
   import Collectables from "./lib/Collectables/Collectables.svelte";
   import ContactsPage from "./lib/Contacts/ContactsPage.svelte";
@@ -99,7 +99,7 @@
       <Route path="contacts/:address"><Contact /></Route>
       <Route primary={false}>
         <div class="header-and-features">
-          <TopToolbar {...user} />
+          <Menu {...user} />
           <div class="features">
             {#if currentFeature === 0}
               <HomeScreen />

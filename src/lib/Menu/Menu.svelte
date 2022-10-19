@@ -3,18 +3,21 @@
   import { authStore } from "../stores";
   import { Link } from "svelte-navigator";
   import { walletBalanceAccount } from "../stores";
-  import usdcSymbolURL from "../../assets/usdc.svg";
-  import solSymbolURL from "../../assets/solana.svg";
+  import usdcIconURL from "../../assets/Icons/usdc.svg";
+  import solIconURL from "../../assets/Icons/solana.svg";
+  import settingsIconURL from "../../assets/Icons/settings.svg";
+  import helpIconURL from "../../assets/Icons/help.svg";
+  import logoutIconURL from "../../assets/Icons/logout.svg";
 
   export let name = "anonymous";
   export let isVerified = false;
 
-  let isDropdownActive = false;
+  let isMenuActive = false;
 
   const toggleAccount = () => {
     $walletBalanceAccount.isShowingBalanceInSol =
       !$walletBalanceAccount.isShowingBalanceInSol;
-    isDropdownActive = !isDropdownActive;
+    isMenuActive = !isMenuActive;
   };
 
   const logout = function () {
@@ -25,34 +28,43 @@
 
 <div class="header">
   <button
-    class={!isDropdownActive ? "drop-button" : "drop-button-active "}
-    on:click={() => (isDropdownActive = !isDropdownActive)}
+    class={!isMenuActive ? "menu-button" : "menu-button-active "}
+    on:click={() => (isMenuActive = !isMenuActive)}
   >
     {name}
     {#if isVerified}
       <img src={Checkmark} alt="Verified" />
     {/if}
   </button>
-  <div class="menu {isDropdownActive ? 'active' : ''}">
+  <div class="menu {isMenuActive ? 'active' : ''}">
     <div class="common">
       <button
-        class="button {$walletBalanceAccount.isShowingBalanceInSol && 'active'}"
+        type={$walletBalanceAccount.isShowingBalanceInSol ? "" : "active"}
         on:click={toggleAccount}
       >
-        <img src={usdcSymbolURL} alt="USDC logo" />USDC account</button
+        <img src={usdcIconURL} alt="USDC account" />USDC account</button
       >
       <button
-        class="button {$walletBalanceAccount.isShowingBalanceInSol || 'active'}"
+        type="button"
+        class={$walletBalanceAccount.isShowingBalanceInSol ? "active" : ""}
         on:click={toggleAccount}
       >
-        <img src={solSymbolURL} alt="Sol logo" />
+        <img src={solIconURL} alt="Sol account" />
         Sol account
       </button>
-      <Link class="button" to="/settings">Settings</Link>
+      <Link class="button" to="/settings">
+        <img src={settingsIconURL} alt="Settings" />
+        Settings
+      </Link>
+      <Link class="button" to="mailto:info@getportal.app">
+        <img src={helpIconURL} alt="Help" />
+        Help
+      </Link>
     </div>
-    <button type="button" on:click|preventDefault={logout} class="logout"
-      >Log out</button
-    >
+    <button type="button" on:click|preventDefault={logout} class="logout">
+      <img src={logoutIconURL} alt="Log out" />
+      Log out
+    </button>
   </div>
 </div>
 
@@ -65,7 +77,7 @@
     justify-items: start;
     gap: 4px;
   }
-  .drop-button {
+  .menu-button {
     background: rgba(61, 101, 245, 0.2);
     padding: 5px 10px 5px 10px;
     border-radius: 21px;
@@ -74,7 +86,7 @@
     font-weight: 600;
     border: 0;
   }
-  .drop-button > img {
+  .menu-button > img {
     width: 18px;
     height: 18px;
     vertical-align: middle;
@@ -82,7 +94,7 @@
 
   /* From https://www.w3schools.com/howto/howto_js_dropdown.asp*/
 
-  .drop-button-active {
+  .menu-button-active {
     background: rgba(61, 101, 245, 0.2);
     padding: 5px 10px 5px 10px;
     border-radius: 14px;
@@ -93,7 +105,7 @@
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
     border: 0;
   }
-  .drop-button-active > img {
+  .menu-button-active > img {
     width: 18px;
     height: 18px;
     vertical-align: middle;
@@ -111,6 +123,7 @@
     height: var(--wallet-height);
     overflow: hidden;
     grid-auto-flow: row;
+    color: var(--black);
     background-color: var(--white);
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
     z-index: 2;
@@ -134,13 +147,22 @@
   .menu button {
     display: grid;
     grid-auto-flow: column;
+    grid-template-columns: 12px 1fr;
+    height: 48px;
+    align-content: center;
+    align-items: center;
     text-align: left;
-    padding: 8px;
+    gap: 8px;
     font-weight: 600;
-    font-size: 16px;
-    color: var(--white);
+    font-size: 12px;
+    color: var(--black);
     background-color: transparent;
     padding: 8px;
+  }
+
+  :global(a.button) img,
+  button img {
+    width: 12px;
   }
 
   .menu :global(a.button):active {
@@ -153,11 +175,12 @@
   }
 
   button.logout {
-    padding: 24px 0px 8px 0px;
+    padding: 8px;
     font-size: 1rem;
-  }
-
-  button img {
-    width: 12px;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--black);
+    align-content: end;
+    background-color: transparent;
   }
 </style>
