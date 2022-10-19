@@ -42,11 +42,6 @@
     isMenuActive = false;
   };
 
-  // TODO: implement
-  const startVerification = () => {
-    log("initiating verification process");
-  };
-
   let user: ContactType | null = null;
 
   (async () => {
@@ -163,8 +158,6 @@
     vertical-align: middle;
   }
 
-  /* From https://www.w3schools.com/howto/howto_js_dropdown.asp*/
-
   .menu-button-active {
     background: rgba(61, 101, 245, 0.2);
     padding: 5px 10px 5px 10px;
@@ -195,24 +188,14 @@
     width: calc(var(--wallet-width) * 0.7);
     height: var(--wallet-height);
     overflow: hidden;
+
+    padding: 6px;
     grid-auto-flow: row;
     color: var(--black);
     background-color: var(--white);
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
     z-index: 2;
     grid-template-rows: 96px 1fr 48px;
-  }
-
-  .get-verified-button {
-    width: auto;
-    margin-top: 5px;
-    padding: 8px 25px;
-    color: #fff;
-    font-weight: 600;
-    margin: auto;
-    font-size: 1.3rem;
-    border-radius: 24px;
-    background: var(--blue-green-gradient);
   }
 
   .menu button.close {

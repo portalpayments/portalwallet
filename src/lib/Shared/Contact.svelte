@@ -23,7 +23,7 @@
     display: grid;
     grid-auto-flow: column;
     grid-template-columns: 64px 1fr;
-    gap: 12px;
+    gap: 6px;
     justify-content: center;
     align-items: center;
     height: 80px;

@@ -5,7 +5,7 @@
 // https://github.com/mdn/dom-examples/blob/main/web-crypto/encrypt-decrypt/aes-gcm.js
 // See https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/deriveKey
 
-import { log, stringify } from "../backend/functions";
+import { log, sleep, stringify } from "../backend/functions";
 import { Keypair } from "@solana/web3.js";
 import base58 from "bs58";
 import localforage from "localforage";
@@ -42,6 +42,19 @@ export const getSHA256Hash = (string: string) => {
   // Get the string as arraybuffer.
   var buffer = textEncoder.encode(string);
   return crypto.subtle.digest("SHA-256", buffer);
+};
+
+export const getSettingsOrNull = async (suppliedPassword: string) => {
+  try {
+    const settings = await getSettings(suppliedPassword);
+    return settings;
+  } catch (thrownObject) {
+    // TODO: we're assuming all getSettings() failures are a bad password
+    // The other possibility is: we simply don't have settings get
+    // We should check localforage for PORTAL_SETTINGS and show the onboarding UI
+    // if it doesn't exist.
+    return null;
+  }
 };
 
 // Use a key derivation function (rather than a hashing function) to slow down the password -> key process

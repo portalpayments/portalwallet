@@ -3,6 +3,7 @@
 
   import { log, isEmpty } from "../../backend/functions";
   import Modal from "../Shared/Modal.svelte";
+  import { getSettingsOrNull } from "../../lib/settings";
   import BlurredText from "./BlurredText.svelte";
   import Password from "../Shared/Password.svelte";
 
@@ -16,23 +17,26 @@
   let showRecoveryPhrase = false;
   let showPrivateKey = false;
 
-  const checkPassword = (
-    password,
+  let secretKeyText: string | null = null;
+
+  const checkPassword = async (
+    suppliedPassword,
     showRecoveryPhrase: boolean = false,
     showPrivateKey: boolean = false
   ) => {
     //  TODO make this secure. Get the private key and personal recovery phrase on demand
-    if (password === "password" && showRecoveryPhrase) {
+    const settings = await getSettingsOrNull(suppliedPassword);
+    const isPasswordCorrect = Boolean(settings);
+    if (showRecoveryPhrase && isPasswordCorrect) {
       isModalOpen = false;
       isRecoveryPhraseBlurred = false;
     }
-    if (password === "password" && showPrivateKey) {
+    if (showPrivateKey && isPasswordCorrect) {
       isModalOpen = false;
       isPrivateKeyBlurred = false;
     }
-    if (password !== "password") {
-      alert("Entered password is wrong");
-    }
+    // TODO: error UI
+    log(`password was bad`);
   };
 </script>
 

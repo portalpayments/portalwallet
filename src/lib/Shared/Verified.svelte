@@ -42,6 +42,11 @@
     display: grid;
     justify-content: start;
     text-align: left;
+    gap: 6px;
+
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
   }
 
   .badges-and-labels {

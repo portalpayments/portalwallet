@@ -6,6 +6,7 @@
   import type { Settings } from "../types";
   import { SECOND } from "../../backend/constants";
   import { log, sleep } from "../../backend/functions";
+  import { getSettingsOrNull } from "../../lib/settings";
 
   let password = "";
 
@@ -17,19 +18,7 @@
       await sleep(1 * SECOND);
       isBadPassword = false;
     }
-    let settings: Settings;
-    try {
-      settings = await getSettings(password);
-    } catch (thrownObject) {
-      // TODO: we're basically assuming all getSettings() failures are a bad password
-      // The other option is: we simply don't have settings get
-      // We should check localforage for PORTAL_SETTINSG and show the onboarding UI
-      // if it doesn't exist.
-      // const error = thrownObject as Error;
-      isBadPassword = true;
-      await sleep(1 * SECOND);
-      isBadPassword = false;
-    }
+    let settings = await getSettingsOrNull(password);
 
     if (settings) {
       $authStore.isLoggedIn = true;

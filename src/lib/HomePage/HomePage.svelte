@@ -4,6 +4,8 @@
   import Transactions from "./Transactions.svelte";
   import Buttons from "./Buttons.svelte";
 
+  import Menu from "../../lib/Menu/Menu.svelte";
+
   import { connectionStore, authStore, transactionsStore } from "../stores";
   import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../constants";
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
@@ -11,6 +13,7 @@
   import { Keypair as KeypairConstructor } from "@solana/web3.js";
   import MockBalance from "../Shared/MockedSVGs/MockBalance.svelte";
   import { log, sleep, stringify } from "../../backend/functions";
+  import type { User } from "../../lib/types";
 
   log(`Homepage loading...`);
 
@@ -18,6 +21,8 @@
     getUSDCAccounts,
     getTransactionSummariesForAddress,
   } from "../../backend/vmwallet";
+
+  export let user: User | null;
 
   let connection: Connection;
   let keypair: Keypair;
@@ -84,6 +89,7 @@
 </script>
 
 <div class="feature">
+  <Menu {...user} />
   {#if isBalanceLoaded}
     <Balance {isBalanceLoaded} {major} {minor} />
   {:else}
