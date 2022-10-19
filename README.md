@@ -16,14 +16,6 @@ See [coding guidelines](CODING_GUIDELINES.md).
 
 `npm run dev`
 
-Then in your browser DevTools console run:
-
-```
-saveSettingsHack("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678", "password")
-```
-
-Get your secret key from **Phantom** -> ⚙️ -> **Export Private Key**
-
 ## To test the Web Extension
 
 ```
@@ -60,7 +52,7 @@ npm run start-validator
 
 ```
 
-## How to save Token Metadata program for use on localhost
+## How to save Token Metadata & Memo programs for use on localhost
 
 From https://solanacookbook.com/references/local-development.html#how-to-load-accounts-from-mainnet
 and https://solana.stackexchange.com/questions/1879/metaplex-create-fails-on-localhost-with-attempt-to-load-a-program-that-does-n/1887#1887
@@ -72,6 +64,7 @@ and https://solana.stackexchange.com/questions/1879/metaplex-create-fails-on-loc
 export METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS="metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 solana program dump -u m ${METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS} metaplex_token_metadata_program.so
 
+# Memo program
 
 export MEMO_PROGRAM_ADDRESS="MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
 solana program dump -u m ${MEMO_PROGRAM_ADDRESS} memo_program.so
