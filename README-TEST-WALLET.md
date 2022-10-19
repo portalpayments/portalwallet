@@ -59,6 +59,3 @@ You can send USDC to Vaheh's wallet, and know it's really him, entirely on the b
 
 - If someone doesn't have the required Portal Token, say Kevin Rose `3ikkFnEDBvUXPHfCmvXma4qBGZxMooveQ5eM6LLQgeuQ` you can either invite them to get verified, or send them money anyway.
 
-## Note
-
-There's a few parts - particular the onboarding workflow -that we're still working on.
