@@ -60,11 +60,10 @@
   img {
     width: 36px;
   }
+
+  /* TODO: what is this? */
   .white-usdc {
     filter: brightness(0) invert(1);
-  }
-
-  .major {
   }
 
   .minor {
