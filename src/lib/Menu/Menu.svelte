@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Checkmark from "../../assets/Checkmark.svg";
+  import verifiedIcon from "../../assets/verified.svg";
   import { Link } from "svelte-navigator";
   import { walletBalanceAccount } from "../stores";
   import usdcIconURL from "../../assets/Icons/usdc.svg";
@@ -86,7 +86,7 @@
   >
     {name}
     {#if isVerified}
-      <img src={Checkmark} alt="Verified" />
+      <img src={verifiedIcon} alt="Verified" />
     {/if}
   </button>
   <div class="menu {isMenuActive ? 'active' : ''}">

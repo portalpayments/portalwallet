@@ -1,6 +1,6 @@
 <script lang="ts">
   import Label from "../Shared/Label.svelte";
-  import Checkmark from "../../assets/Checkmark.svg";
+  import verifiedIcon from "../../assets/verified.svg";
   import { LabelColor } from "../constants";
   import { hackProfilePicsByWallet } from "../utils";
   import type { Contact } from "../types";
@@ -21,7 +21,7 @@
   {contact.verifiedClaims.givenName}
   {contact.verifiedClaims.familyName}
   <div class="badges-and-labels">
-    <img src={Checkmark} class="verified-checkmark" alt="User is Verified" />
+    <img src={verifiedIcon} class="verified-icon" alt="User is Verified" />
     <Label color={LabelColor.Yellow}>New</Label>
   </div>
 </div>
@@ -31,7 +31,7 @@
     border-radius: 50%;
     aspect-ratio: 1 / 1;
   }
-  .verified-checkmark {
+  .verified-icon {
     height: 18px;
   }
   .profile-pic {
