@@ -103,7 +103,7 @@
 
 <style>
   .feature {
-    grid-template-rows: 128px 128px 24px 2fr;
+    grid-template-rows: 72px 128px 48px 2fr;
     background: radial-gradient(at 50% 50%, #dde9ff 0, #fff 80%, #fff 100%);
   }
 </style>
