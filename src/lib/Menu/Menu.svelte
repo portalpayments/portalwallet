@@ -159,6 +159,7 @@
   }
 
   .menu-button-active {
+    /* TODO: color doesn't quite match rest of scheme */
     background: rgba(61, 101, 245, 0.2);
     padding: 5px 10px 5px 10px;
     border-radius: 14px;
@@ -202,6 +203,7 @@
     position: absolute;
     top: 12px;
     right: 12px;
+    font-size: 24px;
     background: transparent;
     color: var(--black);
   }
