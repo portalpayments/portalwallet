@@ -1,23 +1,24 @@
 <script lang="ts">
   import { getFormattedMajorUnits, getFormattedMinorUnits } from "../../utils";
-  import USDClogo from "../../../assets/usdc.svg";
-  import { log, stringify } from "../../../backend/functions";
-  import type { Contact, Transaction } from "../../../lib/types";
+  import USDClogo from "../../../assets/Icons/usdc.svg";
+  import { Direction, type TransactionSummary } from "../../../lib/types";
 
-  export let transactions: Array<Transaction>;
+  export let transactions: Array<TransactionSummary>;
 </script>
 
 <div class="history-container">
   <div class="transaction-history">
     {#each transactions as transaction}
       <div
-        class={transaction.isReceived
-          ? "amount amount-received"
-          : "amount amount-sent"}
+        class="amount {transaction.direction === Direction.recieved
+          ? 'amount-received'
+          : 'amount-sent'}"
       >
         <img
           src={USDClogo}
-          class={!transaction.isReceived ? "white-usdc" : ""}
+          class={transaction.direction === Direction.recieved
+            ? ""
+            : "white-usdc"}
           alt="USDC logo"
         />
         <div>
