@@ -1,17 +1,11 @@
 <script lang="ts">
   import BackButton from "../Shared/BackButton.svelte";
-  import { identityTokenIssuerPublicKeyString } from "../constants";
-  import type { Contact as ContactType } from "../types";
-  import { get as getFromStore } from "svelte/store";
-  import { Keypair, PublicKey } from "@solana/web3.js";
+
   import { log, isEmpty } from "../../backend/functions";
-  import { authStore, connectionStore } from "../../lib/stores";
   import Modal from "../Shared/Modal.svelte";
   import BlurredText from "./BlurredText.svelte";
-  import Contact from "../Shared/Contact.svelte";
   import Password from "../Shared/Password.svelte";
-  import { connect, verifyWallet } from "../../backend/vmwallet";
-  import base58 from "bs58";
+
   const MOCK_PERSONAL_RECOVERY_PHRASE_FOR_BLURRING =
     "I am a mocked phrase to show as blurred text before the real personal recovery phrase has been decrypted";
 
@@ -40,49 +34,6 @@
       alert("Entered password is wrong");
     }
   };
-
-  const startVerification = () => {
-    // TODO: implement
-    log("initiating verification process");
-  };
-
-  let user: ContactType | null = null;
-
-  let secretKeyText: string | null = null;
-
-  (async () => {
-    authStore.subscribe(async (newValue) => {
-      if (newValue.secretKey) {
-        log(`🔑Got secret key.`);
-
-        // Connect to Solana
-        const connection = getFromStore(connectionStore);
-
-        if (!newValue.secretKey) {
-          throw new Error(`Couldn't get the secret key from the auth store!`);
-        }
-        const keypair = Keypair.fromSecretKey(newValue.secretKey);
-
-        secretKeyText = base58.encode(keypair.secretKey);
-
-        if (connection) {
-          const claims = await verifyWallet(
-            connection,
-            keypair,
-            new PublicKey(identityTokenIssuerPublicKeyString),
-            keypair.publicKey
-          );
-
-          user = {
-            walletAddress: keypair.publicKey.toBase58(),
-            isNew: false,
-            isPending: false,
-            verifiedClaims: claims,
-          };
-        }
-      }
-    });
-  })();
 </script>
 
 <div class="settings">
@@ -103,8 +54,6 @@
     <BackButton>Home</BackButton>
   </div>
 
-  <Contact contact={user} />
-
   <BlurredText
     text={MOCK_PERSONAL_RECOVERY_PHRASE_FOR_BLURRING}
     heading="Personal recovery phrase"
@@ -116,14 +65,6 @@
     heading="Secret Key"
     description="secret key"
   />
-
-  {#if isEmpty(user?.verifiedClaims)}
-    <div>
-      <button on:click={startVerification} class="get-verified-button"
-        >get verified</button
-      >
-    </div>
-  {/if}
 </div>
 
 <style>
@@ -150,17 +91,6 @@
     color: #fff;
     font-weight: 600;
     font-size: 1.1rem;
-    border-radius: 24px;
-    background: var(--blue-green-gradient);
-  }
-  .get-verified-button {
-    width: auto;
-    margin-top: 5px;
-    padding: 8px 25px;
-    color: #fff;
-    font-weight: 600;
-    margin: auto;
-    font-size: 1.3rem;
     border-radius: 24px;
     background: var(--blue-green-gradient);
   }

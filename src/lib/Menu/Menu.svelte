@@ -1,6 +1,5 @@
 <script lang="ts">
   import Checkmark from "../../assets/Checkmark.svg";
-  import { authStore } from "../stores";
   import { Link } from "svelte-navigator";
   import { walletBalanceAccount } from "../stores";
   import usdcIconURL from "../../assets/Icons/usdc.svg";
@@ -9,10 +8,24 @@
   import helpIconURL from "../../assets/Icons/help.svg";
   import logoutIconURL from "../../assets/Icons/logout.svg";
 
+  import { identityTokenIssuerPublicKeyString } from "../constants";
+  import type { Contact as ContactType } from "../types";
+  import { get as getFromStore } from "svelte/store";
+  import { Keypair, PublicKey } from "@solana/web3.js";
+
+  import Contact from "../Shared/Contact.svelte";
+  import { connect, verifyWallet } from "../../backend/vmwallet";
+  import { log } from "../../backend/functions";
+  import base58 from "bs58";
+
+  import { authStore, connectionStore } from "../../lib/stores";
+
   export let name = "anonymous";
   export let isVerified = false;
 
   let isMenuActive = false;
+
+  let secretKeyText: string | null = null;
 
   const toggleAccount = () => {
     $walletBalanceAccount.isShowingBalanceInSol =
@@ -28,6 +41,47 @@
   const closeMenu = () => {
     isMenuActive = false;
   };
+
+  // TODO: implement
+  const startVerification = () => {
+    log("initiating verification process");
+  };
+
+  let user: ContactType | null = null;
+
+  (async () => {
+    authStore.subscribe(async (newValue) => {
+      if (newValue.secretKey) {
+        log(`🔑Got secret key.`);
+
+        // Connect to Solana
+        const connection = getFromStore(connectionStore);
+
+        if (!newValue.secretKey) {
+          throw new Error(`Couldn't get the secret key from the auth store!`);
+        }
+        const keypair = Keypair.fromSecretKey(newValue.secretKey);
+
+        secretKeyText = base58.encode(keypair.secretKey);
+
+        if (connection) {
+          const claims = await verifyWallet(
+            connection,
+            keypair,
+            new PublicKey(identityTokenIssuerPublicKeyString),
+            keypair.publicKey
+          );
+
+          user = {
+            walletAddress: keypair.publicKey.toBase58(),
+            isNew: false,
+            isPending: false,
+            verifiedClaims: claims,
+          };
+        }
+      }
+    });
+  })();
 </script>
 
 <div class="header">
@@ -42,6 +96,9 @@
   </button>
   <div class="menu {isMenuActive ? 'active' : ''}">
     <button class="close" on:click={() => closeMenu()}>×</button>
+
+    <Contact contact={user} />
+
     <div class="common">
       <button
         type="button"
@@ -125,6 +182,8 @@
     vertical-align: middle;
   }
 
+  /* Move this into a seperate component */
+
   .menu {
     /* Off screen by Default */
     transform: translateX(-100%);
@@ -141,7 +200,19 @@
     background-color: var(--white);
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
     z-index: 2;
-    grid-template-rows: 1fr 48px;
+    grid-template-rows: 96px 1fr 48px;
+  }
+
+  .get-verified-button {
+    width: auto;
+    margin-top: 5px;
+    padding: 8px 25px;
+    color: #fff;
+    font-weight: 600;
+    margin: auto;
+    font-size: 1.3rem;
+    border-radius: 24px;
+    background: var(--blue-green-gradient);
   }
 
   .menu button.close {
