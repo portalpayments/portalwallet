@@ -70,8 +70,9 @@
 </script>
 
 <div class="feature">
-  <Heading>Gallery</Heading>
-
+  <div class="heading">
+    <Heading>Gallery</Heading>
+  </div>
   {#if isLoading}
     <MockGallery />
   {:else if collectables.length}
@@ -86,6 +87,9 @@
 </div>
 
 <style>
+  .heading {
+    padding: 0 12px;
+  }
   .feature {
     background: radial-gradient(at 50% 50%, #ffe7dd 0, #fff 80%, #fff 100%);
   }
