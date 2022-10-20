@@ -1,5 +1,6 @@
 <script lang="ts">
   import { debounce } from "lodash";
+  import { log } from "../../backend/functions";
 
   export let placeholder: string;
   // https://stackoverflow.com/questions/74069649/how-do-i-set-the-correct-type-for-a-click-handler-when-using-svelte-with-typescr/74070095#74070095
@@ -9,12 +10,14 @@
     null;
 
   const runInputDelayIfExists = (event) => {
+    // log(`Running input delay event`);
     if (onInputDelay) {
       onInputDelay(event);
     }
   };
 
   const runKeyUpDelayIfExists = (event) => {
+    // log(`Running key up delay event`);
     if (onKeyUpDelay) {
       onKeyUpDelay(event);
     }

@@ -128,16 +128,6 @@ export const checkIfOnboarded = async () => {
   return Boolean(settings);
 };
 
-export const checkIfSecretKeyIsValid = (string: string) => {
-  try {
-    const secretKey = base58.decode(string);
-    Keypair.fromSecretKey(secretKey);
-    return true;
-  } catch (thrownObject) {
-    return false;
-  }
-};
-
 // Was getSecretKey
 export const getSettings = async (password: string): Promise<Settings> => {
   const decryptionKey: CryptoKey = await passwordToKey(password);

@@ -10,13 +10,12 @@
     personalPhraseToEntopy,
     entropyToMnemonic,
     mnemonicToKeypairs,
+    checkIfSecretKeyIsValid,
+    checkIfMnemonicPhraseIsValid,
   } from "../../backend/brainwallet";
   import base58 from "bs58";
-  import {
-    checkIfSecretKeyIsValid,
-    saveSettings,
-    checkIfOnboarded,
-  } from "../settings";
+  import { saveSettings, checkIfOnboarded } from "../settings";
+
   import Heading from "../Shared/Heading.svelte";
 
   const MINIMUM_PASSWORD_LENGTH = 8;
@@ -30,23 +29,36 @@
   let personalPhraseToUse: string | null = null;
   let passwordToUse: string | null = null;
 
-  let isSuggestedSecretValid: Boolean | null = null;
+  let isSuggestedSecretOrMnemonicPhraseValid: Boolean | null = null;
   let isPasswordSecure: Boolean | null = null;
   let isPersonalPhraseSecure: Boolean | null = null;
 
   let isOnboarded = false;
   let isBuildingWallet = false;
 
+  let walletImportedFrom: "secret key" | "mnemonic phrase" | null = null;
+
   let restoringOrMakingNewWallet: "restoring" | "makingNewWallet" = "restoring";
 
-  const checkSecretKey = (event) => {
+  const checkSecretKeyOrMnemonicPhrase = (event) => {
     // null while we check...
-    isSuggestedSecretValid = null;
-    const suggestedSecretKey = event.target.value;
+    isSuggestedSecretOrMnemonicPhraseValid = null;
+    const suggestedSecretKeyOrMemonicPhrase = event.target.value;
+
+    log(`Checking`, suggestedSecretKeyOrMemonicPhrase);
     // Now set the actual value
-    isSuggestedSecretValid = checkIfSecretKeyIsValid(suggestedSecretKey);
-    if (isSuggestedSecretValid) {
-      secretKeyToImport = suggestedSecretKey;
+    if (checkIfSecretKeyIsValid(suggestedSecretKeyOrMemonicPhrase)) {
+      log(`User pasted a valid secret key`);
+      isSuggestedSecretOrMnemonicPhraseValid = true;
+      walletImportedFrom = "secret key";
+      secretKeyToImport = suggestedSecretKeyOrMemonicPhrase;
+    } else {
+      // It might not be a secret key - let's check if it's a phrase
+      if (checkIfMnemonicPhraseIsValid(suggestedSecretKeyOrMemonicPhrase)) {
+        log(`User pasted a valid mnemonic phrase`);
+        isSuggestedSecretOrMnemonicPhraseValid = true;
+        walletImportedFrom = "mnemonic phrase";
+      }
     }
   };
 
@@ -128,22 +140,21 @@
             <ProgressBar steps={steps.length} currentStep={stepNumber} />
 
             <div class="content">
-              <Heading size="large">Import secret key</Heading>
-              <p>
-                Paste your secret key below. Some apps call the secret key a
-                'private key'.
-              </p>
+              <Heading size="large">Import wallet</Heading>
+              <p>Paste your secret key or mnemonic phrase below.</p>
               <TextArea
                 placeholder="Secret key"
-                onInputDelay={checkSecretKey}
+                onInputDelay={checkSecretKeyOrMnemonicPhrase}
               />
 
-              {#if isSuggestedSecretValid !== null}
-                {#if isSuggestedSecretValid === true}
-                  <p class="subtle">✅ Secret key is valid!</p>
+              {#if isSuggestedSecretOrMnemonicPhraseValid !== null}
+                {#if isSuggestedSecretOrMnemonicPhraseValid === true}
+                  <p class="subtle">✅ {walletImportedFrom} is valid!</p>
                 {/if}
-                {#if isSuggestedSecretValid === false}
-                  <p class="subtle">🤔 This is not a valid secret key!</p>
+                {#if isSuggestedSecretOrMnemonicPhraseValid === false}
+                  <p class="subtle">
+                    🤔 This is not a valid secret key or mnemonic phrase!
+                  </p>
                 {/if}
               {/if}
             </div>
@@ -151,11 +162,11 @@
             <button
               type="button"
               on:click={() => {
-                if (isSuggestedSecretValid) {
+                if (isSuggestedSecretOrMnemonicPhraseValid) {
                   move(true);
                 }
               }}
-              class="next small-caps  {isSuggestedSecretValid
+              class="next small-caps  {isSuggestedSecretOrMnemonicPhraseValid
                 ? ''
                 : 'disabled'}">Next</button
             >

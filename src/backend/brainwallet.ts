@@ -5,6 +5,7 @@ import { SOLANA_SEED_SIZE_BYTES } from "./constants";
 import { log } from "./functions";
 
 import * as bip39 from "bip39";
+import base58 from "bs58";
 
 if (!globalThis.setImmediate) {
   // Fixes 'ReferenceError: setImmediate is not defined' when running in browser
@@ -69,4 +70,20 @@ export const mnemonicToKeypairs = async (
     log(`${path} => ${keypair.publicKey.toBase58()}`);
   }
   return keyPairs;
+};
+
+export const checkIfSecretKeyIsValid = (suggestedSecretKey: string) => {
+  try {
+    const secretKey = base58.decode(suggestedSecretKey);
+    Keypair.fromSecretKey(secretKey);
+    return true;
+  } catch (thrownObject) {
+    return false;
+  }
+};
+
+export const checkIfMnemonicPhraseIsValid = (
+  suggestedMnemonicPhrase: string
+) => {
+  return bip39.validateMnemonic(suggestedMnemonicPhrase);
 };
