@@ -49,7 +49,7 @@
     border-radius: calc(2 * var(--thickness));
   }
 
-  /* Big outer box with a gradient, shown beneath */
+  /* Big outer box with a gradient, shown beneath the .gradient-box */
   .gradient-box:before {
     content: "";
     position: absolute;
