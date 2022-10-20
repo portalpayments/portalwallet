@@ -6,9 +6,9 @@ Hi potential Investor! We've made a quick demo of Portal for you.
 
 ## Installing the extension
 
-Normally Portal is installed through the Chrome Web Store (or Edge Web Store etc). But for this demo we'll install it outside the store`.
+Normally Portal is installed through the Chrome Web Store (or Edge Web Store etc). But for this demo we'll install it outside the store.
 
-Download an unzip the the file provided.
+Download and unzip the the file provided.
 
 Then in Chrome, click the three dot menu **⋮** then **Manage Extensions**:
 
@@ -38,13 +38,23 @@ You can now open Portal:
 
 <img src="docs/installation/6-ready.png" alt="extension loaded"/>
 
-## Sending money
+## Onboarding
 
 We have made a demo wallet for John Testuser that's already signed in and verified. Normally, users go through a regular Onfido government-supplied ID check as part of signup, to get verified, we've saved you the time for this demo!
 
-The password is `password`. The account has **$10.00 real USDC**, and you can **send the money anywhere you want**.
+To use this, pick **I already have a wallet**. Use the secret key `2okr45A8i762cCetGmUVuAcozTzzpPQhtEw8vFzeTCzLCpQwtiJFq2Woog7hyRoeoufhch6g2rax1yojL3ryBwHe`:
 
-**Some things to try**
+<img src="docs/onboarding/1-secret-key.png" alt="secret key"/>
+
+Use any password you like:
+
+<img src="docs/onboarding/2-password.png" alt="secret key"/>
+
+The wallet is now ready.
+
+## Sending money
+
+The account has **$10.00 real USDC**, and you can **send the money anywhere you want**.
 
 - Someone online says they're your friend Vaheh says `6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG` is their Solana account. Let's find out if this is true! Try sending to that address.
 
@@ -58,4 +68,3 @@ You can send USDC to Vaheh's wallet, and know it's really him, entirely on the b
 <img src="docs/transferring/4-sent.png" alt="sent"/>
 
 - If someone doesn't have the required Portal Token, say Kevin Rose `3ikkFnEDBvUXPHfCmvXma4qBGZxMooveQ5eM6LLQgeuQ` you can either invite them to get verified, or send them money anyway.
-
