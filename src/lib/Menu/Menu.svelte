@@ -42,7 +42,8 @@
     isMenuActive = false;
   };
 
-  let user: ContactType | null = null;
+  let user: ContactType | null;
+  $: user = null;
 
   (async () => {
     authStore.subscribe(async (newValue) => {
@@ -80,10 +81,7 @@
 </script>
 
 <div class="header">
-  <button
-    class={!isMenuActive ? "menu-button" : "menu-button-active "}
-    on:click={() => (isMenuActive = !isMenuActive)}
-  >
+  <button class="menu-button" on:click={() => (isMenuActive = !isMenuActive)}>
     {name}
     {#if isVerified}
       <img src={verifiedIcon} alt="Verified" />
@@ -153,24 +151,6 @@
     border: 0;
   }
   .menu-button > img {
-    width: 18px;
-    height: 18px;
-    vertical-align: middle;
-  }
-
-  .menu-button-active {
-    /* TODO: color doesn't quite match rest of scheme */
-    background: rgba(61, 101, 245, 0.2);
-    padding: 5px 10px 5px 10px;
-    border-radius: 14px;
-    color: var(--dark-blue);
-    font-weight: 600;
-    border-bottom-right-radius: 0px;
-    border-bottom-left-radius: 0px;
-    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
-    border: 0;
-  }
-  .menu-button-active > img {
     width: 18px;
     height: 18px;
     vertical-align: middle;
