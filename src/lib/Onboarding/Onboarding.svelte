@@ -26,6 +26,8 @@
   let currentStep = 0;
 
   let secretKeyToImport: string | null = null;
+  let walletImportedFrom: "secret key" | "mnemonic phrase" | null = null;
+
   let personalPhraseToUse: string | null = null;
   let passwordToUse: string | null = null;
 
@@ -35,8 +37,6 @@
 
   let isOnboarded = false;
   let isBuildingWallet = false;
-
-  let walletImportedFrom: "secret key" | "mnemonic phrase" | null = null;
 
   let restoringOrMakingNewWallet: "restoring" | "makingNewWallet" = "restoring";
 
