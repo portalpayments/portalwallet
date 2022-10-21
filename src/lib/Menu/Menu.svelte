@@ -123,14 +123,14 @@
   :global(a.button.with-icon) {
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 12px 1fr;
+    grid-template-columns: 16px 1fr;
     height: 48px;
     align-content: center;
     align-items: center;
     text-align: left;
-    gap: 8px;
+    gap: 12px;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 16px;
     color: var(--black);
     background-color: transparent;
     padding: 8px;
@@ -138,7 +138,7 @@
 
   button.with-icon img,
   :global(a.button.with-icon) img {
-    width: 12px;
+    width: 16px;
   }
 
   .menu :global(a.button):active {

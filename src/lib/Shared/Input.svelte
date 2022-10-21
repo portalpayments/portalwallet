@@ -132,6 +132,7 @@
     outline: none !important;
     border: 2px solid rgba(65, 156, 253, 0.8);
     box-shadow: 0 0 2px rgba(65, 156, 253, 0.3);
+    border-radius: 6px;
   }
   input:focus ~ .floating-label,
   input:not(:focus):valid ~ .floating-label {
