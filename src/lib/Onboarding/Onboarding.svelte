@@ -26,6 +26,7 @@
   let currentStep = 0;
 
   let secretKeyToImport: string | null = null;
+  let mnemonicToImport: string | null = null;
   let walletImportedFrom: "secret key" | "mnemonic phrase" | null = null;
 
   let personalPhraseToUse: string | null = null;
@@ -43,6 +44,9 @@
   const checkSecretKeyOrMnemonicPhrase = (event) => {
     // Reset these while we check...
     isSuggestedSecretOrMnemonicPhraseValid = null;
+    secretKeyToImport = null;
+    mnemonicToImport = null;
+
     const suggestedSecretKeyOrMemonicPhrase = event.target.value;
 
     log(`Checking`, suggestedSecretKeyOrMemonicPhrase);
