@@ -99,7 +99,7 @@ describe(`recovery`, () => {
     expect(result).toBeFalsy();
   });
 
-  test(`Using a secretKey and using a nmemonic generate the same secret key`, async () => {
+  test(`Using a secretKey and using a mnemonic generate the same secret key`, async () => {
     const mikesSecretKey = process.env.MIKES_SECRET_KEY;
     const mikesMnemonic = process.env.MIKES_MNEMONIC;
     const secretKeyOne = base58.decode(mikesSecretKey);

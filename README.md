@@ -30,7 +30,7 @@ You'll need an `.env` file with:
 
 ```
 TWITTER_API_KEY_BEARER_TOKEN=somebearertoken
-SECRET_KEY=someprivatekeyextractedfromphantom
+SECRET_KEY=somesecretkeyextractedfromphantom
 ```
 
 Ask your colleagues for a copy of this file (not checked into GitHub for security reasons).

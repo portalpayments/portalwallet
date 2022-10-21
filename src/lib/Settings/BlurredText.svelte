@@ -8,14 +8,7 @@
   export let heading: string;
   export let isShown = false;
   export let description: string = "recovery phrase" || "secret key";
-
-  const showText = () => {
-    isShown = true;
-  };
-
-  const hideText = () => {
-    isShown = false;
-  };
+  export let onClick: svelte.JSX.MouseEventHandler<HTMLButtonElement>;
 
   const copyPhrase = async () => {
     //src https://developer.mozilla.org/en-US/docs/Web/API/Navigator/clipboard
@@ -36,7 +29,7 @@
           />copy
         </button>
       {/if}
-      <button on:click={isShown ? hideText : showText} class="show-hide-text">
+      <button on:click={onClick} class="show-hide-text">
         <img
           src={isShown ? Blur : Show}
           alt="{isShown ? 'Blur' : 'Show'} {description}"
