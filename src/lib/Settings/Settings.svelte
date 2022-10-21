@@ -35,6 +35,7 @@
   ) => {
     log(`Trying to get settings...`);
     const settings = await getSettingsOrNull(suppliedPassword);
+
     log(`Got settings`, settings);
 
     const isPasswordCorrect = Boolean(settings);
@@ -89,8 +90,9 @@
     </Modal>
   {/if}
 
-  <div>
-    <BackButton>Home</BackButton>
+  <div class="hack">
+    <BackButton />
+    <Heading>Settings</Heading>
   </div>
 
   <BlurredText
@@ -115,13 +117,18 @@
 </div>
 
 <style>
+  /* TODO: stop using absolute position for the back button */
+  .hack {
+    padding: 18px;
+    height: 100%;
+  }
   .settings {
     display: grid;
     padding: 0 6px;
     width: var(--wallet-width);
     height: var(--wallet-height);
     grid-auto-flow: row;
-    grid-template-rows: 64px 1fr 1fr;
+    grid-template-rows: 120px 1fr 1fr;
     gap: 20px;
     justify-content: center;
     align-items: start;
