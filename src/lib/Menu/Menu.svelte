@@ -1,5 +1,4 @@
 <script lang="ts">
-  import verifiedIcon from "../../assets/verified.svg";
   import { Link } from "svelte-navigator";
   import { walletBalanceAccount } from "../stores";
   import usdcIconURL from "../../assets/Icons/usdc.svg";
@@ -8,24 +7,17 @@
   import helpIconURL from "../../assets/Icons/help.svg";
   import logoutIconURL from "../../assets/Icons/logout.svg";
 
-  import { identityTokenIssuerPublicKeyString } from "../constants";
   import type { Contact as ContactType } from "../types";
-  import { get as getFromStore } from "svelte/store";
-  import { Keypair, PublicKey } from "@solana/web3.js";
 
   import Contact from "../Shared/Contact.svelte";
-  import { connect, verifyWallet } from "../../backend/vmwallet";
-  import { log } from "../../backend/functions";
-  import base58 from "bs58";
 
-  import { authStore, connectionStore } from "../../lib/stores";
+  import { authStore } from "../../lib/stores";
 
-  export let name = "anonymous";
-  export let isVerified = false;
+  export let user: ContactType | null;
 
-  let isMenuActive = false;
+  export let isMenuActive: boolean;
 
-  let secretKeyText: string | null = null;
+  export let onClose: svelte.JSX.MouseEventHandler<HTMLButtonElement>;
 
   const toggleAccount = () => {
     $walletBalanceAccount.isShowingBalanceInSol =
@@ -37,127 +29,53 @@
     $authStore.isLoggedIn = false;
     location.assign("/");
   };
-
-  const closeMenu = () => {
-    isMenuActive = false;
-  };
-
-  let user: ContactType | null;
-  $: user = null;
-
-  (async () => {
-    authStore.subscribe(async (newValue) => {
-      if (newValue.secretKey) {
-        log(`🔑Got secret key.`);
-
-        // Connect to Solana
-        const connection = getFromStore(connectionStore);
-
-        if (!newValue.secretKey) {
-          throw new Error(`Couldn't get the secret key from the auth store!`);
-        }
-        const keypair = Keypair.fromSecretKey(newValue.secretKey);
-
-        secretKeyText = base58.encode(keypair.secretKey);
-
-        if (connection) {
-          const claims = await verifyWallet(
-            connection,
-            keypair,
-            new PublicKey(identityTokenIssuerPublicKeyString),
-            keypair.publicKey
-          );
-
-          user = {
-            walletAddress: keypair.publicKey.toBase58(),
-            isNew: false,
-            isPending: false,
-            verifiedClaims: claims,
-          };
-        }
-      }
-    });
-  })();
 </script>
 
-<div class="header">
-  <button class="menu-button" on:click={() => (isMenuActive = !isMenuActive)}>
-    {name}
-    {#if isVerified}
-      <img src={verifiedIcon} alt="Verified" />
-    {/if}
-  </button>
-  <div class="menu {isMenuActive ? 'active' : ''}">
-    <button class="close" on:click={() => closeMenu()}>×</button>
+<div class="menu {isMenuActive ? 'active' : ''}">
+  <button class="close" on:click={onClose}>×</button>
 
-    <Contact contact={user} />
+  <Contact contact={user} />
 
-    <div class="common">
-      <button
-        type="button"
-        class="with-icon {$walletBalanceAccount.isShowingBalanceInSol
-          ? ''
-          : 'active'}"
-        on:click={toggleAccount}
-      >
-        <img src={usdcIconURL} alt="USDC account" />USDC account</button
-      >
-      <button
-        type="button"
-        class="with-icon {$walletBalanceAccount.isShowingBalanceInSol
-          ? 'active'
-          : ''}"
-        on:click={toggleAccount}
-      >
-        <img src={solIconURL} alt="Sol account" />
-        Sol account
-      </button>
-      <Link class="button with-icon" to="/settings">
-        <img src={settingsIconURL} alt="Settings" />
-        Settings
-      </Link>
-      <Link class="button with-icon" to="mailto:info@getportal.app">
-        <img src={helpIconURL} alt="Help" />
-        Help
-      </Link>
-    </div>
+  <div class="common">
     <button
       type="button"
-      class="logout with-icon"
-      on:click|preventDefault={logout}
+      class="with-icon {$walletBalanceAccount.isShowingBalanceInSol
+        ? ''
+        : 'active'}"
+      on:click={toggleAccount}
     >
-      <img src={logoutIconURL} alt="Log out" />
-      Log out
+      <img src={usdcIconURL} alt="USDC account" />USDC account</button
+    >
+    <button
+      type="button"
+      class="with-icon {$walletBalanceAccount.isShowingBalanceInSol
+        ? 'active'
+        : ''}"
+      on:click={toggleAccount}
+    >
+      <img src={solIconURL} alt="Sol account" />
+      Sol account
     </button>
+    <Link class="button with-icon" to="/settings">
+      <img src={settingsIconURL} alt="Settings" />
+      Settings
+    </Link>
+    <Link class="button with-icon" to="mailto:info@getportal.app">
+      <img src={helpIconURL} alt="Help" />
+      Help
+    </Link>
   </div>
+  <button
+    type="button"
+    class="logout with-icon"
+    on:click|preventDefault={logout}
+  >
+    <img src={logoutIconURL} alt="Log out" />
+    Log out
+  </button>
 </div>
 
 <style>
-  .header {
-    display: grid;
-    grid-auto-flow: column;
-    padding: 0px 12px;
-    align-items: center;
-    justify-items: start;
-    gap: 4px;
-  }
-  .menu-button {
-    background: rgba(61, 101, 245, 0.2);
-    padding: 5px 10px 5px 10px;
-    border-radius: 21px;
-    color: var(--dark-blue);
-    cursor: pointer;
-    font-weight: 600;
-    border: 0;
-  }
-  .menu-button > img {
-    width: 18px;
-    height: 18px;
-    vertical-align: middle;
-  }
-
-  /* Move this into a seperate component */
-
   .menu {
     /* Off screen by Default */
     transform: translateX(-100%);
@@ -218,7 +136,8 @@
     padding: 8px;
   }
 
-  .with-icon img {
+  button.with-icon img,
+  :global(a.button.with-icon) img {
     width: 12px;
   }
 

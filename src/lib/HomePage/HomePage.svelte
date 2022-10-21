@@ -5,6 +5,8 @@
   import Buttons from "./Buttons.svelte";
 
   import Menu from "../../lib/Menu/Menu.svelte";
+  import MenuButton from "../../lib/Menu/MenuButton.svelte";
+  import type { Contact } from "../../lib/types";
 
   import { connectionStore, authStore, transactionsStore } from "../stores";
   import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../constants";
@@ -13,7 +15,6 @@
   import { Keypair as KeypairConstructor } from "@solana/web3.js";
   import MockBalance from "../Shared/MockedSVGs/MockBalance.svelte";
   import { log, sleep, stringify } from "../../backend/functions";
-  import type { User } from "../../lib/types";
 
   log(`Homepage loading...`);
 
@@ -22,12 +23,14 @@
     getTransactionSummariesForAddress,
   } from "../../backend/vmwallet";
 
-  export let user: User | null;
+  export let user: Contact | null;
 
   let connection: Connection;
   let keypair: Keypair;
 
   let isBalanceLoaded = false;
+
+  $: isMenuActive = false;
 
   // Explicitly mark these values as reactive as they depend on other data
   // being updated (they're derived from usdcAccounts)
@@ -89,7 +92,22 @@
 </script>
 
 <div class="feature">
-  <Menu {...user} />
+  <MenuButton
+    {user}
+    onClick={() => {
+      log(`Toggling isMenuActive`);
+      isMenuActive = true;
+    }}
+  />
+  {#if isMenuActive}
+    <Menu
+      {user}
+      {isMenuActive}
+      onClose={() => {
+        isMenuActive = false;
+      }}
+    />
+  {/if}
   {#if isBalanceLoaded}
     <Balance {isBalanceLoaded} {major} {minor} />
   {:else}

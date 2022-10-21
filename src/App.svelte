@@ -12,7 +12,7 @@
   import { Router, Route } from "svelte-navigator";
   import { connect, verifyWallet } from "./backend/vmwallet";
   import { log } from "./backend/functions";
-  import type { User } from "./lib/types";
+  import type { Contact as ContactType } from "./lib/types";
   import Lock from "./lib/Lock/Lock.svelte";
   import Contact from "./lib/Contacts/Contact/ContactAndTransactions.svelte";
   import {
@@ -24,7 +24,7 @@
 
   $authStore;
 
-  let user: null | User = null;
+  let user: ContactType | null;
 
   let isOnboarded: null | Boolean = null;
 
@@ -60,16 +60,14 @@
         keypair.publicKey
       );
 
-      if (verifiedClaims) {
-        user = {
-          name: `${verifiedClaims.givenName} ${verifiedClaims.familyName}`,
-          isVerified: true,
-        };
+      if (!verifiedClaims) {
         return;
       }
       user = {
-        name: "Anonymous",
-        isVerified: false,
+        walletAddress: keypair.publicKey.toBase58(),
+        isNew: false,
+        isPending: false,
+        verifiedClaims,
       };
     }
   });
