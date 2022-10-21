@@ -62,6 +62,7 @@
         log(`User pasted a valid mnemonic phrase`);
         isSuggestedSecretOrMnemonicPhraseValid = true;
         walletImportedFrom = "mnemonic phrase";
+        mnemonicToImport = suggestedSecretKeyOrMemonicPhrase;
       }
     }
   };
@@ -81,19 +82,18 @@
 
   const checkPassword = (event) => {
     // null while we check...
-    log(`Checking password...`);
     isPasswordSecure = null;
     const suggestedPassword = event.target.value;
 
     isPasswordSecure = suggestedPassword.length > MINIMUM_PASSWORD_LENGTH;
-    log(`Finished checking, isPasswordSecure:`, isPasswordSecure);
     if (isPasswordSecure) {
-      personalPhraseToUse = suggestedPassword;
+      log(`Password has sufficient length`);
+      passwordToUse = suggestedPassword;
     }
   };
 
   const move = (isForward: boolean) => {
-    log(`Moving ${isForward ? "forwward" : "back"}`);
+    log(`Moving ${isForward ? "forward" : "back"}`);
     if (isForward) {
       currentStep = currentStep + 1;
       return;
@@ -102,12 +102,33 @@
   };
 
   const makeWallet = async () => {
-    if (!isPersonalPhraseSecure) {
-      return;
+    log(`Making wallet (this will take a moment)....`);
+    isBuildingWallet = true;
+
+    let mnemonic: string | null = null;
+    let personalPhrase: string | null = null;
+    let secretKey: Uint8Array | null = null;
+
+    if (restoringOrMakingNewWallet === "restoring") {
+      if (walletImportedFrom === "secret key") {
+        secretKey = base58.decode(secretKeyToImport);
+        // it's not possible to recover a mnemonic from a secret key
+        // (since the mnemonic was used to create the entropy used for the secret)
+        mnemonic = null;
+      }
+      if (walletImportedFrom === "mnemonic phrase") {
+        mnemonic = mnemonicToImport;
+        personalPhrase = null;
+        const keypairs = await mnemonicToKeypairs(mnemonic, null);
+        const firstWallet = keypairs[0];
+        secretKey = firstWallet.secretKey;
+      }
+      // TODO: in future we will allow recovery from personal phrase
     }
     if (restoringOrMakingNewWallet === "makingNewWallet") {
-      log(`Making wallet (this will take a moment)....`);
-      isBuildingWallet = true;
+      if (!isPersonalPhraseSecure) {
+        return;
+      }
       const entropy = await personalPhraseToEntopy(
         personalPhraseToUse,
         passwordToUse
@@ -117,24 +138,26 @@
 
       const firstWallet = keypairs[0];
 
-      const secretKey = firstWallet.secretKey;
-      await saveSettings(
-        {
-          version: 1,
-          secretKey,
-          personalPhrase: personalPhraseToUse,
-          mnemonic,
-        },
-        passwordToUse
-      );
-
-      isOnboarded = await checkIfOnboarded();
-      move(true);
-      // Wait till animation finished so button doesn't flash colorfully for a moment
-      setTimeout(() => {
-        isBuildingWallet = false;
-      }, 0);
+      secretKey = firstWallet.secretKey;
+      personalPhrase = personalPhraseToUse;
     }
+
+    await saveSettings(
+      {
+        version: 1,
+        secretKey,
+        personalPhrase,
+        mnemonic,
+      },
+      passwordToUse
+    );
+    isOnboarded = await checkIfOnboarded();
+    move(true);
+
+    // Wait till animation finished so button doesn't flash colorfully for a moment
+    setTimeout(() => {
+      isBuildingWallet = false;
+    }, 0);
   };
 </script>
 
@@ -264,22 +287,7 @@
 
             <button
               type="button"
-              on:click={async () => {
-                const secretKey = base58.decode(secretKeyToImport);
-                await saveSettings(
-                  {
-                    version: 1,
-                    secretKey,
-                    personalPhrase: null,
-                    // it's not possible to recover a mnemonic from a secret key
-                    // (since the mnemonic was used to create the entropy used for the secret)
-                    mnemonic: null,
-                  },
-                  passwordToUse
-                );
-                isOnboarded = await checkIfOnboarded();
-                move(true);
-              }}
+              on:click={() => makeWallet()}
               class="next small-caps  {passwordToUse?.length ? '' : 'disabled'}"
               >Open wallet</button
             >

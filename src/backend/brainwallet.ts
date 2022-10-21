@@ -52,7 +52,7 @@ export const mnemonicToKeypairs = async (
   mnemonic: string,
   password: string
 ) => {
-  // The keypair is the (parent) wallet!
+  // The seed is the parent to many wallets
   // See https://github.com/solana-labs/solana/blob/master/web3.js/examples/get_account_info.js
   log(`🤯 Mnemonic is:`, mnemonic);
   const seed = await bip39.mnemonicToSeed(mnemonic, password);

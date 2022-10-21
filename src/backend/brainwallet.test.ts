@@ -1,5 +1,5 @@
 import type { Connection, Keypair } from "@solana/web3.js";
-import { log } from "util";
+import { log } from "./functions";
 import {
   personalPhraseToEntopy,
   mnemonicToKeypairs,
@@ -11,6 +11,7 @@ import { DEPOSIT, SECONDS } from "./constants";
 import { connect, getAccountBalance, putSolIntoWallet } from "./vmwallet";
 import { expectedCleanedPersonalPhrase } from "./__mocks__/mocks";
 import * as dotenv from "dotenv";
+import * as base58 from "bs58";
 
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
@@ -96,5 +97,20 @@ describe(`recovery`, () => {
   test(`We show a bad mnemonic key is bad`, () => {
     const result = checkIfMnemonicPhraseIsValid("i am not a vlaid mnemonic");
     expect(result).toBeFalsy();
+  });
+
+  test(`Using a secretKey and using a nmemonic generate the same secret key`, async () => {
+    const mikesSecretKey = process.env.MIKES_SECRET_KEY;
+    const mikesMnemonic = process.env.MIKES_MNEMONIC;
+    const secretKeyOne = base58.decode(mikesSecretKey);
+
+    const keypairs = await mnemonicToKeypairs(mikesMnemonic, null);
+    const firstWallet = keypairs[0];
+    const secretKeyTwo = firstWallet.secretKey;
+
+    expect(secretKeyOne).toEqual(secretKeyTwo);
+
+    log(secretKeyOne);
+    log(secretKeyTwo);
   });
 });
