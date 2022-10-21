@@ -41,7 +41,7 @@
   let restoringOrMakingNewWallet: "restoring" | "makingNewWallet" = "restoring";
 
   const checkSecretKeyOrMnemonicPhrase = (event) => {
-    // null while we check...
+    // Reset these while we check...
     isSuggestedSecretOrMnemonicPhraseValid = null;
     const suggestedSecretKeyOrMemonicPhrase = event.target.value;
 
