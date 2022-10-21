@@ -100,6 +100,42 @@
     }
     currentStep = currentStep - 1;
   };
+
+  const makeWallet = async () => {
+    if (!isPersonalPhraseSecure) {
+      return;
+    }
+    if (restoringOrMakingNewWallet === "makingNewWallet") {
+      log(`Making wallet (this will take a moment)....`);
+      isBuildingWallet = true;
+      const entropy = await personalPhraseToEntopy(
+        personalPhraseToUse,
+        passwordToUse
+      );
+      const mnemonic = entropyToMnemonic(entropy);
+      const keypairs = await mnemonicToKeypairs(mnemonic, passwordToUse);
+
+      const firstWallet = keypairs[0];
+
+      const secretKey = firstWallet.secretKey;
+      await saveSettings(
+        {
+          version: 1,
+          secretKey,
+          personalPhrase: personalPhraseToUse,
+          mnemonic,
+        },
+        passwordToUse
+      );
+
+      isOnboarded = await checkIfOnboarded();
+      move(true);
+      // Wait till animation finished so button doesn't flash colorfully for a moment
+      setTimeout(() => {
+        isBuildingWallet = false;
+      }, 0);
+    }
+  };
 </script>
 
 <!-- A peep hole that only shows one step at a time -->
@@ -276,41 +312,7 @@
             <button
               type="button"
               disabled={!isPersonalPhraseSecure || isBuildingWallet}
-              on:click={async () => {
-                if (isPersonalPhraseSecure) {
-                  log(`Making wallet (this will take a moment)....`);
-                  isBuildingWallet = true;
-                  const entropy = await personalPhraseToEntopy(
-                    personalPhraseToUse,
-                    passwordToUse
-                  );
-                  const mnemonic = entropyToMnemonic(entropy);
-                  const keypairs = await mnemonicToKeypairs(
-                    mnemonic,
-                    passwordToUse
-                  );
-
-                  const firstWallet = keypairs[0];
-
-                  const secretKey = firstWallet.secretKey;
-                  await saveSettings(
-                    {
-                      version: 1,
-                      secretKey,
-                      personalPhrase: personalPhraseToUse,
-                      mnemonic,
-                    },
-                    passwordToUse
-                  );
-
-                  isOnboarded = await checkIfOnboarded();
-                  move(true);
-                  // Wait till animation finished so button doesn't flash colorfully for a moment
-                  setTimeout(() => {
-                    isBuildingWallet = false;
-                  }, 0);
-                }
-              }}
+              on:click={() => makeWallet()}
               class="next small-caps  {(!isPersonalPhraseSecure ||
                 isBuildingWallet) &&
                 'disabled'} {isBuildingWallet && 'building-wallet'}"
