@@ -28,7 +28,6 @@
     align-items: center;
     height: 80px;
     width: 100%;
-    border-bottom: 1px solid var(--dark-grey);
     box-sizing: border-box;
   }
 </style>

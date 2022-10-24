@@ -5,3 +5,4 @@ test-ledger
 *.zip
 dist/*
 *.DS_Store
+*.afdesign

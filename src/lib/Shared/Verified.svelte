@@ -19,10 +19,16 @@
 />
 <div class="recipient-info">
   {contact.verifiedClaims.givenName}
-  {contact.verifiedClaims.familyName}
-  <div class="badges-and-labels">
-    <img src={verifiedIcon} class="verified-icon" alt="User is Verified" />
-    <Label color={LabelColor.Yellow}>New</Label>
+  <!-- Note move verified badge inline -->
+  {contact.verifiedClaims.familyName}{" "}<img
+    class="verified-icon"
+    src={verifiedIcon}
+    alt="User is Verified"
+  />
+  <div class="labels">
+    {#if contact.isNew}
+      <Label color={LabelColor.Yellow}>New</Label>
+    {/if}
   </div>
 </div>
 
@@ -31,25 +37,29 @@
     border-radius: 50%;
     aspect-ratio: 1 / 1;
   }
-  .verified-icon {
-    height: 18px;
-  }
+
   .profile-pic {
     width: 100%;
   }
 
   .recipient-info {
-    display: grid;
+    display: block;
     justify-content: start;
     text-align: left;
     gap: 6px;
-
     font-weight: 600;
     font-size: 14px;
     line-height: 16px;
   }
 
-  .badges-and-labels {
+  .verified-icon {
+    height: 18px;
+    display: inline-grid;
+    /* Move icon so the tick bottom is level with the text baseline */
+    transform: translateY(5px);
+  }
+
+  .labels {
     display: grid;
     grid-auto-flow: column;
     justify-content: start;

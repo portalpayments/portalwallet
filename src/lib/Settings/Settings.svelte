@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { Link } from "svelte-navigator";
   import BackButton from "../Shared/BackButton.svelte";
+  import helpIconURL from "../../assets/Icons/help.svg";
+  import logoutIconURL from "../../assets/Icons/logout.svg";
 
   import { log, isEmpty } from "../../backend/functions";
   import Modal from "../Shared/Modal.svelte";
@@ -7,6 +10,12 @@
   import BlurredText from "./BlurredText.svelte";
   import Heading from "../Shared/Heading.svelte";
   import Password from "../Shared/Password.svelte";
+  import { authStore } from "../../lib/stores";
+
+  const logout = function () {
+    $authStore.isLoggedIn = false;
+    location.assign("/");
+  };
 
   const MOCK_MNEMONIC_FOR_BLURRING =
     "some words that look like they might be a mnemonic but arent";
@@ -40,7 +49,7 @@
 
     const isPasswordCorrect = Boolean(settings);
     if (!isPasswordCorrect) {
-      // TODO: error UI
+      // TODO: error UI - copy lock screen
       log(`password was bad`);
       return;
     }
@@ -95,6 +104,11 @@
     <Heading>Settings</Heading>
   </div>
 
+  <Link class="button with-icon" to="mailto:help@getportal.app">
+    <img src={helpIconURL} alt="Help" />
+    Get help from the Portal team
+  </Link>
+
   <BlurredText
     text={mnemonic || MOCK_MNEMONIC_FOR_BLURRING}
     onClick={() => {
@@ -114,6 +128,15 @@
     heading="Secret Key"
     description="secret key"
   />
+
+  <button
+    type="button"
+    class="logout with-icon"
+    on:click|preventDefault={logout}
+  >
+    <img src={logoutIconURL} alt="Log out" />
+    Log out
+  </button>
 </div>
 
 <style>

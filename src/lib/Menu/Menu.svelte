@@ -1,17 +1,12 @@
 <script lang="ts">
   import { Link } from "svelte-navigator";
   import { walletBalanceAccount } from "../stores";
-  import usdcIconURL from "../../assets/Icons/usdc.svg";
-  import solIconURL from "../../assets/Icons/solana.svg";
+  import usdcIconURL from "../../assets/Icons/usdc-coin.svg";
+  import solIconURL from "../../assets/Icons/solana-coin.svg";
+  import closeIconURL from "../../assets/Icons/close.svg";
   import settingsIconURL from "../../assets/Icons/settings.svg";
-  import helpIconURL from "../../assets/Icons/help.svg";
-  import logoutIconURL from "../../assets/Icons/logout.svg";
-
   import type { Contact as ContactType } from "../types";
-
   import Contact from "../Shared/Contact.svelte";
-
-  import { authStore } from "../../lib/stores";
 
   export let user: ContactType | null;
 
@@ -24,19 +19,14 @@
       !$walletBalanceAccount.isShowingBalanceInSol;
     isMenuActive = false;
   };
-
-  const logout = function () {
-    $authStore.isLoggedIn = false;
-    location.assign("/");
-  };
 </script>
 
 <div class="menu {isMenuActive ? 'active' : ''}">
-  <button class="close" on:click={onClose}>×</button>
+  <button class="close" on:click={onClose}
+    ><img src={closeIconURL} alt="close" /></button
+  >
 
-  <Contact contact={user} />
-
-  <div class="common">
+  <div class="tokens">
     <button
       type="button"
       class="with-icon {$walletBalanceAccount.isShowingBalanceInSol
@@ -56,23 +46,16 @@
       <img src={solIconURL} alt="Sol account" />
       Sol account
     </button>
-    <Link class="button with-icon" to="/settings">
+  </div>
+  <div class="accounts">
+    <Link class="button with-icon settings" to="/settings">
       <img src={settingsIconURL} alt="Settings" />
       Settings
     </Link>
-    <Link class="button with-icon" to="mailto:info@getportal.app">
-      <img src={helpIconURL} alt="Help" />
-      Help
-    </Link>
+    <button>
+      <Contact contact={user} />
+    </button>
   </div>
-  <button
-    type="button"
-    class="logout with-icon"
-    on:click|preventDefault={logout}
-  >
-    <img src={logoutIconURL} alt="Log out" />
-    Log out
-  </button>
 </div>
 
 <style>
@@ -88,22 +71,26 @@
     height: var(--wallet-height);
     overflow: hidden;
 
+    align-items: stretch;
+
     padding: 6px;
     grid-auto-flow: row;
     color: var(--black);
-    background-color: var(--white);
+    background-color: white;
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
     z-index: 2;
-    grid-template-rows: 96px 1fr 48px;
   }
 
-  .menu button.close {
+  button.close {
     position: absolute;
     top: 12px;
     right: 12px;
-    font-size: 24px;
     background: transparent;
     color: var(--black);
+  }
+
+  button.close img {
+    width: 18px;
   }
 
   /* On screen when active */
@@ -111,34 +98,39 @@
     transform: translateX(0);
   }
 
-  .menu .common {
+  .menu .tokens {
     justify-content: start;
     align-content: start;
-    padding: 8px;
+    padding-top: 24px;
     width: 100%;
-    gap: 8px;
+    grid-template-columns: 100%;
   }
 
   button.with-icon,
   :global(a.button.with-icon) {
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 16px 1fr;
+    grid-template-columns: 24px 1fr;
     height: 48px;
     align-content: center;
     align-items: center;
     text-align: left;
-    gap: 12px;
-    font-weight: 600;
+    gap: 16px;
+    font-weight: 400;
     font-size: 16px;
     color: var(--black);
     background-color: transparent;
-    padding: 8px;
+    padding: 24px 8px;
   }
 
-  button.with-icon img,
-  :global(a.button.with-icon) img {
-    width: 16px;
+  .tokens button.with-icon {
+    border-radius: 0;
+    border-bottom: 1px solid var(--light-grey);
+  }
+
+  .tokens button.with-icon:last-of-type {
+    border-radius: 0;
+    border-bottom: none;
   }
 
   .menu :global(a.button):active {
@@ -146,7 +138,18 @@
     background-color: var(--mid-blue);
   }
 
-  button.active {
+  button.with-icon:hover,
+  :global(a.button.with-icon):hover {
+    border-radius: 0;
+    border-bottom: 2px solid var(--mid-blue);
+  }
+
+  .accounts {
+    align-content: end;
+  }
+
+  .accounts button {
+    color: var(--actually-dark-grey);
     background-color: var(--very-light-grey);
   }
 </style>

@@ -105,23 +105,9 @@ button.primary {
   background: var(--blue-green-gradient);
 }
 
-/* Borrowed from https://codepen.io/GhostRider/pen/oNvoNv */
-::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: var(--white);
-
-  border-radius: 4px;
-}
-
+/* Keep areas scrollable, but we don't need to see scrollbars */
 ::-webkit-scrollbar {
-  width: 8px;
-  background-color: var(--white);
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: var(--mid-grey);
-  border: 2px solid var(--light-grey);
-  border-radius: 4px;
+  width: 0;
 }
 
 input {
