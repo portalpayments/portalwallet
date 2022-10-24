@@ -121,11 +121,7 @@
     color: var(--black);
     background-color: transparent;
     padding: 24px 8px;
-  }
-
-  .tokens button.with-icon {
-    border-radius: 0;
-    border-bottom: 1px solid var(--light-grey);
+    transition: all 0.2s ease-in-out;
   }
 
   .tokens button.with-icon:last-of-type {
@@ -138,10 +134,14 @@
     background-color: var(--mid-blue);
   }
 
+  button.with-icon.active {
+    border-radius: 0;
+    border-bottom: 1px solid var(--mid-blue);
+  }
+
   button.with-icon:hover,
   :global(a.button.with-icon):hover {
-    border-radius: 0;
-    border-bottom: 2px solid var(--mid-blue);
+    transform: translateX(12px);
   }
 
   .accounts {
@@ -150,6 +150,6 @@
 
   .accounts button {
     color: var(--actually-dark-grey);
-    background-color: var(--very-light-grey);
+    background-color: var(--very-very-light-grey);
   }
 </style>
