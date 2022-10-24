@@ -117,16 +117,11 @@ HD keypair
 - https://buildspace.so/
 - https://crypto.stackexchange.com/questions/11269/can-keys-from-bitcoins-hierarchical-deterministic-wallets-be-correlated-reduci
 
-###
+### TODO
 
 Chase Karen
-Chase lydia
-Send PR to SPL token
 
-✅ Use our gradient on a circle with white coin icon
-✅ help@getportal.app
-✅ Stretch buttons all the way across
-✅ Add gradients to other icons
+Send PR to SPL token
 
 Make logout a different color
 
