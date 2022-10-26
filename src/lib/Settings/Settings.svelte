@@ -157,7 +157,7 @@
     height: var(--wallet-height);
     grid-auto-flow: row;
     grid-template-rows: 120px 1fr 1fr;
-    gap: 20px;
+    gap: 16px;
     justify-content: center;
     align-items: start;
     background: radial-gradient(at 50% 50%, #dde9ff 0, #fff 80%, #fff 100%);
