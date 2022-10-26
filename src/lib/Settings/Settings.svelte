@@ -106,6 +106,8 @@
     <Heading>Settings</Heading>
   </div>
 
+  <p>Portal build: {PORTAL_VERSION}</p>
+
   <Link class="button with-icon" to="mailto:help@getportal.app">
     <img src={helpIconURL} alt="Help" />
     Get help from the Portal team
@@ -139,8 +141,6 @@
     <img src={logoutIconURL} alt="Log out" />
     Log out
   </button>
-
-  <p>Portal version: {PORTAL_VERSION}</p>
 </div>
 
 <style>
@@ -150,6 +150,7 @@
     height: 100%;
   }
   .settings {
+    overflow-y: scroll;
     display: grid;
     padding: 0 6px;
     width: var(--wallet-width);

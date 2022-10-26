@@ -106,6 +106,24 @@ button.primary {
   background: var(--blue-green-gradient);
 }
 
+button.with-icon,
+a.button.with-icon {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 24px 1fr;
+  height: 48px;
+  align-content: center;
+  align-items: center;
+  text-align: left;
+  gap: 16px;
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--black);
+  background-color: transparent;
+  padding: 24px 8px;
+  transition: all 0.2s ease-in-out;
+}
+
 /* Keep areas scrollable, but we don't need to see scrollbars */
 ::-webkit-scrollbar {
   width: 0;

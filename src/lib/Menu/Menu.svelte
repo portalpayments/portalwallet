@@ -106,24 +106,6 @@
     grid-template-columns: 100%;
   }
 
-  button.with-icon,
-  :global(a.button.with-icon) {
-    display: grid;
-    grid-auto-flow: column;
-    grid-template-columns: 24px 1fr;
-    height: 48px;
-    align-content: center;
-    align-items: center;
-    text-align: left;
-    gap: 16px;
-    font-weight: 400;
-    font-size: 16px;
-    color: var(--black);
-    background-color: transparent;
-    padding: 24px 8px;
-    transition: all 0.2s ease-in-out;
-  }
-
   .tokens button.with-icon:last-of-type {
     border-radius: 0;
     border-bottom: none;
