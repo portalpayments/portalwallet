@@ -17,6 +17,8 @@
     location.assign("/");
   };
 
+  const PORTAL_VERSION = process.env.PORTAL_VERSION || "Unknown";
+
   const MOCK_MNEMONIC_FOR_BLURRING =
     "some words that look like they might be a mnemonic but arent";
 
@@ -137,6 +139,8 @@
     <img src={logoutIconURL} alt="Log out" />
     Log out
   </button>
+
+  <p>Portal version: {PORTAL_VERSION}</p>
 </div>
 
 <style>

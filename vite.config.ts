@@ -3,12 +3,30 @@ import { defineConfig } from "vite";
 import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 import nodePolyfills from "rollup-plugin-node-polyfills";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { execSync } from "child_process";
+
+const getGitVersion = () => {
+  const OUTPUT = 1;
+  return execSync(`git rev-parse --short HEAD`, {
+    stdio: [OUTPUT],
+  })
+    .toString("utf8")
+    .trim();
+};
+
+const GIT_VERSION = getGitVersion();
+
+const log = console.log;
+
+log(`Git version is: '${GIT_VERSION}'`);
 
 // Config is based on metaplex + vite example from:
 // https://github.com/metaplex-foundation/js-examples/tree/main/getting-started-vite
 
 // es2020 Needed for BigNumbers
 // See https://github.com/sveltejs/kit/issues/859
+
+process.env.PORTAL_VERSION = GIT_VERSION;
 
 export default defineConfig({
   plugins: [svelte()],
