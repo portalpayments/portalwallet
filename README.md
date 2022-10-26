@@ -119,10 +119,6 @@ HD keypair
 
 ### TODO
 
-Chase Karen
-
-Send PR to SPL token
-
 Make logout a different color
 
 Add version number to settings page
