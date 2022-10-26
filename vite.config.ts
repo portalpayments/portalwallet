@@ -3,16 +3,7 @@ import { defineConfig } from "vite";
 import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 import nodePolyfills from "rollup-plugin-node-polyfills";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
-import { execSync } from "child_process";
-
-const getGitVersion = () => {
-  const OUTPUT = 1;
-  return execSync(`git rev-parse --short HEAD`, {
-    stdio: [OUTPUT],
-  })
-    .toString("utf8")
-    .trim();
-};
+import { getGitVersion } from "./build-tools";
 
 const GIT_VERSION = getGitVersion();
 
