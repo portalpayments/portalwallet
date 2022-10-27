@@ -6,12 +6,7 @@ ZIP_FILE_NAME="portal-investor-demo.zip"
 find . -name '*Zone.Identifier' -exec rm '{}' ';'
 
 # Compile TS to JS
-npm run build-vite-only;
-echo "✅ Built main app"
-echo
-npm run build-serviceworker-only;
-echo "✅ Built serviceworker"
-echo
+npm build:extension;
 
 # Now make the zip file
 rm -f "${ZIP_FILE_NAME}"; 

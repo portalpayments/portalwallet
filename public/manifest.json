@@ -1,6 +1,6 @@
 {
-  "name": "Portal Wallet",
-  "description": "send money to verified recipients over crypto",
+  "name": "Portal",
+  "description": "Instant, safe, simple payments with near-zero fees using crypto.",
   "version": "1.0",
   "manifest_version": 3,
   "action": {
@@ -18,7 +18,8 @@
     "128": "icon128.png"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "background"
   ],
   "background": {
     "service_worker": "service-worker.js"

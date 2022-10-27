@@ -7,7 +7,10 @@
     "noEmit": false,
     "strict": false,
     "outDir": "public",
-    "target": "ESNext"
+    "target": "ESNext",
+    // Makes script require 'export' and Chrome will fail to load extensions with
+    // "Unexpected token 'export'"
+    "isolatedModules": false
   },
-  "include": ["src/service-worker.ts"]
+  "include": ["service-worker/service-worker.ts"]
 }

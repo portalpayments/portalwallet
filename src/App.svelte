@@ -75,6 +75,11 @@
   (async () => {
     isOnboarded = await checkIfOnboarded();
     log(`isOnboarded is`, isOnboarded);
+
+    // Should return a promise if in foreground
+    // @ts-ignore
+    const serviceWorkerWindow = await chrome.runtime.getBackgroundPage();
+    log(`serviceWorkerWindow`, serviceWorkerWindow);
   })();
 </script>
 
