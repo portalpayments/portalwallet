@@ -6,3 +6,5 @@ test-ledger
 dist/*
 *.DS_Store
 *.afdesign
+public/service-worker.js
+public/service-worker.js.map
