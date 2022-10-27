@@ -78,8 +78,9 @@
 
     // Should return a promise if in foreground
     // @ts-ignore
-    const serviceWorkerWindow = await chrome.runtime.getBackgroundPage();
-    log(`serviceWorkerWindow`, serviceWorkerWindow);
+    chrome.runtime.sendMessage({ greeting: "hello" }, (response) => {
+      console.log(response.farewell);
+    });
   })();
 </script>
 
