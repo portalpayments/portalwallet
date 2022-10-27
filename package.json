@@ -5,9 +5,12 @@
   "type": "module",
   "author": "Mike MacCana <mike.maccana@gmail.com> and Vahah Hatami <vaheh.hatami@gmail.com>",
   "scripts": {
-    "dev": "vite",
+    "dev": "run-p --print-label dev:*",
+    "dev:vite": "vite",
+    "dev:serviceworker": "tsc --watch --project tsconfig.serviceworker.json",
     "build": "bash make-zip-file.bash",
     "build-vite-only": "vite build",
+    "build-serviceworker-only": "tsc --project tsconfig.serviceworker.json",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "test": "jest",

@@ -1,0 +1,13 @@
+// See comment at https://dev.to/wtho/custom-service-worker-logic-in-typescript-on-vite-4f27#comment-1n0i7
+
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ESNext", "WebWorker"],
+    "noEmit": false,
+    "strict": false,
+    "outDir": "public",
+    "target": "ESNext"
+  },
+  "include": ["src/service-worker.ts"]
+}
