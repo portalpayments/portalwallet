@@ -1,7 +1,7 @@
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 // and https://github.com/GoogleChrome/chrome-extensions-samples
 
-const log = console.log;
+import { log } from "../src/backend/functions";
 
 // From https://dev.to/wtho/custom-service-worker-logic-in-typescript-on-vite-4f27
 
@@ -13,9 +13,12 @@ chrome.runtime.onInstalled.addListener((reason) => {
   log(reason);
   const manifest = chrome.runtime.getManifest();
   log(manifest);
+
+  log(`globalThis is`, globalThis);
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  log(`Hello from service worker`);
   log(
     sender.tab
       ? "from a content script:" + sender.tab.url
