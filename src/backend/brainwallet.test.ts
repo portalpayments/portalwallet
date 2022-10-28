@@ -1,7 +1,7 @@
 import type { Connection, Keypair } from "@solana/web3.js";
 import { log } from "./functions";
 import {
-  personalPhraseToEntopy,
+  personalPhraseToEntropy,
   mnemonicToKeypairs,
   entropyToMnemonic,
   checkIfSecretKeyIsValid,
@@ -32,7 +32,7 @@ describe(`restoration`, () => {
   test(
     `wallets can be created`,
     async () => {
-      const entropy = await personalPhraseToEntopy(
+      const entropy = await personalPhraseToEntropy(
         expectedCleanedPersonalPhrase,
         fullName
       );
@@ -56,7 +56,7 @@ describe(`restoration`, () => {
     `wallets can be restored using their seed phrases`,
     async () => {
       // Lets re-make the keypairs from the seed
-      const entropy = await personalPhraseToEntopy(
+      const entropy = await personalPhraseToEntropy(
         expectedCleanedPersonalPhrase,
         fullName
       );
@@ -99,7 +99,7 @@ describe(`recovery`, () => {
     expect(result).toBeFalsy();
   });
 
-  test(`Using a secretKey and using a mnemonic generate the same secret key`, async () => {
+  test(`Using Mike's mnemonic generates Mike's correct secret key`, async () => {
     const mikesSecretKey = process.env.MIKES_SECRET_KEY;
     const mikesMnemonic = process.env.MIKES_MNEMONIC;
     const secretKeyOne = base58.decode(mikesSecretKey);

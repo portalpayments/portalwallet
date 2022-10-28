@@ -392,7 +392,7 @@ describe(`identity tokens`, () => {
     });
   });
 
-  // TODO - set up a mock mockstorage item?
+  // TODO - set up a mock metaplex mockStorage item?
   // if (!identityToken?.uri) {
   // }
 

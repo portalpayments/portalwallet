@@ -14,10 +14,10 @@ if (!globalThis.setImmediate) {
 }
 
 // @ts-ignore
-import { async as scriptAsync } from "scryptsy";
+import { async as scryptAsync } from "scryptsy";
 
 // Also called the 'seed'.
-export const personalPhraseToEntopy = async (
+export const personalPhraseToEntropy = async (
   phrase: string,
   password: string
 ): Promise<Buffer> => {
@@ -25,15 +25,16 @@ export const personalPhraseToEntopy = async (
 
   // scryptsy is an ascrypt implementation that works in both the browser and node
 
-  const numberOfInterations = 16384;
+  // CPU/memory cost parameter – must be a power of 2, also called 'N'
+  const numberOfIterations = 2 ** 14;
   // Values from https://www.npmjs.com/package/scryptsy#scryptkey-salt-n-r-p-keylenbytes-progresscallback
   const memory = 8;
   const parellisation = 8;
   // @ts-ignore - types are out of date I think
-  let entropy = (await scriptAsync(
+  let entropy = (await scryptAsync(
     phrase,
     password,
-    numberOfInterations,
+    numberOfIterations,
     memory,
     parellisation,
     SOLANA_SEED_SIZE_BYTES

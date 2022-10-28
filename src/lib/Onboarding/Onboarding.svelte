@@ -7,7 +7,7 @@
   import { Circle } from "svelte-loading-spinners";
   import { log } from "../../backend/functions";
   import {
-    personalPhraseToEntopy,
+    personalPhraseToEntropy,
     entropyToMnemonic,
     mnemonicToKeypairs,
     checkIfSecretKeyIsValid,
