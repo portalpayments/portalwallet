@@ -86,6 +86,16 @@ solana program dump -u m ${MEMO_PROGRAM_ADDRESS} memo_program.so
 - That the token has been signed by our mint account
 - That the token is for our recipient account
 
+## How the portal verification token works
+
+1. We have a personal phrase and a password
+2. We make a new random IV
+3. We use the personal phrase and the password and the IV to create some entropy/a key
+4. The portal identity token stores:
+
+- The IV [it's OK to store the IV](https://security.stackexchange.com/questions/17044/when-using-aes-and-cbc-is-it-necessary-to-keep-the-iv-secret)
+- The secret key, encrypted with the entropy
+
 ## Minting
 
 Each mint has a single accounts - the docs at https://solanacookbook.com/references/token.html#how-to-get-a-token-mint.
