@@ -36,5 +36,5 @@ jobs:
       - run: ~/.local/share/solana/install/active_release/bin/solana-test-validator --bpf-program ${METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS} metaplex_token_metadata_program.so --reset &
       # Run tests
       - run: npm ci
-      - run: npm run build --if-present
+      - run: npm run build:extension --if-present
       - run: npm test
