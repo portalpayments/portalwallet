@@ -6,7 +6,7 @@ ZIP_FILE_NAME="portal-investor-demo.zip"
 find . -name '*Zone.Identifier' -exec rm '{}' ';'
 
 # Compile TS to JS
-npm run build:extension;
+npm run build;
 
 # Now make the zip file
 rm -f "${ZIP_FILE_NAME}"; 
