@@ -76,8 +76,11 @@
     isOnboarded = await checkIfOnboarded();
     log(`isOnboarded is`, isOnboarded);
 
-    // Should return a promise if in foreground
-    // @ts-ignore
+    if (!chrome.runtime) {
+      log(`Not contacting background page as not loaded as an extension`);
+      return;
+    }
+
     chrome.runtime.sendMessage({ greeting: "hello" }, (response) => {
       console.log(response.farewell);
     });

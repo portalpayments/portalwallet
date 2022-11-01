@@ -18,7 +18,7 @@ chrome.runtime.onInstalled.addListener((reason) => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  log(`Hello from service worker`);
+  log(`Service worker has recieved message`);
   log(
     sender.tab
       ? "from a content script:" + sender.tab.url
