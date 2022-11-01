@@ -5,7 +5,7 @@
 const log = console.log.bind(console);
 
 const stringify = (object: any) => {
-  JSON.stringify(object, null, 2);
+  return JSON.stringify(object, null, 2);
 };
 
 // From https://dev.to/wtho/custom-service-worker-logic-in-typescript-on-vite-4f27
@@ -14,6 +14,7 @@ log(`Hello from service worker`);
 
 // https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/how-to/service-workers
 self.addEventListener("install", function (event) {
+  // See link above
   // @ts-ignore
   self.skipWaiting();
   log("WORKER: install event in progress.");
@@ -26,6 +27,8 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("message", (event) => {
+  // @ts-ignore
   log("WORKER ✅✅✅✅✅✅: message event in progress.", stringify(event.data));
+  // @ts-ignore
   log(event.data);
 });
