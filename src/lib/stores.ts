@@ -72,8 +72,7 @@ transactionsStore.subscribe(async (transactionSummaries) => {
   );
 
   log(
-    `We need to verify these uniqueTransactionWalletAddresses:`,
-    uniqueTransactionWalletAddresses
+    `We need to verify ${uniqueTransactionWalletAddresses.length} uniqueTransactionWalletAddresses:`
   );
 
   const secretKey = getFromStore(authStore).keyPair.secretKey;
@@ -103,7 +102,7 @@ transactionsStore.subscribe(async (transactionSummaries) => {
     }
   )) as Array<Contact>;
 
-  log(`Got contacts used in transactions`, stringify(contacts));
+  log(`Got ${contacts.length} contacts used in transactions`);
 
   contactsStore.set(contacts);
 });
