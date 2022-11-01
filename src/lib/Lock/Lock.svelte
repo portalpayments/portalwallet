@@ -2,11 +2,10 @@
   import { authStore } from "../stores";
   import PortalLogoSVG from "../../assets/portal-logo.svg";
   import Password from "../Shared/Password.svelte";
-  import { getSettings } from "../settings";
-  import type { Settings } from "../types";
   import { SECOND } from "../../backend/constants";
   import { log, sleep } from "../../backend/functions";
   import { getSettingsOrNull } from "../../lib/settings";
+  import { Keypair } from "@solana/web3.js";
 
   let password = "";
 
@@ -20,9 +19,16 @@
     }
     let settings = await getSettingsOrNull(password);
 
+    let keyPair: Keypair | null = null;
+    try {
+      keyPair = Keypair.fromSecretKey(settings.secretKey);
+    } catch (error) {
+      throw new Error(`Could not get keypair from secret key`, error.message);
+    }
+
     if (settings) {
       $authStore.isLoggedIn = true;
-      $authStore.secretKey = settings.secretKey;
+      $authStore.keyPair = keyPair;
       return;
     }
   };

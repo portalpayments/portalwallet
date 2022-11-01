@@ -120,9 +120,9 @@
   });
 
   authStore.subscribe((newValue) => {
-    if (newValue.secretKey) {
-      log(`🗝️ secretKey has changed, updating balance`);
-      keypair = KeypairConstructor.fromSecretKey(newValue.secretKey);
+    if (newValue.keyPair) {
+      log(`🗝️ keyPair has changed, updating balance`);
+      keypair = newValue.keyPair;
       updateBalance();
     }
   });

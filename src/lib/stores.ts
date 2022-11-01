@@ -26,13 +26,13 @@ export const identityTokenIssuerPublicKey = new PublicKey(
 
 interface Auth {
   isLoggedIn: boolean;
-  secretKey: null | Uint8Array;
+  keyPair: null | Keypair;
 }
 
 // From https://svelte.dev/repl/cc54944f9c2f44209d6da7344ea4c101?version=3.17.2
 export const authStore: Writable<Auth> = writable({
   isLoggedIn: false,
-  secretKey: null,
+  keyPair: null,
 });
 
 // Storing the state of the wallet balance account
@@ -76,7 +76,7 @@ transactionsStore.subscribe(async (transactionSummaries) => {
     uniqueTransactionWalletAddresses
   );
 
-  const secretKey = getFromStore(authStore).secretKey;
+  const secretKey = getFromStore(authStore).keyPair.secretKey;
   if (!secretKey) {
     throw new Error(`Couldn't get the secret key from the auth store!`);
   }

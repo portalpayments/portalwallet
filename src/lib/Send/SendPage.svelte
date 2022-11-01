@@ -114,8 +114,8 @@
   let keyPair: Keypair | null = null;
 
   authStore.subscribe((newValue) => {
-    if (newValue.secretKey) {
-      keyPair = Keypair.fromSecretKey(newValue.secretKey);
+    if (newValue.keyPair) {
+      keyPair = newValue.keyPair;
     }
   });
 

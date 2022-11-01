@@ -37,20 +37,13 @@
   });
 
   authStore.subscribe(async (newValue) => {
-    if (newValue.secretKey) {
-      log(`🔑Got secret key.`);
+    if (newValue.keyPair) {
+      log(`🔑Got keyPair.`);
       // Connect to Solana
       const newConnection = await connect("quickNodeMainNetBeta");
       connectionStore.set(newConnection);
 
-      if (!newValue.secretKey) {
-        throw new Error(`Couldn't get the secret key from the auth store!`);
-      }
-      const keypair = Keypair.fromSecretKey(newValue.secretKey);
-
-      if (!keypair) {
-        throw new Error(`Could not get keypair from secret key`);
-      }
+      const keypair = newValue.keyPair;
 
       // Get identity from the portal Identity Token
       const verifiedClaims = await verifyWallet(

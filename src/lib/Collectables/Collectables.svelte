@@ -61,9 +61,9 @@
   });
 
   authStore.subscribe((newValue) => {
-    if (newValue.secretKey) {
+    if (newValue.keyPair) {
       log(`🗝️ secretKey has changed, updating collectibles`);
-      keypair = KeypairConstructor.fromSecretKey(newValue.secretKey);
+      keypair = newValue.keyPair;
       updateCollectables();
     }
   });
