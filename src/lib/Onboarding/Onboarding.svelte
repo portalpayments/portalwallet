@@ -206,7 +206,7 @@
               <Heading size="large">Import wallet</Heading>
               <p>Paste your secret key or mnemonic phrase below.</p>
               <TextArea
-                placeholder="Secret key"
+                placeholder="Secret key or mnemonic phrase"
                 onInputDelay={checkSecretKeyOrMnemonicPhrase}
               />
 
