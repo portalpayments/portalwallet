@@ -4,7 +4,6 @@
   import Transactions from "./Transactions.svelte";
   import Buttons from "./Buttons.svelte";
   import Heading from "../Shared/Heading.svelte";
-  import { Link } from "svelte-navigator";
 
   import Menu from "../../lib/Menu/Menu.svelte";
   import MenuButton from "../../lib/Menu/MenuButton.svelte";
@@ -14,11 +13,10 @@
   import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../constants";
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
   import type { Connection, Keypair } from "@solana/web3.js";
-  import {
-    Keypair as KeypairConstructor,
+  import type {
     PublicKey,
-    type AccountInfo,
-    type ParsedAccountData,
+    AccountInfo,
+    ParsedAccountData,
   } from "@solana/web3.js";
   import MockBalance from "../Shared/MockedSVGs/MockBalance.svelte";
   import { log, sleep, stringify } from "../../backend/functions";
