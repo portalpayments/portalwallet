@@ -1,3 +1,7 @@
+1145AM Thursday Solana Foundation Grant Process and feedback - Andrea and David from Solana Foundation.
+@A_baglioni on telegram
+@dmcintyre718 on telegram
+
 # Portal Wallet
 
 **[Investors - see README-TEST-WALLET.md](./README-TEST-WALLET.md)**
