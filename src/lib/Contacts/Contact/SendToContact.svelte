@@ -1,6 +1,6 @@
 <script lang="ts">
   import { NUMBERS_OPTIONAL_DECIMAL_PLACE_TWO_NUMBERS } from "../../constants";
-  import type { Contact } from "../../../lib/types";
+  import type { Contact } from "../../types";
   import { log, stringify } from "../../../backend/functions";
 
   let sendAmount;
