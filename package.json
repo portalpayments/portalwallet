@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "author": "Mike MacCana <mike.maccana@gmail.com> and Vahah Hatami <vaheh.hatami@gmail.com>",
+  "author": "Mike MacCana <mike@getportal.app> and Vahah Hatami <vaheh@getportal.app>",
   "scripts": {
     "dev": "run-p --print-label dev:*",
     "dev:vite": "vite",
