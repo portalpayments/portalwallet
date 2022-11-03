@@ -413,6 +413,7 @@
 
   /* TODO: make some kind of utility class to use for primary buttons and link buttons */
   button.next {
+    align-content: center;
     color: white;
     font-weight: 600;
     padding: 6px 24px;

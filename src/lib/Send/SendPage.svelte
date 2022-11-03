@@ -7,7 +7,6 @@
   import { PublicKey, Connection, Keypair } from "@solana/web3.js";
   import SendHeading from "./SendHeading.svelte";
   import SendButtons from "./SendButtons.svelte";
-  import LoaderModal from "../Shared/LoaderModal.svelte";
   import Input from "../Shared/Input.svelte";
   import Modal from "../Shared/Modal.svelte";
   import RequestVerification from "./RequestVerification.svelte";
@@ -201,7 +200,9 @@
   </div>
 
   {#if isCurrentlyLoadingVerificationStateFromNetwork}
-    <LoaderModal />
+    <Modal>
+      <Circle color="var(--mid-blue)" />
+    </Modal>
   {/if}
 
   {#if hasLoadedVerificationStateFromNetwork}
@@ -217,14 +218,14 @@
   {/if}
 
   {#if isSending || isSendingAnyway}
-    <Modal buttonType="transfer">
+    <Modal>
       <div class="transferring-wait">Sending money...</div>
       <Circle color="var(--mid-blue)" />
     </Modal>
   {/if}
 
   {#if isTransactionComplete}
-    <Modal buttonType="transfer">
+    <Modal showCloseButton={true}>
       <TransactionCompleted
         {destinationWalletAddress}
         {transferAmount}
@@ -234,7 +235,7 @@
   {/if}
 
   {#if transactionFailed}
-    <Modal buttonType="transfer">
+    <Modal>
       <TransactionFailed
         {errorMessage}
         {destinationWalletAddress}
@@ -245,7 +246,7 @@
   {/if}
 
   {#if isAskingWalletOwnerToGetVerified}
-    <Modal buttonType="requestVerification">
+    <Modal>
       <RequestVerification
         {destinationWalletAddress}
         {transferAmount}

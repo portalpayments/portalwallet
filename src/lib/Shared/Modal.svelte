@@ -1,31 +1,49 @@
 <script lang="ts">
-  import Backdrop from "./Backdrop.svelte";
-  let isOpen = true;
+  import { Link } from "svelte-navigator";
 
-  const onCloseButtonClicked = () => {
-    return (isOpen = false);
-  };
+  export let showCloseButton = false;
 </script>
 
-<Backdrop show={isOpen} />
-<div
-  class="modal"
-  style="
-    transform: {isOpen ? 'translateY(0)' : 'translateY(-100vh)'};
-    opacity: {isOpen ? '1' : '0'};"
->
+<div class="modal">
   <slot />
+  {#if showCloseButton}
+    <Link to={"/"}>Got it</Link>
+  {/if}
 </div>
 
 <style>
   .modal {
     z-index: 500;
-    background-color: #fff;
     width: var(--wallet-width);
     height: var(--wallet-height);
+    position: fixed;
+    top: 0;
+
+    background-color: var(--white);
+
     padding: 12px;
+    gap: 24px;
+
     grid-auto-flow: row;
-    gap: 6px;
     align-content: center;
+
+    display: grid;
+  }
+
+  .modal :global(a) {
+    color: white;
+    font-weight: 600;
+    padding: 6px 24px;
+    height: 42px;
+    border-radius: 24px;
+    font-size: 14px;
+    background: var(--blue-green-gradient);
+
+    display: grid;
+
+    width: auto;
+    align-self: center;
+    align-content: center;
+    justify-self: center;
   }
 </style>

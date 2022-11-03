@@ -3,13 +3,13 @@
   import { transactionsStore, contactsStore } from "../../stores";
   import { log, stringify } from "../../../backend/functions";
   import type { Contact as ContactType, TransactionSummary } from "../../types";
-  import SendMoney from "./SendMoney.svelte";
+  import SendToContact from "./SendToContact.svelte";
   import Contact from "../../Shared/Contact.svelte";
   import BackButton from "../../Shared/BackButton.svelte";
 
   let contact: ContactType | null = null;
 
-  // Use the wallet address to determine the wallet to use
+  // Use the page address to determine the wallet to use
   let contactWalletAddress: string = window.location.href.split("/").pop();
 
   contactsStore.subscribe((newValue) => {
@@ -47,7 +47,7 @@
       <Contact {contact} />
     </div>
     <Transactions transactions={filteredTransactions} />
-    <SendMoney {contact} />
+    <SendToContact {contact} />
   {:else}
     Loading contact
   {/if}
