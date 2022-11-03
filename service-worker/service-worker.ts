@@ -3,7 +3,8 @@
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 // and https://github.com/GoogleChrome/chrome-extensions-samples
 
-// TODO: get imports working!
+// TODO: imports do not yet work in service-workers
+// https://github.com/w3c/ServiceWorker/issues/1585
 
 const log = console.log.bind(console);
 
