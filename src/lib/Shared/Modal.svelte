@@ -26,6 +26,7 @@
 
     grid-auto-flow: row;
     align-content: center;
+    justify-content: center;
 
     display: grid;
   }

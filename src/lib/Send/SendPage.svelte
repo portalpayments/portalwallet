@@ -219,8 +219,10 @@
 
   {#if isSending || isSendingAnyway}
     <Modal>
-      <div class="transferring-wait">Sending money...</div>
-      <Circle color="var(--mid-blue)" />
+      <div class="transferring-wait">
+        <Heading>Sending money...</Heading>
+        <Circle color="var(--mid-blue)" />
+      </div>
     </Modal>
   {/if}
 
@@ -284,7 +286,9 @@
   }
 
   .transferring-wait {
-    padding-bottom: 24px;
-    font-weight: bold;
+    justify-content: center;
+    justify-items: center;
+    align-content: center;
+    gap: 24px;
   }
 </style>
