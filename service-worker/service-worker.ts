@@ -3,8 +3,13 @@
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 // and https://github.com/GoogleChrome/chrome-extensions-samples
 
-import { log, stringify } from "../src/backend/functions";
+// TODO: get imports working!
 
+const log = console.log.bind(console);
+
+const stringify = (object: any) => {
+  return JSON.stringify(object, null, 2);
+};
 // From https://dev.to/wtho/custom-service-worker-logic-in-typescript-on-vite-4f27
 
 log(`Hello from service worker`);
