@@ -269,8 +269,8 @@ export const getTransactionSummariesForAddress = async (
   log(
     `In getTransactionSummariesForAddress, limit was ${limit}, got ${rawTransactions.length} rawTransactions`
   );
-  let transactionSummaries = rawTransactions.map((transaction) => {
-    return summarizeTransaction(transaction, address);
+  let transactionSummaries = rawTransactions.map((rawTransaction) => {
+    return summarizeTransaction(rawTransaction, address);
   });
 
   // We can't summarize all transactions yet

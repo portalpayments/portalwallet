@@ -57,15 +57,16 @@ const byDateNewestToOldest = (a, b) => {
 };
 
 export const summarizeTransaction = (
-  transactionResponse: ParsedTransactionWithMeta,
+  rawTransaction: ParsedTransactionWithMeta,
   currentWallet: PublicKey
 ): TransactionSummary => {
   // https://docs.solana.com/terminology#transaction-id
   // The first signature in a transaction, which can be used to uniquely identify the transaction across the complete ledger.
-  const id = transactionResponse?.transaction?.signatures?.[0];
+  const id = rawTransaction?.transaction?.signatures?.[0];
+
   let memo: string | null = null;
   try {
-    const instructions = transactionResponse.transaction.message.instructions;
+    const instructions = rawTransaction.transaction.message.instructions;
     if (instructions.length === 1) {
       const firstInstruction = instructions[0] as ParsedInstruction;
       if (
@@ -110,9 +111,9 @@ export const summarizeTransaction = (
       }
     }
 
-    if (transactionResponse.meta.preTokenBalances.length === 0) {
+    if (rawTransaction.meta.preTokenBalances.length === 0) {
       log(`Handing Sol transaction`);
-      const instructions = transactionResponse.transaction.message.instructions;
+      const instructions = rawTransaction.transaction.message.instructions;
 
       const onlyInstruction = instructions[0] as ParsedInstruction;
 
@@ -129,9 +130,9 @@ export const summarizeTransaction = (
 
       const portalTransActionSummary = {
         id,
-        date: solanaBlocktimeToJSTime(transactionResponse.blockTime),
-        status: transactionResponse.meta.err === null,
-        networkFee: transactionResponse.meta.fee,
+        date: solanaBlocktimeToJSTime(rawTransaction.blockTime),
+        status: rawTransaction.meta.err === null,
+        networkFee: rawTransaction.meta.fee,
         direction,
         amount: onlyInstruction.parsed.info.lamports,
         currency: Currency.SOL,
@@ -145,19 +146,18 @@ export const summarizeTransaction = (
 
     const getDifferenceByIndex = (index: number) => {
       const accountBefore = Number(
-        transactionResponse.meta.preTokenBalances[index].uiTokenAmount.amount
+        rawTransaction.meta.preTokenBalances[index].uiTokenAmount.amount
       );
 
       const accountAfter = Number(
-        transactionResponse.meta.postTokenBalances[index].uiTokenAmount.amount
+        rawTransaction.meta.postTokenBalances[index].uiTokenAmount.amount
       );
 
       return accountAfter - accountBefore;
     };
 
     const subjectWalletIndex =
-      transactionResponse.meta.preTokenBalances[0].owner ===
-      currentWallet.toBase58()
+      rawTransaction.meta.preTokenBalances[0].owner === currentWallet.toBase58()
         ? 0
         : 1;
 
@@ -167,9 +167,9 @@ export const summarizeTransaction = (
     const otherWalletDifference = getDifferenceByIndex(otherWalletIndex);
 
     const subjectOwner =
-      transactionResponse.meta.preTokenBalances[subjectWalletIndex].owner;
+      rawTransaction.meta.preTokenBalances[subjectWalletIndex].owner;
     const otherOwner =
-      transactionResponse.meta.preTokenBalances[otherWalletIndex].owner;
+      rawTransaction.meta.preTokenBalances[otherWalletIndex].owner;
 
     let direction: Direction;
     if (isPositive(subjectWalletDifference)) {
@@ -192,9 +192,9 @@ export const summarizeTransaction = (
 
     const portalTransActionSummary = {
       id,
-      date: solanaBlocktimeToJSTime(transactionResponse.blockTime),
-      status: transactionResponse.meta.err === null,
-      networkFee: transactionResponse.meta.fee,
+      date: solanaBlocktimeToJSTime(rawTransaction.blockTime),
+      status: rawTransaction.meta.err === null,
+      networkFee: rawTransaction.meta.fee,
       direction,
       amount: removeSign(subjectWalletDifference),
       currency,
