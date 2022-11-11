@@ -36,7 +36,7 @@
   );
 </script>
 
-<div class="transaction">
+<div class={`transaction ${transaction.id}`}>
   {#if contact}
     <!-- TODO src={contact.verifiedClaims?.imageUrl} -->
     <img
