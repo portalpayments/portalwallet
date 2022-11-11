@@ -1,5 +1,6 @@
 <script lang="ts">
   import { amountAndDecimalsToMajorAndMinor } from "../../lib/utils";
+  import AnonymousImage from "../../assets/anonymous.svg";
   import type { TransactionSummary, Contact } from "../../lib/types";
 
   import { log, stringify } from "../../backend/functions";
@@ -41,13 +42,17 @@
     <!-- TODO src={contact.verifiedClaims?.imageUrl} -->
     <img
       class="profile-pic"
-      src={hackProfilePicsByWallet[contact.walletAddress]}
+      src={hackProfilePicsByWallet[contact.walletAddress] || AnonymousImage}
       alt="wallet avatar"
     />
     <div class="name-and-memo">
       <div class="name">
-        {contact.verifiedClaims?.givenName}
-        {contact.verifiedClaims?.familyName}
+        {#if contact.verifiedClaims}
+          {contact.verifiedClaims?.givenName}
+          {contact.verifiedClaims?.familyName}
+        {:else}
+          Unverified
+        {/if}
       </div>
       {#if transaction.memo}
         <div class="memo">{transaction.memo}</div>
