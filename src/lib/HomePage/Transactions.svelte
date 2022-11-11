@@ -66,6 +66,7 @@
   .days {
     align-content: start;
     overflow-y: scroll;
+    overflow-x: hidden;
   }
 
   .day {
