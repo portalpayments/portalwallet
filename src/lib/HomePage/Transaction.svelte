@@ -93,6 +93,8 @@
 
   .memo {
     font-size: 14px;
+    /* Solana pay writes long unreadable memos */
+    overflow: hidden;
   }
 
   .amount {
