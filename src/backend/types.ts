@@ -59,7 +59,7 @@ export interface TokenMetaData {
 }
 
 export interface VerifiedClaims {
-  type: string;
+  type: "INDIVIDUAL" | "ORGANIZATION";
   givenName: string;
   familyName: string;
   imageUrl: string;
