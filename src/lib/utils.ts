@@ -6,6 +6,7 @@ import {
   SHAQS_WALLET,
   YCOMBINATOR_DEMO_WALLET_FOR_JARED,
   JOHN_TESTUSER_DEMO_WALLET,
+  SOLANA_SPACES_WALLET,
 } from "../backend/constants";
 import { log } from "../backend/functions";
 
@@ -26,6 +27,7 @@ export const hackProfilePicsByWallet = {
   [SHAQS_WALLET]: "/ProfilePics/shaq.jpg",
   [YCOMBINATOR_DEMO_WALLET_FOR_JARED]: "/ProfilePics/jared.jpg",
   [JOHN_TESTUSER_DEMO_WALLET]: "/ProfilePics/test-user.jpg",
+  [SOLANA_SPACES_WALLET]: "/ProfilePics/solana-spaces.png",
 };
 
 export const httpGet = async (uri: string) => {

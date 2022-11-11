@@ -27,6 +27,9 @@ export const PORTAL_IDENTITY_TOKEN_ISSUER_WALLET =
 export const JOHN_TESTUSER_DEMO_WALLET =
   "8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7";
 
+export const SOLANA_SPACES_WALLET =
+  "4iDRFnp2N4UAsZEePHAxs7ozBanQcGtLYd12HG2HJm4s";
+
 // Artist that made Agiza and Kimzo
 export const ARTIST = new PublicKey(
   "9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX"

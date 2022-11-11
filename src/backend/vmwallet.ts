@@ -4,11 +4,13 @@ import type {
   ParsedTransactionWithMeta,
 } from "@solana/web3.js";
 
-import { log, stringify } from "./functions";
+import { log, sleep, stringify } from "./functions";
 import {
   LATEST_IDENTITY_TOKEN_VERSION,
-  MIKES_WALLET,
+  VAHEHS_WALLET,
+  SOLANA_SPACES_WALLET,
   URLS,
+  SECOND,
   USDC_MAINNET_MINT_ACCOUNT,
 } from "./constants";
 import { asyncMap } from "./functions";
@@ -22,6 +24,22 @@ import type { VerifiedClaims } from "./types";
 import { summarizeTransaction } from "./transactions";
 
 const VERIFIED_CLAIMS_BY_ADDRESS: Record<string, VerifiedClaims> = {};
+
+VERIFIED_CLAIMS_BY_ADDRESS[VAHEHS_WALLET] = {
+  familyName: "Hatami",
+  givenName: "Vaheh",
+  // TODO: add images next time we mint tokens
+  imageUrl: "",
+  type: "INDIVIDUAL",
+};
+
+// TODO: send an identity token to Solana Spaces
+VERIFIED_CLAIMS_BY_ADDRESS[SOLANA_SPACES_WALLET] = {
+  type: "ORGANIZATION",
+  givenName: "Solana Spaces",
+  familyName: "",
+  imageUrl: "",
+};
 
 export const getKeypairFromString = (secretKeyString: string) => {
   let decodedSecretKey: Uint8Array;
@@ -165,6 +183,7 @@ export const verifyWallet = async (
     const cachedVerifiedClaims = VERIFIED_CLAIMS_BY_ADDRESS[walletString];
     if (cachedVerifiedClaims) {
       log(`Found verified claims for ${walletString} in cache`);
+      sleep(1 * SECOND);
       return cachedVerifiedClaims;
     }
   }

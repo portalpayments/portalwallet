@@ -25,19 +25,6 @@
 
   const ACTUALLY_SEND_MONEY = true;
 
-  const CACHED_VERIFIED_CLAIMS_BY_WALLET_ADDRESS: Record<
-    string,
-    VerifiedClaims
-  > = {
-    "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG": {
-      familyName: "Hatami",
-      givenName: "Vaheh",
-      // TODO: add images next time we mint tokens
-      imageUrl: "",
-      type: "INDIVIDUAL",
-    },
-  };
-
   let destinationWalletAddress: string | null = null;
   let transferAmount: number | null = null;
   let memo: string | null = null;
@@ -141,22 +128,14 @@
 
     log(`Valid wallet address!`);
 
-    const cachedVerifiedClaims =
-      CACHED_VERIFIED_CLAIMS_BY_WALLET_ADDRESS[destinationWalletAddress];
-
-    if (cachedVerifiedClaims) {
-      log(`Using cached verified claims`);
-      verifiedClaims = cachedVerifiedClaims;
-      await sleep(1 * SECOND);
-    } else {
-      // Get identity from the portal Identity Token
-      verifiedClaims = await verifyWallet(
-        connection,
-        keyPair,
-        identityTokenIssuerPublicKey,
-        new PublicKey(destinationWalletAddress)
-      );
-    }
+    // Get identity from the portal Identity Token
+    verifiedClaims = await verifyWallet(
+      connection,
+      keyPair,
+      identityTokenIssuerPublicKey,
+      new PublicKey(destinationWalletAddress),
+      true
+    );
 
     log(`Verification result!`, verifiedClaims);
 
