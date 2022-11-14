@@ -21,6 +21,7 @@
     identityTokenIssuerPublicKey,
   } from "./lib/stores";
   import { checkIfOnboarded } from "./lib/settings";
+  import MyWalletAddress from "./lib/MyWalletAddress/MyWalletAddress.svelte";
 
   $authStore;
 
@@ -110,7 +111,7 @@
     {:else if $authStore.isLoggedIn}
       <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
       <Route path="sendMoney"><SendPage /></Route>
-
+      <Route path="myWalletAddress/:walletaddress"><MyWalletAddress /></Route>
       <Route path="transactions">
         <TransactionsPage />
       </Route>

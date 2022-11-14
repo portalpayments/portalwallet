@@ -4,11 +4,11 @@
   import Transactions from "./Transactions.svelte";
   import Buttons from "./Buttons.svelte";
   import Heading from "../Shared/Heading.svelte";
-
+  import QRIconForPublicKey from "../../assets/Icons/get-address-qr.svg";
   import Menu from "../../lib/Menu/Menu.svelte";
   import MenuButton from "../../lib/Menu/MenuButton.svelte";
   import type { Contact } from "../../lib/types";
-
+  import { Link } from "svelte-navigator";
   import { connectionStore, authStore, transactionsStore } from "../stores";
   import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../constants";
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
@@ -38,7 +38,6 @@
   let keypair: Keypair;
 
   let isBalanceLoaded = false;
-
   $: isMenuActive = false;
 
   let isNewUnverifiedWallet: null | boolean = null;
@@ -127,23 +126,30 @@
 </script>
 
 <div class="feature">
-  <MenuButton
-    {user}
-    onClick={() => {
-      log(`Toggling isMenuActive`);
-      isMenuActive = true;
-    }}
-  />
-  {#if isMenuActive}
-    <Menu
+  <div class="top-toolbar">
+    <MenuButton
       {user}
-      {isMenuActive}
-      onClose={() => {
-        isMenuActive = false;
+      onClick={() => {
+        log(`Toggling isMenuActive`);
+        isMenuActive = true;
       }}
     />
-  {/if}
-
+    {#if isMenuActive}
+      <Menu
+        {user}
+        {isMenuActive}
+        onClose={() => {
+          isMenuActive = false;
+        }}
+      />
+    {/if}
+    <!-- TODO Check to see if the address to receive SOL and USDC always the same? -->
+    <div class="wallet-address-QR">
+      <Link to={"/myWalletAddress/" + keypair.publicKey}>
+        <img src={QRIconForPublicKey} style={"width:34px;"} />
+      </Link>
+    </div>
+  </div>
   {#if isNewUnverifiedWallet}
     <div class="welcome">
       <Heading>Welcome to the Portal alpha!</Heading>
@@ -189,5 +195,16 @@
   .welcome a {
     color: #fff;
     background-color: var(--mid-blue);
+  }
+  .top-toolbar {
+    display: grid;
+    grid-auto-flow: column;
+  }
+  .wallet-address-QR {
+    align-self: center;
+    justify-self: end;
+    /* eyeballed position */
+    padding-right: 10px;
+    transform: translateY(5px);
   }
 </style>
