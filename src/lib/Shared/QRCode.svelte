@@ -2,13 +2,14 @@
   // https://stackoverflow.com/questions/53898890/how-to-generate-qr-code-together-with-the-image-in-a-center
   import qrcode from "qrcode";
   import { log } from "../../backend/functions";
+  import LogoForQRCode from "../../assets/Icons/portal-logo-forQr.png";
 
   export let walletAddress: string;
 
-  const LOGO_IMAGE = "/icon512-for-qr-codes.png"; //
+  const LOGO_IMAGE = LogoForQRCode;
 
-  const QR_CODE_SIZE = 270;
-  const LOGO_SIZE = 72;
+  const QR_CODE_SIZE = 250;
+  const LOGO_SIZE = 82;
 
   // https://stackoverflow.com/questions/73300193/svelte-reactive-value-with-typescript-type
   let qrCodeHTMLCanvasElement: HTMLCanvasElement | null;
@@ -59,4 +60,10 @@
 <div class="qrcode-background" />
 
 <style>
+  .qrcode-background {
+    border: 1px solid var(--very-light-grey);
+    border-radius: 21px;
+    overflow: hidden;
+    padding: 10px;
+  }
 </style>
