@@ -269,6 +269,13 @@ export const getTransactionSummariesForAddress = async (
   log(
     `In getTransactionSummariesForAddress, limit was ${limit}, got ${rawTransactions.length} rawTransactions`
   );
+
+  if (!rawTransactions.length) {
+    throw new Error(
+      `Could not get any rawTransactions for ${address.toBase58()}`
+    );
+  }
+
   let transactionSummaries = rawTransactions.map((rawTransaction) => {
     return summarizeTransaction(rawTransaction, address);
   });
