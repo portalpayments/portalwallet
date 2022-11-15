@@ -5,12 +5,12 @@
   import QRMock from "../../assets/Icons/QrMock.svg";
 
   let copied = false;
-  export let publicWalletAddress: string | null = window.location.href
+  export let walletAddress: string | null = window.location.href
     .split("/")
     .pop();
   const copyPhrase = async () => {
     //src https://developer.mozilla.org/en-US/docs/Web/API/Navigator/clipboard
-    await navigator.clipboard.writeText(publicWalletAddress);
+    await navigator.clipboard.writeText(walletAddress);
     copied = true;
   };
 </script>
@@ -24,7 +24,7 @@
     </div>
     <div class="copy-button-and-address">
       <div class="address-in-text-form">
-        {publicWalletAddress}
+        {walletAddress}
       </div>
       <button on:click={copyPhrase} class="copy-to-clipboard">
         <img src={CopyToClipboard} alt="copy address to clipboard" />
