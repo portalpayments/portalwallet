@@ -72,10 +72,6 @@ export const URLS = {
   // From https://www.quicknode.com/endpoints/49328
   quickNodeMainNetBeta:
     "https://proportionate-greatest-needle.solana-mainnet.quiknode.pro/",
-  // https://www.ankr.com/rpc/solana
-  //
-  // Maybe bad? Got 'Node is behind by 214 slots'
-  ankrMainNet: "https://rpc.ankr.com/solana",
 };
 
 export const USD_DECIMALS = 2;

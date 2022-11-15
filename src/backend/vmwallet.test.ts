@@ -117,7 +117,7 @@ describe(`mainnet integration tests`, () => {
   );
 
   beforeAll(async () => {
-    mainNetConnection = await connect("ankrMainNet");
+    mainNetConnection = await connect("quickNodeMainNetBeta");
   });
 
   test(
