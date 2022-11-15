@@ -325,41 +325,48 @@ describe(`mainnet integration tests`, () => {
     expect(claims).toBeNull();
   });
 
-  test(`We can get previous transaction summaries from Mike's wallet`, async () => {
-    const transactionSummaries = await getTransactionSummariesForAddress(
-      mainNetConnection,
-      new PublicKey(MIKES_WALLET),
-      1
-    );
+  test(
+    `We can get previous transaction summaries from Mike's USDC account`,
+    async () => {
+      const transactionSummaries = await getTransactionSummariesForAddress(
+        mainNetConnection,
+        new PublicKey(MIKES_USDC_ACCOUNT),
+        1
+      );
 
-    const lastTransaction = transactionSummaries[0];
+      const lastTransaction = transactionSummaries[0];
 
-    // We can't do expect.any(Currency)
-    // - this will fail with
-    // TypeError: Right-hand side of 'instanceof' is not callable'
-    // So check the value is in the enum (as an Object)'s values
-    const currency = lastTransaction.currency;
-    const knownCurrencies = Object.values(Currency);
-    expect(knownCurrencies.includes(currency));
+      // We can't do expect.any(Currency)
+      // - this will fail with
+      // TypeError: Right-hand side of 'instanceof' is not callable'
+      // So check the currency is in the Currency enum's values
+      const currency = lastTransaction.currency;
+      const knownCurrencies = Object.values(Currency);
+      expect(knownCurrencies.includes(currency));
 
-    const direction = lastTransaction.direction;
-    const knownDirections = Object.values(Direction);
-    expect(knownDirections.includes(direction));
+      const direction = lastTransaction.direction;
+      const knownDirections = Object.values(Direction);
+      expect(knownDirections.includes(direction));
 
-    expect(lastTransaction).toEqual({
-      id: expect.any(String),
-      amount: expect.any(Number),
-      date: expect.any(Number),
-      currency: expect.any(Number),
-      direction: expect.any(Number),
-      from: expect.any(String),
-      networkFee: 5000,
-      status: true,
-      to: expect.any(String),
-      // String or null are both fine
-      memo: expect.anything(),
-    });
-  });
+      expect(lastTransaction).toEqual({
+        id: expect.any(String),
+        amount: expect.any(Number),
+        date: expect.any(Number),
+        currency: expect.any(Number),
+        direction: expect.any(Number),
+        from: expect.any(String),
+        networkFee: 5000,
+        status: true,
+        to: expect.any(String),
+        // TODO: String or null are both fine
+        // we should check for either using toBeOneOf()
+        // but jest-extended does not fucking work after an hour
+        // of fucking round with it.
+        memo: expect.any(String),
+      });
+    },
+    15 * SECONDS
+  );
 
   test(`We can get transactions with a note attached`, async () => {
     const transactions = await getTransactionsForAddress(
