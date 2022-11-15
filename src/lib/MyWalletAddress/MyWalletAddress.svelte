@@ -1,6 +1,7 @@
 <script lang="ts">
   import BackButton from "../Shared/BackButton.svelte";
   import Heading from "../Shared/Heading.svelte";
+  import QRCode from "../Shared/QRCode.svelte";
   import CopyToClipboard from "../../assets/Icons/copy-gradient-color.svg";
   import QRMock from "../../assets/Icons/QrMock.svg";
 
@@ -31,11 +32,7 @@
         <span class="colorful-text">{copied ? "copied!" : "copy"}</span>
       </button>
     </div>
-    <img
-      style={"width: 100%; border: 1px solid #d9d9d9; border-radius: 21px;"}
-      src={QRMock}
-      alt="scan the qr code to get the wallet address"
-    />
+    <QRCode {walletAddress} />
   </div>
 </div>
 
