@@ -1,0 +1,93 @@
+<script lang="ts">
+  import BackButton from "../Shared/BackButton.svelte";
+  import Heading from "../Shared/Heading.svelte";
+  import CopyToClipboard from "../../assets/Icons/copy-gradient-color.svg";
+  import QRMock from "../../assets/Icons/QrMock.svg";
+
+  let copied = false;
+  export let publicWalletAddress: string | null = window.location.href
+    .split("/")
+    .pop();
+  const copyPhrase = async () => {
+    //src https://developer.mozilla.org/en-US/docs/Web/API/Navigator/clipboard
+    await navigator.clipboard.writeText(publicWalletAddress);
+    copied = true;
+  };
+</script>
+
+<div class="container">
+  <BackButton />
+
+  <div class="wallet-details">
+    <div class="heading">
+      <Heading>Wallet Address</Heading>
+    </div>
+    <div class="copy-button-and-address">
+      <div class="address-in-text-form">
+        {publicWalletAddress}
+      </div>
+      <button on:click={copyPhrase} class="copy-to-clipboard">
+        <img src={CopyToClipboard} alt="copy address to clipboard" />
+        <span class="colorful-text">{copied ? "copied!" : "copy"}</span>
+      </button>
+    </div>
+    <img
+      style={"width: 100%; border: 1px solid #d9d9d9; border-radius: 21px;"}
+      src={QRMock}
+      alt="scan the qr code to get the wallet address"
+    />
+  </div>
+</div>
+
+<style>
+  .container {
+    display: grid;
+    height: var(--wallet-height);
+    width: var(--wallet-width);
+    grid-template-rows: 1fr;
+    /* eyeballed to align with the back button */
+  }
+  .heading {
+    justify-self: center;
+    align-self: end;
+  }
+  .address-in-text-form {
+    position: relative;
+    overflow-wrap: anywhere;
+    text-align: justify;
+    background-color: var(--very-very-light-grey);
+    border-radius: 8px;
+    padding: 12px 12px;
+    font-weight: 500;
+    color: #4d4d4d;
+  }
+  .copy-button-and-address {
+    position: relative;
+    display: grid;
+    gap: 4px;
+    padding: 4px;
+  }
+  .copy-to-clipboard {
+    color: #9d9d9d;
+    font-size: 0.9rem;
+    font-weight: 500;
+    align-self: end;
+    justify-self: end;
+  }
+  button {
+    background-color: transparent;
+  }
+  .copy-to-clipboard img {
+    width: 16px;
+    vertical-align: bottom;
+  }
+  .wallet-details {
+    display: grid;
+    width: 90%;
+    justify-self: center;
+    grid-auto-flow: row;
+    gap: 20px;
+    grid-template-rows: 78px 110px 310px;
+    align-items: center;
+  }
+</style>
