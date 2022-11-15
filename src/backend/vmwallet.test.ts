@@ -23,6 +23,7 @@ import {
   JOE_MCCANNS_WALLET,
   KIMZO_NFT_ADDRESS,
   KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT,
+  MIKES_USDC_ACCOUNT,
   MIKES_WALLET,
   NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN,
   PORTAL_IDENTITY_TOKEN_ISSUER_WALLET,
@@ -274,7 +275,7 @@ describe(`mainnet integration tests`, () => {
           owner: TOKEN_PROGRAM_ID,
           rentEpoch: expect.any(Number),
         },
-        pubkey: new PublicKey("Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc"),
+        pubkey: new PublicKey(MIKES_USDC_ACCOUNT),
       },
     ]);
   });

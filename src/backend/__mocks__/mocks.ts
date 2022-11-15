@@ -1,5 +1,4 @@
 import { PublicKey } from "@solana/web3.js";
-import type { writable } from "svelte/store";
 import {
   MEMO_PROGRAM,
   MIKES_USDC_ACCOUNT,
@@ -541,7 +540,7 @@ export const transactionWithMemo = {
       {
         accountIndex: 2,
         mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-        owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        owner: MIKES_WALLET,
         programId: SPL_TOKEN_PROGRAM,
         uiTokenAmount: {
           amount: "12863485",
@@ -568,7 +567,7 @@ export const transactionWithMemo = {
       {
         accountIndex: 2,
         mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-        owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        owner: MIKES_WALLET,
         programId: SPL_TOKEN_PROGRAM,
         uiTokenAmount: {
           amount: "13073485",
@@ -588,7 +587,7 @@ export const transactionWithMemo = {
     message: {
       accountKeys: [
         {
-          pubkey: new PublicKey("5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"),
+          pubkey: new PublicKey(MIKES_WALLET),
           signer: true,
           source: "transaction",
           writable: true,
@@ -600,7 +599,7 @@ export const transactionWithMemo = {
           writable: true,
         },
         {
-          pubkey: new PublicKey("Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc"),
+          pubkey: new PublicKey(MIKES_USDC_ACCOUNT),
           signer: false,
           source: "transaction",
           writable: true,
@@ -624,9 +623,9 @@ export const transactionWithMemo = {
           parsed: {
             info: {
               amount: "210000",
-              authority: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+              authority: MIKES_WALLET,
               destination: "Bz2GC7qwvrQDLnhHvysYpbGsLPMtJmC4bWQZQqs9Hb8N",
-              source: "Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc",
+              source: MIKES_USDC_ACCOUNT,
             },
             type: "transfer",
           },
