@@ -2,7 +2,7 @@
   // https://stackoverflow.com/questions/53898890/how-to-generate-qr-code-together-with-the-image-in-a-center
   import qrcode from "qrcode";
   import { log } from "../../backend/functions";
-  import LogoForQRCode from "../../assets/Icons/portal-logo-forQr.png";
+  import LogoForQRCode from "../../assets/Icons/portal-logo-for-qr.png";
 
   export let walletAddress: string;
 
