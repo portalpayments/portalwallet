@@ -1,8 +1,10 @@
 <script lang="ts">
-  import { amountAndDecimalsToMajorAndMinor } from "../../lib/utils";
+  import {
+    amountAndDecimalsToMajorAndMinor,
+    truncateWallet,
+  } from "../../lib/utils";
   import AnonymousImage from "../../assets/anonymous.svg";
   import type { TransactionSummary, Contact } from "../../lib/types";
-
   import { log, isEmpty, stringify } from "../../backend/functions";
   import { hackProfilePicsByWallet } from "../utils";
   import { Direction } from "../types";
@@ -54,7 +56,7 @@
           {contact.verifiedClaims?.givenName}
           {contact.verifiedClaims?.familyName}
         {:else}
-          Unverified
+          Unverified {truncateWallet(contact.walletAddress)}
         {/if}
       </div>
       {#if transaction.memo}
