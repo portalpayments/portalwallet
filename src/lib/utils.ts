@@ -28,6 +28,7 @@ export const hackProfilePicsByWallet = {
   [YCOMBINATOR_DEMO_WALLET_FOR_JARED]: "/ProfilePics/jared.jpg",
   [JOHN_TESTUSER_DEMO_WALLET]: "/ProfilePics/test-user.jpg",
   [SOLANA_SPACES_WALLET]: "/ProfilePics/solana-spaces.jpg",
+  generic: "/ProfilePics/holger.jpg",
 };
 
 export const httpGet = async (uri: string) => {

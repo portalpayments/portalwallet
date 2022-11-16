@@ -3,7 +3,7 @@
   import AnonymousImage from "../../assets/anonymous.svg";
   import type { TransactionSummary, Contact } from "../../lib/types";
 
-  import { log, stringify } from "../../backend/functions";
+  import { log, isEmpty, stringify } from "../../backend/functions";
   import { hackProfilePicsByWallet } from "../utils";
   import { Direction } from "../types";
 
@@ -42,12 +42,15 @@
     <!-- TODO src={contact.verifiedClaims?.imageUrl} -->
     <img
       class="profile-pic"
-      src={hackProfilePicsByWallet[contact.walletAddress] || AnonymousImage}
+      src={!isEmpty(contact?.verifiedClaims)
+        ? hackProfilePicsByWallet[contact.walletAddress] ||
+          hackProfilePicsByWallet["generic"]
+        : AnonymousImage}
       alt="wallet avatar"
     />
     <div class="name-and-memo">
       <div class="name">
-        {#if contact.verifiedClaims}
+        {#if !isEmpty(contact?.verifiedClaims)}
           {contact.verifiedClaims?.givenName}
           {contact.verifiedClaims?.familyName}
         {:else}

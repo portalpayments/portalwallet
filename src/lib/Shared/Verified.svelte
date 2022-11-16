@@ -13,7 +13,8 @@
 
 <!-- TODO: src={contact.verifiedClaims.imageUrl} -->
 <img
-  src={hackProfilePicsByWallet[contact.walletAddress]}
+  src={hackProfilePicsByWallet[contact.walletAddress] ||
+    hackProfilePicsByWallet["generic"]}
   class="profile-pic"
   alt="Address is verified"
 />
