@@ -18,7 +18,7 @@
     AccountInfo,
     ParsedAccountData,
   } from "@solana/web3.js";
-  import MockBalance from "../Shared/MockedSVGs/MockBalance.svelte";
+  import SkeletonBalance from "../Shared/Skeletons/SkeletonBalance.svelte";
   import { log, sleep, stringify } from "../../backend/functions";
   import type { TransactionSummary } from "../types";
   import { getEmailLink } from "../../backend/email";
@@ -166,7 +166,7 @@
     {#if isBalanceLoaded}
       <Balance {isBalanceLoaded} {major} {minor} />
     {:else}
-      <MockBalance />
+      <SkeletonBalance />
     {/if}
     <Buttons />
     <TransactionsHeading />

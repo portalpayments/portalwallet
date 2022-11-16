@@ -3,7 +3,6 @@
   import Heading from "../Shared/Heading.svelte";
   import QRCode from "../Shared/QRCode.svelte";
   import CopyToClipboard from "../../assets/Icons/copy-gradient-color.svg";
-  import QRMock from "../../assets/Icons/QrMock.svg";
 
   let copied = false;
   export let walletAddress: string | null = window.location.href

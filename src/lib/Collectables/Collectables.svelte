@@ -4,7 +4,7 @@
   import { getAllNftMetadatasFromAWallet } from "../../backend/identity-tokens";
   import { httpGet } from "../utils";
   import type { Collectable } from "../types";
-  import MockGallery from "../Shared/MockedSVGs/MockGallery.svelte";
+  import SkeletonGallery from "../Shared/Skeletons/SkeletonGallery.svelte";
 
   import { connectionStore, authStore } from "../stores";
 
@@ -74,7 +74,7 @@
     <Heading>Gallery</Heading>
   </div>
   {#if isLoading}
-    <MockGallery />
+    <SkeletonGallery />
   {:else if collectables.length}
     <div class="nfts">
       {#each collectables as collectable}
