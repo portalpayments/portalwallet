@@ -20,7 +20,7 @@
   });
 </script>
 
-{#if transactionsByDays}
+{#if false}
   <div class="days">
     {#each transactionsByDays as transactionsByDay}
       <div class="day">
@@ -53,7 +53,9 @@
     <p>No transactions</p>
   {/if}
 {:else}
-  <MockedTransactionsSvg />
+  <div class="days mock-days">
+    <MockedTransactionsSvg />
+  </div>
 {/if}
 
 <style>
@@ -67,6 +69,10 @@
     align-content: start;
     overflow-y: scroll;
     overflow-x: hidden;
+  }
+
+  .mock-days {
+    min-height: 400px;
   }
 
   .day {
