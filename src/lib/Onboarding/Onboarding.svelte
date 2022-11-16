@@ -129,7 +129,7 @@
       if (!isPersonalPhraseSecure) {
         return;
       }
-      const entropy = await personalPhraseToEntopy(
+      const entropy = await personalPhraseToEntropy(
         personalPhraseToUse,
         passwordToUse
       );
