@@ -4,7 +4,7 @@
   import Transactions from "./Transactions.svelte";
   import Buttons from "./Buttons.svelte";
   import Heading from "../Shared/Heading.svelte";
-  import QRIconForPublicKey from "../../assets/Icons/get-address-qr.svg";
+  import QRCodeIcon from "../../assets/Icons/get-address-qr.svg";
   import Menu from "../../lib/Menu/Menu.svelte";
   import MenuButton from "../../lib/Menu/MenuButton.svelte";
   import type { Contact } from "../../lib/types";
@@ -143,10 +143,9 @@
         }}
       />
     {/if}
-    <!-- TODO Check to see if the address to receive SOL and USDC always the same? -->
-    <div class="wallet-address-QR">
+    <div class="wallet-address-qr">
       <Link to={"/myWalletAddress/" + keypair.publicKey}>
-        <img src={QRIconForPublicKey} style={"width:34px;"} />
+        <img alt="Wallet address" src={QRCodeIcon} style={"width:34px;"} />
       </Link>
     </div>
   </div>
@@ -155,8 +154,10 @@
       <Heading>Welcome to the Portal alpha!</Heading>
       <p class="welcome-unverified-users">Get verified to receive:</p>
       <ul>
-        <li>$10 of real USDC you can send to anyone you like</li>
-        <li>Your free Portal identity token so people send money to you!</li>
+        <li>$5 of real USDC you can send to anyone you like</li>
+        <li>
+          Your free Portal identity token so people can send money to you!
+        </li>
       </ul>
 
       <a class="button" href={emailLink}>Get verified</a>
@@ -200,7 +201,7 @@
     display: grid;
     grid-auto-flow: column;
   }
-  .wallet-address-QR {
+  .wallet-address-qr {
     align-self: center;
     justify-self: end;
     /* eyeballed position */
