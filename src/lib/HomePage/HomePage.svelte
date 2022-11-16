@@ -153,12 +153,8 @@
     <div class="welcome">
       <Heading>Welcome to the Portal alpha!</Heading>
       <p class="welcome-unverified-users">Get verified to receive:</p>
-      <ul>
-        <li>$5 of real USDC you can send to anyone you like</li>
-        <li>
-          Your free Portal identity token so people can send money to you!
-        </li>
-      </ul>
+      <p>💰 $5 of real USDC you can send to anyone you like</p>
+      <p>✅ Your Portal verification token so people can send you money!</p>
 
       <a class="button" href={emailLink}>Get verified</a>
     </div>
@@ -178,10 +174,14 @@
   .feature {
     grid-template-rows: 72px 128px 48px 2fr;
     background: radial-gradient(at 50% 50%, #dde9ff 0, #fff 80%, #fff 100%);
+    padding: 16px;
   }
 
   .welcome {
     justify-content: center;
+    align-content: center;
+    gap: 8px;
+    height: 400px;
   }
 
   .welcome a {
@@ -196,6 +196,11 @@
   .welcome a {
     color: #fff;
     background-color: var(--mid-blue);
+  }
+
+  .welcome ul,
+  .welcome p {
+    text-align: left;
   }
   .top-toolbar {
     display: grid;

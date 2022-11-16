@@ -5,7 +5,7 @@ export const getEmailLink = (walletAddressInBase58: string) => {
   );
   const body = encodeURIComponent(`Hi here! 
   
-I own the new wallet address ${walletAddressInBase58} 😃! I'd like to get verified and claim my $10 USDC! 💰
+I own the new wallet address ${walletAddressInBase58} 😃! I'd like to get verified and claim my $5 USDC! 💰
 
 Thanks!`);
 
