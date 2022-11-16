@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-ZIP_FILE_NAME="portal-investor-demo.zip"
+ZIP_FILE_NAME="portal-alpha.zip"
 
 # Zone.Identifier files can cause errors when unzipping
 find . -name '*Zone.Identifier' -exec rm '{}' ';'
