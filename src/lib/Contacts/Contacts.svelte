@@ -25,6 +25,9 @@
       </div>
     </Link>
   {/each}
+  {#if !contacts.length}
+    No contacts.
+  {/if}
 </div>
 
 <style>
