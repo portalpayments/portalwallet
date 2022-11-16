@@ -172,9 +172,9 @@
 
 <style>
   .feature {
-    grid-template-rows: 72px 128px 48px 2fr;
+    /* heading, balance, buttons, heading, transactions */
+    grid-template-rows: 72px 128px 48px 24px 1fr;
     background: radial-gradient(at 50% 50%, #dde9ff 0, #fff 80%, #fff 100%);
-    padding: 16px;
   }
 
   .welcome {
@@ -182,6 +182,7 @@
     align-content: center;
     gap: 8px;
     height: 400px;
+    padding: 16px;
   }
 
   .welcome a {
