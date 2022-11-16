@@ -18,6 +18,10 @@ export const MIKES_USDC_ACCOUNT = "Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc";
 
 export const SPL_TOKEN_PROGRAM = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
 
+// Made by Vaheh 20221116
+export const UNVERIFIED_ADDRESS =
+  "9KbuEUjtkCgZYvZ8jKtyF97hHDCubUcE3UnakDUPeQbJ";
+
 export const YCOMBINATOR_DEMO_WALLET_FOR_JARED =
   "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz";
 
