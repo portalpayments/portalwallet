@@ -198,7 +198,6 @@
     background-color: var(--mid-blue);
   }
 
-  .welcome ul,
   .welcome p {
     text-align: left;
   }
