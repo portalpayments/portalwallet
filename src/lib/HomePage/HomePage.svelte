@@ -152,7 +152,7 @@
   {#if isNewUnverifiedWallet}
     <div class="welcome">
       <Heading>Welcome to the Portal alpha!</Heading>
-      <p class="welcome-unverified-users">Get verified to receive:</p>
+      <p>Get verified to receive:</p>
       <p>💰 $5 of real USDC you can send to anyone you like</p>
       <p>✅ Your Portal verification token so people can send you money!</p>
 
