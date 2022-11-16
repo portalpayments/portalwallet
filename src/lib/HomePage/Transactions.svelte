@@ -20,7 +20,7 @@
   });
 </script>
 
-{#if false}
+{#if transactionsByDays}
   <div class="days">
     {#each transactionsByDays as transactionsByDay}
       <div class="day">
