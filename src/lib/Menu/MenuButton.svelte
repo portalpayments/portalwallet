@@ -46,6 +46,7 @@
     cursor: pointer;
     font-weight: 600;
     border: 0;
+    font-size: 14px;
   }
   button img {
     width: 18px;
