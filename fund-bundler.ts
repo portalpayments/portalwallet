@@ -1,8 +1,8 @@
 #!/usr/bin/env ts-node
 
 import { BundlrStorageDriver } from "@metaplex-foundation/js";
-import { getMetaplex } from "./src/identity-tokens";
-import { connect, getKeypairFromString } from "./src/vmwallet";
+import { getMetaplex } from "./src/backend/identity-tokens";
+import { connect, getKeypairFromString } from "./src/backend/vmwallet";
 import dotenv from "dotenv";
 
 dotenv.config();
