@@ -119,15 +119,13 @@
       <Route path="contacts/:address"><Contact /></Route>
       <Route primary={false}>
         <div class="header-and-features">
-          <div class="features">
-            {#if currentFeature === 0}
-              <HomeScreen {user} />
-            {:else if currentFeature === 1}
-              <ContactsPage />
-            {:else if currentFeature === 2}
-              <Collectables />
-            {/if}
-          </div>
+          {#if currentFeature === 0}
+            <HomeScreen {user} />
+          {:else if currentFeature === 1}
+            <ContactsPage />
+          {:else if currentFeature === 2}
+            <Collectables />
+          {/if}
           <Navbar bind:currentFeature />
         </div>
       </Route>
