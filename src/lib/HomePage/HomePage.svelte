@@ -145,7 +145,7 @@
     {/if}
     <div class="wallet-address-qr">
       <Link to={"/myWalletAddress/" + keypair.publicKey}>
-        <img alt="Wallet address" src={QRCodeIcon} style={"width:34px;"} />
+        <img alt="Wallet address" src={QRCodeIcon} class="qr-code-icon" />
       </Link>
     </div>
   </div>
@@ -212,5 +212,9 @@
     /* eyeballed position */
     padding-right: 10px;
     transform: translateY(5px);
+  }
+
+  .qr-code-icon {
+    width: 36px;
   }
 </style>
