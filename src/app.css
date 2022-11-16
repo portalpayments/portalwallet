@@ -28,12 +28,10 @@
   --dark-grey: #d9d9d9;
   --actually-dark-grey: #7d7d7d;
   --black: #4d4d4d;
-  --dark-blue: #2d5177;
   --shade: rgba(217, 217, 217, 0.1);
   --error-pink: #ffdce2;
 
   /* From website */
-  --dark-blue: #1e2e54;
   --pale-blue: #76d9ff;
   --bright-green: #6ed199;
   --teal: #3797bc;
@@ -172,6 +170,11 @@ input:focus {
   background-clip: text;
   -webkit-background-clip: text;
   background-image: var(--blue-green-gradient);
+}
+
+.gradient-border {
+  background-image: var(--blue-green-gradient);
+  padding: 2px;
 }
 
 .small-caps {

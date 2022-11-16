@@ -10,15 +10,17 @@
 </script>
 
 <div class="header">
-  <button class="menu" on:click={onClick}>
-    {#if isEmpty(user?.verifiedClaims)}
-      Anonymous
-    {:else}
-      {user.verifiedClaims.givenName}
-      {user.verifiedClaims.familyName}
-      <img src={verifiedIcon} alt="Verified" />
-    {/if}
-  </button>
+  <div class="gradient-border">
+    <button class="menu" on:click={onClick}>
+      {#if isEmpty(user?.verifiedClaims)}
+        Anonymous
+      {:else}
+        {user.verifiedClaims.givenName}
+        {user.verifiedClaims.familyName}
+        <img src={verifiedIcon} alt="Verified" />
+      {/if}
+    </button>
+  </div>
 </div>
 
 <style>
@@ -30,11 +32,17 @@
     justify-items: start;
     gap: 4px;
   }
+
+  .gradient-border {
+    height: 36px;
+    border-radius: 18px;
+  }
+
   button {
-    background: rgba(61, 101, 245, 0.2);
+    background: white;
+    color: var(--black);
     padding: 5px 10px 5px 10px;
     border-radius: 21px;
-    color: var(--dark-blue);
     cursor: pointer;
     font-weight: 600;
     border: 0;
