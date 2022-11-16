@@ -178,10 +178,14 @@
   .feature {
     grid-template-rows: 72px 128px 48px 2fr;
     background: radial-gradient(at 50% 50%, #dde9ff 0, #fff 80%, #fff 100%);
+    padding: 16px;
   }
 
   .welcome {
     justify-content: center;
+    align-content: center;
+    gap: 8px;
+    height: 400px;
   }
 
   .welcome a {
@@ -196,6 +200,11 @@
   .welcome a {
     color: #fff;
     background-color: var(--mid-blue);
+  }
+
+  .welcome ul,
+  .welcome p {
+    text-align: left;
   }
   .top-toolbar {
     display: grid;
