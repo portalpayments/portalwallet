@@ -30,6 +30,9 @@ export const JOHN_TESTUSER_DEMO_WALLET =
 export const SOLANA_SPACES_WALLET =
   "4iDRFnp2N4UAsZEePHAxs7ozBanQcGtLYd12HG2HJm4s";
 
+// Alpha user, delete in future
+export const HOLGERS_WALLET = "GHHsG4JfM5MfauNSRk6CNuPUQx2rNE9VmEQMjAkqBQC2";
+
 // Artist that made Agiza and Kimzo
 export const ARTIST = new PublicKey(
   "9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX"
