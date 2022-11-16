@@ -26,7 +26,7 @@
     ><img src={closeIconURL} alt="close" /></button
   >
 
-  <div class="tokens">
+  <div class="accounts">
     <button
       type="button"
       class="with-icon {$walletBalanceAccount.isShowingBalanceInSol
@@ -47,7 +47,7 @@
       Sol account
     </button>
   </div>
-  <div class="accounts">
+  <div class="settings-and-wallet">
     <Link class="button with-icon settings" to="/settings">
       <img src={settingsIconURL} alt="Settings" />
       Settings
@@ -98,7 +98,7 @@
     transform: translateX(0);
   }
 
-  .menu .tokens {
+  .menu .accounts {
     justify-content: start;
     align-content: start;
     padding-top: 24px;
@@ -106,7 +106,7 @@
     grid-template-columns: 100%;
   }
 
-  .tokens button.with-icon:last-of-type {
+  .accounts button.with-icon:last-of-type {
     border-radius: 0;
     border-bottom: none;
   }
@@ -126,11 +126,11 @@
     transform: translateX(12px);
   }
 
-  .accounts {
+  .settings-and-wallet {
     align-content: end;
   }
 
-  .accounts button {
+  .settings-and-wallet button {
     color: var(--actually-dark-grey);
     background-color: var(--very-very-light-grey);
   }
