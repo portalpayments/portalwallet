@@ -219,7 +219,7 @@ export const getTransactionsByDays = (
   transactions: Array<TransactionSummary>,
   // We can't add, eg, 50 cents to 130 sol. So this function is for a specific currency only
   currency: Currency
-) => {
+): Array<TransactionsByDay> => {
   transactions = transactions.filter(
     (transaction) => transaction.currency === currency
   );
@@ -245,9 +245,13 @@ export const getTransactionsByDays = (
       lastDay.total += toSpendingAmount(transaction);
     } else {
       // Create a new TransactionsByDay item
+      const spendingAmount = toSpendingAmount(transaction);
       transactionsByDays.push({
         isoDate,
-        total: toSpendingAmount(transaction),
+        // Remove sign from spending amount, since if we get money spending amount will be minus - we'll use 'direction' for that
+        total: Math.abs(spendingAmount),
+        // If spending amount is negative, we've made money
+        direction: spendingAmount < 0 ? Direction.recieved : Direction.sent,
         transactions: [transaction],
       });
     }

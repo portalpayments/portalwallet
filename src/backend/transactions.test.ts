@@ -251,6 +251,7 @@ describe(`grouping transactions`, () => {
       {
         isoDate: "2022-09-12",
         total: 1000000,
+        direction: 0,
         transactions: [
           {
             id: "1",
@@ -269,6 +270,7 @@ describe(`grouping transactions`, () => {
       {
         isoDate: "2022-09-09",
         total: 500000,
+        direction: 0,
         transactions: [
           {
             id: "2",
@@ -287,6 +289,7 @@ describe(`grouping transactions`, () => {
       {
         isoDate: "2022-09-08",
         total: 790000,
+        direction: 0,
         transactions: [
           {
             id: "4",

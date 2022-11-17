@@ -8,6 +8,7 @@
   } from "../../backend/transactions";
   import { Currency } from "../../lib/types";
   import type { TransactionsByDay } from "../../lib/types";
+  import { Direction } from "../../lib/types";
   import { stringify } from "../../backend/functions";
   import SkeletonTransactions from "../Shared/Skeletons/SkeletonTransactions.svelte";
 
@@ -29,8 +30,12 @@
             {isoDateToFriendlyName(transactionsByDay.isoDate)}
           </div>
 
-          <div class="day-total">
-            <!-- TODO: clean up this code -->
+          <div
+            class={`day-total ${
+              transactionsByDay.direction === Direction.recieved && "positive"
+            }`}
+          >
+            <!-- TODO: decimals (eg 6) should come from account store -->
             {amountAndDecimalsToMajorAndMinor(
               String(transactionsByDay.total),
               6
@@ -103,5 +108,9 @@
     text-transform: uppercase;
     font-weight: 600;
     color: #7d7d7d;
+  }
+
+  .day-total.positive {
+    color: var(--bright-green);
   }
 </style>

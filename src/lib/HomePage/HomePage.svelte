@@ -103,6 +103,7 @@
         HOW_MANY_TRANSACTIONS_TO_SHOW
       );
 
+      // TransactionsStore should be set by publicKey
       transactionsStore.set(transactionSummaries);
 
       usdcAccount = usdcAccounts[JUST_ONE_SUPPORTED_USDC_ACCOUNT_FOR_NOW];
