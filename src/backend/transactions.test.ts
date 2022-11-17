@@ -1,5 +1,5 @@
 import {
-  flip,
+  flipZeroAndOne,
   getTransactionsByDays,
   summarizeTransaction,
 } from "./transactions";

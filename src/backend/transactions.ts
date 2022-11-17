@@ -26,7 +26,7 @@ export const invertNumber = (number: number) => {
   return -number;
 };
 
-export const flip = (number: number) => {
+export const flipZeroAndOne = (number: 0 | 1) => {
   return Number(!number);
 };
 
@@ -161,7 +161,7 @@ export const summarizeTransaction = (
         ? 0
         : 1;
 
-    const otherWalletIndex = flip(subjectWalletIndex);
+    const otherWalletIndex = flipZeroAndOne(subjectWalletIndex);
 
     let subjectWalletDifference = getDifferenceByIndex(subjectWalletIndex);
     const otherWalletDifference = getDifferenceByIndex(otherWalletIndex);
