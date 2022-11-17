@@ -12,14 +12,17 @@
   import { connectionStore, authStore, transactionsStore } from "../stores";
   import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../constants";
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
-  import type { Connection, Keypair } from "@solana/web3.js";
   import type {
+    Connection,
+    Keypair,
     PublicKey,
     AccountInfo,
     ParsedAccountData,
   } from "@solana/web3.js";
+  import { PublicKey as PublicKeyConstructor } from "@solana/web3.js";
   import SkeletonBalance from "../Shared/Skeletons/SkeletonBalance.svelte";
   import { log, sleep, stringify } from "../../backend/functions";
+  import { USDC_MAINNET_MINT_ACCOUNT } from "../../backend/constants";
   import type { TransactionSummary } from "../types";
   import { getEmailLink } from "../../backend/email";
 
@@ -27,7 +30,7 @@
 
   import {
     getUSDCAccounts,
-    getTransactionSummariesForAddress,
+    getTransactionSummariesForTokenAccount,
   } from "../../backend/vmwallet";
 
   export let user: Contact | null;
@@ -90,9 +93,13 @@
       amount = "0";
       decimals = 6;
     } else {
-      transactionSummaries = await getTransactionSummariesForAddress(
+      transactionSummaries = await getTransactionSummariesForTokenAccount(
         connection,
         keypair.publicKey,
+        // TODO: this should by dynamic,
+        // based on whatever the mintAccount for the active
+        // account is
+        new PublicKeyConstructor(USDC_MAINNET_MINT_ACCOUNT),
         HOW_MANY_TRANSACTIONS_TO_SHOW
       );
 

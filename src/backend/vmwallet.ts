@@ -22,6 +22,7 @@ import type { AxiosResponse } from "axios";
 import { getIdentityTokenFromWallet } from "./identity-tokens";
 import type { VerifiedClaims } from "./types";
 import { summarizeTransaction } from "./transactions";
+import { token } from "@metaplex-foundation/js";
 
 const VERIFIED_CLAIMS_BY_ADDRESS: Record<string, VerifiedClaims> = {};
 
@@ -254,6 +255,31 @@ export const getTransactionsForAddress = async (
     });
 
   return transactions;
+};
+
+export const getTransactionSummariesForTokenAccount = async (
+  connection: Connection,
+  address: PublicKey,
+  tokenMint: PublicKey,
+  limit: number
+) => {
+  const tokenAccounts = await getTokenAccountsByOwner(connection, address);
+  const tokenAccountForCurrency = tokenAccounts.find((tokenAccount) => {
+    // We need to compare by value, otherwise the account won't be found
+    return tokenAccount.mint.toBase58() === tokenMint.toBase58();
+  });
+
+  if (!tokenAccountForCurrency) {
+    throw new Error(`Could not find an account for ${tokenMint}`);
+  }
+
+  const transactionSummaries = await getTransactionSummariesForAddress(
+    connection,
+    tokenAccountForCurrency.address,
+    limit
+  );
+
+  return transactionSummaries;
 };
 
 export const getTransactionSummariesForAddress = async (
