@@ -206,8 +206,9 @@ export const summarizeTransaction = (
     return portalTransActionSummary;
   } catch (thrownObject) {
     const error = thrownObject as Error;
+    log(error);
     log(
-      `Warning: could not summarize transaction ID: ${id} - see the block explorer for more info.`
+      `Warning: could not summarize transaction ID: ${id} - see the block explorer for more info, ${error.message}`
     );
     // TODO: throw error (once we can handle more types of transactions)
     return null;
