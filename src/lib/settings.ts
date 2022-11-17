@@ -44,7 +44,9 @@ export const getSHA256Hash = (string: string) => {
   return crypto.subtle.digest("SHA-256", buffer);
 };
 
-export const getSettingsOrNull = async (suppliedPassword: string) => {
+export const getSettingsOrNull = async (
+  suppliedPassword: string
+): Promise<Settings | null> => {
   try {
     const settings = await getSettings(suppliedPassword);
     return settings;

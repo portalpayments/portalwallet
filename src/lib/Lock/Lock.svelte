@@ -19,11 +19,15 @@
     }
     let settings = await getSettingsOrNull(password);
 
+    if (!settings) {
+      throw new Error(`Password was bad`);
+    }
+
     let keyPair: Keypair | null = null;
     try {
       keyPair = Keypair.fromSecretKey(settings.secretKey);
     } catch (error) {
-      throw new Error(`Could not get keypair from secret key`, error.message);
+      throw new Error(`Could not get keypair from secret key ${error.message}`);
     }
 
     if (settings) {
