@@ -42,7 +42,7 @@ export const walletBalanceAccount = writable({
 
 transactionsStore.subscribe(async (transactionSummaries) => {
   if (!transactionSummaries) {
-    if (connection) {
+    if (!connection) {
       throw new Error(
         `We have transactions but no connection. This shouldn't happen!`
       );
