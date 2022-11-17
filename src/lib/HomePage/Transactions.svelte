@@ -30,17 +30,13 @@
             {isoDateToFriendlyName(transactionsByDay.isoDate)}
           </div>
 
-          <div
-            class={`day-total ${
-              transactionsByDay.direction === Direction.recieved && "positive"
-            }`}
-          >
+          <div class="day-total">
             <!-- TODO: decimals (eg 6) should come from account store -->
             {amountAndDecimalsToMajorAndMinor(
-              String(transactionsByDay.total),
+              String(transactionsByDay.totalSpending),
               6
             )[0]}.{amountAndDecimalsToMajorAndMinor(
-              String(transactionsByDay.total),
+              String(transactionsByDay.totalSpending),
               6
             )[1]}
           </div>

@@ -231,7 +231,7 @@ export const getTransactionsByDays = (
     if (transaction.direction === Direction.sent) {
       return transaction.amount;
     } else {
-      return invertNumber(transaction.amount);
+      return 0;
     }
   };
 
@@ -242,16 +242,13 @@ export const getTransactionsByDays = (
       // Add this transaction to the existing entry for this day
       lastDay.transactions.push(transaction);
       // And add it to the spending total for this day
-      lastDay.total += toSpendingAmount(transaction);
+      lastDay.totalSpending += toSpendingAmount(transaction);
     } else {
       // Create a new TransactionsByDay item
       const spendingAmount = toSpendingAmount(transaction);
       transactionsByDays.push({
         isoDate,
-        // Remove sign from spending amount, since if we get money spending amount will be minus - we'll use 'direction' for that
-        total: Math.abs(spendingAmount),
-        // If spending amount is negative, we've made money
-        direction: spendingAmount < 0 ? Direction.recieved : Direction.sent,
+        totalSpending: spendingAmount,
         transactions: [transaction],
       });
     }

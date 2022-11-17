@@ -51,7 +51,6 @@ export interface TransactionSummary {
 
 export interface TransactionsByDay {
   isoDate: string;
-  total: number;
-  direction: Direction;
+  totalSpending: number;
   transactions: Array<TransactionSummary>;
 }
