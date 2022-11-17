@@ -30,7 +30,7 @@ export const hackProfilePicsByWallet = {
   [JOHN_TESTUSER_DEMO_WALLET]: "/ProfilePics/test-user.jpg",
   [SOLANA_SPACES_WALLET]: "/ProfilePics/solana-spaces.jpg",
   [HOLGERS_WALLET]: "/ProfilePics/holger.jpg",
-  generic: "/ProfilePics/adontai.png",
+  generic: "/ProfilePics/dimitrios.jpg",
 };
 
 export const httpGet = async (uri: string) => {

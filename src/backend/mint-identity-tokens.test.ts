@@ -8,8 +8,8 @@ log(`Running token minter...`);
 // (would normally be a script not a test but I couldn't get ts-node to work properly)
 describe(`mint a real identity token`, () => {
   const WALLET_ADDRESS = "";
-  const firstName = "";
-  const lastName = "";
+  const firstName = "Dimitrios";
+  const lastName = "Konstantinidis";
 
   // DO NOT RE-ENABLE THIS TEST AND COMMIT THAT CHANGE
   // (IT IS A HACK WHILE I GET TS-NODE WORKING)
