@@ -231,7 +231,7 @@ export const getTransactionsByDays = (
     if (transaction.direction === Direction.sent) {
       return transaction.amount;
     } else {
-      return flip(transaction.amount);
+      return invertNumber(transaction.amount);
     }
   };
 
