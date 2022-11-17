@@ -34,6 +34,9 @@ export const JOHN_TESTUSER_DEMO_WALLET =
 export const SOLANA_SPACES_WALLET =
   "4iDRFnp2N4UAsZEePHAxs7ozBanQcGtLYd12HG2HJm4s";
 
+export const DECAF_PROMO_WALLET =
+  "AAB98aGddTYoprM78e5i3fxYwCr98fAToDH19WU6vJQ3";
+
 // Alpha user, delete in future
 export const HOLGERS_WALLET = "GHHsG4JfM5MfauNSRk6CNuPUQx2rNE9VmEQMjAkqBQC2";
 

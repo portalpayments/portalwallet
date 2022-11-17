@@ -12,6 +12,7 @@ import {
   URLS,
   SECOND,
   USDC_MAINNET_MINT_ACCOUNT,
+  DECAF_PROMO_WALLET,
 } from "./constants";
 import { asyncMap } from "./functions";
 import base58 from "bs58";
@@ -38,6 +39,13 @@ VERIFIED_CLAIMS_BY_ADDRESS[VAHEHS_WALLET] = {
 VERIFIED_CLAIMS_BY_ADDRESS[SOLANA_SPACES_WALLET] = {
   type: "ORGANIZATION",
   givenName: "Solana Spaces",
+  familyName: "",
+  imageUrl: "",
+};
+
+VERIFIED_CLAIMS_BY_ADDRESS[DECAF_PROMO_WALLET] = {
+  type: "ORGANIZATION",
+  givenName: "Decaf Promo",
   familyName: "",
   imageUrl: "",
 };

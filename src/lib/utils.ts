@@ -8,6 +8,7 @@ import {
   JOHN_TESTUSER_DEMO_WALLET,
   SOLANA_SPACES_WALLET,
   HOLGERS_WALLET,
+  DECAF_PROMO_WALLET,
 } from "../backend/constants";
 import { log } from "../backend/functions";
 
@@ -29,6 +30,7 @@ export const hackProfilePicsByWallet = {
   [YCOMBINATOR_DEMO_WALLET_FOR_JARED]: "/ProfilePics/jared.jpg",
   [JOHN_TESTUSER_DEMO_WALLET]: "/ProfilePics/test-user.jpg",
   [SOLANA_SPACES_WALLET]: "/ProfilePics/solana-spaces.jpg",
+  [DECAF_PROMO_WALLET]: "/ProfilePics/decaf.png",
   [HOLGERS_WALLET]: "/ProfilePics/holger.jpg",
   generic: "/ProfilePics/dimitrios.jpg",
 };
