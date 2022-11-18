@@ -25,7 +25,7 @@ import {
   MIKES_WALLET,
   NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN,
   SECONDS,
-  SHAQS_WALLET,
+  KEVIN_ROSES_WALLET,
   USDC_MAINNET_MINT_ACCOUNT,
   PORTAL_IDENTITY_TOKEN_ISSUER_WALLET,
   VAHEHS_WALLET,
@@ -334,7 +334,7 @@ describe(`mainnet integration tests`, () => {
     });
   });
 
-  test(`We can not verify Shaq's wallet`, async () => {
+  test(`We can not verify Kevin Rose's wallet`, async () => {
     if (!mainNetConnection) {
       throw new Error(`Couldn't get a connection, can't continue`);
     }
@@ -348,7 +348,7 @@ describe(`mainnet integration tests`, () => {
       mainNetConnection,
       identityTokenIssuer,
       identityTokenIssuer.publicKey,
-      new PublicKey(SHAQS_WALLET)
+      new PublicKey(KEVIN_ROSES_WALLET)
     );
 
     expect(claims).toBeNull();
