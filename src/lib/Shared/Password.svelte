@@ -1,11 +1,21 @@
 <script lang="ts">
   import { debounce } from "lodash";
+  import { onMount } from "svelte";
 
   export let placeHolder: string | null = null;
   export let value: string;
   export let onEnter: Function | null = null;
   export let isBadPassword = false;
   export let onInputDelay: Function | null = null;
+  export let autoFocus: boolean = false;
+
+  let element;
+
+  onMount(function () {
+    if (autoFocus) {
+      element.focus();
+    }
+  });
 
   const runInputDelayIfExists = (event) => {
     if (onInputDelay) {
@@ -14,10 +24,12 @@
   };
 </script>
 
+<!-- svelte-ignore a11y-autofocus -->
 <input
   type="password"
   placeholder={placeHolder}
   bind:value
+  bind:this={element}
   required
   class="password {isBadPassword ? 'bad-password' : ''}"
   on:keydown={(event) => {
@@ -34,6 +46,11 @@
   .password {
     width: 100%;
     transition: all 200ms ease-out;
+    height: 100%;
+    border-radius: 22px;
+    background-color: white;
+    border: none;
+    padding: 0 12px;
   }
 
   .bad-password {

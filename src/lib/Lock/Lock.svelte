@@ -47,11 +47,14 @@
       <div class="password-container">
         <div class="password-prompt">Enter your password</div>
 
-        <Password
-          bind:value={password}
-          onEnter={() => login(password)}
-          bind:isBadPassword
-        />
+        <div class="gradient-border">
+          <Password
+            bind:value={password}
+            onEnter={() => login(password)}
+            bind:isBadPassword
+            autoFocus={true}
+          />
+        </div>
 
         <button
           type="button"
@@ -76,6 +79,12 @@
     /* Cool subtle background borrowed from website */
     background: radial-gradient(at 50% 50%, #ddfff6 0, #fff 80%, #fff 100%);
   }
+
+  .gradient-border {
+    height: 48px;
+    border-radius: 24px;
+  }
+
   .logo {
     width: 180px;
     justify-self: center;
