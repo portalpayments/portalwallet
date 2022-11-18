@@ -105,8 +105,4 @@
     font-weight: 600;
     color: #7d7d7d;
   }
-
-  .day-total.positive {
-    color: var(--bright-green);
-  }
 </style>
