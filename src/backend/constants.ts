@@ -39,6 +39,7 @@ export const DECAF_PROMO_WALLET =
 
 // Alpha user, delete in future
 export const HOLGERS_WALLET = "GHHsG4JfM5MfauNSRk6CNuPUQx2rNE9VmEQMjAkqBQC2";
+export const EDS_WALLET = "3MSGwLzrybJXvuMjiVpGtCHXGUFYHC2EUL5vJjmDZgtn";
 
 // Artist that made Agiza and Kimzo
 export const ARTIST = new PublicKey(

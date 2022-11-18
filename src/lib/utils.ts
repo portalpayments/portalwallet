@@ -9,6 +9,7 @@ import {
   SOLANA_SPACES_WALLET,
   HOLGERS_WALLET,
   DECAF_PROMO_WALLET,
+  EDS_WALLET,
 } from "../backend/constants";
 import { log } from "../backend/functions";
 
@@ -32,7 +33,8 @@ export const hackProfilePicsByWallet = {
   [SOLANA_SPACES_WALLET]: "/ProfilePics/solana-spaces.jpg",
   [DECAF_PROMO_WALLET]: "/ProfilePics/decaf.png",
   [HOLGERS_WALLET]: "/ProfilePics/holger.jpg",
-  generic: "/ProfilePics/ed.jpg",
+  [EDS_WALLET]: "/ProfilePics/ed.jpg",
+  generic: "/ProfilePics/arina.jpg",
 };
 
 export const httpGet = async (uri: string) => {
