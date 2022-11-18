@@ -13,12 +13,15 @@ import {
   bundlrStorage,
 } from "@metaplex-foundation/js";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { promises as fs } from "fs";
 import { asyncMap, log } from "./functions";
-
+import Arweave from "arweave";
 import {
   IDENTITY_TOKEN_NAME,
   LATEST_IDENTITY_TOKEN_VERSION,
+  SECONDS,
 } from "./constants";
+const OK = 200;
 import { stringify } from "./functions";
 
 // TODO maybe use node fetch after node 18
@@ -88,6 +91,61 @@ export const getAllNftMetadatasFromAWallet = async (
     .run();
 
   return findNftsByOwnerOutput;
+};
+
+export const fileNameToContentType = (fileName: string) => {
+  let contentType: "image/png" | "image/jpeg" | null = null;
+
+  if (fileName.endsWith(".png")) {
+    contentType = "image/png";
+  }
+
+  if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+    contentType = "image/jpeg";
+  }
+
+  if (!contentType) {
+    throw new Error(`Could not determine Content Type for ${fileName}`);
+  }
+
+  return contentType;
+};
+
+// See https://solanacookbook.com/references/nfts.html#upload-to-arweave
+export const uploadImageToArweave = async (fileName: string) => {
+  const data = await fs.readFile(fileName);
+
+  const arweave = Arweave.init({
+    host: "arweave.net",
+    port: 443,
+    protocol: "https",
+    timeout: 20 * SECONDS,
+    logging: false,
+  });
+
+  const contentType = fileNameToContentType(fileName);
+
+  const arWeaveWallet = JSON.parse(
+    // File supplied by https://faucet.arweave.net/
+    await fs.readFile("arweave-wallet.json", "utf-8")
+  );
+
+  const transaction = await arweave.createTransaction({
+    data,
+  });
+
+  transaction.addTag("Content-Type", contentType);
+
+  await arweave.transactions.sign(transaction, arWeaveWallet);
+
+  const response = await arweave.transactions.post(transaction);
+
+  if (response.status !== OK) {
+    throw new Error(`Got error from arWeave`);
+  }
+
+  const uploadedImageUrl = `https://arweave.net/${transaction.id}`;
+  return uploadedImageUrl;
 };
 
 export const getTokenMetaData = (

@@ -5,21 +5,26 @@ import {
   getMetaplex,
   getTokenMetaData,
   mintIdentityToken,
+  uploadImageToArweave,
 } from "./identity-tokens";
 import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { connect, getTokenAccountsByOwner, putSolIntoWallet } from "./vmwallet";
 import { deepClone, log, sleep, stringify } from "./functions";
 import {
   IDENTITY_TOKEN_NAME,
-  MIKES_WALLET,
   ONE,
   ZERO,
-  ENOUGH_TO_MAKE_A_NEW_TOKEN,
-  SECONDS,
   SOLANA_SYSTEM_PROGRAM,
 } from "./constants";
-import BN, { BN as BigNumber } from "bn.js";
+import { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
+
+describe(`arWeave`, () => {
+  test(`We can upload an image to arWeave`, async () => {
+    const result = await uploadImageToArweave("./public/icon16.png");
+    expect(result).toMatch(/https:\/\/arweave.net\/.*/);
+  });
+});
 
 describe(`identity tokens`, () => {
   let connection: Connection;
