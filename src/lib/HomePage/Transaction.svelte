@@ -6,7 +6,6 @@
   import AnonymousImage from "../../assets/anonymous.svg";
   import type { TransactionSummary, Contact } from "../../lib/types";
   import { log, isEmpty, stringify } from "../../backend/functions";
-  import { hackProfilePicsByWallet } from "../utils";
   import { Direction } from "../types";
 
   import { contactsStore } from "../stores";
@@ -45,8 +44,7 @@
     <img
       class="profile-pic"
       src={!isEmpty(contact?.verifiedClaims)
-        ? hackProfilePicsByWallet[contact.walletAddress] ||
-          hackProfilePicsByWallet["generic"]
+        ? contact.verifiedClaims.imageUrl
         : AnonymousImage}
       alt="wallet avatar"
     />

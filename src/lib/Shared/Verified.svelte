@@ -2,7 +2,6 @@
   import Label from "../Shared/Label.svelte";
   import verifiedIcon from "../../assets/verified.svg";
   import { LabelColor } from "../constants";
-  import { hackProfilePicsByWallet } from "../utils";
   import type { Contact } from "../types";
 
   export let contact: Contact;
@@ -11,10 +10,8 @@
   let isNew = false;
 </script>
 
-<!-- TODO: src={contact.verifiedClaims.imageUrl} -->
 <img
-  src={hackProfilePicsByWallet[contact.walletAddress] ||
-    hackProfilePicsByWallet["generic"]}
+  src={contact.verifiedClaims.imageUrl}
   class="profile-pic"
   alt="Address is verified"
 />

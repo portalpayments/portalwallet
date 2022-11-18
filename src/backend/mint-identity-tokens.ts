@@ -3,12 +3,14 @@
 // Make the token and sent it to the recipient's wallet
 // https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 
-import { log, stringify } from "./functions";
-import { getTokenMetaData, mintIdentityToken } from "./identity-tokens";
+import { log, sleep, stringify } from "./functions";
+import { makeTokenMetaData, mintIdentityToken } from "./identity-tokens";
 import { connect, getKeypairFromString } from "./vmwallet";
 import dotenv from "dotenv";
 import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
 import { PublicKey } from "@solana/web3.js";
+import { uploadImageToArweave } from "./arweave";
+import { SECONDS } from "./constants";
 
 dotenv.config();
 
@@ -23,25 +25,36 @@ const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
 export const mintAndTransferIdentityToken = async (
   wallet: string,
   givenName: string,
-  familyName: string
+  familyName: string,
+  imageFile: string
 ) => {
   log(`🏦 Minting identity tokens`);
   const connection = await connect("quickNodeMainNetBeta");
 
+  const imageUrl = await uploadImageToArweave(imageFile);
+
+  log(`🖼️ Uploaded image`, imageUrl);
+
   const tokenCreateOutput = await mintIdentityToken(
     connection,
     identityTokenIssuer,
-    getTokenMetaData(wallet, givenName, familyName),
+    makeTokenMetaData(wallet, givenName, familyName, imageUrl),
     true
   );
 
   const mintAddress = tokenCreateOutput.mintAddress;
   const tokenAddress = tokenCreateOutput.tokenAddress;
 
-  log(`🎟️The token for ${givenName} has been created.`, {
+  log(`🎟️ The token for ${givenName} has been created.`, {
     mintAddress: mintAddress.toBase58(),
     tokenAddress: tokenAddress.toBase58(),
   });
+
+  // TODO: there seems to be a race condition in metaplex
+  // Adding this hack to avoid token account not found errors
+  log(`sleeping again...`);
+  await sleep(5 * SECONDS);
+  log(`... done sleeping`);
 
   // Yes really, the sender token account is the token address
   const senderTokenAccount = tokenAddress;

@@ -32,6 +32,18 @@ export const decodeFromBase64 = (stringToDecode: string): string => {
   return Buffer.from(stringToDecode, "base64").toString("ascii");
 };
 
+// Adapted from https://github.com/mgenware/node-filter-async/blob/main/src/main.ts
+// (which seems to have issues loading its ESM module)
+export const asyncFilter = async <T>(
+  array: Array<T>,
+  filter: (value: T, index: number) => Promise<boolean>
+): Promise<Array<T>> => {
+  const results: boolean[] = await Promise.all(
+    array.map((value, index) => filter(value, index))
+  );
+  return array.filter((_, i) => results[i]);
+};
+
 export const asyncMap = async <T>(
   array: Array<T>,
   iterator: (value: T, index?: number) => Promise<unknown>

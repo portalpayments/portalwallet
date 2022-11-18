@@ -37,10 +37,6 @@ export const SOLANA_SPACES_WALLET =
 export const DECAF_PROMO_WALLET =
   "AAB98aGddTYoprM78e5i3fxYwCr98fAToDH19WU6vJQ3";
 
-// Alpha user, delete in future
-export const HOLGERS_WALLET = "GHHsG4JfM5MfauNSRk6CNuPUQx2rNE9VmEQMjAkqBQC2";
-export const EDS_WALLET = "3MSGwLzrybJXvuMjiVpGtCHXGUFYHC2EUL5vJjmDZgtn";
-
 // Artist that made Agiza and Kimzo
 export const ARTIST = new PublicKey(
   "9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX"
@@ -90,7 +86,7 @@ export const USD_DECIMALS = 2;
 export const SOL = LAMPORTS_PER_SOL;
 
 // Older were minted with test storage URLs, timed out, etc.
-export const LATEST_IDENTITY_TOKEN_VERSION = 6;
+export const LATEST_IDENTITY_TOKEN_VERSION = 7;
 
 // Oldest that's acceptable to use in UI
 export const MINIMUM_IDENTITY_TOKEN_VERSION = LATEST_IDENTITY_TOKEN_VERSION;

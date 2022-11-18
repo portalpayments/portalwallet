@@ -4,51 +4,23 @@ import type {
   ParsedTransactionWithMeta,
 } from "@solana/web3.js";
 
-import { log, sleep, stringify } from "./functions";
+import { log, sleep } from "./functions";
 import {
   LATEST_IDENTITY_TOKEN_VERSION,
-  VAHEHS_WALLET,
-  SOLANA_SPACES_WALLET,
   URLS,
   SECOND,
   USDC_MAINNET_MINT_ACCOUNT,
-  DECAF_PROMO_WALLET,
 } from "./constants";
 import { asyncMap } from "./functions";
 import base58 from "bs58";
 import { AccountLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import type { RawAccount } from "@solana/spl-token";
-import axios from "axios";
-import type { AxiosResponse } from "axios";
-import { getIdentityTokenFromWallet } from "./identity-tokens";
-import type { VerifiedClaims } from "./types";
+import { getIdentityTokensFromWallet } from "./identity-tokens";
+import type { TokenMetaData, VerifiedClaims } from "./types";
 import { summarizeTransaction } from "./transactions";
-import { token } from "@metaplex-foundation/js";
+import { httpGet } from "../lib/utils";
 
 const VERIFIED_CLAIMS_BY_ADDRESS: Record<string, VerifiedClaims> = {};
-
-VERIFIED_CLAIMS_BY_ADDRESS[VAHEHS_WALLET] = {
-  familyName: "Hatami",
-  givenName: "Vaheh",
-  // TODO: add images next time we mint tokens
-  imageUrl: "",
-  type: "INDIVIDUAL",
-};
-
-// TODO: send an identity token to Solana Spaces
-VERIFIED_CLAIMS_BY_ADDRESS[SOLANA_SPACES_WALLET] = {
-  type: "ORGANIZATION",
-  givenName: "Solana Spaces",
-  familyName: "",
-  imageUrl: "",
-};
-
-VERIFIED_CLAIMS_BY_ADDRESS[DECAF_PROMO_WALLET] = {
-  type: "ORGANIZATION",
-  givenName: "Decaf Promo",
-  familyName: "",
-  imageUrl: "",
-};
 
 export const getKeypairFromString = (secretKeyString: string) => {
   let decodedSecretKey: Uint8Array;
@@ -197,42 +169,45 @@ export const verifyWallet = async (
     }
   }
 
-  const identityToken = await getIdentityTokenFromWallet(
+  const identityTokens = await getIdentityTokensFromWallet(
     connection,
     metaplexConnectionKeypair,
     identityTokenIssuerPublicKey,
     wallet
   );
 
-  if (!identityToken) {
+  if (!identityTokens.length) {
     return null;
   }
 
-  let arweaveResponse: AxiosResponse<any, any>;
-  try {
-    arweaveResponse = await axios.get(identityToken.uri);
-  } catch (thrownObject) {
-    const error = thrownObject as Error;
-    throw new Error(`Error fetching data from ARWeave: ${error.message}`);
-  }
+  const tokensMetadata = (await asyncMap(
+    identityTokens,
+    async (identityTokens) => {
+      const metadata = await httpGet(identityTokens.uri);
+      return metadata;
+    }
+  )) as Array<TokenMetaData>;
 
-  const arweaveResponseBody = arweaveResponse.data;
+  const currentTokenMetadata = await tokensMetadata.filter((tokenMetadata) => {
+    // Don't support older, beta tokens.
+    if (tokenMetadata.version < LATEST_IDENTITY_TOKEN_VERSION) {
+      return false;
+    }
+    // Ensure the token is actually issued for this wallet
+    if (tokenMetadata.issuedAgainst !== walletString) {
+      return false;
+    }
+    return true;
+  });
 
-  // Ensure the token is actually issued for this wallet
-  if (arweaveResponseBody.issuedAgainst !== walletString) {
+  if (!currentTokenMetadata.length) {
+    log(`No current identity token was issued to this wallet`);
     return null;
   }
 
-  // Don't support older, beta tokens.
-  if (arweaveResponseBody.version < LATEST_IDENTITY_TOKEN_VERSION) {
-    return null;
-  }
+  const latestTokenMetadata = currentTokenMetadata?.[0];
 
-  const claims = arweaveResponseBody.claims;
-
-  VERIFIED_CLAIMS_BY_ADDRESS[walletString] = claims;
-
-  return claims;
+  return latestTokenMetadata.claims;
 };
 
 // https://www.quicknode.com/guides/web3-sdks/how-to-get-transaction-logs-on-solana

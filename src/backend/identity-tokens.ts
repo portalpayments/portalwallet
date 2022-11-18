@@ -13,17 +13,19 @@ import {
   bundlrStorage,
 } from "@metaplex-foundation/js";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
-import { asyncMap, log } from "./functions";
 
+import { asyncFilter, asyncMap, log, sleep } from "./functions";
 import {
   IDENTITY_TOKEN_NAME,
   LATEST_IDENTITY_TOKEN_VERSION,
+  SECONDS,
 } from "./constants";
 import { stringify } from "./functions";
 
 // TODO maybe use node fetch after node 18
 import axios from "axios";
 import type { TokenMetaData, ExpandedNFT } from "./types";
+import { httpGet } from "../lib/utils";
 
 const name = IDENTITY_TOKEN_NAME;
 
@@ -59,6 +61,12 @@ export const mintIdentityToken = async (
 
   // See https://github.com/metaplex-foundation/js-examples/blob/main/getting-started-expressjs/createNFT.cjs too
 
+  // TODO: there seems to be a race condition in metaplex
+  // Adding this hack to avoid token account not found errors
+  log(`sleeping....`);
+  await sleep(5 * SECONDS);
+  log(`finished sleeping...`);
+
   const createOutput = await metaplexNFTs
     .create({
       uri: uploadResponse.uri, // "https://arweave.net/123",
@@ -90,10 +98,11 @@ export const getAllNftMetadatasFromAWallet = async (
   return findNftsByOwnerOutput;
 };
 
-export const getTokenMetaData = (
+export const makeTokenMetaData = (
   wallet: string,
   givenName: string,
-  familyName: string
+  familyName: string,
+  imageUrl: string
 ): TokenMetaData => {
   return {
     version: LATEST_IDENTITY_TOKEN_VERSION,
@@ -105,7 +114,7 @@ export const getTokenMetaData = (
       type: "INDIVIDUAL",
       givenName,
       familyName,
-      imageUrl: "/ProfilePics/vaheh.jpg",
+      imageUrl,
     },
   };
 };
@@ -154,7 +163,7 @@ export const getFullNFTsFromWallet = async (
   return nftData;
 };
 
-export const getIdentityTokenFromWallet = async (
+export const getIdentityTokensFromWallet = async (
   connection: Connection,
   metaplexConnectionKeypair: Keypair,
   identityTokenIssuerPublicKey: PublicKey,
@@ -167,17 +176,12 @@ export const getIdentityTokenFromWallet = async (
       owner: wallet,
     })
     .run();
-
-  const identityToken = nfts.find((nft) => {
+  const identityTokens = nfts.filter((nft) => {
     // Quick note we need to toBase58() both addresses for the comparison to work.
     const tokenCreator = nft?.creators?.[0]?.address.toBase58();
     const portalCompany = identityTokenIssuerPublicKey.toBase58();
     return tokenCreator === portalCompany;
   });
 
-  if (!identityToken) {
-    return null;
-  }
-
-  return identityToken;
+  return identityTokens;
 };

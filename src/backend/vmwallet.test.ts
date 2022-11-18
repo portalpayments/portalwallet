@@ -8,7 +8,6 @@ import {
   getAccountBalance,
   getKeypairFromEnvFile,
   getKeypairFromString,
-  getTransactionsForAddress,
   getUSDCAccounts,
   putSolIntoWallet,
   verifyWallet,
@@ -20,18 +19,21 @@ import {
   AGIZA_NFT_ASSOCIATED_TOKEN_ACCOUNT,
   ARTIST,
   DEPOSIT,
-  JOE_MCCANNS_WALLET,
   KIMZO_NFT_ADDRESS,
   KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT,
   MIKES_USDC_ACCOUNT,
   MIKES_WALLET,
   NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN,
-  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET,
   SECONDS,
   SHAQS_WALLET,
   USDC_MAINNET_MINT_ACCOUNT,
+  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET,
+  VAHEHS_WALLET,
 } from "./constants";
-import { getAllNftMetadatasFromAWallet } from "./identity-tokens";
+import {
+  getAllNftMetadatasFromAWallet,
+  getIdentityTokensFromWallet,
+} from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
 import { getTransactionSummariesForAddress } from "./vmwallet";
@@ -118,6 +120,33 @@ describe(`mainnet integration tests`, () => {
 
   beforeAll(async () => {
     mainNetConnection = await connect("quickNodeMainNetBeta");
+  });
+
+  test(`We can get Vaheh's identity tokens from his wallet`, async () => {
+    const identityTokens = await getIdentityTokensFromWallet(
+      mainNetConnection,
+      // Connect to Metaplex as Mike
+      mikeKeypair,
+      new PublicKey(PORTAL_IDENTITY_TOKEN_ISSUER_WALLET),
+      new PublicKey(VAHEHS_WALLET)
+    );
+    expect(identityTokens.length).toBeGreaterThan(0);
+  });
+
+  test(`We can verify Vaheh`, async () => {
+    const claims = await verifyWallet(
+      mainNetConnection,
+      // Connect to Metaplex as Mike
+      mikeKeypair,
+      new PublicKey(PORTAL_IDENTITY_TOKEN_ISSUER_WALLET),
+      new PublicKey(VAHEHS_WALLET)
+    );
+    expect(claims).toEqual({
+      familyName: "Hatami",
+      givenName: "Vaheh",
+      imageUrl: expect.stringMatching(/https:\/\/arweave.net\/.*/),
+      type: "INDIVIDUAL",
+    });
   });
 
   test(
@@ -280,7 +309,7 @@ describe(`mainnet integration tests`, () => {
     ]);
   });
 
-  test(`We can verify Mike's wallet belongs to Mike`, async () => {
+  test(`We can verify Mike`, async () => {
     if (!mainNetConnection) {
       throw new Error(`Couldn't get a connection, can't continue`);
     }
@@ -300,7 +329,7 @@ describe(`mainnet integration tests`, () => {
     expect(claims).toEqual({
       familyName: "MacCana",
       givenName: "Micheal-Sean",
-      imageUrl: "//src/assets/verifiedMikeImage.png",
+      imageUrl: expect.stringMatching(/https:\/\/arweave.net\/.*/),
       type: "INDIVIDUAL",
     });
   });

@@ -1,25 +1,35 @@
 import { Metaplex, Pda } from "@metaplex-foundation/js";
 import {
   getAllNftMetadatasFromAWallet,
-  getIdentityTokenFromWallet,
+  getIdentityTokensFromWallet,
   getMetaplex,
-  getTokenMetaData,
+  makeTokenMetaData,
   mintIdentityToken,
 } from "./identity-tokens";
+import { uploadImageToArweave } from "./arweave";
 import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
-import { connect, getTokenAccountsByOwner, putSolIntoWallet } from "./vmwallet";
+import {
+  connect,
+  getTokenAccountsByOwner,
+  putSolIntoWallet,
+  verifyWallet,
+} from "./vmwallet";
 import { deepClone, log, sleep, stringify } from "./functions";
 import {
   IDENTITY_TOKEN_NAME,
-  MIKES_WALLET,
   ONE,
   ZERO,
-  ENOUGH_TO_MAKE_A_NEW_TOKEN,
-  SECONDS,
   SOLANA_SYSTEM_PROGRAM,
 } from "./constants";
-import BN, { BN as BigNumber } from "bn.js";
+import { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
+
+describe(`arWeave`, () => {
+  test(`We can upload an image to arWeave`, async () => {
+    const result = await uploadImageToArweave("./public/icon16.png");
+    expect(result).toMatch(/https:\/\/arweave.net\/.*/);
+  });
+});
 
 describe(`identity tokens`, () => {
   let connection: Connection;
@@ -42,10 +52,11 @@ describe(`identity tokens`, () => {
   test(`we can mint an identity token for Alice`, async () => {
     await putSolIntoWallet(connection, alice.publicKey, 1_000_000_000);
 
-    const metadata = getTokenMetaData(
+    const metadata = makeTokenMetaData(
       alice.publicKey.toBase58(),
       "Alice",
-      "Smith"
+      "Smith",
+      "https://arweave.net/jHaEN1AuV87osodSw63QgTsYgH0JcmA6CG0T4Zcg56c"
     );
 
     const name = IDENTITY_TOKEN_NAME;
@@ -356,47 +367,52 @@ describe(`identity tokens`, () => {
     ]);
   });
 
-  test(`We can get the associated token account for Portal Identity Token for Alice's wallet`, async () => {
-    const identityToken = await getIdentityTokenFromWallet(
+  test(`We can get the Portal Identity Tokens for Alice's wallet`, async () => {
+    const identityTokens = await getIdentityTokensFromWallet(
       connection,
       testIdentityTokenIssuer,
       testIdentityTokenIssuer.publicKey,
       alice.publicKey
     );
 
-    expect(identityToken).toEqual({
-      address: expect.any(PublicKey),
-      collection: null,
-      collectionDetails: null,
-      creators: [
-        {
-          address: testIdentityTokenIssuer.publicKey,
-          share: 100,
-          verified: true,
-        },
-      ],
-      editionNonce: expect.any(Number),
-      isMutable: true,
-      json: null,
-      jsonLoaded: false,
-      mintAddress,
-      model: "metadata",
-      name: "Portal Identity Token",
-      primarySaleHappened: false,
-      sellerFeeBasisPoints: 0,
-      symbol: "",
-      tokenStandard: 0,
-      updateAuthorityAddress: testIdentityTokenIssuer.publicKey,
-      uri: expect.any(String),
-      uses: null,
-    });
+    expect(identityTokens).toEqual([
+      {
+        address: expect.any(PublicKey),
+        collection: null,
+        collectionDetails: null,
+        creators: [
+          {
+            address: testIdentityTokenIssuer.publicKey,
+            share: 100,
+            verified: true,
+          },
+        ],
+        editionNonce: expect.any(Number),
+        isMutable: true,
+        json: null,
+        jsonLoaded: false,
+        mintAddress,
+        model: "metadata",
+        name: "Portal Identity Token",
+        primarySaleHappened: false,
+        sellerFeeBasisPoints: 0,
+        symbol: "",
+        tokenStandard: 0,
+        updateAuthorityAddress: testIdentityTokenIssuer.publicKey,
+        uri: expect.any(String),
+        uses: null,
+      },
+    ]);
   });
 
-  // TODO - set up a mock metaplex mockStorage item?
-  // if (!identityToken?.uri) {
-  // }
+  // test(`We can verify Alice`, async () => {
+  //   const claims = await verifyWallet(
+  //     connection,
+  //     testIdentityTokenIssuer,
+  //     testIdentityTokenIssuer.publicKey,
+  //     alice.publicKey
+  //   );
 
-  // const data = await httpGet(identityToken.uri);
-
-  // expect(data).toMatchObject({});
+  //   expect(claims).toEqual({});
+  // });
 });

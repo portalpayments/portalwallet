@@ -1,5 +1,5 @@
 import { log } from "./functions";
-import { JOHN_TESTUSER_DEMO_WALLET, MINUTES } from "./constants";
+import { MINUTES } from "./constants";
 import { mintAndTransferIdentityToken } from "./mint-identity-tokens";
 
 log(`Running token minter...`);
@@ -7,9 +7,10 @@ log(`Running token minter...`);
 // Only needed for alpha tests
 // (would normally be a script not a test but I couldn't get ts-node to work properly)
 describe(`mint a real identity token`, () => {
-  const WALLET_ADDRESS = "23sV4gXUQBGsAdcHBJ4tRwApXF5Md5XyKwUitNQecgBD";
-  const firstName = "Arina";
-  const lastName = "Nesterenko";
+  const WALLET_ADDRESS = "";
+  const firstName = "";
+  const lastName = "";
+  const imageFile = "./public/ProfilePics/";
 
   // DO NOT RE-ENABLE THIS TEST AND COMMIT THAT CHANGE
   // (IT IS A HACK WHILE I GET TS-NODE WORKING)
@@ -21,7 +22,8 @@ describe(`mint a real identity token`, () => {
       const transactionId = await mintAndTransferIdentityToken(
         WALLET_ADDRESS,
         firstName,
-        lastName
+        lastName,
+        imageFile
       );
       log(transactionId);
 

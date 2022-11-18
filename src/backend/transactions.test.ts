@@ -46,6 +46,28 @@ describe(`transaction summaries`, () => {
     );
 
     expect(portalTransactionSummary).toEqual({
+      id: "2Nqkv1E6ktnr93v3MqbdbYMZrPnMc5akgACdtfMyuaXZkVBX7JefkAjsxuLh9BexNfMEJJEhghPDfhEQLiMByVY",
+      date: 1663119635000,
+      status: true,
+      networkFee: 5000,
+      direction: Direction.sent,
+      amount: 5000000,
+      currency: Currency.USDC,
+      from: MOCK_SENDER_PUBLIC_KEY,
+      to: MOCK_RECIPIENT_PUBLIC_KEY,
+      memo: null,
+    });
+  });
+
+  test(`We can produce a transaction summary from a pre-cooked transaction where the sender is first index`, async () => {
+    const currentUserWallet = MOCK_SENDER_PUBLIC_KEY;
+
+    const portalTransactionSummary = summarizeTransaction(
+      transactionResponseSenderComesFirst,
+      new PublicKey(currentUserWallet)
+    );
+
+    expect(portalTransactionSummary).toEqual({
       id: "2PF9JkUYfARqWbxFv5fBNLK7VhQ9NTsSA5QYcUUNDTQZyX4JATE8TjnLBhoaMNsZ1F1ETUxmM8LUygqRUBtbhgFS",
       date: 1663119635000,
       status: true,
@@ -250,8 +272,7 @@ describe(`grouping transactions`, () => {
     expect(transactionsByDays).toEqual([
       {
         isoDate: "2022-09-12",
-        total: 1000000,
-        direction: 0,
+        totalSpending: 1000000,
         transactions: [
           {
             id: "1",
@@ -269,8 +290,7 @@ describe(`grouping transactions`, () => {
       },
       {
         isoDate: "2022-09-09",
-        total: 500000,
-        direction: 0,
+        totalSpending: 500000,
         transactions: [
           {
             id: "2",
@@ -288,8 +308,7 @@ describe(`grouping transactions`, () => {
       },
       {
         isoDate: "2022-09-08",
-        total: 790000,
-        direction: 0,
+        totalSpending: 790000,
         transactions: [
           {
             id: "4",

@@ -1,17 +1,4 @@
 import { PublicKey } from "@solana/web3.js";
-import {
-  VAHEHS_WALLET,
-  MIKES_WALLET,
-  JOE_MCCANNS_WALLET,
-  SHAQS_WALLET,
-  YCOMBINATOR_DEMO_WALLET_FOR_JARED,
-  JOHN_TESTUSER_DEMO_WALLET,
-  SOLANA_SPACES_WALLET,
-  HOLGERS_WALLET,
-  DECAF_PROMO_WALLET,
-  EDS_WALLET,
-} from "../backend/constants";
-import { log } from "../backend/functions";
 
 const WALLET_CHARACTERS_TO_SHOW = 5;
 
@@ -21,21 +8,6 @@ const numberFormatter = new Intl.NumberFormat("en-US", {
   // Do not show fractions - front end should only handle whole numbers
   maximumFractionDigits: 0,
 });
-
-// TODO: delete and put real selfies into Arweave
-export const hackProfilePicsByWallet = {
-  [VAHEHS_WALLET]: "/ProfilePics/vaheh.jpg",
-  [MIKES_WALLET]: "/ProfilePics/mike.jpg",
-  [JOE_MCCANNS_WALLET]: "/ProfilePics/joe.jpg",
-  [SHAQS_WALLET]: "/ProfilePics/shaq.jpg",
-  [YCOMBINATOR_DEMO_WALLET_FOR_JARED]: "/ProfilePics/jared.jpg",
-  [JOHN_TESTUSER_DEMO_WALLET]: "/ProfilePics/test-user.jpg",
-  [SOLANA_SPACES_WALLET]: "/ProfilePics/solana-spaces.jpg",
-  [DECAF_PROMO_WALLET]: "/ProfilePics/decaf.png",
-  [HOLGERS_WALLET]: "/ProfilePics/holger.jpg",
-  [EDS_WALLET]: "/ProfilePics/ed.jpg",
-  generic: "/ProfilePics/arina.jpg",
-};
 
 export const httpGet = async (uri: string) => {
   const response = await fetch(uri, {

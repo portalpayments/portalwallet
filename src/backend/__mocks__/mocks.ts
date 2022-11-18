@@ -26,6 +26,266 @@ export const MOCK_SENDER_PUBLIC_KEY =
 export const MOCK_RECIPIENT_PUBLIC_KEY =
   "2DCC44zP2BDxTKzgi4yYScEJmbyhW2G8aYCQUrEcABts";
 
+export const transactionResponseMakeAccountAndSend = {
+  blockTime: 1668770097,
+  meta: {
+    err: null,
+    fee: 5000,
+    innerInstructions: [
+      {
+        index: 0,
+        instructions: [
+          {
+            parsed: {
+              info: {
+                extensionTypes: ["immutableOwner"],
+                mint: USDC_MAINNET_MINT_ACCOUNT,
+              },
+              type: "getAccountDataSize",
+            },
+            program: "spl-token",
+            programId: SPL_TOKEN_PROGRAM,
+          },
+          {
+            parsed: {
+              info: {
+                lamports: 2039280,
+                newAccount: "JBArixarujq7y213FLvnsuS9Wb28FgQeK55GZX7Dshvk",
+                owner: SPL_TOKEN_PROGRAM,
+                source: MIKES_WALLET,
+                space: 165,
+              },
+              type: "createAccount",
+            },
+            program: "system",
+            programId: "11111111111111111111111111111111",
+          },
+          {
+            parsed: {
+              info: {
+                account: "JBArixarujq7y213FLvnsuS9Wb28FgQeK55GZX7Dshvk",
+              },
+              type: "initializeImmutableOwner",
+            },
+            program: "spl-token",
+            programId: SPL_TOKEN_PROGRAM,
+          },
+          {
+            parsed: {
+              info: {
+                account: "JBArixarujq7y213FLvnsuS9Wb28FgQeK55GZX7Dshvk",
+                mint: USDC_MAINNET_MINT_ACCOUNT,
+                owner: "23sV4gXUQBGsAdcHBJ4tRwApXF5Md5XyKwUitNQecgBD",
+              },
+              type: "initializeAccount3",
+            },
+            program: "spl-token",
+            programId: SPL_TOKEN_PROGRAM,
+          },
+        ],
+      },
+    ],
+    logMessages: [
+      "Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL invoke [1]",
+      "Program log: Create",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [2]",
+      "Program log: Instruction: GetAccountDataSize",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 1622 of 588408 compute units",
+      "Program return: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA pQAAAAAAAAA=",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success",
+      "Program 11111111111111111111111111111111 invoke [2]",
+      "Program 11111111111111111111111111111111 success",
+      "Program log: Initialize the associated token account",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [2]",
+      "Program log: Instruction: InitializeImmutableOwner",
+      "Program log: Please upgrade to SPL Token 2022 for immutable owner support",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 1405 of 581918 compute units",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [2]",
+      "Program log: Instruction: InitializeAccount3",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 4241 of 578034 compute units",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success",
+      "Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 26545 of 600000 compute units",
+      "Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [1]",
+      "Program log: Instruction: TransferChecked",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 6199 of 573455 compute units",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success",
+      "Program noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93 invoke [1]",
+      "Program noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93 consumed 737 of 567256 compute units",
+      "Program noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93 success",
+    ],
+    postBalances: [
+      447656226144, 2039280, 2039280, 1, 30000000, 731913600, 179719266068,
+      1009200, 934087680, 1141440,
+    ],
+    postTokenBalances: [
+      {
+        accountIndex: 1,
+        mint: USDC_MAINNET_MINT_ACCOUNT,
+        owner: "23sV4gXUQBGsAdcHBJ4tRwApXF5Md5XyKwUitNQecgBD",
+        programId: SPL_TOKEN_PROGRAM,
+        uiTokenAmount: {
+          amount: "5000000",
+          decimals: 6,
+          uiAmount: 5,
+          uiAmountString: "5",
+        },
+      },
+      {
+        accountIndex: 2,
+        mint: USDC_MAINNET_MINT_ACCOUNT,
+        owner: MIKES_WALLET,
+        programId: SPL_TOKEN_PROGRAM,
+        uiTokenAmount: {
+          amount: "5563485",
+          decimals: 6,
+          uiAmount: 5.563485,
+          uiAmountString: "5.563485",
+        },
+      },
+    ],
+    preBalances: [
+      447658270424, 0, 2039280, 1, 30000000, 731913600, 179719266068, 1009200,
+      934087680, 1141440,
+    ],
+    preTokenBalances: [
+      {
+        accountIndex: 2,
+        mint: USDC_MAINNET_MINT_ACCOUNT,
+        owner: MIKES_WALLET,
+        programId: SPL_TOKEN_PROGRAM,
+        uiTokenAmount: {
+          amount: "10563485",
+          decimals: 6,
+          uiAmount: 10.563485,
+          uiAmountString: "10.563485",
+        },
+      },
+    ],
+    rewards: [],
+    status: {
+      Ok: null,
+    },
+  },
+  slot: 161726839,
+  transaction: {
+    message: {
+      accountKeys: [
+        {
+          pubkey: MIKES_WALLET,
+          signer: true,
+          source: "transaction",
+          writable: true,
+        },
+        {
+          pubkey: "JBArixarujq7y213FLvnsuS9Wb28FgQeK55GZX7Dshvk",
+          signer: false,
+          source: "transaction",
+          writable: true,
+        },
+        {
+          pubkey: "Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc",
+          signer: false,
+          source: "transaction",
+          writable: true,
+        },
+        {
+          pubkey: "11111111111111111111111111111111",
+          signer: false,
+          source: "transaction",
+          writable: false,
+        },
+        {
+          pubkey: "23sV4gXUQBGsAdcHBJ4tRwApXF5Md5XyKwUitNQecgBD",
+          signer: false,
+          source: "transaction",
+          writable: false,
+        },
+        {
+          pubkey: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+          signer: false,
+          source: "transaction",
+          writable: false,
+        },
+        {
+          pubkey: USDC_MAINNET_MINT_ACCOUNT,
+          signer: false,
+          source: "transaction",
+          writable: false,
+        },
+        {
+          pubkey: "SysvarRent111111111111111111111111111111111",
+          signer: false,
+          source: "transaction",
+          writable: false,
+        },
+        {
+          pubkey: SPL_TOKEN_PROGRAM,
+          signer: false,
+          source: "transaction",
+          writable: false,
+        },
+        {
+          pubkey: "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93",
+          signer: false,
+          source: "transaction",
+          writable: false,
+        },
+      ],
+      addressTableLookups: null,
+      instructions: [
+        {
+          parsed: {
+            info: {
+              account: "JBArixarujq7y213FLvnsuS9Wb28FgQeK55GZX7Dshvk",
+              mint: USDC_MAINNET_MINT_ACCOUNT,
+              source: MIKES_WALLET,
+              systemProgram: "11111111111111111111111111111111",
+              tokenProgram: SPL_TOKEN_PROGRAM,
+              wallet: "23sV4gXUQBGsAdcHBJ4tRwApXF5Md5XyKwUitNQecgBD",
+            },
+            type: "create",
+          },
+          program: "spl-associated-token-account",
+          programId: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        },
+        {
+          parsed: {
+            info: {
+              authority: MIKES_WALLET,
+              destination: "JBArixarujq7y213FLvnsuS9Wb28FgQeK55GZX7Dshvk",
+              mint: USDC_MAINNET_MINT_ACCOUNT,
+              source: "Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc",
+              tokenAmount: {
+                amount: "5000000",
+                decimals: 6,
+                uiAmount: 5,
+                uiAmountString: "5",
+              },
+            },
+            type: "transferChecked",
+          },
+          program: "spl-token",
+          programId: SPL_TOKEN_PROGRAM,
+        },
+        {
+          accounts: [
+            MIKES_WALLET,
+            "23sV4gXUQBGsAdcHBJ4tRwApXF5Md5XyKwUitNQecgBD",
+          ],
+          data: "W8vHV872oMT2bNtBMWFVbVc3hBT6kgrczv",
+          programId: "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93",
+        },
+      ],
+      recentBlockhash: "4Gx18ZfMCXGZYHWFYYAGUVhkqZRTPME4BQEuSj8yKfxn",
+    },
+    signatures: [
+      "2Nqkv1E6ktnr93v3MqbdbYMZrPnMc5akgACdtfMyuaXZkVBX7JefkAjsxuLh9BexNfMEJJEhghPDfhEQLiMByVY",
+    ],
+  },
+};
+
 export const transactionResponseSenderComesFirst = {
   blockTime: 1663119635,
   meta: {
@@ -527,7 +787,7 @@ export const transactionWithMemo = {
     postTokenBalances: [
       {
         accountIndex: 1,
-        mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        mint: USDC_MAINNET_MINT_ACCOUNT,
         owner: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
         programId: SPL_TOKEN_PROGRAM,
         uiTokenAmount: {
@@ -539,7 +799,7 @@ export const transactionWithMemo = {
       },
       {
         accountIndex: 2,
-        mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        mint: USDC_MAINNET_MINT_ACCOUNT,
         owner: MIKES_WALLET,
         programId: SPL_TOKEN_PROGRAM,
         uiTokenAmount: {
@@ -554,7 +814,7 @@ export const transactionWithMemo = {
     preTokenBalances: [
       {
         accountIndex: 1,
-        mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        mint: USDC_MAINNET_MINT_ACCOUNT,
         owner: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
         programId: SPL_TOKEN_PROGRAM,
         uiTokenAmount: {
@@ -566,7 +826,7 @@ export const transactionWithMemo = {
       },
       {
         accountIndex: 2,
-        mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        mint: USDC_MAINNET_MINT_ACCOUNT,
         owner: MIKES_WALLET,
         programId: SPL_TOKEN_PROGRAM,
         uiTokenAmount: {
