@@ -32,7 +32,7 @@ export const hackProfilePicsByWallet = {
   [SOLANA_SPACES_WALLET]: "/ProfilePics/solana-spaces.jpg",
   [DECAF_PROMO_WALLET]: "/ProfilePics/decaf.png",
   [HOLGERS_WALLET]: "/ProfilePics/holger.jpg",
-  generic: "/ProfilePics/dimitrios.jpg",
+  generic: "/ProfilePics/ed.jpg",
 };
 
 export const httpGet = async (uri: string) => {
