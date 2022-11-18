@@ -7,9 +7,9 @@ log(`Running token minter...`);
 // Only needed for alpha tests
 // (would normally be a script not a test but I couldn't get ts-node to work properly)
 describe(`mint a real identity token`, () => {
-  const WALLET_ADDRESS = "3MSGwLzrybJXvuMjiVpGtCHXGUFYHC2EUL5vJjmDZgtn";
-  const firstName = "Edward";
-  const lastName = "Bramwell";
+  const WALLET_ADDRESS = "23sV4gXUQBGsAdcHBJ4tRwApXF5Md5XyKwUitNQecgBD";
+  const firstName = "Arina";
+  const lastName = "Nesterenko";
 
   // DO NOT RE-ENABLE THIS TEST AND COMMIT THAT CHANGE
   // (IT IS A HACK WHILE I GET TS-NODE WORKING)
