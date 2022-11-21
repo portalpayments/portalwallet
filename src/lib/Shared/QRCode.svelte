@@ -15,14 +15,13 @@
   let qrCodeHTMLCanvasElement: HTMLCanvasElement | null;
   $: qrCodeHTMLCanvasElement = null;
 
-  const getQRcodeImage = async (string: String): Promise<HTMLCanvasElement> => {
+  const getQRcodeImage = async (string: string): Promise<HTMLCanvasElement> => {
     log(`Generating QRcode for ${string}`);
-    let canvas: HTMLCanvasElement;
+    let canvas = new HTMLCanvasElement();
     try {
       // See https://www.npmjs.com/package/qrcode#options
-      canvas = await qrcode.toCanvas(string, {
+      await qrcode.toCanvas(canvas, string, {
         width: QR_CODE_SIZE,
-        height: QR_CODE_SIZE,
         margin: 0,
       });
 
