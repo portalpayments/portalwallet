@@ -205,10 +205,12 @@
             <div class="content">
               <Heading size="large">Import wallet</Heading>
               <p>Paste your secret key or mnemonic phrase below.</p>
-              <TextArea
-                placeholder="Secret key or mnemonic phrase"
-                onInputDelay={checkSecretKeyOrMnemonicPhrase}
-              />
+              <div class="gradient-border">
+                <TextArea
+                  placeholder="Secret key or mnemonic phrase"
+                  onInputDelay={checkSecretKeyOrMnemonicPhrase}
+                />
+              </div>
 
               {#if isSuggestedSecretOrMnemonicPhraseValid !== null}
                 {#if isSuggestedSecretOrMnemonicPhraseValid === true}
@@ -238,10 +240,12 @@
             <div class="content">
               <Heading>Set a password</Heading>
 
-              <Password
-                bind:value={passwordToUse}
-                onInputDelay={checkPassword}
-              />
+              <div class="gradient-border">
+                <Password
+                  bind:value={passwordToUse}
+                  onInputDelay={checkPassword}
+                />
+              </div>
 
               {#if isPasswordSecure !== null}
                 {#if isPasswordSecure === true}
@@ -269,11 +273,12 @@
             <ProgressBar steps={steps.length} currentStep={stepNumber} />
             <div class="content">
               <Heading>Set a password</Heading>
-
-              <Password
-                bind:value={passwordToUse}
-                onInputDelay={checkPassword}
-              />
+              <div class="gradient-border">
+                <Password
+                  bind:value={passwordToUse}
+                  onInputDelay={checkPassword}
+                />
+              </div>
 
               {#if isPasswordSecure !== null}
                 {#if isPasswordSecure === true}
@@ -299,10 +304,12 @@
                 If you lose your devices, you can access your wallet using this
                 phrase.
               </p>
-              <TextArea
-                placeholder="When I was six my brother Finian got a train set for Christmas."
-                onInputDelay={checkPersonalPhrase}
-              />
+              <div class="gradient-border">
+                <TextArea
+                  placeholder="When I was six my brother Finian got a train set for Christmas."
+                  onInputDelay={checkPersonalPhrase}
+                />
+              </div>
 
               {#if isPersonalPhraseSecure !== null}
                 {#if isPersonalPhraseSecure === true}
@@ -409,6 +416,11 @@
 
   .buttons {
     width: 100%;
+  }
+
+  .gradient-border {
+    min-height: 48px;
+    border-radius: 24px;
   }
 
   /* TODO: make some kind of utility class to use for primary buttons and link buttons */

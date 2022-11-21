@@ -1,19 +1,19 @@
 <script lang="ts">
   import { debounce } from "lodash";
-  import { onMount } from "svelte";
+  import { onMount as svelteOnMount } from "svelte";
 
   export let placeHolder: string | null = null;
   export let value: string;
   export let onEnter: Function | null = null;
   export let isBadPassword = false;
   export let onInputDelay: Function | null = null;
-  export let autoFocus: boolean = false;
+  export let onMount: Function | null = null;
 
   let element;
 
-  onMount(function () {
-    if (autoFocus) {
-      element.focus();
+  svelteOnMount(() => {
+    if (onMount) {
+      onMount(element);
     }
   });
 

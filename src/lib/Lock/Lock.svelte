@@ -52,7 +52,9 @@
             bind:value={password}
             onEnter={() => login(password)}
             bind:isBadPassword
-            autoFocus={true}
+            onMount={(element) => {
+              element.focus();
+            }}
           />
         </div>
 

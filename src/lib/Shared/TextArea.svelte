@@ -32,19 +32,18 @@
 
 <style>
   textarea {
-    border-radius: 7px;
+    border-radius: 22px;
+    border: none;
     width: 100%;
     background-color: white;
-    padding: 6px;
-    height: 150px;
+    padding: 12px 6px;
+    height: 160px;
     resize: none;
     color: var(--actually-dark-grey);
   }
 
   textarea:focus {
     outline: none;
-    /* TODO: gradient for border? */
-    border: 2px solid var(--mid-blue);
     box-shadow: 0 0 2px rgb(65 156 253 / 30%);
   }
 
