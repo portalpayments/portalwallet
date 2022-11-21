@@ -66,17 +66,24 @@ export const mintIdentityToken = async (
   // See https://github.com/metaplex-foundation/js-examples/blob/main/getting-started-expressjs/createNFT.cjs too
 
   // Sometimes fails with
-  //   MetaplexError: Account Not Found
-  // >> Source: SDK
-  // >> Problem: The account of type [MintAccount] was not found at the provided address [5etWoCSijRWoKM8ZS4zbqjqBCwe7eJiiRZd8GbDnYQvU].
-  // >> Solution: Ensure the provided address is correct and that an account exists at this address.
-  const createOutput = await metaplexNFTs
-    .create({
-      uri: uploadResponse.uri, // "https://arweave.net/123",
-      name,
-      sellerFeeBasisPoints: 0, // 500 would represent 5.00%.
-    })
-    .run();
+  let createOutput: CreateNftOutput;
+  try {
+    createOutput = await metaplexNFTs
+      .create({
+        uri: uploadResponse.uri, // "https://arweave.net/123",
+        name,
+        sellerFeeBasisPoints: 0, // 500 would represent 5.00%.
+      })
+      .run();
+  } catch (thrownError) {
+    const error = thrownError as Error;
+    log(`Unexpected error`, error.message);
+    // See https://github.com/metaplex-foundation/js/issues/148
+    throw new Error(
+      `Check Sol balance of wallet for token issuer ${identityTokenIssuer.publicKey.toBase58()}`
+    );
+  }
+
   return createOutput;
 };
 
