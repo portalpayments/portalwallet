@@ -60,13 +60,6 @@ export const mintIdentityToken = async (
   // Full parameters at https://github.com/metaplex-foundation/js/blob/main/packages/js/src/plugins/nftModule/createNft.ts#L64
 
   // See https://github.com/metaplex-foundation/js-examples/blob/main/getting-started-expressjs/createNFT.cjs too
-
-  // TODO: there seems to be a race condition in metaplex
-  // Adding this hack to avoid token account not found errors
-  log(`sleeping....`);
-  await sleep(5 * SECONDS);
-  log(`finished sleeping...`);
-
   const createOutput = await metaplexNFTs
     .create({
       uri: uploadResponse.uri, // "https://arweave.net/123",

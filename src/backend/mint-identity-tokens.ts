@@ -50,12 +50,6 @@ export const mintAndTransferIdentityToken = async (
     tokenAddress: tokenAddress.toBase58(),
   });
 
-  // TODO: there seems to be a race condition in metaplex
-  // Adding this hack to avoid token account not found errors
-  log(`sleeping again...`);
-  await sleep(5 * SECONDS);
-  log(`... done sleeping`);
-
   // Yes really, the sender token account is the token address
   const senderTokenAccount = tokenAddress;
 
