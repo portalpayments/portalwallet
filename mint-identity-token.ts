@@ -22,12 +22,13 @@ const IMAGE_FILE = "";
 
 const main = async () => {
   log(`🎟️ Running Portal Identity token minter ...`);
+
   log(
     stringify({
       WALLET_ADDRESS,
-      firstName: FIRST_NAME,
-      lastName: LAST_NAME,
-      imageFile: IMAGE_FILE,
+      FIRST_NAME,
+      LAST_NAME,
+      IMAGE_FILE,
     })
   );
 
