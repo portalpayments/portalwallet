@@ -1,9 +1,19 @@
 // Run with 'npx tsx mint-identity-token.ts'
-// ts-node has issues:
+// because 'ts-node' has issues:
 // https://github.com/TypeStrong/ts-node/issues/1062#issuecomment-1192847985
 
 import { log, stringify } from "./src/backend/functions";
-import { mintAndTransferIdentityToken } from "./src/backend/mint-identity-tokens";
+import { mintAndTransferIdentityToken } from "./src/backend/identity-tokens";
+import dotenv from "dotenv";
+import { getKeypairFromString } from "./src/backend/vmwallet";
+
+dotenv.config();
+
+const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;
+
+if (!identityTokenSecretKey) {
+  throw new Error(`Please set IDENTITY_TOKEN_SECRET_KEY in .env file`);
+}
 
 const WALLET_ADDRESS = "";
 const FIRST_NAME = "";
@@ -21,11 +31,14 @@ const main = async () => {
     })
   );
 
+  const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
+
   const transactionId = await mintAndTransferIdentityToken(
     WALLET_ADDRESS,
     FIRST_NAME,
     LAST_NAME,
-    IMAGE_FILE
+    IMAGE_FILE,
+    identityTokenIssuer
   );
   log(transactionId);
 

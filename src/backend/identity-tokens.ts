@@ -11,6 +11,7 @@ import {
   keypairIdentity,
   mockStorage,
   bundlrStorage,
+  type CreateNftOutput,
 } from "@metaplex-foundation/js";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 
@@ -26,6 +27,9 @@ import { stringify } from "./functions";
 import axios from "axios";
 import type { TokenMetaData, ExpandedNFT } from "./types";
 import { httpGet } from "../lib/utils";
+import { uploadImageToArweave } from "./arweave";
+import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
+import { connect } from "./vmwallet";
 
 const name = IDENTITY_TOKEN_NAME;
 
@@ -60,6 +64,12 @@ export const mintIdentityToken = async (
   // Full parameters at https://github.com/metaplex-foundation/js/blob/main/packages/js/src/plugins/nftModule/createNft.ts#L64
 
   // See https://github.com/metaplex-foundation/js-examples/blob/main/getting-started-expressjs/createNFT.cjs too
+
+  // Sometimes fails with
+  //   MetaplexError: Account Not Found
+  // >> Source: SDK
+  // >> Problem: The account of type [MintAccount] was not found at the provided address [5etWoCSijRWoKM8ZS4zbqjqBCwe7eJiiRZd8GbDnYQvU].
+  // >> Solution: Ensure the provided address is correct and that an account exists at this address.
   const createOutput = await metaplexNFTs
     .create({
       uri: uploadResponse.uri, // "https://arweave.net/123",
@@ -67,8 +77,81 @@ export const mintIdentityToken = async (
       sellerFeeBasisPoints: 0, // 500 would represent 5.00%.
     })
     .run();
-
   return createOutput;
+};
+
+// Make the token and sent it to the recipient's wallet
+// https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
+
+export const mintAndTransferIdentityToken = async (
+  wallet: string,
+  givenName: string,
+  familyName: string,
+  imageFile: string,
+  identityTokenIssuer: Keypair
+) => {
+  log(`🏦 Minting identity token`);
+  const connection = await connect("quickNodeMainNetBeta");
+
+  const imageUrl = await uploadImageToArweave(imageFile);
+
+  log(`🖼️ Uploaded image`, imageUrl);
+
+  let tokenCreateOutput: CreateNftOutput;
+
+  try {
+    tokenCreateOutput = await mintIdentityToken(
+      connection,
+      identityTokenIssuer,
+      makeTokenMetaData(wallet, givenName, familyName, imageUrl),
+      true
+    );
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    if (error.message.includes("insufficient lamports")) {
+      throw new Error(
+        `⚠️ The token mint account has run out of Sol. Please send Sol to the Token issuer account ${identityTokenIssuer.publicKey.toBase58()}`
+      );
+    }
+    log(`Unexpected error making NFT`);
+    throw error;
+  }
+
+  const mintAddress = tokenCreateOutput.mintAddress;
+  const tokenAddress = tokenCreateOutput.tokenAddress;
+
+  log(`🎟️ The token for ${givenName} has been created.`, {
+    mintAddress: mintAddress.toBase58(),
+    tokenAddress: tokenAddress.toBase58(),
+  });
+
+  // Yes really, the sender token account is the token address
+  const senderTokenAccount = tokenAddress;
+
+  const tokenAccountResults = await makeTokenAccount(
+    connection,
+    identityTokenIssuer,
+    mintAddress,
+    new PublicKey(wallet)
+  );
+
+  const recipientTokenAccount = tokenAccountResults.address;
+
+  log(
+    `👛 made token account for this mint on ${givenName}'s wallet, recipient token account is`,
+    recipientTokenAccount.toBase58()
+  );
+
+  const signature = await transferPortalIdentityToken(
+    connection,
+    identityTokenIssuer,
+    senderTokenAccount,
+    recipientTokenAccount
+  );
+
+  log(`Transferred token to final destination!`, signature);
+
+  return signature;
 };
 
 // From https://solana.stackexchange.com/questions/137/how-do-i-get-all-nfts-for-a-given-wallet
@@ -87,7 +170,6 @@ export const getAllNftMetadatasFromAWallet = async (
       owner,
     })
     .run();
-
   return findNftsByOwnerOutput;
 };
 
@@ -127,7 +209,6 @@ export const getFullNFTsFromWallet = async (
       owner,
     })
     .run();
-
   const nfts = await asyncMap(nftMetadatas, async (metadata) => {
     return (
       metaplex
