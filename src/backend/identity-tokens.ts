@@ -26,8 +26,6 @@ import { stringify } from "./functions";
 // TODO maybe use node fetch after node 18
 import axios from "axios";
 import type { TokenMetaData, ExpandedNFT } from "./types";
-import { httpGet } from "../lib/utils";
-import { uploadImageToArweave } from "./arweave";
 import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
 import { connect } from "./vmwallet";
 
@@ -94,15 +92,11 @@ export const mintAndTransferIdentityToken = async (
   wallet: string,
   givenName: string,
   familyName: string,
-  imageFile: string,
+  uploadedImageUrl: string,
   identityTokenIssuer: Keypair
 ) => {
   log(`🏦 Minting identity token`);
   const connection = await connect("quickNodeMainNetBeta");
-
-  const imageUrl = await uploadImageToArweave(imageFile);
-
-  log(`🖼️ Uploaded image`, imageUrl);
 
   let tokenCreateOutput: CreateNftOutput;
 
@@ -110,7 +104,7 @@ export const mintAndTransferIdentityToken = async (
     tokenCreateOutput = await mintIdentityToken(
       connection,
       identityTokenIssuer,
-      makeTokenMetaData(wallet, givenName, familyName, imageUrl),
+      makeTokenMetaData(wallet, givenName, familyName, uploadedImageUrl),
       true
     );
   } catch (thrownObject) {

@@ -2,10 +2,12 @@
 // because 'ts-node' has issues:
 // https://github.com/TypeStrong/ts-node/issues/1062#issuecomment-1192847985
 
-import { log, stringify } from "./src/backend/functions";
+import { log, sleep, stringify } from "./src/backend/functions";
 import { mintAndTransferIdentityToken } from "./src/backend/identity-tokens";
+import { uploadImageToArweave } from "./src/backend/arweave";
 import dotenv from "dotenv";
 import { getKeypairFromString } from "./src/backend/vmwallet";
+import { SECOND, SECONDS } from "./src/backend/constants";
 
 dotenv.config();
 
@@ -16,8 +18,8 @@ if (!identityTokenSecretKey) {
 }
 
 const WALLET_ADDRESS = "";
-const FIRST_NAME = "";
-const LAST_NAME = "";
+const GIVEN_NAME = "";
+const FAMILY_NAME = "";
 const IMAGE_FILE = "";
 
 const main = async () => {
@@ -26,19 +28,38 @@ const main = async () => {
   log(
     stringify({
       WALLET_ADDRESS,
-      FIRST_NAME,
-      LAST_NAME,
+      GIVEN_NAME,
+      LAST_NAME: FAMILY_NAME,
       IMAGE_FILE,
     })
   );
 
+  log(
+    `Press Ctrl C now if these details are incorrect, othermine minting in 5 seconds.`
+  );
+
+  await sleep(1 * SECOND);
+  log(`4...`);
+  await sleep(1 * SECOND);
+  log(`3...`);
+  await sleep(1 * SECOND);
+  log(`2...`);
+  await sleep(1 * SECOND);
+  log(`1...`);
+  await sleep(1 * SECOND);
+  log(`We have lift off....`);
+
   const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
+
+  const uploadedImageUrl = await uploadImageToArweave(IMAGE_FILE);
+
+  log(`🖼️ Uploaded image`, uploadedImageUrl);
 
   const transactionId = await mintAndTransferIdentityToken(
     WALLET_ADDRESS,
-    FIRST_NAME,
-    LAST_NAME,
-    IMAGE_FILE,
+    GIVEN_NAME,
+    FAMILY_NAME,
+    uploadedImageUrl,
     identityTokenIssuer
   );
   log(transactionId);
