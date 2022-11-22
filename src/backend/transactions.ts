@@ -131,7 +131,7 @@ const getWalletDifference = (
 
 export const summarizeTransaction = (
   rawTransaction: ParsedTransactionWithMeta,
-  currentWallet: PublicKey
+  walletAccount: PublicKey
 ): TransactionSummary => {
   // https://docs.solana.com/terminology#transaction-id
   // The first signature in a transaction, which can be used to uniquely identify the transaction across the complete ledger.
@@ -184,7 +184,7 @@ export const summarizeTransaction = (
       const onlyInstruction = instructions[0] as ParsedInstruction;
 
       const direction =
-        onlyInstruction.parsed.info.source === currentWallet.toBase58()
+        onlyInstruction.parsed.info.source === walletAccount.toBase58()
           ? Direction.sent
           : Direction.recieved;
 
@@ -212,7 +212,7 @@ export const summarizeTransaction = (
 
     let walletDifference = getWalletDifference(
       rawTransaction,
-      currentWallet.toBase58()
+      walletAccount.toBase58()
     );
 
     if (rawTransaction.meta.postTokenBalances.length > 2) {
@@ -220,7 +220,7 @@ export const summarizeTransaction = (
     }
 
     const otherWallet = rawTransaction.meta.postTokenBalances.find(
-      (postTokenBalance) => postTokenBalance.owner !== currentWallet.toBase58()
+      (postTokenBalance) => postTokenBalance.owner !== walletAccount.toBase58()
     ).owner;
 
     // Use postTokenBalances to work out the wallet addresses that were actually involved in the transaction
@@ -233,11 +233,11 @@ export const summarizeTransaction = (
     let from: string;
     let to: string;
     if (direction === Direction.sent) {
-      from = currentWallet.toBase58();
+      from = walletAccount.toBase58();
       to = otherWallet;
     } else {
       from = otherWallet;
-      to = currentWallet.toBase58();
+      to = walletAccount.toBase58();
     }
 
     const currency = Currency.USDC;

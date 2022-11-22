@@ -242,11 +242,14 @@ export const getTransactionsForAddress = async (
 
 export const getTransactionSummariesForTokenAccount = async (
   connection: Connection,
-  address: PublicKey,
+  walletAddress: PublicKey,
   tokenMint: PublicKey,
   limit: number
 ) => {
-  const tokenAccounts = await getTokenAccountsByOwner(connection, address);
+  const tokenAccounts = await getTokenAccountsByOwner(
+    connection,
+    walletAddress
+  );
   const tokenAccountForCurrency = tokenAccounts.find((tokenAccount) => {
     // We need to compare by value, otherwise the account won't be found
     return tokenAccount.mint.toBase58() === tokenMint.toBase58();
@@ -258,6 +261,7 @@ export const getTransactionSummariesForTokenAccount = async (
 
   const transactionSummaries = await getTransactionSummariesForAddress(
     connection,
+    walletAddress,
     tokenAccountForCurrency.address,
     limit
   );
@@ -267,19 +271,24 @@ export const getTransactionSummariesForTokenAccount = async (
 
 export const getTransactionSummariesForAddress = async (
   connection: Connection,
-  address: PublicKey,
+  walletAddress: PublicKey,
+  tokenAccount: PublicKey | null,
   limit: number
 ) => {
+  // For token accounts, we must get transactions for the token account specifically
+  // - getting transactions for the parent wallet won't show deposits by other people
+  // since deposits by other people aren't signed by our wallet
+  const addressToGetTransactionsFor = tokenAccount || walletAddress;
   const rawTransactions = await getTransactionsForAddress(
     connection,
-    address,
+    addressToGetTransactionsFor,
     limit
   );
 
   if (!rawTransactions.length) {
     // TODO: we may wish to change this to a warning
     throw new Error(
-      `Could not get any rawTransactions for ${address.toBase58()}`
+      `Could not get any rawTransactions for ${walletAddress.toBase58()}`
     );
   }
 
@@ -288,7 +297,7 @@ export const getTransactionSummariesForAddress = async (
   );
 
   let transactionSummaries = rawTransactions.map((rawTransaction) => {
-    return summarizeTransaction(rawTransaction, address);
+    return summarizeTransaction(rawTransaction, walletAddress);
   });
 
   // We can't summarize all transactions yet
