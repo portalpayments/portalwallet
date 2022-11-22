@@ -3,6 +3,7 @@ import type {
   PublicKey,
   ParsedTransactionWithMeta,
   ParsedInstruction,
+  PartiallyDecodedInstruction,
 } from "@solana/web3.js";
 import {
   Currency,
@@ -11,7 +12,7 @@ import {
   type TransactionSummary,
 } from "../lib/types";
 
-import { MEMO_PROGRAM, NOTE_PROGRAM } from "./constants";
+import { MEMO_PROGRAM, NOTE_PROGRAM, SPL_TOKEN_PROGRAM } from "./constants";
 
 export const solanaBlocktimeToJSTime = (blockTime: number) => {
   return blockTime * 1000;
@@ -56,6 +57,78 @@ const byDateNewestToOldest = (a, b) => {
   return -1;
 };
 
+const checkIsCreatingTokenAccount = (instruction: ParsedInstruction) => {
+  return (
+    instruction.program === "spl-associated-token-account" &&
+    instruction.parsed.type === "create"
+  );
+};
+
+const checkIsSendingUSDC = (instruction: ParsedInstruction) => {
+  return (
+    instruction.programId.toBase58() === SPL_TOKEN_PROGRAM &&
+    instruction.parsed.type === "transferChecked"
+  );
+};
+
+const getNoteOrMemo = (
+  instruction: ParsedInstruction | PartiallyDecodedInstruction
+): string | null => {
+  const instructionProgram = instruction.programId.toBase58();
+
+  // The 'Note program' is exactly like the 'memo program'
+  // Just run by someone else.
+  if (instructionProgram === MEMO_PROGRAM) {
+    // OK this is just sending Sol with a memo
+
+    // @ts-ignore this definitely exists, see sendingLamportsWithNoteTransaction
+    const memo = instruction.parsed;
+    return memo;
+  }
+
+  // The 'Note program' is exactly like the 'memo program'
+  // Just run by someone else.
+  if (instructionProgram === NOTE_PROGRAM) {
+    // OK this is just sending Sol with a note
+
+    // @ts-ignore this definitely exists, see sendingLamportsWithNoteTransaction
+    const instructionData = instruction.data;
+
+    const noteData = instructionDataToNote(instructionData);
+    return noteData;
+  }
+  return null;
+};
+
+const checkIsMakingUSDCAccount = (instructions: Array<ParsedInstruction>) => {
+  return (
+    instructions.length === 3 &&
+    checkIsCreatingTokenAccount(instructions[0]) &&
+    checkIsSendingUSDC(instructions[1])
+  );
+};
+
+const getWalletDifference = (
+  rawTransaction: ParsedTransactionWithMeta,
+  wallet: string
+) => {
+  const ownerBefore = rawTransaction.meta.preTokenBalances.find(
+    (preTokenBalance) => preTokenBalance.owner === wallet
+  );
+
+  const ownerAfter = rawTransaction.meta.postTokenBalances.find(
+    (postTokenBalance) => postTokenBalance.owner === wallet
+  );
+
+  // It's possible we didn't have thi token before, so we didn't have the token account for it.
+  const valueBefore = Number(ownerBefore?.uiTokenAmount?.amount || 0);
+  const valueAfter = Number(ownerAfter.uiTokenAmount.amount);
+
+  const difference = valueAfter - valueBefore;
+
+  return difference;
+};
+
 export const summarizeTransaction = (
   rawTransaction: ParsedTransactionWithMeta,
   currentWallet: PublicKey
@@ -64,56 +137,49 @@ export const summarizeTransaction = (
   // The first signature in a transaction, which can be used to uniquely identify the transaction across the complete ledger.
   const id = rawTransaction?.transaction?.signatures?.[0];
 
+  // ie, Sol native currency, not a token account
+  const isSolTransaction = rawTransaction.meta.preTokenBalances.length === 0;
+
+  const instructions = rawTransaction.transaction.message
+    .instructions as Array<ParsedInstruction>;
+
+  const firstInstruction = instructions[0];
+
   let memo: string | null = null;
   try {
-    const instructions = rawTransaction.transaction.message.instructions;
-    if (instructions.length === 1) {
-      const firstInstruction = instructions[0] as ParsedInstruction;
+    const hasMultipleInstructions = instructions.length > 1;
+    if (!hasMultipleInstructions) {
       if (
         firstInstruction.parsed.info.source ===
         firstInstruction.parsed.info.destination
       ) {
-        log(`Ignoring transaction sending money to self (probably a mistake)`);
+        log(
+          `Ignoring transaction sending money to self (probably a user mistake)`
+        );
         return null;
       }
     }
 
-    if (instructions.length !== 1) {
-      const secondInstruction = instructions[1];
+    if (hasMultipleInstructions) {
+      if (checkIsMakingUSDCAccount(instructions)) {
+        // Typical Glow sending USDC to new account
+        memo = getNoteOrMemo(instructions[2]);
+      } else {
+        // TODO add comment here describing the common scenario we go down this code path
+        // eg what app normally sends this?
 
-      const secondInstructionProgram = secondInstruction.programId.toBase58();
+        memo = getNoteOrMemo(instructions[1]);
 
-      // The 'Note program' is exactly like the 'memo program'
-      // Just run by someone else.
-      if (secondInstructionProgram === MEMO_PROGRAM) {
-        // OK this is just sending Sol with a memo
-
-        // @ts-ignore this definitely exists, see sendingLamportsWithNoteTransaction
-        memo = secondInstruction.parsed;
-      }
-
-      // The 'Note program' is exactly like the 'memo program'
-      // Just run by someone else.
-      if (secondInstructionProgram === NOTE_PROGRAM) {
-        // OK this is just sending Sol with a note
-
-        // @ts-ignore this definitely exists, see sendingLamportsWithNoteTransaction
-        const instructionData = secondInstruction.data;
-
-        const noteData = instructionDataToNote(instructionData);
-        memo = noteData;
-      }
-
-      if (!memo) {
-        throw new Error(
-          `Don't know how to summarize this transaction - second instruction isn't a memo or note`
-        );
+        if (!memo) {
+          throw new Error(
+            `Don't know how to summarize this transaction - second instruction isn't a memo or note`
+          );
+        }
       }
     }
 
-    if (rawTransaction.meta.preTokenBalances.length === 0) {
+    if (isSolTransaction) {
       log(`Handing Sol transaction`);
-      const instructions = rawTransaction.transaction.message.instructions;
 
       const onlyInstruction = instructions[0] as ParsedInstruction;
 
@@ -144,48 +210,34 @@ export const summarizeTransaction = (
       return portalTransActionSummary;
     }
 
-    const getDifferenceByIndex = (index: number) => {
-      const accountBefore = Number(
-        rawTransaction.meta.preTokenBalances[index].uiTokenAmount.amount
-      );
+    let walletDifference = getWalletDifference(
+      rawTransaction,
+      currentWallet.toBase58()
+    );
 
-      const accountAfter = Number(
-        rawTransaction.meta.postTokenBalances[index].uiTokenAmount.amount
-      );
-
-      return accountAfter - accountBefore;
-    };
-
-    const subjectWalletIndex =
-      rawTransaction.meta.preTokenBalances[0].owner === currentWallet.toBase58()
-        ? 0
-        : 1;
-
-    const otherWalletIndex = flipZeroAndOne(subjectWalletIndex);
-
-    let subjectWalletDifference = getDifferenceByIndex(subjectWalletIndex);
-    const otherWalletDifference = getDifferenceByIndex(otherWalletIndex);
-
-    const subjectOwner =
-      rawTransaction.meta.preTokenBalances[subjectWalletIndex].owner;
-    const otherOwner =
-      rawTransaction.meta.preTokenBalances[otherWalletIndex].owner;
-
-    let direction: Direction;
-    if (isPositive(subjectWalletDifference)) {
-      direction = Direction.recieved;
-    } else {
-      direction = Direction.sent;
+    if (rawTransaction.meta.postTokenBalances.length > 2) {
+      throw new Error(`Can't parse this transaction`);
     }
+
+    const otherWallet = rawTransaction.meta.postTokenBalances.find(
+      (postTokenBalance) => postTokenBalance.owner !== currentWallet.toBase58()
+    ).owner;
+
+    // Use postTokenBalances to work out the wallet addresses that were actually involved in the transaction
+    // Note we can't use pre, as the token accounts may not exist yet
+
+    let direction: Direction = isPositive(walletDifference)
+      ? Direction.recieved
+      : Direction.sent;
 
     let from: string;
     let to: string;
     if (direction === Direction.sent) {
-      from = subjectOwner;
-      to = otherOwner;
+      from = currentWallet.toBase58();
+      to = otherWallet;
     } else {
-      from = otherOwner;
-      to = subjectOwner;
+      from = otherWallet;
+      to = currentWallet.toBase58();
     }
 
     const currency = Currency.USDC;
@@ -196,7 +248,7 @@ export const summarizeTransaction = (
       status: rawTransaction.meta.err === null,
       networkFee: rawTransaction.meta.fee,
       direction,
-      amount: removeSign(subjectWalletDifference),
+      amount: removeSign(walletDifference),
       currency,
       from,
       to,

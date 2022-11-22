@@ -4,7 +4,7 @@ import type {
   ParsedTransactionWithMeta,
 } from "@solana/web3.js";
 
-import { log, sleep } from "./functions";
+import { log, sleep, stringify } from "./functions";
 import {
   LATEST_IDENTITY_TOKEN_VERSION,
   URLS,

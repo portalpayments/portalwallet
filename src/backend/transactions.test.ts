@@ -1,8 +1,4 @@
-import {
-  flipZeroAndOne,
-  getTransactionsByDays,
-  summarizeTransaction,
-} from "./transactions";
+import { getTransactionsByDays, summarizeTransaction } from "./transactions";
 import {
   MOCK_SENDER_PUBLIC_KEY,
   MOCK_RECIPIENT_PUBLIC_KEY,
@@ -10,14 +6,9 @@ import {
   mikeSendingJaredSomeLamportsTransaction,
   sendingLamportsWithNoteTransaction,
   transactionWithMemo,
+  transactionSendingFiveUSDCGlow,
 } from "./__mocks__/mocks";
-import {
-  Connection,
-  Keypair,
-  PublicKey,
-  Transaction,
-  type ParsedTransactionWithMeta,
-} from "@solana/web3.js";
+import { PublicKey, type ParsedTransactionWithMeta } from "@solana/web3.js";
 import {
   transactionResponseSenderComesFirst,
   transactionResponseSenderComesSecond,
@@ -27,17 +18,56 @@ import {
   MIKES_WALLET,
   YCOMBINATOR_DEMO_WALLET_FOR_JARED,
 } from "./constants";
-import {
-  Currency,
-  type TransactionsByDay,
-  type TransactionSummary,
-} from "../lib/types";
+import { Currency } from "../lib/types";
 import { Direction } from "../lib/types";
 import { hexToUtf8, log, stringify } from "./functions";
-import { identityTokenIssuerPublicKeyString } from "../lib/constants";
+
+const GREGS_WALLET = "CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs";
 
 describe(`transaction summaries`, () => {
-  test(`We can produce a transaction summary from a pre-cooked transaction where the sender is first index`, async () => {
+  // Mike sending CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs with glow
+  test(`We can produce a transaction summary from us sending someone money with glow`, async () => {
+    const portalTransactionSummary = summarizeTransaction(
+      transactionSendingFiveUSDCGlow,
+      new PublicKey(MIKES_WALLET)
+    );
+
+    expect(portalTransactionSummary).toEqual({
+      id: "5e9xViaBigEX6G17PvHt9AizyJwRBHPdxCEkz2eLRYsanr53567SHzULhYT6zk63vbsZ4puN3WY7i5774HS7CneZ",
+      date: 1669052844000,
+      status: true,
+      networkFee: 5000,
+      direction: 0,
+      amount: 5000000,
+      currency: 0,
+      from: MIKES_WALLET,
+      to: GREGS_WALLET,
+      memo: "Hey Greg! 🙋🏻‍♂️",
+    });
+  });
+
+  test(`We can produce a transaction summary from someone sending us money with glow`, async () => {
+    // Same transaction as before but with perspective shifted to greg
+    const portalTransactionSummary = summarizeTransaction(
+      transactionSendingFiveUSDCGlow,
+      new PublicKey(GREGS_WALLET)
+    );
+
+    expect(portalTransactionSummary).toEqual({
+      id: "5e9xViaBigEX6G17PvHt9AizyJwRBHPdxCEkz2eLRYsanr53567SHzULhYT6zk63vbsZ4puN3WY7i5774HS7CneZ",
+      date: 1669052844000,
+      status: true,
+      networkFee: 5000,
+      direction: 1,
+      amount: 5000000,
+      currency: 0,
+      from: MIKES_WALLET,
+      to: GREGS_WALLET,
+      memo: "Hey Greg! 🙋🏻‍♂️",
+    });
+  });
+
+  test(`We can produce a transaction summary from a pre-cooked transaction where the sender is first index 1`, async () => {
     const currentUserWallet = MOCK_SENDER_PUBLIC_KEY;
 
     const portalTransactionSummary = summarizeTransaction(
@@ -59,7 +89,7 @@ describe(`transaction summaries`, () => {
     });
   });
 
-  test(`We can produce a transaction summary from a pre-cooked transaction where the sender is first index`, async () => {
+  test(`We can produce a transaction summary from a pre-cooked transaction where the sender is first index 2`, async () => {
     const currentUserWallet = MOCK_SENDER_PUBLIC_KEY;
 
     const portalTransactionSummary = summarizeTransaction(

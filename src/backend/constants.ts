@@ -18,6 +18,9 @@ export const MIKES_USDC_ACCOUNT = "Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc";
 
 export const SPL_TOKEN_PROGRAM = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
 
+export const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM =
+  "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL";
+
 // Made by Vaheh 20221116
 export const UNVERIFIED_ADDRESS =
   "9KbuEUjtkCgZYvZ8jKtyF97hHDCubUcE3UnakDUPeQbJ";

@@ -239,8 +239,6 @@ export const getFullNFTsFromWallet = async (
     }
   });
 
-  log(stringify(nftData));
-
   return nftData;
 };
 
