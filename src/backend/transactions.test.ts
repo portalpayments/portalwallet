@@ -67,29 +67,7 @@ describe(`transaction summaries`, () => {
     });
   });
 
-  test(`We can produce a transaction summary from a pre-cooked transaction where the sender is first index 1`, async () => {
-    const currentUserWallet = MOCK_SENDER_PUBLIC_KEY;
-
-    const portalTransactionSummary = summarizeTransaction(
-      transactionResponseSenderComesFirst,
-      new PublicKey(currentUserWallet)
-    );
-
-    expect(portalTransactionSummary).toEqual({
-      id: "2Nqkv1E6ktnr93v3MqbdbYMZrPnMc5akgACdtfMyuaXZkVBX7JefkAjsxuLh9BexNfMEJJEhghPDfhEQLiMByVY",
-      date: 1663119635000,
-      status: true,
-      networkFee: 5000,
-      direction: Direction.sent,
-      amount: 5000000,
-      currency: Currency.USDC,
-      from: MOCK_SENDER_PUBLIC_KEY,
-      to: MOCK_RECIPIENT_PUBLIC_KEY,
-      memo: null,
-    });
-  });
-
-  test(`We can produce a transaction summary from a pre-cooked transaction where the sender is first index 2`, async () => {
+  test(`We can produce a transaction summary from a pre-cooked transaction where the sender is first`, async () => {
     const currentUserWallet = MOCK_SENDER_PUBLIC_KEY;
 
     const portalTransactionSummary = summarizeTransaction(
