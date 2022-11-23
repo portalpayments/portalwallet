@@ -1,5 +1,5 @@
 <script lang="ts">
-  const log = console.log;
+  import { log } from "../../backend/functions";
   export let currentFeature: number = 0;
   const navigate = (newFeature) => {
     log(`Changing currentFeature to ${newFeature}`);

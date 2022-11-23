@@ -88,7 +88,7 @@
         // messages from service worker.
 
         navigator.serviceWorker.onmessage = function (event) {
-          console.log("🟦 Got a message from the service worker", event.data);
+          log("🟦 Got a message from the service worker", event.data);
         };
 
         return;
