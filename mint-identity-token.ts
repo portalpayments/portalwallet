@@ -29,7 +29,7 @@ const main = async () => {
     stringify({
       WALLET_ADDRESS,
       GIVEN_NAME,
-      LAST_NAME: FAMILY_NAME,
+      FAMILY_NAME,
       IMAGE_FILE,
     })
   );
