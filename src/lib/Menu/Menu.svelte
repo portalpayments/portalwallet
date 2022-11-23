@@ -1,47 +1,69 @@
 <script lang="ts">
   import { Link } from "svelte-navigator";
-  import { walletBalanceAccount } from "../stores";
-  import usdcIconURL from "../../assets/Icons/usdc-coin.svg";
+  import { get as getFromStore } from "svelte/store";
+  import {
+    activeAccountIndexOrNativeStore,
+    tokenAccountsStore,
+  } from "../stores";
+  import type { AccountSummary } from "../../lib/types";
   import solIconURL from "../../assets/Icons/solana-coin.svg";
   import closeIconURL from "../../assets/Icons/close.svg";
   import settingsIconURL from "../../assets/Icons/settings.svg";
   import type { Contact as ContactType } from "../types";
+  import { log } from "../../backend/functions";
+  import { getCurrencyName } from "../../backend/vmwallet";
   import Contact from "../Shared/Contact.svelte";
+  import { ICONS } from "../constants";
 
   export let user: ContactType | null;
 
   export let isMenuActive: boolean;
 
-  export let onClose: svelte.JSX.MouseEventHandler<HTMLButtonElement>;
+  export let onClose: Function;
 
-  const toggleAccount = () => {
-    $walletBalanceAccount.isShowingBalanceInSol =
-      !$walletBalanceAccount.isShowingBalanceInSol;
-    isMenuActive = false;
+  let tokenAccounts: Array<AccountSummary>;
+
+  tokenAccountsStore.subscribe((newValue: Array<AccountSummary>) => {
+    tokenAccounts = newValue;
+  });
+
+  const changeAccount = (accountToSetActive: number | "native") => {
+    log(`Setting ${accountToSetActive} as active account`);
+    activeAccountIndexOrNativeStore.set(accountToSetActive);
+    onClose();
   };
 </script>
 
 <div class="menu {isMenuActive ? 'active' : ''}">
-  <button class="close" on:click={onClose}
+  <button class="close" on:click={() => onClose}
     ><img src={closeIconURL} alt="close" /></button
   >
 
   <div class="accounts">
+    {#each tokenAccounts as tokenAccount, index}
+      <button
+        type="button"
+        class="with-icon {getFromStore(activeAccountIndexOrNativeStore) ===
+        index
+          ? 'active'
+          : ''}"
+        on:click={() => changeAccount(index)}
+      >
+        <img
+          src={ICONS[getCurrencyName(tokenAccount.currency)]}
+          alt="{getCurrencyName(tokenAccount.currency)} account"
+        />{getCurrencyName(tokenAccount.currency)}
+        account</button
+      >
+    {/each}
+
     <button
       type="button"
-      class="with-icon {$walletBalanceAccount.isShowingBalanceInSol
-        ? ''
-        : 'active'}"
-      on:click={toggleAccount}
-    >
-      <img src={usdcIconURL} alt="USDC account" />USDC account</button
-    >
-    <button
-      type="button"
-      class="with-icon {$walletBalanceAccount.isShowingBalanceInSol
+      class="with-icon {getFromStore(activeAccountIndexOrNativeStore) ===
+      'native'
         ? 'active'
         : ''}"
-      on:click={toggleAccount}
+      on:click={() => changeAccount("native")}
     >
       <img src={solIconURL} alt="Sol account" />
       Sol account

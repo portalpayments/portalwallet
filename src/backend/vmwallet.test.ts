@@ -8,9 +8,9 @@ import {
   getAccountBalance,
   getKeypairFromEnvFile,
   getKeypairFromString,
-  getUSDCAccounts,
   putSolIntoWallet,
   verifyWallet,
+  getTokenAccountSummaries,
 } from "./vmwallet";
 import base58 from "bs58";
 
@@ -21,14 +21,16 @@ import {
   DEPOSIT,
   KIMZO_NFT_ADDRESS,
   KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT,
-  MIKES_USDC_ACCOUNT,
   MIKES_WALLET,
   NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN,
   SECONDS,
   KEVIN_ROSES_WALLET,
-  USDC_MAINNET_MINT_ACCOUNT,
   PORTAL_IDENTITY_TOKEN_ISSUER_WALLET,
   VAHEHS_WALLET,
+  MIKES_USDC_ACCOUNT,
+  MINUTE,
+  MIKES_USDH_ACCOUNT,
+  MIKES_USDT_ACCOUNT,
 } from "./constants";
 import {
   getAllNftMetadatasFromAWallet,
@@ -270,46 +272,7 @@ describe(`mainnet integration tests`, () => {
     expect(accountBalance).toEqual(expect.any(Number));
   });
 
-  test(`We can get Mike's USDC balance`, async () => {
-    if (!mainNetConnection) {
-      throw new Error(`Couldn't get a connection, can't continue`);
-    }
-
-    let usdcAccounts = await getUSDCAccounts(mainNetConnection, mikePublicKey);
-
-    expect(usdcAccounts).toEqual([
-      {
-        account: {
-          data: {
-            parsed: {
-              info: {
-                isNative: false,
-                mint: USDC_MAINNET_MINT_ACCOUNT,
-                owner: mikePublicKey.toString(),
-                state: "initialized",
-                tokenAmount: {
-                  amount: expect.any(String),
-                  decimals: 6,
-                  uiAmount: expect.any(Number),
-                  uiAmountString: expect.any(String),
-                },
-              },
-              type: "account",
-            },
-            program: "spl-token",
-            space: 165,
-          },
-          executable: false,
-          lamports: 2039280,
-          owner: TOKEN_PROGRAM_ID,
-          rentEpoch: expect.any(Number),
-        },
-        pubkey: new PublicKey(MIKES_USDC_ACCOUNT),
-      },
-    ]);
-  });
-
-  test(`We can verify Mike`, async () => {
+  test(`We can verify Mike's wallet belongs to Mike`, async () => {
     if (!mainNetConnection) {
       throw new Error(`Couldn't get a connection, can't continue`);
     }
@@ -396,5 +359,39 @@ describe(`mainnet integration tests`, () => {
       });
     },
     15 * SECONDS
+  );
+
+  test(
+    `getAccountSummaries() works`,
+    async () => {
+      const accountSummaries = await getTokenAccountSummaries(
+        mainNetConnection,
+        new PublicKey(MIKES_WALLET)
+      );
+      expect(accountSummaries).toEqual([
+        {
+          address: new PublicKey(MIKES_USDH_ACCOUNT),
+          balance: expect.any(Number),
+          currency: Currency.USDH,
+          decimals: 6,
+          transactionSummaries: expect.any(Array),
+        },
+        {
+          address: new PublicKey(MIKES_USDT_ACCOUNT),
+          balance: expect.any(Number),
+          currency: Currency.USDT,
+          decimals: 6,
+          transactionSummaries: expect.any(Array),
+        },
+        {
+          address: new PublicKey(MIKES_USDC_ACCOUNT),
+          balance: expect.any(Number),
+          currency: Currency.USDC,
+          decimals: 6,
+          transactionSummaries: expect.any(Array),
+        },
+      ]);
+    },
+    1 * MINUTE
   );
 });

@@ -258,23 +258,18 @@ export const summarizeTransaction = (
     return portalTransActionSummary;
   } catch (thrownObject) {
     const error = thrownObject as Error;
-    log(error);
     log(
       `Warning: could not summarize transaction ID: ${id} - see the block explorer for more info, ${error.message}`
     );
-    // TODO: throw error (once we can handle more types of transactions)
+    // TODO: throw error (once we can handle more types of transactions in future)
     return null;
   }
 };
 
 export const getTransactionsByDays = (
-  transactions: Array<TransactionSummary>,
-  // We can't add, eg, 50 cents to 130 sol. So this function is for a specific currency only
-  currency: Currency
+  // It is assumed that all transactionSummaries are for the same currency
+  transactions: Array<TransactionSummary>
 ): Array<TransactionsByDay> => {
-  transactions = transactions.filter(
-    (transaction) => transaction.currency === currency
-  );
   transactions.sort(byDateNewestToOldest);
 
   const transactionsByDays: Array<TransactionsByDay> = [];

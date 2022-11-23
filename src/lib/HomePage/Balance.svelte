@@ -1,35 +1,40 @@
 <script lang="ts">
-  import usdcSymbolURL from "../../assets/Icons/usdc.svg";
-  import solSymbolURL from "../../assets/Icons/solana.svg";
-  import { formatMajorUnits } from "../utils";
-  import { walletBalanceAccount } from "../stores";
+  import { amountAndDecimalsToMajorAndMinor } from "../utils";
+  import { log } from "../../backend/functions";
+  import type { AccountSummary } from "../types";
+  import { ICONS } from "../constants";
+  import { getCurrencyName } from "../../backend/vmwallet";
 
-  export let isBalanceLoaded: boolean;
-  export let major: string;
-  export let minor: string;
+  export let account: AccountSummary;
+  export let noUSDCAccountYet: boolean;
 
-  const SYMBOLS = {
-    usdc: usdcSymbolURL,
-    sol: solSymbolURL,
-  };
+  // Explicitly mark these values as reactive as they depend on other data
+  // being updated (they're derived from usdcAccounts)
+  let major: string | null = null;
+  let minor: string | null = null;
+
+  let currencyName: string;
+
+  if (account) {
+    const majorAndMinor = amountAndDecimalsToMajorAndMinor(
+      account.balance,
+      account.decimals
+    );
+    major = majorAndMinor[0];
+    minor = majorAndMinor[1];
+    currencyName = getCurrencyName(account.currency);
+  }
 </script>
 
 <div class="balance">
   <div class="symbol-major-minor">
-    {#if isBalanceLoaded}
-      {#if $walletBalanceAccount.isShowingBalanceInSol}
-        <!-- TODO load sol account balance here @MikeMacCana -->
-        <img class="symbol" alt="Sol logo" src={SYMBOLS.sol} />
-        <div class="major">{0}</div>
-        <div class="minor">.{0}</div>
-      {:else}
-        <img class="symbol" alt="USDC logo" src={SYMBOLS.usdc} />
-        <div class="major">{formatMajorUnits(major)}</div>
-        <div class="minor">.{minor}</div>
-      {/if}
-    {:else}
-      <div>...</div>
-    {/if}
+    <img class="symbol" alt="{currencyName} logo" src={ICONS[currencyName]} />
+    <div class="major">
+      {noUSDCAccountYet ? "0" : major}
+    </div>
+    <div class="minor">
+      .{noUSDCAccountYet ? "0" : minor}
+    </div>
   </div>
 </div>
 

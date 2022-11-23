@@ -11,6 +11,7 @@
   import { contactsStore } from "../stores";
 
   export let transaction: TransactionSummary | null;
+  export let decimals: number;
 
   // Find the contact for this transaction
   let contact: Contact | null = null;
@@ -33,8 +34,8 @@
   });
 
   const majorAndMinor = amountAndDecimalsToMajorAndMinor(
-    String(transaction.amount),
-    6
+    transaction.amount,
+    decimals
   );
 </script>
 

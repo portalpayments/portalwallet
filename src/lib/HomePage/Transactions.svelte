@@ -1,62 +1,132 @@
 <script lang="ts">
-  import { transactionsStore } from "../../lib/stores";
+  import {
+    tokenAccountsStore,
+    nativeAccountStore,
+    activeAccountIndexOrNativeStore,
+  } from "../../lib/stores";
   import TransactionComponent from "./Transaction.svelte";
   import { amountAndDecimalsToMajorAndMinor } from "../../lib/utils";
+  import { get as getFromStore } from "svelte/store";
   import {
     getTransactionsByDays,
     isoDateToFriendlyName,
   } from "../../backend/transactions";
   import { Currency } from "../../lib/types";
-  import type { TransactionsByDay } from "../../lib/types";
-  import { Direction } from "../../lib/types";
-  import { stringify } from "../../backend/functions";
+  import type {
+    TransactionSummary,
+    TransactionsByDay,
+    AccountSummary,
+  } from "../../lib/types";
+  import { log, stringify } from "../../backend/functions";
   import SkeletonTransactions from "../Shared/Skeletons/SkeletonTransactions.svelte";
 
-  let transactionsByDays: Array<TransactionsByDay>;
+  let transactionsByDays: Array<TransactionsByDay> = [];
+  let decimals: number;
+  let isLoadingTransactionSummaries: boolean = true;
 
-  transactionsStore.subscribe((newValue) => {
+  // TODO: maybe move this to the store?
+  const updateTransactionsByDays = () => {
+    const activeAccountIndexOrNative = getFromStore(
+      activeAccountIndexOrNativeStore
+    );
+    // 0 is a fine index
+    if (activeAccountIndexOrNative === null) {
+      log(`No active account`);
+      return;
+    }
+
+    const solanaAccount = getFromStore(nativeAccountStore);
+
+    if (!solanaAccount) {
+      log(`Solana account not yet loaded`);
+      return;
+    }
+
+    const tokenAccounts = getFromStore(tokenAccountsStore);
+
+    if (!tokenAccounts) {
+      log(`Token accounts not yet loaded`);
+      return;
+    }
+
+    log(`We have everything we need to load transactions by days`);
+
+    let account: AccountSummary;
+
+    if (activeAccountIndexOrNative === "native") {
+      account = solanaAccount;
+      decimals = solanaAccount.decimals;
+    }
+
+    if (typeof activeAccountIndexOrNative === "number") {
+      account = tokenAccounts[activeAccountIndexOrNative];
+      decimals = account.decimals;
+    }
+
+    log(
+      `Setting transactionsByDays, based on ${account.transactionSummaries.length} transactionSummaries `
+    );
+
+    transactionsByDays = getTransactionsByDays(account.transactionSummaries);
+    isLoadingTransactionSummaries = false;
+  };
+
+  activeAccountIndexOrNativeStore.subscribe((newValue) => {
     if (newValue) {
-      transactionsByDays = getTransactionsByDays(newValue, Currency.USDC);
+      updateTransactionsByDays();
+    }
+  });
+
+  nativeAccountStore.subscribe((newValue) => {
+    if (newValue) {
+      updateTransactionsByDays();
+    }
+  });
+
+  tokenAccountsStore.subscribe((newValue) => {
+    if (newValue) {
+      updateTransactionsByDays();
     }
   });
 </script>
 
 {#if transactionsByDays}
-  <div class="days">
-    {#each transactionsByDays as transactionsByDay}
-      <div class="day">
-        <div class="day-summary">
-          <div class="day-name">
-            {isoDateToFriendlyName(transactionsByDay.isoDate)}
+  {#if !isLoadingTransactionSummaries}
+    <div class="days">
+      {#each transactionsByDays as transactionsByDay}
+        <div class="day">
+          <div class="day-summary">
+            <div class="day-name">
+              {isoDateToFriendlyName(transactionsByDay.isoDate)}
+            </div>
+
+            <div class="day-total">
+              {amountAndDecimalsToMajorAndMinor(
+                transactionsByDay.totalSpending,
+                decimals
+              )[0]}.{amountAndDecimalsToMajorAndMinor(
+                transactionsByDay.totalSpending,
+                decimals
+              )[1]}
+            </div>
           </div>
 
-          <div class="day-total">
-            <!-- TODO: decimals (eg 6) should come from account store -->
-            {amountAndDecimalsToMajorAndMinor(
-              String(transactionsByDay.totalSpending),
-              6
-            )[0]}.{amountAndDecimalsToMajorAndMinor(
-              String(transactionsByDay.totalSpending),
-              6
-            )[1]}
+          <div class="transactions">
+            {#each transactionsByDay.transactions as transaction}
+              <TransactionComponent {transaction} {decimals} />
+            {/each}
           </div>
         </div>
-
-        <div class="transactions">
-          {#each transactionsByDay.transactions as transaction}
-            <TransactionComponent {transaction} />
-          {/each}
-        </div>
-      </div>
-    {/each}
-  </div>
-  {#if !transactionsByDays.length}
-    <p>No transactions</p>
+      {/each}
+    </div>
+    {#if !transactionsByDays.length}
+      <p>No transactions</p>
+    {/if}
+  {:else}
+    <div class="days mock-days">
+      <SkeletonTransactions />
+    </div>
   {/if}
-{:else}
-  <div class="days mock-days">
-    <SkeletonTransactions />
-  </div>
 {/if}
 
 <style>

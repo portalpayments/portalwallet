@@ -1,3 +1,4 @@
+import type { PublicKey } from "@solana/web3.js";
 import type { VerifiedClaims } from "../backend/types";
 
 export interface Settings {
@@ -26,6 +27,14 @@ export interface Contact {
   verifiedClaims: VerifiedClaims;
 }
 
+export interface AccountSummary {
+  address: PublicKey;
+  currency: Currency;
+  balance: number;
+  decimals: number;
+  transactionSummaries: Array<TransactionSummary>;
+}
+
 export enum Direction {
   "sent",
   "recieved",
@@ -33,6 +42,8 @@ export enum Direction {
 
 export enum Currency {
   "USDC",
+  "USDH",
+  "USDT",
   "SOL",
 }
 

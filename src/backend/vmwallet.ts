@@ -1,4 +1,9 @@
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import {
+  Connection,
+  Keypair,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+} from "@solana/web3.js";
 import type {
   TransactionResponse,
   ParsedTransactionWithMeta,
@@ -9,7 +14,7 @@ import {
   LATEST_IDENTITY_TOKEN_VERSION,
   URLS,
   SECOND,
-  USDC_MAINNET_MINT_ACCOUNT,
+  mintToCurrencyMap,
 } from "./constants";
 import { asyncMap } from "./functions";
 import base58 from "bs58";
@@ -19,6 +24,9 @@ import { getIdentityTokensFromWallet } from "./identity-tokens";
 import type { TokenMetaData, VerifiedClaims } from "./types";
 import { summarizeTransaction } from "./transactions";
 import { httpGet } from "../lib/utils";
+import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../lib/constants";
+import { Currency } from "../lib/types";
+import type { AccountSummary } from "../lib/types";
 
 const VERIFIED_CLAIMS_BY_ADDRESS: Record<string, VerifiedClaims> = {};
 
@@ -30,24 +38,6 @@ export const getKeypairFromString = (secretKeyString: string) => {
     throw new Error("Invalid secret key! See README.md");
   }
   return Keypair.fromSecretKey(decodedSecretKey);
-};
-
-export const getUSDCAccounts = async (
-  connection: Connection,
-  publicKey: PublicKey,
-  usdcMintAccount = USDC_MAINNET_MINT_ACCOUNT
-) => {
-  try {
-    let parsedTokenAccountsByOwner =
-      await connection.getParsedTokenAccountsByOwner(publicKey, {
-        mint: new PublicKey(usdcMintAccount),
-      });
-    return parsedTokenAccountsByOwner.value;
-  } catch (thrownObject) {
-    const error = thrownObject as Error;
-    console.trace();
-    throw new Error(`Error in getParsedTokenAccountsByOwner: ${error.message}`);
-  }
 };
 
 export const connect = async (
@@ -240,35 +230,6 @@ export const getTransactionsForAddress = async (
   return transactions;
 };
 
-export const getTransactionSummariesForTokenAccount = async (
-  connection: Connection,
-  walletAddress: PublicKey,
-  tokenMint: PublicKey,
-  limit: number
-) => {
-  const tokenAccounts = await getTokenAccountsByOwner(
-    connection,
-    walletAddress
-  );
-  const tokenAccountForCurrency = tokenAccounts.find((tokenAccount) => {
-    // We need to compare by value, otherwise the account won't be found
-    return tokenAccount.mint.toBase58() === tokenMint.toBase58();
-  });
-
-  if (!tokenAccountForCurrency) {
-    throw new Error(`Could not find an account for ${tokenMint}`);
-  }
-
-  const transactionSummaries = await getTransactionSummariesForAddress(
-    connection,
-    walletAddress,
-    tokenAccountForCurrency.address,
-    limit
-  );
-
-  return transactionSummaries;
-};
-
 export const getTransactionSummariesForAddress = async (
   connection: Connection,
   walletAddress: PublicKey,
@@ -292,10 +253,6 @@ export const getTransactionSummariesForAddress = async (
     );
   }
 
-  log(
-    `In getTransactionSummariesForAddress, limit was ${limit}, got ${rawTransactions.length} rawTransactions`
-  );
-
   let transactionSummaries = rawTransactions.map((rawTransaction) => {
     return summarizeTransaction(rawTransaction, walletAddress);
   });
@@ -305,5 +262,83 @@ export const getTransactionSummariesForAddress = async (
     (transactionSummary) => transactionSummary !== null
   );
 
+  log(
+    `In getTransactionSummariesForAddress, for wallet ${walletAddress.toBase58()} token account ${tokenAccount.toBase58()} limit was ${limit}, got ${
+      rawTransactions.length
+    } rawTransactions, produced ${
+      transactionSummaries.length
+    } transactionSummaries`
+  );
+
   return transactionSummaries;
+};
+
+export const getTokenAccountSummaries = async (
+  connection: Connection,
+  walletAddress: PublicKey
+): Promise<Array<AccountSummary>> => {
+  const tokenAccounts = await getTokenAccountsByOwner(
+    connection,
+    walletAddress
+  );
+  // TODO: fix asyncmap
+  // @ts-ignore
+  const accountSummariesOrNulls: Array<AccountSummary | null> = await asyncMap(
+    tokenAccounts,
+    async (tokenAccount) => {
+      const currencyInfo = mintToCurrencyMap[tokenAccount.mint.toBase58()];
+
+      if (!currencyInfo) {
+        log(`Unknown currency for mint ${tokenAccount.mint}`);
+        return null;
+      }
+
+      const currencyName = currencyInfo.name;
+      log(`Getting transactions for ${currencyName} account`);
+      const transactionSummaries = await getTransactionSummariesForAddress(
+        connection,
+        walletAddress,
+        tokenAccount.address,
+        HOW_MANY_TRANSACTIONS_TO_SHOW
+      );
+      const accountSummary: AccountSummary = {
+        address: tokenAccount.address,
+        currency: currencyInfo.id,
+        // TODO - converting BigInt to Number may be sketchy
+        balance: Number(tokenAccount.amount),
+        decimals: currencyInfo.decimals,
+        transactionSummaries,
+      };
+      return accountSummary;
+    }
+  );
+  const accountSummaries: Array<AccountSummary> =
+    accountSummariesOrNulls.filter((accountSummary) => accountSummary !== null);
+  return accountSummaries;
+};
+
+export const getNativeAccountSummary = async (
+  connection: Connection,
+  walletAddress: PublicKey
+): Promise<AccountSummary> => {
+  log(`Getting transactions for native account`);
+  const accountBalance = await getAccountBalance(connection, walletAddress);
+  const transactionSummaries = await getTransactionSummariesForAddress(
+    connection,
+    walletAddress,
+    walletAddress,
+    HOW_MANY_TRANSACTIONS_TO_SHOW
+  );
+  const accountSummary: AccountSummary = {
+    address: walletAddress,
+    currency: Currency.SOL,
+    balance: accountBalance,
+    decimals: LAMPORTS_PER_SOL,
+    transactionSummaries,
+  };
+  return accountSummary;
+};
+
+export const getCurrencyName = (currencyNumber: number) => {
+  return Currency[currencyNumber] || null;
 };

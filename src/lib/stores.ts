@@ -2,11 +2,20 @@ import { get as getFromStore, writable, type Writable } from "svelte/store";
 import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
 import { Keypair as KeypairConstructor } from "@solana/web3.js";
 import { identityTokenIssuerPublicKeyString } from "./constants";
-import { Direction, type Contact, type TransactionSummary } from "../lib/types";
+import {
+  Currency,
+  Direction,
+  type AccountSummary,
+  type Contact,
+} from "../lib/types";
 import { asyncMap, log, stringify } from "../backend/functions";
-import { verifyWallet } from "../backend/vmwallet";
+import {
+  getNativeAccountSummary,
+  getTokenAccountSummaries,
+  verifyWallet,
+} from "../backend/vmwallet";
 import { toUniqueStringArray } from "./utils";
-import { getSettings } from "./settings";
+import { NOT_FOUND } from "../backend/constants";
 
 let connection: Connection | null;
 let keyPair: Keypair | null;
@@ -17,7 +26,14 @@ connectionStore.subscribe((newValue) => {
   connection = newValue;
 });
 
-export const transactionsStore: Writable<null | Array<TransactionSummary>> =
+export const activeAccountIndexOrNativeStore: Writable<
+  null | number | "native"
+> = writable(null);
+
+export const nativeAccountStore: Writable<null | AccountSummary> =
+  writable(null);
+
+export const tokenAccountsStore: Writable<null | Array<AccountSummary>> =
   writable(null);
 
 export const identityTokenIssuerPublicKey = new PublicKey(
@@ -35,30 +51,75 @@ export const authStore: Writable<Auth> = writable({
   keyPair: null,
 });
 
-// Storing the state of the wallet balance account
-export const walletBalanceAccount = writable({
-  isShowingBalanceInSol: false,
-});
-
-transactionsStore.subscribe(async (transactionSummaries) => {
-  if (!transactionSummaries?.length) {
+const updateAccounts = async () => {
+  if (!connection) {
+    return;
+  }
+  if (!keyPair) {
     return;
   }
 
-  log(`${transactionSummaries.length} transactionSummaries.`);
+  log(`Updating Solana account....`);
+  const nativeAccountSummaries: AccountSummary = await getNativeAccountSummary(
+    connection,
+    keyPair.publicKey
+  );
+  nativeAccountStore.set(nativeAccountSummaries);
 
-  const transactionWalletAddresses = transactionSummaries.map((transaction) => {
-    let transactionWalletAddress: string;
-    if (transaction.direction === Direction.sent) {
-      transactionWalletAddress = transaction.to;
-    } else {
-      transactionWalletAddress = transaction.from;
-    }
-    return transactionWalletAddress;
+  log(`Updating token accounts...`);
+  const tokenAccountSummaries: Array<AccountSummary> =
+    await getTokenAccountSummaries(connection, keyPair.publicKey);
+  tokenAccountsStore.set(tokenAccountSummaries);
+
+  log(`Finding USDC account...`);
+  const usdcAccountIndex = tokenAccountSummaries.findIndex(
+    (accountSummary) => accountSummary.currency === Currency.USDC
+  );
+
+  if (usdcAccountIndex === NOT_FOUND) {
+    log(`No existing USDC account in this wallet`);
+    return;
+  }
+
+  log(`Setting USDC account index as active account`);
+  activeAccountIndexOrNativeStore.set(usdcAccountIndex);
+};
+
+connectionStore.subscribe((newValue) => {
+  if (newValue) {
+    log(`🔌 connection has changed, updating accounts`);
+    connection = newValue;
+    updateAccounts();
+  }
+});
+
+authStore.subscribe((newValue) => {
+  if (newValue.keyPair) {
+    log(`🗝️ keyPair has changed, updating accounts`);
+    keyPair = newValue.keyPair;
+    updateAccounts();
+  }
+});
+
+tokenAccountsStore.subscribe(async (accounts) => {
+  if (!accounts?.length) {
+    return;
+  }
+
+  const transactionWalletAddresses = accounts.map((account) => {
+    return account.transactionSummaries.map((transaction) => {
+      let transactionWalletAddress: string;
+      if (transaction.direction === Direction.sent) {
+        transactionWalletAddress = transaction.to;
+      } else {
+        transactionWalletAddress = transaction.from;
+      }
+      return transactionWalletAddress;
+    });
   });
 
   const uniqueTransactionWalletAddresses: Array<string> = toUniqueStringArray(
-    transactionWalletAddresses
+    transactionWalletAddresses.flat()
   );
 
   log(

@@ -30,12 +30,11 @@ export const toUniqueStringArray = (array: Array<string>): Array<string> => {
 };
 
 export const amountAndDecimalsToMajorAndMinor = (
-  // Amount is astring because that's what web3.js uses
-  amount: string,
+  amount: number,
   decimals: number
 ) => {
   const multiplier = getMultiplier(decimals);
-  const major = String(Math.floor(Number(amount) / multiplier));
+  const major = String(Math.floor(amount / multiplier));
   let minor = String(Number(amount) % multiplier);
   // Normalize '6' to be '000006' etc.
   const minorPadded = minor.padStart(decimals, "0");
