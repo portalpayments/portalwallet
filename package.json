@@ -16,7 +16,8 @@
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "test": "jest",
     "start-validator": "bash start-validator.bash",
-    "mint-identity-token": "npx jest -t 'mint a real identity token'"
+    "mint-identity-token": "npx tsx mint-identity-token.ts",
+    "make-zip-file": "bash make-zip-file.bash"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",

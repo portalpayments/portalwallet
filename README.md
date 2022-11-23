@@ -10,6 +10,26 @@
 
 See [coding guidelines](CODING_GUIDELINES.md).
 
+## To package the Web Extension and run a User Test
+
+### Make zip file
+
+```
+npm run make-zip-file
+```
+
+### Set options for identity token
+
+Then edit `mint-identity-token.ts` with the wallet address, first name, etc.
+
+### Make identity token
+
+Then run:
+
+```
+npm run mint-identity-token
+```
+
 ## For browser work
 
 ### Start the development server
