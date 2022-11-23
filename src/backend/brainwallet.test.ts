@@ -9,9 +9,9 @@ import {
 } from "./brainwallet";
 import { DEPOSIT, SECONDS } from "./constants";
 import { connect, getAccountBalance, putSolIntoWallet } from "./vmwallet";
-import { expectedCleanedPersonalPhrase } from "./__mocks__/mocks";
 import * as dotenv from "dotenv";
 import * as base58 from "bs58";
+import { expectedCleanedPersonalPhrase } from "./phrase-cleaning.test";
 
 const firstName = `Joe`;
 const lastName = `Cottoneye`;

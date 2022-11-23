@@ -359,6 +359,7 @@ describe(`mainnet integration tests`, () => {
     async () => {
       const transactionSummaries = await getTransactionSummariesForAddress(
         mainNetConnection,
+        new PublicKey(MIKES_WALLET),
         new PublicKey(MIKES_USDC_ACCOUNT),
         1
       );

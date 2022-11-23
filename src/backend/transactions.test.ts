@@ -2,17 +2,12 @@ import { getTransactionsByDays, summarizeTransaction } from "./transactions";
 import {
   MOCK_SENDER_PUBLIC_KEY,
   MOCK_RECIPIENT_PUBLIC_KEY,
-  mikeSendingHimselfMoneyTransaction,
-  mikeSendingJaredSomeLamportsTransaction,
-  sendingLamportsWithNoteTransaction,
-  transactionWithMemo,
-  transactionSendingFiveUSDCGlow,
 } from "./__mocks__/mocks";
 import { PublicKey, type ParsedTransactionWithMeta } from "@solana/web3.js";
 import {
-  transactionResponseSenderComesFirst,
-  transactionResponseSenderComesSecond,
-} from "./__mocks__/mocks";
+  sendToExistingTokenAccountSenderComesFirst,
+  sendToExistingTokenAccountSenderComesSecond,
+} from "./__mocks__/transactions/sendToExistingTokenAccount";
 import {
   JOHN_TESTUSER_DEMO_WALLET,
   MIKES_WALLET,
@@ -21,6 +16,13 @@ import {
 import { Currency } from "../lib/types";
 import { Direction } from "../lib/types";
 import { hexToUtf8, log, stringify } from "./functions";
+import { sendFiveUSDC } from "./__mocks__/transactions/sendFiveUSDC";
+import { sendingMoneyToSelf } from "./__mocks__/transactions/sendingMoneyToSelf";
+import {
+  sendingSol,
+  sendingSolWithMemo,
+  sendingSolWithNote,
+} from "./__mocks__/transactions/sendingSol";
 
 const GREGS_WALLET = "CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs";
 
@@ -28,7 +30,7 @@ describe(`transaction summaries`, () => {
   // Mike sending CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs with glow
   test(`We can produce a transaction summary from us sending someone money with glow`, async () => {
     const portalTransactionSummary = summarizeTransaction(
-      transactionSendingFiveUSDCGlow,
+      sendFiveUSDC,
       new PublicKey(MIKES_WALLET)
     );
 
@@ -49,7 +51,7 @@ describe(`transaction summaries`, () => {
   test(`We can produce a transaction summary from someone sending us money with glow`, async () => {
     // Same transaction as before but with perspective shifted to greg
     const portalTransactionSummary = summarizeTransaction(
-      transactionSendingFiveUSDCGlow,
+      sendFiveUSDC,
       new PublicKey(GREGS_WALLET)
     );
 
@@ -71,7 +73,7 @@ describe(`transaction summaries`, () => {
     const currentUserWallet = MOCK_SENDER_PUBLIC_KEY;
 
     const portalTransactionSummary = summarizeTransaction(
-      transactionResponseSenderComesFirst,
+      sendToExistingTokenAccountSenderComesFirst,
       new PublicKey(currentUserWallet)
     );
 
@@ -95,7 +97,7 @@ describe(`transaction summaries`, () => {
     const portalTransactionSummary = summarizeTransaction(
       // TODO: our logged transaction.message seems to be missing some properties - investigate - could just be typescript types not being up to date
       // @ts-ignore
-      transactionResponseSenderComesSecond,
+      sendToExistingTokenAccountSenderComesSecond,
       new PublicKey(currentUserWallet)
     );
 
@@ -119,7 +121,7 @@ describe(`transaction summaries`, () => {
     const portalTransactionSummary = summarizeTransaction(
       // TODO: our logged transaction.message seems to be missing some properties - investigate - could just be typescript types not being up to date
       // @ts-ignore
-      transactionResponseSenderComesFirst,
+      sendToExistingTokenAccountSenderComesFirst,
       new PublicKey(currentUserWallet)
     );
 
@@ -141,7 +143,7 @@ describe(`transaction summaries`, () => {
     const portalTransactionSummary =
       // TODO: 'as' shouldn't be necessary, we should tweak our test data
       summarizeTransaction(
-        mikeSendingHimselfMoneyTransaction as ParsedTransactionWithMeta,
+        sendingMoneyToSelf as ParsedTransactionWithMeta,
         new PublicKey(MIKES_WALLET)
       );
 
@@ -152,7 +154,7 @@ describe(`transaction summaries`, () => {
     const portalTransactionSummary =
       // TODO: 'as' shouldn't be necessary, we should tweak our test data
       summarizeTransaction(
-        mikeSendingJaredSomeLamportsTransaction as ParsedTransactionWithMeta,
+        sendingSol as ParsedTransactionWithMeta,
         new PublicKey(MIKES_WALLET)
       );
 
@@ -387,7 +389,7 @@ describe(`grouping transactions`, () => {
 describe(`memos and notes`, () => {
   test(`We can read a transaction with a memo`, () => {
     const summary = summarizeTransaction(
-      transactionWithMemo,
+      sendingSolWithMemo,
       new PublicKey(MIKES_WALLET)
     );
     expect(summary).toEqual({
@@ -416,7 +418,7 @@ describe(`memos and notes`, () => {
     const portalTransactionSummary =
       // TODO: 'as' shouldn't be necessary, we should tweak our test data
       summarizeTransaction(
-        sendingLamportsWithNoteTransaction as ParsedTransactionWithMeta,
+        sendingSolWithNote as ParsedTransactionWithMeta,
         new PublicKey(JOHN_TESTUSER_DEMO_WALLET)
       );
 

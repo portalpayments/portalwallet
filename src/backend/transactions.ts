@@ -81,7 +81,7 @@ const getNoteOrMemo = (
   if (instructionProgram === MEMO_PROGRAM) {
     // OK this is just sending Sol with a memo
 
-    // @ts-ignore this definitely exists, see sendingLamportsWithNoteTransaction
+    // @ts-ignore this definitely exists, see sendingSolWithNote
     const memo = instruction.parsed;
     return memo;
   }
@@ -91,7 +91,7 @@ const getNoteOrMemo = (
   if (instructionProgram === NOTE_PROGRAM) {
     // OK this is just sending Sol with a note
 
-    // @ts-ignore this definitely exists, see sendingLamportsWithNoteTransaction
+    // @ts-ignore this definitely exists, see sendingSolWithNote
     const instructionData = instruction.data;
 
     const noteData = instructionDataToNote(instructionData);
