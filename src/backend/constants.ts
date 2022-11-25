@@ -105,17 +105,17 @@ export const NOT_FOUND = -1;
 export const mintToCurrencyMap = {
   [USDC_MAINNET_MINT_ACCOUNT]: {
     id: Currency.USDC,
-    name: Currency.USDC,
+    name: "USDC",
     decimals: 6,
   },
   [USDH_MAINNET_MINT_ACCOUNT]: {
     id: Currency.USDH,
-    name: Currency.USDH,
+    name: "USDH",
     decimals: 6,
   },
   [USDT_MAINNET_MINT_ACCOUNT]: {
     id: Currency.USDT,
-    name: Currency.USDT,
+    name: "USDT",
     decimals: 6,
   },
 };
