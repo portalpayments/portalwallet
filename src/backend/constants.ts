@@ -96,7 +96,11 @@ export const URLS = {
     "https://proportionate-greatest-needle.solana-mainnet.quiknode.pro/",
 };
 
-export const USD_DECIMALS = 2;
+// USD-based currencies have more granularity than this,
+// but users want to see these currencies as a dollars and cents
+export const USD_VISUAL_DECIMALS = 2;
+
+export const SOLANA_DECIMALS = Math.log10(LAMPORTS_PER_SOL);
 
 export const SOL = LAMPORTS_PER_SOL;
 
@@ -135,7 +139,7 @@ export const DEPOSIT = 1_000_000;
 export const ENOUGH_TO_MAKE_A_NEW_TOKEN = 1_000_000_000;
 export const NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN = 500_000;
 
-export const USD = Number(`1e${USD_DECIMALS}`);
+export const USD = Number(`1e${USD_VISUAL_DECIMALS}`);
 
 // BIP44
 // From https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#purpose

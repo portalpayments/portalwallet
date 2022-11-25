@@ -1,8 +1,6 @@
 <script lang="ts">
   import {
-    tokenAccountsStore,
-    nativeAccountStore,
-    activeAccountIndexOrNativeStore,
+    activeAccountStore,
   } from "../../lib/stores";
   import TransactionComponent from "./Transaction.svelte";
   import { amountAndDecimalsToMajorAndMinor } from "../../lib/utils";
@@ -25,69 +23,20 @@
   let isLoadingTransactionSummaries: boolean = true;
 
   // TODO: maybe move this to the store?
-  const updateTransactionsByDays = () => {
-    const activeAccountIndexOrNative = getFromStore(
-      activeAccountIndexOrNativeStore
-    );
-    // 0 is a fine index
-    if (activeAccountIndexOrNative === null) {
-      log(`No active account`);
-      return;
+  activeAccountStore.subscribe( (newValue) => {
+    if ( newValue ) {
+      log(
+        `Setting transactionsByDays, based on ${newValue.transactionSummaries.length} transactionSummaries `
+      );
+
+      transactionsByDays = getTransactionsByDays(newValue.transactionSummaries);
+      decimals = newValue.decimals
+
+      isLoadingTransactionSummaries = false;
     }
-
-    const solanaAccount = getFromStore(nativeAccountStore);
-
-    if (!solanaAccount) {
-      log(`Solana account not yet loaded`);
-      return;
-    }
-
-    const tokenAccounts = getFromStore(tokenAccountsStore);
-
-    if (!tokenAccounts) {
-      log(`Token accounts not yet loaded`);
-      return;
-    }
-
-    log(`We have everything we need to load transactions by days`);
-
-    let account: AccountSummary;
-
-    if (activeAccountIndexOrNative === "native") {
-      account = solanaAccount;
-      decimals = solanaAccount.decimals;
-    }
-
-    if (typeof activeAccountIndexOrNative === "number") {
-      account = tokenAccounts[activeAccountIndexOrNative];
-      decimals = account.decimals;
-    }
-
-    log(
-      `Setting transactionsByDays, based on ${account.transactionSummaries.length} transactionSummaries `
-    );
-
-    transactionsByDays = getTransactionsByDays(account.transactionSummaries);
-    isLoadingTransactionSummaries = false;
-  };
-
-  activeAccountIndexOrNativeStore.subscribe((newValue) => {
-    if (newValue) {
-      updateTransactionsByDays();
-    }
+    
   });
 
-  nativeAccountStore.subscribe((newValue) => {
-    if (newValue) {
-      updateTransactionsByDays();
-    }
-  });
-
-  tokenAccountsStore.subscribe((newValue) => {
-    if (newValue) {
-      updateTransactionsByDays();
-    }
-  });
 </script>
 
 {#if transactionsByDays}

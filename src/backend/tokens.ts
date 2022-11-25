@@ -19,7 +19,7 @@ import {
 } from "@solana/spl-token";
 import type { Account } from "@solana/spl-token";
 
-import { USDC_MAINNET_MINT_ACCOUNT, USD_DECIMALS } from "./constants";
+import { USDC_MAINNET_MINT_ACCOUNT, USD_VISUAL_DECIMALS } from "./constants";
 import { getABetterErrorMessage } from "./errors";
 import { log, stringify } from "./functions";
 import { transferWithMemo } from "./transfer-with-memo";
@@ -38,7 +38,7 @@ export const createMintAccount = async (
       payer,
       mintAuthority,
       null, // Don't both with a freeze address
-      USD_DECIMALS
+      USD_VISUAL_DECIMALS
     );
     return mintAccountPublicKey;
   } catch (thrownObject) {
@@ -66,7 +66,7 @@ export const mintTokens = async (
     tokenAccountPublicKey, // receiver (sholud be a token account)
     mintAuthorityPublicKey, // mint authority
     amount,
-    USD_DECIMALS
+    USD_VISUAL_DECIMALS
   );
   return transactionHash;
 };

@@ -10,6 +10,7 @@ import {
 } from "../lib/types";
 import { asyncMap, log, stringify } from "../backend/functions";
 import {
+  getContactsFromTransactions,
   getNativeAccountSummary,
   getTokenAccountSummaries,
   verifyWallet,
@@ -26,9 +27,10 @@ connectionStore.subscribe((newValue) => {
   connection = newValue;
 });
 
-export const activeAccountIndexOrNativeStore: Writable<
-  null | number | "native"
-> = writable(null);
+export const contactsStore: Writable<Array<Contact>> = writable([]);
+
+export const activeAccountStore: Writable<null | AccountSummary> =
+  writable(null);
 
 export const nativeAccountStore: Writable<null | AccountSummary> =
   writable(null);
@@ -51,6 +53,10 @@ export const authStore: Writable<Auth> = writable({
   keyPair: null,
 });
 
+export const haveAccountsLoadedStore: Writable<boolean> = writable(false);
+
+export const hasUSDCAccountStore: Writable<boolean | null> = writable(null);
+
 const updateAccounts = async () => {
   if (!connection) {
     return;
@@ -59,30 +65,42 @@ const updateAccounts = async () => {
     return;
   }
 
+  log(`Updating accounts...`);
+
   log(`Updating Solana account....`);
-  const nativeAccountSummaries: AccountSummary = await getNativeAccountSummary(
+  const nativeAccountSummary: AccountSummary = await getNativeAccountSummary(
     connection,
     keyPair.publicKey
   );
-  nativeAccountStore.set(nativeAccountSummaries);
+  nativeAccountStore.set(nativeAccountSummary);
 
   log(`Updating token accounts...`);
   const tokenAccountSummaries: Array<AccountSummary> =
     await getTokenAccountSummaries(connection, keyPair.publicKey);
   tokenAccountsStore.set(tokenAccountSummaries);
+  haveAccountsLoadedStore.set(true);
 
   log(`Finding USDC account...`);
   const usdcAccountIndex = tokenAccountSummaries.findIndex(
     (accountSummary) => accountSummary.currency === Currency.USDC
   );
-
   if (usdcAccountIndex === NOT_FOUND) {
     log(`No existing USDC account in this wallet`);
+    hasUSDCAccountStore.set(false);
     return;
   }
+  log(`Found USDC account`);
+  hasUSDCAccountStore.set(true);
+  activeAccountStore.set(tokenAccountSummaries[usdcAccountIndex]);
 
-  log(`Setting USDC account index as active account`);
-  activeAccountIndexOrNativeStore.set(usdcAccountIndex);
+  log(`Getting contacts for all transactions`);
+  const contacts = await getContactsFromTransactions(
+    connection,
+    keyPair,
+    nativeAccountSummary,
+    tokenAccountSummaries
+  );
+  contactsStore.set(contacts);
 };
 
 connectionStore.subscribe((newValue) => {
@@ -100,62 +118,3 @@ authStore.subscribe((newValue) => {
     updateAccounts();
   }
 });
-
-tokenAccountsStore.subscribe(async (accounts) => {
-  if (!accounts?.length) {
-    return;
-  }
-
-  const transactionWalletAddresses = accounts.map((account) => {
-    return account.transactionSummaries.map((transaction) => {
-      let transactionWalletAddress: string;
-      if (transaction.direction === Direction.sent) {
-        transactionWalletAddress = transaction.to;
-      } else {
-        transactionWalletAddress = transaction.from;
-      }
-      return transactionWalletAddress;
-    });
-  });
-
-  const uniqueTransactionWalletAddresses: Array<string> = toUniqueStringArray(
-    transactionWalletAddresses.flat()
-  );
-
-  log(
-    `We need to verify ${uniqueTransactionWalletAddresses.length} uniqueTransactionWalletAddresses:`
-  );
-
-  const secretKey = getFromStore(authStore).keyPair.secretKey;
-  if (!secretKey) {
-    throw new Error(`Couldn't get the secret key from the auth store!`);
-  }
-
-  keyPair = KeypairConstructor.fromSecretKey(secretKey);
-
-  // TODO - Fix 'as' - asyncMap may need some work.
-  const contacts = (await asyncMap(
-    uniqueTransactionWalletAddresses,
-    async (walletAddress): Promise<Contact> => {
-      const verifiedClaims = await verifyWallet(
-        connection,
-        keyPair,
-        identityTokenIssuerPublicKey,
-        new PublicKey(walletAddress)
-      );
-      const contact: Contact = {
-        walletAddress,
-        isNew: false,
-        isPending: false,
-        verifiedClaims,
-      };
-      return contact;
-    }
-  )) as Array<Contact>;
-
-  log(`Got ${contacts.length} contacts used in transactions`);
-
-  contactsStore.set(contacts);
-});
-
-export const contactsStore: Writable<Array<Contact>> = writable([]);

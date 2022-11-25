@@ -1,41 +1,84 @@
 <script lang="ts">
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
   import { log } from "../../backend/functions";
-  import type { AccountSummary } from "../types";
+  import { get as getFromStore } from "svelte/store";
   import { ICONS } from "../constants";
   import { getCurrencyName } from "../../backend/vmwallet";
+  import type { AccountSummary } from "../../lib/types";
+  import SkeletonBalance from "../Shared/Skeletons/SkeletonBalance.svelte";
 
-  export let account: AccountSummary;
-  export let noUSDCAccountYet: boolean;
+  import {
+    activeAccountStore,
+    hasUSDCAccountStore,
+    haveAccountsLoadedStore,
+  } from "../stores";
 
+  // TODO
   // Explicitly mark these values as reactive as they depend on other data
-  // being updated (they're derived from usdcAccounts)
-  let major: string | null = null;
-  let minor: string | null = null;
+  let major: string | null;
+  $: major = null;
+  let minor: string | null;
+  $: minor = null;
 
   let currencyName: string;
 
-  if (account) {
-    const majorAndMinor = amountAndDecimalsToMajorAndMinor(
-      account.balance,
-      account.decimals
-    );
-    major = majorAndMinor[0];
-    minor = majorAndMinor[1];
-    currencyName = getCurrencyName(account.currency);
-  }
+  let account: AccountSummary | null;
+  $: account = null;
+
+  let haveAccountsLoaded: boolean;
+
+  let hasUSDCAccount: boolean;
+
+  hasUSDCAccountStore.subscribe((newValue) => {
+    hasUSDCAccount = newValue;
+  });
+
+  haveAccountsLoadedStore.subscribe((newValue) => {
+    haveAccountsLoaded = newValue;
+  });
+
+  activeAccountStore.subscribe((newValue) => {
+    log(`Updating Balance...`);
+    if (newValue) {
+      account = newValue;
+      const majorAndMinor = amountAndDecimalsToMajorAndMinor(
+        account.balance,
+        account.decimals
+      );
+      major = majorAndMinor[0];
+      minor = majorAndMinor[1];
+      currencyName = getCurrencyName(account.currency);
+      haveAccountsLoaded = true;
+    }
+  });
 </script>
 
 <div class="balance">
-  <div class="symbol-major-minor">
-    <img class="symbol" alt="{currencyName} logo" src={ICONS[currencyName]} />
-    <div class="major">
-      {noUSDCAccountYet ? "0" : major}
-    </div>
-    <div class="minor">
-      .{noUSDCAccountYet ? "0" : minor}
-    </div>
-  </div>
+  {#if haveAccountsLoaded}
+    {#if hasUSDCAccount}
+      <div class="symbol-major-minor">
+        <img
+          class="symbol"
+          alt="{currencyName} logo"
+          src={ICONS[currencyName]}
+        />
+        <div class="major">{major}</div>
+        <div class="minor">.{minor}</div>
+      </div>
+    {:else}
+      <div class="symbol-major-minor">
+        <img
+          class="symbol"
+          alt="{currencyName} logo"
+          src={ICONS[currencyName]}
+        />
+        <div class="major">0</div>
+        <div class="minor">.0</div>
+      </div>
+    {/if}
+  {:else}
+    <SkeletonBalance />
+  {/if}
 </div>
 
 <style>

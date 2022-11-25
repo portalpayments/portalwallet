@@ -2,11 +2,12 @@
   import { Link } from "svelte-navigator";
   import { get as getFromStore } from "svelte/store";
   import {
-    activeAccountIndexOrNativeStore,
+    activeAccountStore,
+    nativeAccountStore,
     tokenAccountsStore,
   } from "../stores";
   import type { AccountSummary } from "../../lib/types";
-  import solIconURL from "../../assets/Icons/solana-coin.svg";
+  import solIconURL from "../../assets/Icons/sol-coin.svg";
   import closeIconURL from "../../assets/Icons/close.svg";
   import settingsIconURL from "../../assets/Icons/settings.svg";
   import type { Contact as ContactType } from "../types";
@@ -27,9 +28,15 @@
     tokenAccounts = newValue;
   });
 
-  const changeAccount = (accountToSetActive: number | "native") => {
-    log(`Setting ${accountToSetActive} as active account`);
-    activeAccountIndexOrNativeStore.set(accountToSetActive);
+  const changeAccount = (tokenAccountIndexOrNative: number | "native") => {
+    log(`Setting account '${tokenAccountIndexOrNative}' as active account`);
+    let accountToSetActive: AccountSummary;
+    if (tokenAccountIndexOrNative === "native") {
+      accountToSetActive = getFromStore(nativeAccountStore);
+    } else {
+      accountToSetActive = tokenAccountsStore[tokenAccountIndexOrNative];
+    }
+    activeAccountStore.set(accountToSetActive);
     onClose();
   };
 </script>
@@ -41,12 +48,10 @@
 
   <div class="accounts">
     {#each tokenAccounts as tokenAccount, index}
+      <!-- TODO: store active account index and use it to mark one of these as active -->
       <button
         type="button"
-        class="with-icon {getFromStore(activeAccountIndexOrNativeStore) ===
-        index
-          ? 'active'
-          : ''}"
+        class="with-icon"
         on:click={() => changeAccount(index)}
       >
         <img
@@ -57,12 +62,10 @@
       >
     {/each}
 
+    <!-- TODO: store active account index and use it to mark one of these as active -->
     <button
       type="button"
-      class="with-icon {getFromStore(activeAccountIndexOrNativeStore) ===
-      'native'
-        ? 'active'
-        : ''}"
+      class="with-icon"
       on:click={() => changeAccount("native")}
     >
       <img src={solIconURL} alt="Sol account" />

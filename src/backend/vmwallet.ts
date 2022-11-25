@@ -4,10 +4,7 @@ import {
   LAMPORTS_PER_SOL,
   PublicKey,
 } from "@solana/web3.js";
-import type {
-  TransactionResponse,
-  ParsedTransactionWithMeta,
-} from "@solana/web3.js";
+import type { ParsedTransactionWithMeta } from "@solana/web3.js";
 
 import { log, sleep, stringify } from "./functions";
 import {
@@ -15,6 +12,7 @@ import {
   URLS,
   SECOND,
   mintToCurrencyMap,
+  SOLANA_DECIMALS,
 } from "./constants";
 import { asyncMap } from "./functions";
 import base58 from "bs58";
@@ -23,10 +21,11 @@ import type { RawAccount } from "@solana/spl-token";
 import { getIdentityTokensFromWallet } from "./identity-tokens";
 import type { TokenMetaData, VerifiedClaims } from "./types";
 import { summarizeTransaction } from "./transactions";
-import { httpGet } from "../lib/utils";
+import { httpGet, toUniqueStringArray } from "../lib/utils";
 import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../lib/constants";
-import { Currency } from "../lib/types";
+import { Currency, Direction, type Contact } from "../lib/types";
 import type { AccountSummary } from "../lib/types";
+import { identityTokenIssuerPublicKey } from "../lib/stores";
 
 const VERIFIED_CLAIMS_BY_ADDRESS: Record<string, VerifiedClaims> = {};
 
@@ -333,7 +332,7 @@ export const getNativeAccountSummary = async (
     address: walletAddress,
     currency: Currency.SOL,
     balance: accountBalance,
-    decimals: LAMPORTS_PER_SOL,
+    decimals: SOLANA_DECIMALS,
     transactionSummaries,
   };
   return accountSummary;
@@ -341,4 +340,57 @@ export const getNativeAccountSummary = async (
 
 export const getCurrencyName = (currencyNumber: number) => {
   return Currency[currencyNumber] || null;
+};
+
+export const getContactsFromTransactions = async (
+  connection: Connection,
+  keyPair: Keypair,
+  nativeAccount: AccountSummary,
+  tokenAccounts: Array<AccountSummary>
+): Promise<Array<Contact>> => {
+  const allAccounts = [...tokenAccounts];
+  allAccounts.push(nativeAccount);
+
+  const transactionWalletAddresses = allAccounts.map((account) => {
+    return account.transactionSummaries.map((transaction) => {
+      let transactionWalletAddress: string;
+      if (transaction.direction === Direction.sent) {
+        transactionWalletAddress = transaction.to;
+      } else {
+        transactionWalletAddress = transaction.from;
+      }
+      return transactionWalletAddress;
+    });
+  });
+
+  const uniqueTransactionWalletAddresses: Array<string> = toUniqueStringArray(
+    transactionWalletAddresses.flat()
+  );
+  log(
+    `We need to verify ${uniqueTransactionWalletAddresses.length} uniqueTransactionWalletAddresses:`
+  );
+
+  // TODO - Fix 'as' - asyncMap may need some work.
+  const contacts = (await asyncMap(
+    uniqueTransactionWalletAddresses,
+    async (walletAddress): Promise<Contact> => {
+      const verifiedClaims = await verifyWallet(
+        connection,
+        keyPair,
+        identityTokenIssuerPublicKey,
+        new PublicKey(walletAddress)
+      );
+      const contact: Contact = {
+        walletAddress,
+        isNew: false,
+        isPending: false,
+        verifiedClaims,
+      };
+      return contact;
+    }
+  )) as Array<Contact>;
+
+  log(`Got ${contacts.length} contacts used in transactions`);
+
+  return contacts;
 };

@@ -9,12 +9,11 @@
   import MenuButton from "../../lib/Menu/MenuButton.svelte";
   import type { Contact } from "../../lib/types";
   import { Link } from "svelte-navigator";
-  import { nativeAccountStore, tokenAccountsStore } from "../stores";
+  
   import type { Connection, Keypair } from "@solana/web3.js";
   import SkeletonBalance from "../Shared/Skeletons/SkeletonBalance.svelte";
   import { log, sleep, stringify } from "../../backend/functions";
   import type { AccountSummary } from "../types";
-  import { Currency } from "../types";
 
   log(`Homepage loading...`);
 
@@ -25,28 +24,6 @@
   let haveAccountsLoaded = false;
 
   $: isMenuActive = false;
-
-  let tokenAccounts: Array<AccountSummary>;
-
-  let activeAccount: AccountSummary | null = null;
-
-  let noUSDCAccountYet: boolean | null = null;
-
-  tokenAccountsStore.subscribe((newValue: Array<AccountSummary>) => {
-    if (newValue) {
-      tokenAccounts = newValue;
-      // By default we always load USDC
-      const usdcAccount = tokenAccounts.find((tokenAccount) => {
-        return tokenAccount.currency === Currency.USDC;
-      });
-      if (!usdcAccount) {
-        noUSDCAccountYet = true;
-        return;
-      }
-      activeAccount = usdcAccount;
-      haveAccountsLoaded = true;
-    }
-  });
 
   let isNewUnverifiedWallet: null | boolean = null;
 
@@ -89,11 +66,7 @@
       <a class="button" href={emailLink}>Get verified</a>
     </div>
   {:else}
-    {#if haveAccountsLoaded}
-      <Balance account={activeAccount} {noUSDCAccountYet} />
-    {:else}
-      <SkeletonBalance />
-    {/if}
+    <Balance />
     <Buttons />
     <TransactionsHeading />
     <Transactions />

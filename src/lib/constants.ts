@@ -1,6 +1,7 @@
 import usdcIconURL from "../assets/Icons/usdc-coin.svg";
 import usdtIconURL from "../assets/Icons/usdt-coin.svg";
 import usdhIconURL from "../assets/Icons/usdh-coin.svg";
+import solIconURL from "../assets/Icons/sol-coin.svg";
 
 export enum LabelColor {
   Grey = "grey",
@@ -15,6 +16,7 @@ export const ICONS = {
   USDC: usdcIconURL,
   USDT: usdtIconURL,
   USDH: usdhIconURL,
+  SOL: solIconURL,
 };
 
 // TODO: this is extracted from the secret key in the backend .env file
