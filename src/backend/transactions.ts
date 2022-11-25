@@ -201,7 +201,7 @@ export const summarizeTransaction = (
         );
       }
 
-      const portalTransActionSummary = {
+      const transactionSummary = {
         id,
         date: solanaBlocktimeToJSTime(rawTransaction.blockTime),
         status: rawTransaction.meta.err === null,
@@ -214,7 +214,7 @@ export const summarizeTransaction = (
         memo,
       };
 
-      return portalTransActionSummary;
+      return transactionSummary;
     }
 
     let walletDifference = getWalletDifference(
@@ -225,7 +225,12 @@ export const summarizeTransaction = (
     const mintAccount = rawTransaction.meta.postTokenBalances.find(
       (postTokenBalance) => postTokenBalance.owner !== walletAccount.toBase58()
     ).mint;
-    const currency = mintToCurrencyMap[mintAccount];
+    const currency = mintToCurrencyMap[mintAccount].id;
+
+    if (currency !== Currency.USDC) {
+      log(`Found USDH transaction:`);
+      log(stringify(rawTransaction));
+    }
 
     if (rawTransaction.meta.postTokenBalances.length > 2) {
       throw new Error(`Can't parse this transaction`);
@@ -236,7 +241,7 @@ export const summarizeTransaction = (
     ).owner;
 
     // Use postTokenBalances to work out the wallet addresses that were actually involved in the transaction
-    // Note we can't use pre, as the token accounts may not exist yet
+    // Note we can't use preTokenBalances, as the token accounts may not exist yet
 
     let direction: Direction = isPositive(walletDifference)
       ? Direction.recieved
@@ -252,7 +257,7 @@ export const summarizeTransaction = (
       to = walletAccount.toBase58();
     }
 
-    const portalTransActionSummary = {
+    const transactionSummary: TransactionSummary = {
       id,
       date: solanaBlocktimeToJSTime(rawTransaction.blockTime),
       status: rawTransaction.meta.err === null,
@@ -265,12 +270,12 @@ export const summarizeTransaction = (
       memo,
     };
 
-    return portalTransActionSummary;
+    return transactionSummary;
   } catch (thrownObject) {
     const error = thrownObject as Error;
-    log(
-      `Warning: could not summarize transaction ID: ${id} - see the block explorer for more info, ${error.message}`
-    );
+    // log(
+    //   `Warning: could not summarize transaction ID: ${id} - see the block explorer for more info, ${error.message}`
+    // );
     // TODO: throw error (once we can handle more types of transactions in future)
     return null;
   }
