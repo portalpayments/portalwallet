@@ -114,8 +114,9 @@ a.button.with-icon {
   align-items: center;
   text-align: left;
   gap: 16px;
-  font-weight: 400;
-  font-size: 16px;
+  font-weight: 600;
+  font-size: 14px;
+
   color: var(--black);
   background-color: transparent;
   padding: 24px 8px;
