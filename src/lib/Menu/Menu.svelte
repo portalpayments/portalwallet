@@ -1,4 +1,5 @@
 <script lang="ts">
+  // Design incpiration: https://dribbble.com/shots/17444832-BoxedUP-Delivery-Driver-application/attachments/12575962?mode=media
   import { Link } from "svelte-navigator";
   import { get as getFromStore } from "svelte/store";
   import {
@@ -7,12 +8,12 @@
     tokenAccountsStore,
   } from "../stores";
   import type { AccountSummary } from "../../lib/types";
-  import solIconURL from "../../assets/Icons/sol-coin.svg";
   import closeIconURL from "../../assets/Icons/close.svg";
   import settingsIconURL from "../../assets/Icons/settings.svg";
   import type { Contact as ContactType } from "../types";
   import { log } from "../../backend/functions";
   import { getCurrencyName } from "../../backend/vmwallet";
+  import { amountAndDecimalsToString } from "../utils";
   import Contact from "../Shared/Contact.svelte";
   import { ICONS } from "../constants";
 
@@ -22,10 +23,18 @@
 
   export let onClose: Function;
 
-  let tokenAccounts: Array<AccountSummary>;
+  let tokenAccounts: Array<AccountSummary> = [];
 
   tokenAccountsStore.subscribe((newValue: Array<AccountSummary>) => {
-    tokenAccounts = newValue;
+    if (newValue.length) {
+      tokenAccounts = newValue;
+    }
+  });
+
+  let nativeAccount: AccountSummary;
+
+  nativeAccountStore.subscribe((newValue: AccountSummary) => {
+    nativeAccount = newValue;
   });
 
   const changeAccount = (tokenAccountIndexOrNative: number | "native") => {
@@ -42,9 +51,13 @@
 </script>
 
 <div class="menu {isMenuActive ? 'active' : ''}">
-  <button class="close" on:click={() => onClose}
+  <button class="close" on:click={() => onClose()}
     ><img src={closeIconURL} alt="close" /></button
   >
+
+  <button class="wallet">
+    <Contact contact={user} />
+  </button>
 
   <div class="accounts">
     {#each tokenAccounts as tokenAccount, index}
@@ -57,9 +70,19 @@
         <img
           src={ICONS[getCurrencyName(tokenAccount.currency)]}
           alt="{getCurrencyName(tokenAccount.currency)} account"
-        />{getCurrencyName(tokenAccount.currency)}
-        account</button
-      >
+        />
+        <div class="text">
+          <div class="currency-name">
+            {getCurrencyName(tokenAccount.currency)}
+          </div>
+          <div class="balance">
+            {amountAndDecimalsToString(
+              tokenAccount.balance,
+              tokenAccount.decimals
+            )}
+          </div>
+        </div>
+      </button>
     {/each}
 
     <!-- TODO: store active account index and use it to mark one of these as active -->
@@ -68,22 +91,31 @@
       class="with-icon"
       on:click={() => changeAccount("native")}
     >
-      <img src={solIconURL} alt="Sol account" />
-      Sol account
+      <img src={ICONS["SOL"]} alt="Sol account" />
+      <div class="text">
+        <div class="currency-name">Sol</div>
+        <div class="balance">
+          {amountAndDecimalsToString(
+            nativeAccount.balance,
+            nativeAccount.decimals
+          )}
+        </div>
+      </div>
     </button>
   </div>
-  <div class="settings-and-wallet">
-    <Link class="button with-icon settings" to="/settings">
-      <img src={settingsIconURL} alt="Settings" />
-      Settings
-    </Link>
-    <button>
-      <Contact contact={user} />
-    </button>
-  </div>
+
+  <Link class="button with-icon settings" to="/settings">
+    <img src={settingsIconURL} alt="Settings" />
+    Settings
+  </Link>
 </div>
 
 <style>
+  button.wallet {
+    background-color: transparent;
+    color: var(--black);
+    font-size: 18px;
+  }
   .menu {
     /* Off screen by Default */
     transform: translateX(-100%);
@@ -126,9 +158,26 @@
   .menu .accounts {
     justify-content: start;
     align-content: start;
-    padding-top: 24px;
+    padding-left: 24px;
+    gap: 16px;
     width: 100%;
     grid-template-columns: 100%;
+  }
+
+  .accounts button.with-icon .text {
+    grid-auto-flow: row;
+    grid-template-rows: 18px 10px;
+  }
+
+  .accounts button.with-icon .text {
+    grid-auto-flow: row;
+    gap: 8px;
+    grid-template-rows: 18px 10px;
+  }
+
+  .accounts button.with-icon .balance {
+    color: rgb(195, 195, 195);
+    font-size: 13px;
   }
 
   .accounts button.with-icon:last-of-type {
@@ -141,22 +190,8 @@
     background-color: var(--mid-blue);
   }
 
-  button.with-icon.active {
-    border-radius: 0;
-    border-bottom: 1px solid var(--mid-blue);
-  }
-
   button.with-icon:hover,
   :global(a.button.with-icon):hover {
     transform: translateX(12px);
-  }
-
-  .settings-and-wallet {
-    align-content: end;
-  }
-
-  .settings-and-wallet button {
-    color: var(--actually-dark-grey);
-    background-color: var(--very-very-light-grey);
   }
 </style>

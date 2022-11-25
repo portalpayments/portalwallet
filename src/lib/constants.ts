@@ -1,7 +1,7 @@
-import usdcIconURL from "../assets/Icons/usdc-coin.svg";
-import usdtIconURL from "../assets/Icons/usdt-coin.svg";
-import usdhIconURL from "../assets/Icons/usdh-coin.svg";
-import solIconURL from "../assets/Icons/sol-coin.svg";
+import usdcIconURL from "../assets/Icons/usdc-coin-grey.svg";
+import usdtIconURL from "../assets/Icons/usdt-coin-grey.svg";
+import usdhIconURL from "../assets/Icons/usdh-coin-grey.svg";
+import solIconURL from "../assets/Icons/sol-coin-grey.svg";
 
 export enum LabelColor {
   Grey = "grey",

@@ -43,6 +43,11 @@ export const amountAndDecimalsToMajorAndMinor = (
   return [major, minorPadded.slice(0, 2)];
 };
 
+export const amountAndDecimalsToString = (amount: number, decimals: number) => {
+  const [major, minor] = amountAndDecimalsToMajorAndMinor(amount, decimals);
+  return `${major}.${minor}`;
+};
+
 export const getFormattedMajorUnits = (minorUnits: number, digits = 2) => {
   const multiplier = getMultiplier(digits);
   const majorPart = Math.floor(minorUnits / multiplier);
