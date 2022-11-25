@@ -1,6 +1,7 @@
 <script lang="ts">
   import { log, isEmpty } from "../../backend/functions";
   import verifiedIcon from "../../assets/verified.svg";
+  import AnonymousImage from "../../assets/anonymous.svg";
 
   import type { Contact } from "../types";
 
@@ -13,11 +14,21 @@
   <div class="gradient-border">
     <button class="menu" on:click={onClick}>
       {#if isEmpty(user?.verifiedClaims)}
+        <img
+          class="avatar"
+          src={AnonymousImage}
+          alt="Anonymous"
+        />
         Anonymous
       {:else}
+        <img
+          class="avatar"
+          src={user.verifiedClaims.imageUrl}
+          alt="{user.verifiedClaims.givenName} {user.verifiedClaims.familyName}"
+        />
+
         {user.verifiedClaims.givenName}
-        {user.verifiedClaims.familyName}
-        <img src={verifiedIcon} alt="Verified" />
+        <img class="verified" src={verifiedIcon} alt="Verified" />
       {/if}
     </button>
   </div>
@@ -41,16 +52,25 @@
   button {
     background: white;
     color: var(--black);
-    padding: 5px 10px 5px 10px;
+    padding: 0 2px 0 0;
     border-radius: 21px;
     cursor: pointer;
     font-weight: 600;
     border: 0;
     font-size: 14px;
   }
+
   button img {
-    width: 18px;
-    height: 18px;
     vertical-align: middle;
+  }
+  button img.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 15px;
+  }
+
+  button img.verified {
+    width: 22px;
+    height: 22px;
   }
 </style>
