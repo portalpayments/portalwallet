@@ -12,7 +12,12 @@ import {
   type TransactionSummary,
 } from "../lib/types";
 
-import { MEMO_PROGRAM, NOTE_PROGRAM, SPL_TOKEN_PROGRAM } from "./constants";
+import {
+  MEMO_PROGRAM,
+  mintToCurrencyMap,
+  NOTE_PROGRAM,
+  SPL_TOKEN_PROGRAM,
+} from "./constants";
 
 export const solanaBlocktimeToJSTime = (blockTime: number) => {
   return blockTime * 1000;
@@ -215,6 +220,11 @@ export const summarizeTransaction = (
       walletAccount.toBase58()
     );
 
+    const mintAccount = rawTransaction.meta.postTokenBalances.find(
+      (postTokenBalance) => postTokenBalance.owner !== walletAccount.toBase58()
+    ).mint;
+    const currency = mintToCurrencyMap[mintAccount];
+
     if (rawTransaction.meta.postTokenBalances.length > 2) {
       throw new Error(`Can't parse this transaction`);
     }
@@ -239,8 +249,6 @@ export const summarizeTransaction = (
       from = otherWallet;
       to = walletAccount.toBase58();
     }
-
-    const currency = Currency.USDC;
 
     const portalTransActionSummary = {
       id,
