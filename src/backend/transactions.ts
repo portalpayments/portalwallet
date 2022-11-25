@@ -171,7 +171,7 @@ export const summarizeTransaction = (
         memo = getNoteOrMemo(instructions[2]);
       } else {
         // TODO add comment here describing the common scenario we go down this code path
-        // eg what app normally sends this?
+        // eg what app was used to make this transaction?
 
         memo = getNoteOrMemo(instructions[1]);
 
@@ -195,8 +195,10 @@ export const summarizeTransaction = (
 
       const amount = onlyInstruction.parsed.info.lamports;
       if (!amount) {
-        // Probably a createWallet instruction, see https://explorer.solana.com/tx/3DbFFLeUbUGFiQ7oyi3uZddD8qnsvE94VVv8HpNkYozUrKE1ordD74LWXH8di5ywKbCKMBNBYYTRM5Ur8q13fvY6
-        throw new Error(`Don't know how to summarize this transaction ${id}`);
+        // See https://explorer.solana.com/tx/3DbFFLeUbUGFiQ7oyi3uZddD8qnsvE94VVv8HpNkYozUrKE1ordD74LWXH8di5ywKbCKMBNBYYTRM5Ur8q13fvY6
+        throw new Error(
+          `Ignoring transaction where no money was sent (eg, creating wallet without transferring funsds ${id}`
+        );
       }
 
       const portalTransActionSummary = {
