@@ -12,7 +12,12 @@ import {
   type TransactionSummary,
 } from "../lib/types";
 
-import { MEMO_PROGRAM, NOTE_PROGRAM, SPL_TOKEN_PROGRAM } from "./constants";
+import {
+  MEMO_PROGRAM,
+  mintToCurrencyMap,
+  NOTE_PROGRAM,
+  SPL_TOKEN_PROGRAM,
+} from "./constants";
 
 export const solanaBlocktimeToJSTime = (blockTime: number) => {
   return blockTime * 1000;
@@ -166,7 +171,7 @@ export const summarizeTransaction = (
         memo = getNoteOrMemo(instructions[2]);
       } else {
         // TODO add comment here describing the common scenario we go down this code path
-        // eg what app normally sends this?
+        // eg what app was used to make this transaction?
 
         memo = getNoteOrMemo(instructions[1]);
 
@@ -190,11 +195,13 @@ export const summarizeTransaction = (
 
       const amount = onlyInstruction.parsed.info.lamports;
       if (!amount) {
-        // Probably a createWallet instruction, see https://explorer.solana.com/tx/3DbFFLeUbUGFiQ7oyi3uZddD8qnsvE94VVv8HpNkYozUrKE1ordD74LWXH8di5ywKbCKMBNBYYTRM5Ur8q13fvY6
-        throw new Error(`Don't know how to summarize this transaction ${id}`);
+        // See https://explorer.solana.com/tx/3DbFFLeUbUGFiQ7oyi3uZddD8qnsvE94VVv8HpNkYozUrKE1ordD74LWXH8di5ywKbCKMBNBYYTRM5Ur8q13fvY6
+        throw new Error(
+          `Ignoring transaction where no money was sent (eg, creating wallet without transferring funsds ${id}`
+        );
       }
 
-      const portalTransActionSummary = {
+      const transactionSummary = {
         id,
         date: solanaBlocktimeToJSTime(rawTransaction.blockTime),
         status: rawTransaction.meta.err === null,
@@ -207,13 +214,23 @@ export const summarizeTransaction = (
         memo,
       };
 
-      return portalTransActionSummary;
+      return transactionSummary;
     }
 
     let walletDifference = getWalletDifference(
       rawTransaction,
       walletAccount.toBase58()
     );
+
+    const mintAccount = rawTransaction.meta.postTokenBalances.find(
+      (postTokenBalance) => postTokenBalance.owner !== walletAccount.toBase58()
+    ).mint;
+    const currency = mintToCurrencyMap[mintAccount].id;
+
+    if (currency !== Currency.USDC) {
+      log(`Found USDH transaction:`);
+      log(stringify(rawTransaction));
+    }
 
     if (rawTransaction.meta.postTokenBalances.length > 2) {
       throw new Error(`Can't parse this transaction`);
@@ -224,7 +241,7 @@ export const summarizeTransaction = (
     ).owner;
 
     // Use postTokenBalances to work out the wallet addresses that were actually involved in the transaction
-    // Note we can't use pre, as the token accounts may not exist yet
+    // Note we can't use preTokenBalances, as the token accounts may not exist yet
 
     let direction: Direction = isPositive(walletDifference)
       ? Direction.recieved
@@ -240,9 +257,7 @@ export const summarizeTransaction = (
       to = walletAccount.toBase58();
     }
 
-    const currency = Currency.USDC;
-
-    const portalTransActionSummary = {
+    const transactionSummary: TransactionSummary = {
       id,
       date: solanaBlocktimeToJSTime(rawTransaction.blockTime),
       status: rawTransaction.meta.err === null,
@@ -255,26 +270,21 @@ export const summarizeTransaction = (
       memo,
     };
 
-    return portalTransActionSummary;
+    return transactionSummary;
   } catch (thrownObject) {
     const error = thrownObject as Error;
-    log(error);
-    log(
-      `Warning: could not summarize transaction ID: ${id} - see the block explorer for more info, ${error.message}`
-    );
-    // TODO: throw error (once we can handle more types of transactions)
+    // log(
+    //   `Warning: could not summarize transaction ID: ${id} - see the block explorer for more info, ${error.message}`
+    // );
+    // TODO: throw error (once we can handle more types of transactions in future)
     return null;
   }
 };
 
 export const getTransactionsByDays = (
-  transactions: Array<TransactionSummary>,
-  // We can't add, eg, 50 cents to 130 sol. So this function is for a specific currency only
-  currency: Currency
+  // It is assumed that all transactionSummaries are for the same currency
+  transactions: Array<TransactionSummary>
 ): Array<TransactionsByDay> => {
-  transactions = transactions.filter(
-    (transaction) => transaction.currency === currency
-  );
   transactions.sort(byDateNewestToOldest);
 
   const transactionsByDays: Array<TransactionsByDay> = [];

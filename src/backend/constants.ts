@@ -1,5 +1,6 @@
 import { clusterApiUrl, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { BN as BigNumber } from "bn.js";
+import { Currency } from "../lib/types";
 
 export const IDENTITY_TOKEN_NAME = "Portal Identity Token";
 
@@ -15,6 +16,9 @@ export const MIKES_WALLET = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
 export const VAHEHS_WALLET = "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG";
 
 export const MIKES_USDC_ACCOUNT = "Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc";
+export const MIKES_USDH_ACCOUNT = "6TE68teBQqydhWDze8MzUsySWo926Hs5nFSTXVFszx2";
+export const MIKES_USDT_ACCOUNT =
+  "4JP7SxrFfQdGEarcGFwRx6S8WMTeP9MthrcCWXddJQVj";
 
 export const SPL_TOKEN_PROGRAM = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
 
@@ -67,6 +71,14 @@ export const KIMZO_NFT_ADDRESS = new PublicKey(
 export const USDC_MAINNET_MINT_ACCOUNT =
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
+// TODO - check official docs, got from explorer
+export const USDH_MAINNET_MINT_ACCOUNT =
+  "USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX";
+
+// TODO - check official docs, got from explorer
+export const USDT_MAINNET_MINT_ACCOUNT =
+  "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB";
+
 // https://developers.circle.com/docs/usdc-on-testnet#usdc-on-solana-testnet
 export const USDC_SOLANA_SPL_TOKEN_ON_DEVNET =
   "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
@@ -84,9 +96,33 @@ export const URLS = {
     "https://proportionate-greatest-needle.solana-mainnet.quiknode.pro/",
 };
 
-export const USD_DECIMALS = 2;
+// USD-based currencies have more granularity than this,
+// but users want to see these currencies as a dollars and cents
+export const USD_VISUAL_DECIMALS = 2;
+
+export const SOLANA_DECIMALS = Math.log10(LAMPORTS_PER_SOL);
 
 export const SOL = LAMPORTS_PER_SOL;
+
+export const NOT_FOUND = -1;
+
+export const mintToCurrencyMap = {
+  [USDC_MAINNET_MINT_ACCOUNT]: {
+    id: Currency.USDC,
+    name: "USDC",
+    decimals: 6,
+  },
+  [USDH_MAINNET_MINT_ACCOUNT]: {
+    id: Currency.USDH,
+    name: "USDH",
+    decimals: 6,
+  },
+  [USDT_MAINNET_MINT_ACCOUNT]: {
+    id: Currency.USDT,
+    name: "USDT",
+    decimals: 6,
+  },
+};
 
 // Older were minted with test storage URLs, timed out, etc.
 export const LATEST_IDENTITY_TOKEN_VERSION = 7;
@@ -103,7 +139,7 @@ export const DEPOSIT = 1_000_000;
 export const ENOUGH_TO_MAKE_A_NEW_TOKEN = 1_000_000_000;
 export const NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN = 500_000;
 
-export const USD = Number(`1e${USD_DECIMALS}`);
+export const USD = Number(`1e${USD_VISUAL_DECIMALS}`);
 
 // BIP44
 // From https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#purpose

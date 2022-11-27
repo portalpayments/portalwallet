@@ -2,11 +2,22 @@ import { get as getFromStore, writable, type Writable } from "svelte/store";
 import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
 import { Keypair as KeypairConstructor } from "@solana/web3.js";
 import { identityTokenIssuerPublicKeyString } from "./constants";
-import { Direction, type Contact, type TransactionSummary } from "../lib/types";
+import {
+  Currency,
+  Direction,
+  type AccountSummary,
+  type Contact,
+} from "../lib/types";
 import { asyncMap, log, stringify } from "../backend/functions";
-import { verifyWallet } from "../backend/vmwallet";
-import { toUniqueStringArray } from "./utils";
-import { getSettings } from "./settings";
+import {
+  getContactsFromTransactions,
+  getCurrencyName,
+  getNativeAccountSummary,
+  getTokenAccountSummaries,
+  verifyWallet,
+} from "../backend/vmwallet";
+import { amountAndDecimalsToMajorAndMinor, toUniqueStringArray } from "./utils";
+import { NOT_FOUND } from "../backend/constants";
 
 let connection: Connection | null;
 let keyPair: Keypair | null;
@@ -17,8 +28,39 @@ connectionStore.subscribe((newValue) => {
   connection = newValue;
 });
 
-export const transactionsStore: Writable<null | Array<TransactionSummary>> =
+export const contactsStore: Writable<Array<Contact>> = writable([]);
+
+// number for a numbered token account, "native" for Solana
+export const activeAccountIndexStore: Writable<number | "native" | null> =
   writable(null);
+
+export const nativeAccountStore: Writable<null | AccountSummary> =
+  writable(null);
+
+export const tokenAccountsStore: Writable<null | Array<AccountSummary>> =
+  writable(null);
+
+export const getActiveAccount = () => {
+  const activeAccountIndex = getFromStore(activeAccountIndexStore);
+  if (typeof activeAccountIndex === "number") {
+    const tokenAccounts = getFromStore(tokenAccountsStore);
+    return tokenAccounts.at(activeAccountIndex);
+  }
+  if (activeAccountIndex === "native") {
+    const nativeAccount = getFromStore(nativeAccountStore);
+    return nativeAccount;
+  }
+  return null;
+};
+
+export const onChangeActiveAccount = (_function: Function) => {
+  activeAccountIndexStore.subscribe((newValue) => {
+    if (newValue !== null) {
+      const activeAccount = getActiveAccount();
+      _function(activeAccount);
+    }
+  });
+};
 
 export const identityTokenIssuerPublicKey = new PublicKey(
   identityTokenIssuerPublicKeyString
@@ -35,66 +77,68 @@ export const authStore: Writable<Auth> = writable({
   keyPair: null,
 });
 
-// Storing the state of the wallet balance account
-export const walletBalanceAccount = writable({
-  isShowingBalanceInSol: false,
-});
+export const haveAccountsLoadedStore: Writable<boolean> = writable(false);
 
-transactionsStore.subscribe(async (transactionSummaries) => {
-  if (!transactionSummaries?.length) {
+export const hasUSDCAccountStore: Writable<boolean | null> = writable(null);
+
+const updateAccounts = async () => {
+  if (!connection) {
+    return;
+  }
+  if (!keyPair) {
     return;
   }
 
-  log(`${transactionSummaries.length} transactionSummaries.`);
+  log(`Updating accounts...`);
 
-  const transactionWalletAddresses = transactionSummaries.map((transaction) => {
-    let transactionWalletAddress: string;
-    if (transaction.direction === Direction.sent) {
-      transactionWalletAddress = transaction.to;
-    } else {
-      transactionWalletAddress = transaction.from;
-    }
-    return transactionWalletAddress;
-  });
-
-  const uniqueTransactionWalletAddresses: Array<string> = toUniqueStringArray(
-    transactionWalletAddresses
+  log(`Updating Solana account....`);
+  const nativeAccountSummary: AccountSummary = await getNativeAccountSummary(
+    connection,
+    keyPair.publicKey
   );
+  nativeAccountStore.set(nativeAccountSummary);
 
-  log(
-    `We need to verify ${uniqueTransactionWalletAddresses.length} uniqueTransactionWalletAddresses:`
+  log(`Updating token accounts...`);
+  const tokenAccountSummaries: Array<AccountSummary> =
+    await getTokenAccountSummaries(connection, keyPair.publicKey);
+  tokenAccountsStore.set(tokenAccountSummaries);
+  haveAccountsLoadedStore.set(true);
+
+  log(`Finding USDC account...`);
+  const usdcAccountIndex = tokenAccountSummaries.findIndex(
+    (accountSummary) => accountSummary.currency === Currency.USDC
   );
-
-  const secretKey = getFromStore(authStore).keyPair.secretKey;
-  if (!secretKey) {
-    throw new Error(`Couldn't get the secret key from the auth store!`);
+  if (usdcAccountIndex === NOT_FOUND) {
+    log(`No existing USDC account in this wallet`);
+    hasUSDCAccountStore.set(false);
+    return;
   }
+  log(`Found USDC account`);
+  hasUSDCAccountStore.set(true);
+  activeAccountIndexStore.set(usdcAccountIndex);
 
-  keyPair = KeypairConstructor.fromSecretKey(secretKey);
-
-  // TODO - Fix 'as' - asyncMap may need some work.
-  const contacts = (await asyncMap(
-    uniqueTransactionWalletAddresses,
-    async (walletAddress): Promise<Contact> => {
-      const verifiedClaims = await verifyWallet(
-        connection,
-        keyPair,
-        identityTokenIssuerPublicKey,
-        new PublicKey(walletAddress)
-      );
-      const contact: Contact = {
-        walletAddress,
-        isNew: false,
-        isPending: false,
-        verifiedClaims,
-      };
-      return contact;
-    }
-  )) as Array<Contact>;
-
-  log(`Got ${contacts.length} contacts used in transactions`);
-
+  log(`Getting contacts for all transactions`);
+  const contacts = await getContactsFromTransactions(
+    connection,
+    keyPair,
+    nativeAccountSummary,
+    tokenAccountSummaries
+  );
   contactsStore.set(contacts);
+};
+
+connectionStore.subscribe((newValue) => {
+  if (newValue) {
+    log(`🔌 connection has changed, updating accounts`);
+    connection = newValue;
+    updateAccounts();
+  }
 });
 
-export const contactsStore: Writable<Array<Contact>> = writable([]);
+authStore.subscribe((newValue) => {
+  if (newValue.keyPair) {
+    log(`🗝️ keyPair has changed, updating accounts`);
+    keyPair = newValue.keyPair;
+    updateAccounts();
+  }
+});

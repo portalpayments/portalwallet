@@ -1,36 +1,74 @@
 <script lang="ts">
-  import usdcSymbolURL from "../../assets/Icons/usdc.svg";
-  import solSymbolURL from "../../assets/Icons/solana.svg";
-  import { formatMajorUnits } from "../utils";
-  import { walletBalanceAccount } from "../stores";
+  import { amountAndDecimalsToMajorAndMinor } from "../utils";
+  import { log, stringify } from "../../backend/functions";
+  import { get as getFromStore } from "svelte/store";
+  import { ICONS } from "../constants";
+  import { getCurrencyName } from "../../backend/vmwallet";
+  import type { AccountSummary } from "../../lib/types";
+  import SkeletonBalance from "../Shared/Skeletons/SkeletonBalance.svelte";
 
-  export let isBalanceLoaded: boolean;
-  export let major: string;
-  export let minor: string;
+  import {
+    hasUSDCAccountStore,
+    haveAccountsLoadedStore,
+    onChangeActiveAccount,
+  } from "../stores";
 
-  const SYMBOLS = {
-    usdc: usdcSymbolURL,
-    sol: solSymbolURL,
-  };
+  let majorAndMinor: Array<string | null> = [null, null];
+
+  let currencyName: string;
+
+  let account: AccountSummary | null;
+  $: account = null;
+
+  let haveAccountsLoaded: boolean;
+
+  let hasUSDCAccount: boolean;
+
+  hasUSDCAccountStore.subscribe((newValue) => {
+    hasUSDCAccount = newValue;
+  });
+
+  haveAccountsLoadedStore.subscribe((newValue) => {
+    haveAccountsLoaded = newValue;
+  });
+
+  onChangeActiveAccount((activeAccount) => {
+    log(`Active account has changed, updating balance...`);
+    majorAndMinor = amountAndDecimalsToMajorAndMinor(
+      activeAccount.balance,
+      activeAccount.decimals
+    );
+    currencyName = getCurrencyName(activeAccount.currency);
+    haveAccountsLoaded = true;
+  });
 </script>
 
 <div class="balance">
-  <div class="symbol-major-minor">
-    {#if isBalanceLoaded}
-      {#if $walletBalanceAccount.isShowingBalanceInSol}
-        <!-- TODO load sol account balance here @MikeMacCana -->
-        <img class="symbol" alt="Sol logo" src={SYMBOLS.sol} />
-        <div class="major">{0}</div>
-        <div class="minor">.{0}</div>
-      {:else}
-        <img class="symbol" alt="USDC logo" src={SYMBOLS.usdc} />
-        <div class="major">{formatMajorUnits(major)}</div>
-        <div class="minor">.{minor}</div>
-      {/if}
+  {#if haveAccountsLoaded}
+    {#if hasUSDCAccount}
+      <div class="symbol-major-minor">
+        <img
+          class="symbol"
+          alt="{currencyName} logo"
+          src={ICONS[currencyName]}
+        />
+        <div class="major">{majorAndMinor[0]}</div>
+        <div class="minor">.{majorAndMinor[1]}</div>
+      </div>
     {:else}
-      <div>...</div>
+      <div class="symbol-major-minor">
+        <img
+          class="symbol"
+          alt="{currencyName} logo"
+          src={ICONS[currencyName]}
+        />
+        <div class="major">0</div>
+        <div class="minor">.0</div>
+      </div>
     {/if}
-  </div>
+  {:else}
+    <SkeletonBalance />
+  {/if}
 </div>
 
 <style>

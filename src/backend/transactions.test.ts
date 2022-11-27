@@ -274,10 +274,7 @@ describe(`grouping transactions`, () => {
       },
     ];
 
-    const transactionsByDays = getTransactionsByDays(
-      transactionSummaries,
-      Currency.USDC
-    );
+    const transactionsByDays = getTransactionsByDays(transactionSummaries);
 
     expect(transactionsByDays).toEqual([
       {

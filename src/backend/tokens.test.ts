@@ -1,7 +1,11 @@
 import { getMint, getAccount, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import type { Account } from "@solana/spl-token";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
-import { USD_DECIMALS, SECONDS, ENOUGH_TO_MAKE_A_NEW_TOKEN } from "./constants";
+import {
+  USD_VISUAL_DECIMALS,
+  SECONDS,
+  ENOUGH_TO_MAKE_A_NEW_TOKEN,
+} from "./constants";
 import { log, stringify } from "./functions";
 import {
   createMintAccount,
@@ -56,7 +60,7 @@ describe("minting and USDC-like transfers", () => {
 
       expect(mintInformation).toEqual({
         address: expect.any(PublicKey),
-        decimals: USD_DECIMALS,
+        decimals: USD_VISUAL_DECIMALS,
         freezeAuthority: null,
         isInitialized: true,
         mintAuthority: testUSDCAuthority.publicKey,
@@ -110,7 +114,7 @@ describe("minting and USDC-like transfers", () => {
       },
       value: {
         amount: String(NO_TOKENS_MINTED_YET),
-        decimals: USD_DECIMALS,
+        decimals: USD_VISUAL_DECIMALS,
         uiAmount: NO_TOKENS_MINTED_YET,
         uiAmountString: String(NO_TOKENS_MINTED_YET),
       },
@@ -142,7 +146,7 @@ describe("minting and USDC-like transfers", () => {
       },
       value: {
         amount: String(MINT_AMOUNT),
-        decimals: USD_DECIMALS,
+        decimals: USD_VISUAL_DECIMALS,
         uiAmount: MINT_AMOUNT_UI,
         uiAmountString: String(MINT_AMOUNT_UI),
       },

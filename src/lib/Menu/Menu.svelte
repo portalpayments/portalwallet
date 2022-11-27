@@ -1,64 +1,88 @@
 <script lang="ts">
+  // Design incpiration: https://dribbble.com/shots/17444832-BoxedUP-Delivery-Driver-application/attachments/12575962?mode=media
   import { Link } from "svelte-navigator";
-  import { walletBalanceAccount } from "../stores";
-  import usdcIconURL from "../../assets/Icons/usdc-coin.svg";
-  import solIconURL from "../../assets/Icons/solana-coin.svg";
+  import { get as getFromStore } from "svelte/store";
+  import {
+    activeAccountIndexStore,
+    getActiveAccount,
+    nativeAccountStore,
+    tokenAccountsStore,
+  } from "../stores";
+  import type { AccountSummary } from "../../lib/types";
   import closeIconURL from "../../assets/Icons/close.svg";
   import settingsIconURL from "../../assets/Icons/settings.svg";
   import type { Contact as ContactType } from "../types";
+  import { log } from "../../backend/functions";
+  import { getCurrencyName } from "../../backend/vmwallet";
+  import { amountAndDecimalsToString } from "../utils";
   import Contact from "../Shared/Contact.svelte";
+  import MenuBalance from "./MenuBalance.svelte";
+  import { ICONS } from "../constants";
 
   export let user: ContactType | null;
 
   export let isMenuActive: boolean;
 
-  export let onClose: svelte.JSX.MouseEventHandler<HTMLButtonElement>;
+  export let onClose: Function;
 
-  const toggleAccount = () => {
-    $walletBalanceAccount.isShowingBalanceInSol =
-      !$walletBalanceAccount.isShowingBalanceInSol;
-    isMenuActive = false;
+  let tokenAccounts: Array<AccountSummary> = [];
+
+  tokenAccountsStore.subscribe((newValue: Array<AccountSummary>) => {
+    if (newValue.length) {
+      tokenAccounts = newValue;
+    }
+  });
+
+  let nativeAccount: AccountSummary;
+
+  nativeAccountStore.subscribe((newValue: AccountSummary) => {
+    nativeAccount = newValue;
+  });
+
+  const changeAccount = (tokenAccountIndexOrNative: number | "native") => {
+    log(`Setting account '${tokenAccountIndexOrNative}' as active account`);
+    activeAccountIndexStore.set(tokenAccountIndexOrNative);
+    onClose();
   };
 </script>
 
 <div class="menu {isMenuActive ? 'active' : ''}">
-  <button class="close" on:click={onClose}
+  <button class="close" on:click={() => onClose()}
     ><img src={closeIconURL} alt="close" /></button
   >
 
+  <button class="wallet">
+    <Contact contact={user} />
+  </button>
+
   <div class="accounts">
-    <button
-      type="button"
-      class="with-icon {$walletBalanceAccount.isShowingBalanceInSol
-        ? ''
-        : 'active'}"
-      on:click={toggleAccount}
-    >
-      <img src={usdcIconURL} alt="USDC account" />USDC account</button
-    >
-    <button
-      type="button"
-      class="with-icon {$walletBalanceAccount.isShowingBalanceInSol
-        ? 'active'
-        : ''}"
-      on:click={toggleAccount}
-    >
-      <img src={solIconURL} alt="Sol account" />
-      Sol account
-    </button>
+    {#each tokenAccounts as tokenAccount, index}
+      <!-- TODO: store active account index and use it to mark one of these as active -->
+      <MenuBalance
+        account={tokenAccount}
+        changeAccount={() => changeAccount(index)}
+      />
+    {/each}
+
+    <!-- TODO: store active account index and use it to mark one of these as active -->
+    <MenuBalance
+      account={nativeAccount}
+      changeAccount={() => changeAccount("native")}
+    />
   </div>
-  <div class="settings-and-wallet">
-    <Link class="button with-icon settings" to="/settings">
-      <img src={settingsIconURL} alt="Settings" />
-      Settings
-    </Link>
-    <button>
-      <Contact contact={user} />
-    </button>
-  </div>
+
+  <Link class="button with-icon settings" to="/settings">
+    <img src={settingsIconURL} alt="Settings" />
+    Settings
+  </Link>
 </div>
 
 <style>
+  button.wallet {
+    background-color: transparent;
+    color: var(--black);
+    font-size: 18px;
+  }
   .menu {
     /* Off screen by Default */
     transform: translateX(-100%);
@@ -101,37 +125,14 @@
   .menu .accounts {
     justify-content: start;
     align-content: start;
-    padding-top: 24px;
+    padding-left: 24px;
+    gap: 16px;
     width: 100%;
     grid-template-columns: 100%;
-  }
-
-  .accounts button.with-icon:last-of-type {
-    border-radius: 0;
-    border-bottom: none;
   }
 
   .menu :global(a.button):active {
     color: var(--white);
     background-color: var(--mid-blue);
-  }
-
-  button.with-icon.active {
-    border-radius: 0;
-    border-bottom: 1px solid var(--mid-blue);
-  }
-
-  button.with-icon:hover,
-  :global(a.button.with-icon):hover {
-    transform: translateX(12px);
-  }
-
-  .settings-and-wallet {
-    align-content: end;
-  }
-
-  .settings-and-wallet button {
-    color: var(--actually-dark-grey);
-    background-color: var(--very-very-light-grey);
   }
 </style>

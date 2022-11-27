@@ -1,6 +1,6 @@
 <script lang="ts">
   import Transactions from "./Transactions.svelte";
-  import { transactionsStore, contactsStore } from "../../stores";
+  import { tokenAccountsStore, contactsStore } from "../../stores";
   import { log, stringify } from "../../../backend/functions";
   import type { Contact as ContactType, TransactionSummary } from "../../types";
   import SendToContact from "./SendToContact.svelte";
@@ -26,17 +26,21 @@
 
   let filteredTransactions: Array<TransactionSummary> = [];
 
-  transactionsStore.subscribe((newValue) => {
+  tokenAccountsStore.subscribe((newValue) => {
     // Filter our transactions to just the ones from this single contact
-    filteredTransactions = newValue.filter((transaction) => {
-      if (
-        transaction.from === contactWalletAddress ||
-        transaction.to === contactWalletAddress
-      ) {
-        return true;
-      }
-      return false;
-    });
+    filteredTransactions = newValue
+      .map((account) => {
+        return account.transactionSummaries.filter((transaction) => {
+          if (
+            transaction.from === contactWalletAddress ||
+            transaction.to === contactWalletAddress
+          ) {
+            return true;
+          }
+          return false;
+        });
+      })
+      .flat();
   });
 </script>
 

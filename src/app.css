@@ -113,13 +113,19 @@ a.button.with-icon {
   align-content: center;
   align-items: center;
   text-align: left;
-  gap: 16px;
-  font-weight: 400;
-  font-size: 16px;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 20px;
+
   color: var(--black);
   background-color: transparent;
   padding: 24px 8px;
   transition: all 0.2s ease-in-out;
+}
+
+button.with-icon img,
+a.button.with-icon img {
+  height: 20px;
 }
 
 /* See https://stackoverflow.com/questions/16670931/hide-scroll-bar-but-while-still-being-able-to-scroll */
