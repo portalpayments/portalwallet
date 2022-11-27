@@ -22,7 +22,6 @@
 
   // TODO: maybe move transactionsByDays to the store?
   onChangeActiveAccount((activeAccount) => {
-    log(`Active account has changed, updating balance...`);
     log(
       `Setting transactionsByDays, based on ${activeAccount.transactionSummaries.length} transactionSummaries `
     );
