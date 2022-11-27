@@ -3,7 +3,8 @@
   import { Link } from "svelte-navigator";
   import { get as getFromStore } from "svelte/store";
   import {
-    activeAccountStore,
+    activeAccountIndexStore,
+    getActiveAccount,
     nativeAccountStore,
     tokenAccountsStore,
   } from "../stores";
@@ -40,13 +41,7 @@
 
   const changeAccount = (tokenAccountIndexOrNative: number | "native") => {
     log(`Setting account '${tokenAccountIndexOrNative}' as active account`);
-    let accountToSetActive: AccountSummary;
-    if (tokenAccountIndexOrNative === "native") {
-      accountToSetActive = getFromStore(nativeAccountStore);
-    } else {
-      accountToSetActive = tokenAccountsStore[tokenAccountIndexOrNative];
-    }
-    activeAccountStore.set(accountToSetActive);
+    activeAccountIndexStore.set(tokenAccountIndexOrNative);
     onClose();
   };
 </script>

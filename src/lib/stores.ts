@@ -29,7 +29,8 @@ connectionStore.subscribe((newValue) => {
 
 export const contactsStore: Writable<Array<Contact>> = writable([]);
 
-export const activeAccountStore: Writable<null | AccountSummary> =
+// number for a numbered token account, "native" for Solana
+export const activeAccountIndexStore: Writable<number | "native" | null> =
   writable(null);
 
 export const nativeAccountStore: Writable<null | AccountSummary> =
@@ -37,6 +38,19 @@ export const nativeAccountStore: Writable<null | AccountSummary> =
 
 export const tokenAccountsStore: Writable<null | Array<AccountSummary>> =
   writable(null);
+
+export const getActiveAccount = () => {
+  const activeAccountIndex = getFromStore(activeAccountIndexStore);
+  if (typeof activeAccountIndex === "number") {
+    const tokenAccounts = getFromStore(tokenAccountsStore);
+    return tokenAccounts.at(activeAccountIndex);
+  }
+  if (activeAccountIndex === "native") {
+    const nativeAccount = getFromStore(nativeAccountStore);
+    return nativeAccount;
+  }
+  return null;
+};
 
 export const identityTokenIssuerPublicKey = new PublicKey(
   identityTokenIssuerPublicKeyString
@@ -91,7 +105,7 @@ const updateAccounts = async () => {
   }
   log(`Found USDC account`);
   hasUSDCAccountStore.set(true);
-  activeAccountStore.set(tokenAccountSummaries[usdcAccountIndex]);
+  activeAccountIndexStore.set(usdcAccountIndex);
 
   log(`Getting contacts for all transactions`);
   const contacts = await getContactsFromTransactions(

@@ -8,9 +8,10 @@
   import SkeletonBalance from "../Shared/Skeletons/SkeletonBalance.svelte";
 
   import {
-    activeAccountStore,
     hasUSDCAccountStore,
     haveAccountsLoadedStore,
+    activeAccountIndexStore,
+    getActiveAccount,
   } from "../stores";
 
   // TODO
@@ -37,17 +38,17 @@
     haveAccountsLoaded = newValue;
   });
 
-  activeAccountStore.subscribe((newValue) => {
-    log(`Updating Balance...`);
-    if (newValue) {
-      account = newValue;
+  activeAccountIndexStore.subscribe((newValue) => {
+    log(`Active account has changed, updating balance...`);
+    if (newValue !== null) {
+      const activeAccount = getActiveAccount();
       const majorAndMinor = amountAndDecimalsToMajorAndMinor(
-        account.balance,
-        account.decimals
+        activeAccount.balance,
+        activeAccount.decimals
       );
       major = majorAndMinor[0];
       minor = majorAndMinor[1];
-      currencyName = getCurrencyName(account.currency);
+      currencyName = getCurrencyName(activeAccount.currency);
       haveAccountsLoaded = true;
     }
   });
