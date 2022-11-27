@@ -15,6 +15,7 @@
   import { getCurrencyName } from "../../backend/vmwallet";
   import { amountAndDecimalsToString } from "../utils";
   import Contact from "../Shared/Contact.svelte";
+  import MenuBalance from "./MenuBalance.svelte";
   import { ICONS } from "../constants";
 
   export let user: ContactType | null;
@@ -62,46 +63,17 @@
   <div class="accounts">
     {#each tokenAccounts as tokenAccount, index}
       <!-- TODO: store active account index and use it to mark one of these as active -->
-      <button
-        type="button"
-        class="with-icon"
-        on:click={() => changeAccount(index)}
-      >
-        <img
-          src={ICONS[getCurrencyName(tokenAccount.currency)]}
-          alt="{getCurrencyName(tokenAccount.currency)} account"
-        />
-        <div class="text">
-          <div class="currency-name">
-            {getCurrencyName(tokenAccount.currency)}
-          </div>
-          <div class="balance">
-            {amountAndDecimalsToString(
-              tokenAccount.balance,
-              tokenAccount.decimals
-            )}
-          </div>
-        </div>
-      </button>
+      <MenuBalance
+        account={tokenAccount}
+        changeAccount={() => changeAccount(index)}
+      />
     {/each}
 
     <!-- TODO: store active account index and use it to mark one of these as active -->
-    <button
-      type="button"
-      class="with-icon"
-      on:click={() => changeAccount("native")}
-    >
-      <img src={ICONS["SOL"]} alt="Sol account" />
-      <div class="text">
-        <div class="currency-name">Sol</div>
-        <div class="balance">
-          {amountAndDecimalsToString(
-            nativeAccount.balance,
-            nativeAccount.decimals
-          )}
-        </div>
-      </div>
-    </button>
+    <MenuBalance
+      account={nativeAccount}
+      changeAccount={() => changeAccount("native")}
+    />
   </div>
 
   <Link class="button with-icon settings" to="/settings">
@@ -164,34 +136,8 @@
     grid-template-columns: 100%;
   }
 
-  .accounts button.with-icon .text {
-    grid-auto-flow: row;
-    grid-template-rows: 18px 10px;
-  }
-
-  .accounts button.with-icon .text {
-    grid-auto-flow: row;
-    gap: 8px;
-    grid-template-rows: 18px 10px;
-  }
-
-  .accounts button.with-icon .balance {
-    color: rgb(195, 195, 195);
-    font-size: 13px;
-  }
-
-  .accounts button.with-icon:last-of-type {
-    border-radius: 0;
-    border-bottom: none;
-  }
-
   .menu :global(a.button):active {
     color: var(--white);
     background-color: var(--mid-blue);
-  }
-
-  button.with-icon:hover,
-  :global(a.button.with-icon):hover {
-    transform: translateX(12px);
   }
 </style>

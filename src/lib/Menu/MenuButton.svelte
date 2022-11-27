@@ -14,11 +14,7 @@
   <div class="gradient-border">
     <button class="menu" on:click={onClick}>
       {#if isEmpty(user?.verifiedClaims)}
-        <img
-          class="avatar"
-          src={AnonymousImage}
-          alt="Anonymous"
-        />
+        <img class="avatar" src={AnonymousImage} alt="Anonymous" />
         Anonymous
       {:else}
         <img
@@ -52,7 +48,7 @@
   button {
     background: white;
     color: var(--black);
-    padding: 0 2px 0 0;
+    padding: 0 6px 0 0;
     border-radius: 21px;
     cursor: pointer;
     font-weight: 600;
