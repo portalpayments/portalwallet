@@ -11,11 +11,12 @@ import {
 import { asyncMap, log, stringify } from "../backend/functions";
 import {
   getContactsFromTransactions,
+  getCurrencyName,
   getNativeAccountSummary,
   getTokenAccountSummaries,
   verifyWallet,
 } from "../backend/vmwallet";
-import { toUniqueStringArray } from "./utils";
+import { amountAndDecimalsToMajorAndMinor, toUniqueStringArray } from "./utils";
 import { NOT_FOUND } from "../backend/constants";
 
 let connection: Connection | null;
@@ -50,6 +51,15 @@ export const getActiveAccount = () => {
     return nativeAccount;
   }
   return null;
+};
+
+export const onChangeActiveAccount = (_function: Function) => {
+  activeAccountIndexStore.subscribe((newValue) => {
+    if (newValue !== null) {
+      const activeAccount = getActiveAccount();
+      _function(activeAccount);
+    }
+  });
 };
 
 export const identityTokenIssuerPublicKey = new PublicKey(

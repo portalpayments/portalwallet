@@ -10,8 +10,7 @@
   import {
     hasUSDCAccountStore,
     haveAccountsLoadedStore,
-    activeAccountIndexStore,
-    getActiveAccount,
+    onChangeActiveAccount,
   } from "../stores";
 
   // TODO
@@ -38,19 +37,16 @@
     haveAccountsLoaded = newValue;
   });
 
-  activeAccountIndexStore.subscribe((newValue) => {
+  onChangeActiveAccount((activeAccount) => {
     log(`Active account has changed, updating balance...`);
-    if (newValue !== null) {
-      const activeAccount = getActiveAccount();
-      const majorAndMinor = amountAndDecimalsToMajorAndMinor(
-        activeAccount.balance,
-        activeAccount.decimals
-      );
-      major = majorAndMinor[0];
-      minor = majorAndMinor[1];
-      currencyName = getCurrencyName(activeAccount.currency);
-      haveAccountsLoaded = true;
-    }
+    const majorAndMinor = amountAndDecimalsToMajorAndMinor(
+      activeAccount.balance,
+      activeAccount.decimals
+    );
+    major = majorAndMinor[0];
+    minor = majorAndMinor[1];
+    currencyName = getCurrencyName(activeAccount.currency);
+    haveAccountsLoaded = true;
   });
 </script>
 

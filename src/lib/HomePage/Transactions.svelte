@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { activeAccountIndexStore, getActiveAccount } from "../../lib/stores";
+  import { onChangeActiveAccount } from "../../lib/stores";
   import TransactionComponent from "./Transaction.svelte";
   import { amountAndDecimalsToMajorAndMinor } from "../../lib/utils";
   import { get as getFromStore } from "svelte/store";
@@ -21,21 +21,18 @@
   let isLoadingTransactionSummaries: boolean = true;
 
   // TODO: maybe move transactionsByDays to the store?
-  activeAccountIndexStore.subscribe((newValue) => {
+  onChangeActiveAccount((activeAccount) => {
     log(`Active account has changed, updating balance...`);
-    if (newValue !== null) {
-      const activeAccount = getActiveAccount();
-      log(
-        `Setting transactionsByDays, based on ${activeAccount.transactionSummaries.length} transactionSummaries `
-      );
+    log(
+      `Setting transactionsByDays, based on ${activeAccount.transactionSummaries.length} transactionSummaries `
+    );
 
-      transactionsByDays = getTransactionsByDays(
-        activeAccount.transactionSummaries
-      );
-      decimals = activeAccount.decimals;
+    transactionsByDays = getTransactionsByDays(
+      activeAccount.transactionSummaries
+    );
+    decimals = activeAccount.decimals;
 
-      isLoadingTransactionSummaries = false;
-    }
+    isLoadingTransactionSummaries = false;
   });
 </script>
 
