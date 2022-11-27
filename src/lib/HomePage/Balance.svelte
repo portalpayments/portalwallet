@@ -1,6 +1,6 @@
 <script lang="ts">
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
-  import { log } from "../../backend/functions";
+  import { log, stringify } from "../../backend/functions";
   import { get as getFromStore } from "svelte/store";
   import { ICONS } from "../constants";
   import { getCurrencyName } from "../../backend/vmwallet";
@@ -13,12 +13,7 @@
     onChangeActiveAccount,
   } from "../stores";
 
-  // TODO
-  // Explicitly mark these values as reactive as they depend on other data
-  let major: string | null;
-  $: major = null;
-  let minor: string | null;
-  $: minor = null;
+  let majorAndMinor: Array<string | null> = [null, null];
 
   let currencyName: string;
 
@@ -39,12 +34,10 @@
 
   onChangeActiveAccount((activeAccount) => {
     log(`Active account has changed, updating balance...`);
-    const majorAndMinor = amountAndDecimalsToMajorAndMinor(
+    majorAndMinor = amountAndDecimalsToMajorAndMinor(
       activeAccount.balance,
       activeAccount.decimals
     );
-    major = majorAndMinor[0];
-    minor = majorAndMinor[1];
     currencyName = getCurrencyName(activeAccount.currency);
     haveAccountsLoaded = true;
   });
@@ -59,8 +52,8 @@
           alt="{currencyName} logo"
           src={ICONS[currencyName]}
         />
-        <div class="major">{major}</div>
-        <div class="minor">.{minor}</div>
+        <div class="major">{majorAndMinor[0]}</div>
+        <div class="minor">.{majorAndMinor[1]}</div>
       </div>
     {:else}
       <div class="symbol-major-minor">
