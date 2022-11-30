@@ -30,6 +30,9 @@ describe(`transaction summaries`, () => {
   // Mike sending CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs with glow
   test(`We can produce a transaction summary from us sending someone money with glow`, async () => {
     const portalTransactionSummary = summarizeTransaction(
+      // TODO: fix 'transaction.message.accountKeys' (is a string, should be somethign else)
+      // in the demo transaction below
+      // @ts-ignore
       sendFiveUSDC,
       new PublicKey(MIKES_WALLET)
     );
@@ -51,6 +54,9 @@ describe(`transaction summaries`, () => {
   test(`We can produce a transaction summary from someone sending us money with glow`, async () => {
     // Same transaction as before but with perspective shifted to greg
     const portalTransactionSummary = summarizeTransaction(
+      // TODO: fix 'transaction.message.accountKeys' (is a string, should be somethign else)
+      // in the demo transaction below
+      // @ts-ignore
       sendFiveUSDC,
       new PublicKey(GREGS_WALLET)
     );
@@ -386,6 +392,9 @@ describe(`grouping transactions`, () => {
 describe(`memos and notes`, () => {
   test(`We can read a transaction with a memo`, () => {
     const summary = summarizeTransaction(
+      // TODO: fix 'transaction.message.accountKeys' (is a string, should be somethign else)
+      // in the demo transaction below
+      // @ts-ignore
       sendingSolWithMemo,
       new PublicKey(MIKES_WALLET)
     );
