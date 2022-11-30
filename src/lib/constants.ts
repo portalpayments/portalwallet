@@ -1,3 +1,5 @@
+// Frontend-specific constants
+// Backend constants are in the backend constants file.
 import usdcIconURL from "../assets/Icons/usdc-coin-grey.svg";
 import usdtIconURL from "../assets/Icons/usdt-coin-grey.svg";
 import usdhIconURL from "../assets/Icons/usdh-coin-grey.svg";
@@ -9,8 +11,6 @@ export enum LabelColor {
   Yellow = "yellow",
   Red = "red",
 }
-
-export const HOW_MANY_TRANSACTIONS_TO_SHOW = 30;
 
 export const ICONS = {
   USDC: usdcIconURL,
