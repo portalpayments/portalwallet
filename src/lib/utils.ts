@@ -1,5 +1,4 @@
 import { PublicKey } from "@solana/web3.js";
-
 const WALLET_CHARACTERS_TO_SHOW = 5;
 
 // Adds commas to numbers
@@ -13,7 +12,16 @@ export const httpGet = async (uri: string) => {
   const response = await fetch(uri, {
     method: "GET",
   });
-  return response.json();
+  const contentType = response.headers.get("Content-Type").split(";").at(0);
+
+  if (contentType === "text/html" || contentType === "text/plain") {
+    const htmlOrText = await response.text();
+    return htmlOrText;
+  }
+  if (contentType === "application/json") {
+    return response.json();
+  }
+  throw new Error(`Don't know ho to decode this contentType: ${contentType}`);
 };
 
 export const formatMajorUnits = (number: number | string) => {
