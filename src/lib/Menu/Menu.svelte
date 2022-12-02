@@ -17,7 +17,6 @@
   import { amountAndDecimalsToString } from "../utils";
   import Contact from "../Shared/Contact.svelte";
   import MenuBalance from "./MenuBalance.svelte";
-  import { ICONS } from "../constants";
 
   export let user: ContactType | null;
 

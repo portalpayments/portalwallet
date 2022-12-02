@@ -6,6 +6,12 @@
 
   export let account: AccountSummary;
   export let changeAccount: Function;
+
+  const ICONS = {
+    USDC: "../assets/Icons/usdc-coin.svg",
+    USDT: "../assets/Icons/usdt-coin.svg",
+    USDH: "../assets/Icons/usdh-coin.svg",
+  };
 </script>
 
 <button type="button" class="with-icon" on:click={() => changeAccount()}>

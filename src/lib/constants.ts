@@ -1,8 +1,3 @@
-import usdcIconURL from "../assets/Icons/usdc-coin-grey.svg";
-import usdtIconURL from "../assets/Icons/usdt-coin-grey.svg";
-import usdhIconURL from "../assets/Icons/usdh-coin-grey.svg";
-import solIconURL from "../assets/Icons/sol-coin-grey.svg";
-
 export enum LabelColor {
   Grey = "grey",
   Green = "green",
@@ -11,13 +6,6 @@ export enum LabelColor {
 }
 
 export const HOW_MANY_TRANSACTIONS_TO_SHOW = 30;
-
-export const ICONS = {
-  USDC: usdcIconURL,
-  USDT: usdtIconURL,
-  USDH: usdhIconURL,
-  SOL: solIconURL,
-};
 
 // TODO: this is extracted from the secret key in the backend .env file
 export const identityTokenIssuerPublicKeyString =
