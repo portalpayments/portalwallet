@@ -1,6 +1,6 @@
 import { clusterApiUrl, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { BN as BigNumber } from "bn.js";
-import { Currency } from "../lib/types";
+import { Currency, type CurrencyDetails } from "../lib/types";
 
 export const IDENTITY_TOKEN_NAME = "Portal Identity Token";
 
@@ -102,11 +102,13 @@ export const USD_VISUAL_DECIMALS = 2;
 
 export const SOLANA_DECIMALS = Math.log10(LAMPORTS_PER_SOL);
 
+export const HOW_MANY_TRANSACTIONS_TO_SHOW = 30;
+
 export const SOL = LAMPORTS_PER_SOL;
 
 export const NOT_FOUND = -1;
 
-export const mintToCurrencyMap = {
+export const mintToCurrencyMap: Record<string, CurrencyDetails> = {
   [USDC_MAINNET_MINT_ACCOUNT]: {
     id: Currency.USDC,
     name: "USDC",

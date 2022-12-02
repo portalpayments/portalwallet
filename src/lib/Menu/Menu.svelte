@@ -1,24 +1,20 @@
 <script lang="ts">
   // Design incpiration: https://dribbble.com/shots/17444832-BoxedUP-Delivery-Driver-application/attachments/12575962?mode=media
   import { Link } from "svelte-navigator";
-  import { get as getFromStore } from "svelte/store";
   import {
     activeAccountIndexStore,
-    getActiveAccount,
     nativeAccountStore,
     tokenAccountsStore,
   } from "../stores";
   import type { AccountSummary } from "../../lib/types";
   import closeIconURL from "../../assets/Icons/close.svg";
-  import settingsIconURL from "../../assets/Icons/settings.svg";
+  import settingsIconURL from "../../assets/Icons/settings-grey.svg";
   import type { Contact as ContactType } from "../types";
   import { log } from "../../backend/functions";
-  import { getCurrencyName } from "../../backend/vmwallet";
-  import { amountAndDecimalsToString } from "../utils";
   import Contact from "../Shared/Contact.svelte";
   import MenuBalance from "./MenuBalance.svelte";
 
-  export let user: ContactType | null;
+  export let user: ContactType | null = null;
 
   export let isMenuActive: boolean;
 
@@ -27,7 +23,7 @@
   let tokenAccounts: Array<AccountSummary> = [];
 
   tokenAccountsStore.subscribe((newValue: Array<AccountSummary>) => {
-    if (newValue.length) {
+    if (newValue?.length) {
       tokenAccounts = newValue;
     }
   });
@@ -45,7 +41,7 @@
   };
 </script>
 
-<div class="menu {isMenuActive ? 'active' : ''}">
+<div class="menu polymer {isMenuActive ? 'active' : ''}">
   <button class="close" on:click={() => onClose()}
     ><img src={closeIconURL} alt="close" /></button
   >
@@ -64,10 +60,12 @@
     {/each}
 
     <!-- TODO: store active account index and use it to mark one of these as active -->
-    <MenuBalance
-      account={nativeAccount}
-      changeAccount={() => changeAccount("native")}
-    />
+    {#if nativeAccount}
+      <MenuBalance
+        account={nativeAccount}
+        changeAccount={() => changeAccount("native")}
+      />
+    {/if}
   </div>
 
   <Link class="button with-icon settings" to="/settings">
@@ -87,6 +85,7 @@
     transform: translateX(-100%);
     transition: all 200ms ease-in-out;
 
+    grid-template-rows: 120px 1fr 64px;
     position: absolute;
     top: 0;
     left: 0;
@@ -99,8 +98,6 @@
     padding: 6px;
     grid-auto-flow: row;
     color: var(--black);
-    background-color: white;
-    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
     z-index: 2;
   }
 
@@ -119,6 +116,7 @@
   /* On screen when active */
   .menu.active {
     transform: translateX(0);
+    box-shadow: 1px 5px 15px 5px rgba(0, 0, 0, 0.33);
   }
 
   .menu .accounts {

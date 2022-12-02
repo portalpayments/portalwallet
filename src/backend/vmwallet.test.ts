@@ -356,37 +356,50 @@ describe(`mainnet integration tests`, () => {
         // but jest-extended does not fucking work after an hour
         // of fucking round with it.
         memo: expect.any(String),
+        receipt: null,
       });
     },
     15 * SECONDS
   );
 
   test(
-    `getAccountSummaries() works`,
+    `We can get account summaries`,
     async () => {
       const accountSummaries = await getTokenAccountSummaries(
         mainNetConnection,
         new PublicKey(MIKES_WALLET)
       );
-      expect(accountSummaries).toEqual([
+
+      // Doesn't consistently return in order so let's sort() it
+      const byCurrency = (a, b) => {
+        if (a.currency > b.currency) {
+          return 1;
+        }
+        if (a.currency < b.currency) {
+          return -1;
+        }
+        return 0;
+      };
+
+      expect(accountSummaries.sort(byCurrency)).toEqual([
+        {
+          address: new PublicKey(MIKES_USDC_ACCOUNT),
+          currency: Currency.USDC,
+          balance: expect.any(Number),
+          decimals: 6,
+          transactionSummaries: expect.any(Array),
+        },
         {
           address: new PublicKey(MIKES_USDH_ACCOUNT),
-          balance: expect.any(Number),
           currency: Currency.USDH,
+          balance: expect.any(Number),
           decimals: 6,
           transactionSummaries: expect.any(Array),
         },
         {
           address: new PublicKey(MIKES_USDT_ACCOUNT),
-          balance: expect.any(Number),
           currency: Currency.USDT,
-          decimals: 6,
-          transactionSummaries: expect.any(Array),
-        },
-        {
-          address: new PublicKey(MIKES_USDC_ACCOUNT),
           balance: expect.any(Number),
-          currency: Currency.USDC,
           decimals: 6,
           transactionSummaries: expect.any(Array),
         },

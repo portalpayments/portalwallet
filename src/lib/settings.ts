@@ -156,7 +156,6 @@ export const getSettings = async (password: string): Promise<Settings> => {
     const error = thrownObject as Error;
     // Original error is 'Unsupported state or unable to authenticate data'
     // but that's vague.
-    log(error.message);
     throw new Error("Bad password");
   }
   // 2. Turn ArrayBuffer into String

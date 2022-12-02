@@ -21,7 +21,7 @@
     identityTokenIssuerPublicKey,
   } from "./lib/stores";
   import { checkIfOnboarded } from "./lib/settings";
-  import MyWalletAddress from "./lib/MyWalletAddress/MyWalletAddress.svelte";
+  import WalletAddress from "./lib/MyWalletAddress/MyWalletAddress.svelte";
 
   $authStore;
 
@@ -54,9 +54,6 @@
         keypair.publicKey
       );
 
-      if (!verifiedClaims) {
-        return;
-      }
       user = {
         walletAddress: keypair.publicKey.toBase58(),
         isNew: false,
@@ -111,7 +108,7 @@
     {:else if $authStore.isLoggedIn}
       <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
       <Route path="sendMoney"><SendPage /></Route>
-      <Route path="myWalletAddress/:walletaddress"><MyWalletAddress /></Route>
+      <Route path="myWalletAddress/:walletaddress"><WalletAddress /></Route>
       <Route path="transactions">
         <TransactionsPage />
       </Route>

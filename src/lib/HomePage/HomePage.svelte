@@ -9,28 +9,38 @@
   import MenuButton from "../../lib/Menu/MenuButton.svelte";
   import type { Contact } from "../../lib/types";
   import { Link } from "svelte-navigator";
-  
-  import type { Connection, Keypair } from "@solana/web3.js";
-  import SkeletonBalance from "../Shared/Skeletons/SkeletonBalance.svelte";
+
+  import { hasUSDCAccountStore } from "../../lib/stores";
   import { log, sleep, stringify } from "../../backend/functions";
-  import type { AccountSummary } from "../types";
 
   log(`Homepage loading...`);
 
   export let user: Contact | null;
 
-  let keypair: Keypair | null = null;
-
-  let haveAccountsLoaded = false;
-
   $: isMenuActive = false;
 
   let isNewUnverifiedWallet: null | boolean = null;
 
-  let emailLink: null | string = null;
+  hasUSDCAccountStore.subscribe((newValue) => {
+    // TODO: we're saying if we have no USDC account, we don't have a wallet.
+    // This isn't strictly true.
+
+    // Check for 'false' specifically as null just means unknown.
+    if (newValue === false) {
+      isNewUnverifiedWallet = true;
+    }
+  });
 </script>
 
 <div class="feature">
+  <Menu
+    {user}
+    {isMenuActive}
+    onClose={() => {
+      isMenuActive = false;
+    }}
+  />
+
   <div class="top-toolbar">
     <MenuButton
       {user}
@@ -39,32 +49,28 @@
         isMenuActive = true;
       }}
     />
-    {#if isMenuActive}
-      <Menu
-        {user}
-        {isMenuActive}
-        onClose={() => {
-          isMenuActive = false;
-        }}
-      />
-    {/if}
-    {#if keypair}
+
+    {#if user}
       <div class="wallet-address-qr">
-        <Link to={"/myWalletAddress/" + keypair.publicKey}>
+        <Link to={`/myWalletAddress/${user.walletAddress}`}>
           <img alt="Wallet address" src={QRCodeIcon} class="qr-code-icon" />
         </Link>
       </div>
     {/if}
   </div>
   {#if isNewUnverifiedWallet}
-    <div class="welcome">
-      <Heading>Welcome to the Portal alpha!</Heading>
-      <p>Get verified to receive:</p>
-      <p>💰 $5 of real USDC you can send to anyone you like</p>
-      <p>✅ Your Portal verification token so people can send you money!</p>
+    {#if user}
+      <div class="welcome">
+        <Heading>Welcome to the Portal alpha!</Heading>
+        <p>Get verified to receive:</p>
+        <p>💰 $5 of real USDC you can send to anyone you like</p>
+        <p>✅ Your Portal verification token so people can send you money!</p>
 
-      <a class="button" href={emailLink}>Get verified</a>
-    </div>
+        <Link to={`/myWalletAddress/${user.walletAddress}`}>
+          <button class="get-verified primary">Get verified</button>
+        </Link>
+      </div>
+    {/if}
   {:else}
     <Balance />
     <Buttons />
@@ -86,20 +92,6 @@
     gap: 8px;
     height: 400px;
     padding: 16px;
-  }
-
-  .welcome a {
-    color: white;
-    font-weight: 600;
-    padding: 7px 0px;
-    font-size: 14px;
-
-    border-radius: 24px;
-    background: var(--blue-green-gradient);
-  }
-  .welcome a {
-    color: #fff;
-    background-color: var(--mid-blue);
   }
 
   .welcome p {

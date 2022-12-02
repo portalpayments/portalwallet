@@ -22,8 +22,13 @@ import { getIdentityTokensFromWallet } from "./identity-tokens";
 import type { TokenMetaData, VerifiedClaims } from "./types";
 import { summarizeTransaction } from "./transactions";
 import { httpGet, toUniqueStringArray } from "../lib/utils";
-import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../lib/constants";
-import { Currency, Direction, type Contact } from "../lib/types";
+import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "./constants";
+import {
+  Currency,
+  Direction,
+  type Contact,
+  type TransactionSummary,
+} from "../lib/types";
 import type { AccountSummary } from "../lib/types";
 import { identityTokenIssuerPublicKey } from "../lib/stores";
 
@@ -252,9 +257,12 @@ export const getTransactionSummariesForAddress = async (
     );
   }
 
-  let transactionSummaries = rawTransactions.map((rawTransaction) => {
-    return summarizeTransaction(rawTransaction, walletAddress);
-  });
+  let transactionSummaries = (await asyncMap(
+    rawTransactions,
+    (rawTransaction) => {
+      return summarizeTransaction(rawTransaction, walletAddress);
+    }
+  )) as Array<TransactionSummary>;
 
   // We can't summarize all transactions yet
   transactionSummaries = transactionSummaries.filter(
@@ -321,13 +329,19 @@ export const getNativeAccountSummary = async (
   walletAddress: PublicKey
 ): Promise<AccountSummary> => {
   log(`Getting transactions for native account`);
-  const accountBalance = await getAccountBalance(connection, walletAddress);
-  const transactionSummaries = await getTransactionSummariesForAddress(
-    connection,
-    walletAddress,
-    walletAddress,
-    HOW_MANY_TRANSACTIONS_TO_SHOW
-  );
+  let accountBalance = 0;
+  let transactionSummaries: Array<TransactionSummary> = [];
+  try {
+    accountBalance = await getAccountBalance(connection, walletAddress);
+    transactionSummaries = await getTransactionSummariesForAddress(
+      connection,
+      walletAddress,
+      walletAddress,
+      HOW_MANY_TRANSACTIONS_TO_SHOW
+    );
+  } catch (error) {
+    log(`No sol account balance for ${walletAddress}`);
+  }
   const accountSummary: AccountSummary = {
     address: walletAddress,
     currency: Currency.SOL,

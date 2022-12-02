@@ -13,7 +13,7 @@ import {
   MIKES_WALLET,
   YCOMBINATOR_DEMO_WALLET_FOR_JARED,
 } from "./constants";
-import { Currency } from "../lib/types";
+import { Currency, type TransactionSummary } from "../lib/types";
 import { Direction } from "../lib/types";
 import { hexToUtf8, log, stringify } from "./functions";
 import { sendFiveUSDC } from "./__mocks__/transactions/sendFiveUSDC";
@@ -29,9 +29,14 @@ const GREGS_WALLET = "CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs";
 describe(`transaction summaries`, () => {
   // Mike sending CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs with glow
   test(`We can produce a transaction summary from us sending someone money with glow`, async () => {
-    const portalTransactionSummary = summarizeTransaction(
+    const portalTransactionSummary = await summarizeTransaction(
+      // TODO: fix 'transaction.message.accountKeys' (is a string, should be somethign else)
+      // in the demo transaction below
+      // @ts-ignore
       sendFiveUSDC,
-      new PublicKey(MIKES_WALLET)
+      new PublicKey(MIKES_WALLET),
+      null,
+      false
     );
 
     expect(portalTransactionSummary).toEqual({
@@ -45,12 +50,16 @@ describe(`transaction summaries`, () => {
       from: MIKES_WALLET,
       to: GREGS_WALLET,
       memo: "Hey Greg! 🙋🏻‍♂️",
+      receipt: null,
     });
   });
 
   test(`We can produce a transaction summary from someone sending us money with glow`, async () => {
     // Same transaction as before but with perspective shifted to greg
-    const portalTransactionSummary = summarizeTransaction(
+    const portalTransactionSummary = await summarizeTransaction(
+      // TODO: fix 'transaction.message.accountKeys' (is a string, should be somethign else)
+      // in the demo transaction below
+      // @ts-ignore
       sendFiveUSDC,
       new PublicKey(GREGS_WALLET)
     );
@@ -62,19 +71,40 @@ describe(`transaction summaries`, () => {
       networkFee: 5000,
       direction: 1,
       amount: 5000000,
-      currency: 0,
+      currency: Currency.USDC,
       from: MIKES_WALLET,
       to: GREGS_WALLET,
       memo: "Hey Greg! 🙋🏻‍♂️",
+      receipt: null,
     });
   });
+
+  // 'USDC' on our local environment is just a token mint account we make
+  const getFakeMintToCurrencyMapFromTestTransaction = (
+    rawTransaction: ParsedTransactionWithMeta
+  ) => {
+    const fakeUSDCTokenAccount = rawTransaction.meta.preTokenBalances[0].mint;
+    const fakeMintToCurrencyMap = {
+      [fakeUSDCTokenAccount]: {
+        id: Currency.USDC,
+        name: "USDC local testing",
+        decimals: 6,
+      },
+    };
+    return fakeMintToCurrencyMap;
+  };
 
   test(`We can produce a transaction summary from a pre-cooked transaction where the sender is first`, async () => {
     const currentUserWallet = MOCK_SENDER_PUBLIC_KEY;
 
-    const portalTransactionSummary = summarizeTransaction(
+    const fakeMintToCurrencyMap = getFakeMintToCurrencyMapFromTestTransaction(
+      sendToExistingTokenAccountSenderComesFirst
+    );
+
+    const portalTransactionSummary = await summarizeTransaction(
       sendToExistingTokenAccountSenderComesFirst,
-      new PublicKey(currentUserWallet)
+      new PublicKey(currentUserWallet),
+      fakeMintToCurrencyMap
     );
 
     expect(portalTransactionSummary).toEqual({
@@ -88,17 +118,22 @@ describe(`transaction summaries`, () => {
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
       memo: null,
+      receipt: null,
     });
   });
 
   test(`We can produce a transaction summary from a pre-cooked transaction where the sender isn't first`, async () => {
     const currentUserWallet = MOCK_SENDER_PUBLIC_KEY;
 
-    const portalTransactionSummary = summarizeTransaction(
+    const fakeMintToCurrencyMap = getFakeMintToCurrencyMapFromTestTransaction(
+      sendToExistingTokenAccountSenderComesSecond
+    );
+    const portalTransactionSummary = await summarizeTransaction(
       // TODO: our logged transaction.message seems to be missing some properties - investigate - could just be typescript types not being up to date
       // @ts-ignore
       sendToExistingTokenAccountSenderComesSecond,
-      new PublicKey(currentUserWallet)
+      new PublicKey(currentUserWallet),
+      fakeMintToCurrencyMap
     );
 
     expect(portalTransactionSummary).toEqual({
@@ -112,17 +147,23 @@ describe(`transaction summaries`, () => {
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
       memo: null,
+      receipt: null,
     });
   });
 
   test(`We can produce a transaction summary from a pre-cooked transaction where the sender is first index from recipient's point of view`, async () => {
     const currentUserWallet = MOCK_RECIPIENT_PUBLIC_KEY;
 
-    const portalTransactionSummary = summarizeTransaction(
+    const fakeMintToCurrencyMap = getFakeMintToCurrencyMapFromTestTransaction(
+      sendToExistingTokenAccountSenderComesFirst
+    );
+
+    const portalTransactionSummary = await summarizeTransaction(
       // TODO: our logged transaction.message seems to be missing some properties - investigate - could just be typescript types not being up to date
       // @ts-ignore
       sendToExistingTokenAccountSenderComesFirst,
-      new PublicKey(currentUserWallet)
+      new PublicKey(currentUserWallet),
+      fakeMintToCurrencyMap
     );
 
     expect(portalTransactionSummary).toEqual({
@@ -136,13 +177,14 @@ describe(`transaction summaries`, () => {
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
       memo: null,
+      receipt: null,
     });
   });
 
-  test(`We ignore a transaction of Mike sending himself some money`, () => {
+  test(`We ignore a transaction of Mike sending himself some money`, async () => {
     const portalTransactionSummary =
       // TODO: 'as' shouldn't be necessary, we should tweak our test data
-      summarizeTransaction(
+      await summarizeTransaction(
         sendingMoneyToSelf as ParsedTransactionWithMeta,
         new PublicKey(MIKES_WALLET)
       );
@@ -150,10 +192,10 @@ describe(`transaction summaries`, () => {
     expect(portalTransactionSummary).toEqual(null);
   });
 
-  test(`Mike sending Jared some lamports`, () => {
+  test(`Mike sending Jared some lamports`, async () => {
     const portalTransactionSummary =
       // TODO: 'as' shouldn't be necessary, we should tweak our test data
-      summarizeTransaction(
+      await summarizeTransaction(
         sendingSol as ParsedTransactionWithMeta,
         new PublicKey(MIKES_WALLET)
       );
@@ -161,7 +203,7 @@ describe(`transaction summaries`, () => {
     expect(portalTransactionSummary).toEqual({
       id: "5KKQASDKTxoViRWYzN7Rf8X9n3wiiNVztpgpNG1oyyZbkNiai1JVcD4rAV2XYzFPgRP4dXQv7A3Bku68UT4j2FZk",
       amount: 30000000,
-      currency: 1,
+      currency: Currency.SOL,
       date: 1662733089000,
       direction: 0,
       from: MIKES_WALLET,
@@ -169,13 +211,14 @@ describe(`transaction summaries`, () => {
       status: true,
       to: YCOMBINATOR_DEMO_WALLET_FOR_JARED,
       memo: null,
+      receipt: null,
     });
   });
 });
 
 describe(`grouping transactions`, () => {
   test(`grouping transactions`, () => {
-    const transactionSummaries = [
+    const transactionSummaries: Array<TransactionSummary> = [
       {
         id: "1",
         date: 1662985498000,
@@ -183,10 +226,11 @@ describe(`grouping transactions`, () => {
         networkFee: 5000,
         direction: 0,
         amount: 1000000,
-        currency: 0,
+        currency: Currency.USDC,
         from: MIKES_WALLET,
         to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
         memo: null,
+        receipt: null,
       },
       {
         id: "2",
@@ -195,11 +239,13 @@ describe(`grouping transactions`, () => {
         networkFee: 5000,
         direction: 0,
         amount: 500000,
-        currency: 0,
+        currency: Currency.USDC,
         from: MIKES_WALLET,
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
         memo: null,
+        receipt: null,
       },
+      // Sneaky sol transaction - we don't want to see this in our USDC transaction summary!
       {
         id: "3",
         date: 1662733089000,
@@ -207,10 +253,11 @@ describe(`grouping transactions`, () => {
         networkFee: 5000,
         direction: 0,
         amount: 30000000,
-        currency: 1,
+        currency: Currency.SOL,
         from: MIKES_WALLET,
         to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
         memo: null,
+        receipt: null,
       },
       {
         id: "4",
@@ -219,10 +266,11 @@ describe(`grouping transactions`, () => {
         networkFee: 5000,
         direction: 0,
         amount: 70000,
-        currency: 0,
+        currency: Currency.USDC,
         from: MIKES_WALLET,
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
         memo: null,
+        receipt: null,
       },
       {
         id: "5",
@@ -231,10 +279,11 @@ describe(`grouping transactions`, () => {
         networkFee: 5000,
         direction: 0,
         amount: 210000,
-        currency: 0,
+        currency: Currency.USDC,
         from: MIKES_WALLET,
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
         memo: null,
+        receipt: null,
       },
       {
         id: "6",
@@ -243,10 +292,11 @@ describe(`grouping transactions`, () => {
         networkFee: 5000,
         direction: 0,
         amount: 230000,
-        currency: 0,
+        currency: Currency.USDC,
         from: MIKES_WALLET,
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
         memo: null,
+        receipt: null,
       },
       {
         id: "7",
@@ -255,10 +305,11 @@ describe(`grouping transactions`, () => {
         networkFee: 5000,
         direction: 0,
         amount: 210000,
-        currency: 0,
+        currency: Currency.USDC,
         from: MIKES_WALLET,
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
         memo: null,
+        receipt: null,
       },
       {
         id: "8",
@@ -267,14 +318,18 @@ describe(`grouping transactions`, () => {
         networkFee: 5000,
         direction: 0,
         amount: 70000,
-        currency: 0,
+        currency: Currency.USDC,
         from: MIKES_WALLET,
         to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
         memo: null,
+        receipt: null,
       },
     ];
 
-    const transactionsByDays = getTransactionsByDays(transactionSummaries);
+    const transactionsByDays = getTransactionsByDays(
+      transactionSummaries,
+      Currency.USDC
+    );
 
     expect(transactionsByDays).toEqual([
       {
@@ -292,6 +347,7 @@ describe(`grouping transactions`, () => {
             from: MIKES_WALLET,
             to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
             memo: null,
+            receipt: null,
           },
         ],
       },
@@ -310,6 +366,7 @@ describe(`grouping transactions`, () => {
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
+            receipt: null,
           },
         ],
       },
@@ -328,6 +385,7 @@ describe(`grouping transactions`, () => {
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
+            receipt: null,
           },
           {
             id: "5",
@@ -340,6 +398,7 @@ describe(`grouping transactions`, () => {
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
+            receipt: null,
           },
           {
             id: "6",
@@ -352,6 +411,7 @@ describe(`grouping transactions`, () => {
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
+            receipt: null,
           },
           {
             id: "7",
@@ -364,6 +424,7 @@ describe(`grouping transactions`, () => {
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
+            receipt: null,
           },
           {
             id: "8",
@@ -376,6 +437,7 @@ describe(`grouping transactions`, () => {
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
+            receipt: null,
           },
         ],
       },
@@ -384,8 +446,11 @@ describe(`grouping transactions`, () => {
 });
 
 describe(`memos and notes`, () => {
-  test(`We can read a transaction with a memo`, () => {
-    const summary = summarizeTransaction(
+  test(`We can read a transaction with a memo`, async () => {
+    const summary = await summarizeTransaction(
+      // TODO: fix 'transaction.message.accountKeys' (is a string, should be somethign else)
+      // in the demo transaction below
+      // @ts-ignore
       sendingSolWithMemo,
       new PublicKey(MIKES_WALLET)
     );
@@ -400,6 +465,7 @@ describe(`memos and notes`, () => {
       networkFee: 5000,
       status: true,
       to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+      receipt: null,
     });
   });
 
@@ -414,14 +480,14 @@ describe(`memos and notes`, () => {
   test(`We can extract a note out of a transaction`, async () => {
     const portalTransactionSummary =
       // TODO: 'as' shouldn't be necessary, we should tweak our test data
-      summarizeTransaction(
+      await summarizeTransaction(
         sendingSolWithNote as ParsedTransactionWithMeta,
         new PublicKey(JOHN_TESTUSER_DEMO_WALLET)
       );
 
     expect(portalTransactionSummary).toEqual({
       amount: 100000000,
-      currency: 1,
+      currency: Currency.SOL,
       date: 1665584732000,
       direction: 1,
       from: "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
@@ -430,6 +496,7 @@ describe(`memos and notes`, () => {
       status: true,
       to: "8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7",
       memo: "Test note to recipient from Mike",
+      receipt: null,
     });
   });
 });

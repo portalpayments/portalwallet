@@ -1,13 +1,8 @@
 import { log, stringify, hexToUtf8, instructionDataToNote } from "./functions";
-import type {
-  PublicKey,
-  ParsedTransactionWithMeta,
-  ParsedInstruction,
-  PartiallyDecodedInstruction,
-} from "@solana/web3.js";
 import {
   Currency,
   Direction,
+  type CurrencyDetails,
   type TransactionsByDay,
   type TransactionSummary,
 } from "../lib/types";
@@ -18,6 +13,14 @@ import {
   NOTE_PROGRAM,
   SPL_TOKEN_PROGRAM,
 } from "./constants";
+import { getReceiptForTransactionSummary } from "./receipts";
+import { getKeypairFromString } from "./vmwallet";
+import type {
+  ParsedInstruction,
+  PartiallyDecodedInstruction,
+  ParsedTransactionWithMeta,
+  PublicKey,
+} from "@solana/web3.js";
 
 export const solanaBlocktimeToJSTime = (blockTime: number) => {
   return blockTime * 1000;
@@ -134,10 +137,13 @@ const getWalletDifference = (
   return difference;
 };
 
-export const summarizeTransaction = (
+export const summarizeTransaction = async (
   rawTransaction: ParsedTransactionWithMeta,
-  walletAccount: PublicKey
-): TransactionSummary => {
+  walletAccount: PublicKey,
+  fakeMintToCurrencyMap: Record<string, CurrencyDetails> | null = null,
+  enableReceipts: boolean = false,
+  secretKeyForReceipts: string | null = null
+): Promise<TransactionSummary> => {
   // https://docs.solana.com/terminology#transaction-id
   // The first signature in a transaction, which can be used to uniquely identify the transaction across the complete ledger.
   const id = rawTransaction?.transaction?.signatures?.[0];
@@ -184,8 +190,6 @@ export const summarizeTransaction = (
     }
 
     if (isSolTransaction) {
-      log(`Handing Sol transaction`);
-
       const onlyInstruction = instructions[0] as ParsedInstruction;
 
       const direction =
@@ -212,7 +216,17 @@ export const summarizeTransaction = (
         from: onlyInstruction.parsed.info.source,
         to: onlyInstruction.parsed.info.destination,
         memo,
+        receipt: null,
       };
+
+      if (enableReceipts && secretKeyForReceipts) {
+        const keyPair = getKeypairFromString(secretKeyForReceipts);
+        transactionSummary.receipt = await getReceiptForTransactionSummary(
+          keyPair,
+          transactionSummary.memo,
+          transactionSummary.date
+        );
+      }
 
       return transactionSummary;
     }
@@ -225,9 +239,17 @@ export const summarizeTransaction = (
     const mintAccount = rawTransaction.meta.postTokenBalances.find(
       (postTokenBalance) => postTokenBalance.owner !== walletAccount.toBase58()
     ).mint;
-    const currency = mintToCurrencyMap[mintAccount].id;
 
-    if (currency !== Currency.USDC) {
+    const currencyDetails = fakeMintToCurrencyMap
+      ? fakeMintToCurrencyMap[mintAccount]
+      : mintToCurrencyMap[mintAccount];
+
+    if (!currencyDetails) {
+      throw new Error(`Unknown currency for mint '${mintAccount}'`);
+    }
+
+    const currencyId = currencyDetails.id;
+    if (currencyId !== Currency.USDC) {
       log(`Found USDH transaction:`);
       log(stringify(rawTransaction));
     }
@@ -264,11 +286,21 @@ export const summarizeTransaction = (
       networkFee: rawTransaction.meta.fee,
       direction,
       amount: removeSign(walletDifference),
-      currency,
+      currency: currencyId,
       from,
       to,
       memo,
+      receipt: null,
     };
+
+    if (enableReceipts && secretKeyForReceipts) {
+      const keyPair = getKeypairFromString(secretKeyForReceipts);
+      transactionSummary.receipt = await getReceiptForTransactionSummary(
+        keyPair,
+        transactionSummary.memo,
+        transactionSummary.date
+      );
+    }
 
     return transactionSummary;
   } catch (thrownObject) {
@@ -283,9 +315,12 @@ export const summarizeTransaction = (
 
 export const getTransactionsByDays = (
   // It is assumed that all transactionSummaries are for the same currency
-  transactions: Array<TransactionSummary>
+  transactions: Array<TransactionSummary>,
+  currency: Currency
 ): Array<TransactionsByDay> => {
-  transactions.sort(byDateNewestToOldest);
+  transactions = transactions
+    .sort(byDateNewestToOldest)
+    .filter((transaction) => transaction.currency === currency);
 
   const transactionsByDays: Array<TransactionsByDay> = [];
 

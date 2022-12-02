@@ -1,6 +1,5 @@
 import { get as getFromStore, writable, type Writable } from "svelte/store";
 import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
-import { Keypair as KeypairConstructor } from "@solana/web3.js";
 import { identityTokenIssuerPublicKeyString } from "./constants";
 import {
   Currency,
@@ -11,12 +10,9 @@ import {
 import { asyncMap, log, stringify } from "../backend/functions";
 import {
   getContactsFromTransactions,
-  getCurrencyName,
   getNativeAccountSummary,
   getTokenAccountSummaries,
-  verifyWallet,
 } from "../backend/vmwallet";
-import { amountAndDecimalsToMajorAndMinor, toUniqueStringArray } from "./utils";
 import { NOT_FOUND } from "../backend/constants";
 
 let connection: Connection | null;
@@ -53,11 +49,15 @@ export const getActiveAccount = () => {
   return null;
 };
 
-export const onChangeActiveAccount = (_function: Function) => {
+type ActiveAccountHandler = (accountSummary: AccountSummary) => any;
+
+export const onChangeActiveAccount = (
+  activeAccountHandler: ActiveAccountHandler
+) => {
   activeAccountIndexStore.subscribe((newValue) => {
     if (newValue !== null) {
       const activeAccount = getActiveAccount();
-      _function(activeAccount);
+      activeAccountHandler(activeAccount);
     }
   });
 };
@@ -102,6 +102,7 @@ const updateAccounts = async () => {
   const tokenAccountSummaries: Array<AccountSummary> =
     await getTokenAccountSummaries(connection, keyPair.publicKey);
   tokenAccountsStore.set(tokenAccountSummaries);
+
   haveAccountsLoadedStore.set(true);
 
   log(`Finding USDC account...`);
@@ -111,6 +112,7 @@ const updateAccounts = async () => {
   if (usdcAccountIndex === NOT_FOUND) {
     log(`No existing USDC account in this wallet`);
     hasUSDCAccountStore.set(false);
+    // TODO: we could add a fake USDC account here so it shows a zero balance.
     return;
   }
   log(`Found USDC account`);

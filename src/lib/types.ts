@@ -47,6 +47,20 @@ export enum Currency {
   "SOL",
 }
 
+export type CurrencyDetails = {
+  id: Currency;
+  name: string;
+  decimals: number;
+};
+
+export interface ReceiptSummary {
+  shop: string;
+  items: Array<{
+    quantity: number;
+    name: string;
+    price: number;
+  }>;
+}
 export interface TransactionSummary {
   id: string;
   date: number;
@@ -58,6 +72,7 @@ export interface TransactionSummary {
   from: string;
   to: string;
   memo: string | null;
+  receipt: ReceiptSummary | null;
 }
 
 export interface TransactionsByDay {

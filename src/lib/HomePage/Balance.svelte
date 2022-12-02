@@ -15,14 +15,14 @@
 
   let majorAndMinor: Array<string | null> = [null, null];
 
-  let currencyName: string;
+  let currencyName: string = null;
 
-  let account: AccountSummary | null;
-  $: account = null;
+  let activeAccount: AccountSummary | null;
+  $: activeAccount = null;
 
   let haveAccountsLoaded: boolean;
 
-  let hasUSDCAccount: boolean;
+  let hasUSDCAccount: boolean = false;
 
   hasUSDCAccountStore.subscribe((newValue) => {
     hasUSDCAccount = newValue;
@@ -32,14 +32,15 @@
     haveAccountsLoaded = newValue;
   });
 
-  onChangeActiveAccount((activeAccount) => {
+  onChangeActiveAccount((newValue) => {
     log(`Active account has changed, updating balance...`);
     majorAndMinor = amountAndDecimalsToMajorAndMinor(
-      activeAccount.balance,
-      activeAccount.decimals
+      newValue.balance,
+      newValue.decimals
     );
-    currencyName = getCurrencyName(activeAccount.currency);
+    currencyName = getCurrencyName(newValue.currency);
     haveAccountsLoaded = true;
+    activeAccount = newValue;
   });
 </script>
 
@@ -50,18 +51,14 @@
         <img
           class="symbol"
           alt="{currencyName} logo"
-          src={ICONS[currencyName]}
+          src={activeAccount ? ICONS[currencyName] : ICONS.USDC}
         />
         <div class="major">{majorAndMinor[0]}</div>
         <div class="minor">.{majorAndMinor[1]}</div>
       </div>
     {:else}
       <div class="symbol-major-minor">
-        <img
-          class="symbol"
-          alt="{currencyName} logo"
-          src={ICONS[currencyName]}
-        />
+        <img class="symbol" alt="USDC logo" src={ICONS.USDC} />
         <div class="major">0</div>
         <div class="minor">.0</div>
       </div>

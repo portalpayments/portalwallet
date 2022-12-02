@@ -27,7 +27,8 @@
     );
 
     transactionsByDays = getTransactionsByDays(
-      activeAccount.transactionSummaries
+      activeAccount.transactionSummaries,
+      activeAccount.currency
     );
     decimals = activeAccount.decimals;
 

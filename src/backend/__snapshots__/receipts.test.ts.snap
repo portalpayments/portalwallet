@@ -1,0 +1,157 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`dialect Getting receipts from messages 1`] = `
+Object {
+  "buildId": "s_U2jOX4q6ShosslyfVMJ",
+  "gsp": true,
+  "isFallback": false,
+  "page": "/receipt/[receiptId]",
+  "props": Object {
+    "__N_SSG": true,
+    "pageProps": Object {
+      "dev": false,
+      "order": Object {
+        "attemptedPaymentNum": 1,
+        "cashier": "Tessa",
+        "creationTime": 1667678976911,
+        "discount": 0,
+        "discountBreakdown": Object {
+          "solana-or-not-financial-advice-tee": Object {
+            "appliedDiscountNFTName": "",
+            "appliedDiscountPubKey": "",
+            "appliedDiscountUSD": 0,
+            "isMaxDiscount": false,
+          },
+        },
+        "discountItem": Object {},
+        "email": "",
+        "fiatTotal": 32,
+        "functionError": null,
+        "gateway": "solana_counter",
+        "id": "qqS5qxxEjMg7mSup0rBI",
+        "items": Array [
+          Object {
+            "addOns": Array [
+              Object {
+                "categorySlug": "solana-or-not-financial-advice-tee-variants",
+                "externalId": "4AGMD3ZOHMU3J5V5XGCGUMFO",
+                "id": "solana-or-not-financial-advice-tee-medium-white",
+                "name": "Medium, White",
+                "price": Object {
+                  "currencyCode": "usd",
+                  "value": 32,
+                },
+                "sku": "695202K",
+                "slug": "solana-or-not-financial-advice-tee-medium-white",
+                "status": "publish",
+                "stock": 87,
+              },
+            ],
+            "candyMachineId": "",
+            "externalId": "VJ6CQI2ABZUOKZMVO44KYDB2",
+            "image": "https://items-images-production.s3.us-west-2.amazonaws.com/files/48b95aff5cbfc2087daeac70e1037728f4180867/original.png",
+            "orderQuantity": 1,
+            "productId": "solana-or-not-financial-advice-tee",
+            "productName": "Solana | Not Financial Advice Tee",
+            "specialInstructions": "",
+            "taxIds": Array [
+              "YX7PHIKISGZU53WNHSFE6BT6",
+            ],
+            "toAmount": 0,
+            "type": "product",
+            "unitPrice": 32,
+          },
+        ],
+        "name": "Admin",
+        "nativeTotal": 0,
+        "orderReference": "A64u27MpYAYNJvpgnKjEHwTuJBBNfNphco4f46S752ZA",
+        "payingPubKey": "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        "paymentStatus": "paid",
+        "phoneNumber": "",
+        "refundStatus": "notRefunded",
+        "requireSquareSync": true,
+        "restaurantId": "mtJcsdB9ETLJdmjrOLff",
+        "squareOrderId": "hhe5I60wV1ZqHrU4ge5vFrR03QSZY",
+        "squarePaymentId": "LNkSvZUuVADHFaAXHpFoS3uqEt9YY",
+        "squarePaymentIds": Array [
+          "LNkSvZUuVADHFaAXHpFoS3uqEt9YY",
+        ],
+        "status": "completed",
+        "subtotal": 32,
+        "table": "",
+        "tax": 0,
+        "tip": 0,
+        "total": 32,
+        "txOutcome": Object {
+          "err": "",
+          "outcome": true,
+          "tx": "2Wgzyv1fFFiF4jd8ckPvSJa2eRBHF7pj3wbeTpEzMvqzpfx1jpUgWUZbJW9h915rxWccNqZ9ksFjP7PVVckArZtX",
+        },
+      },
+      "shop": Object {
+        "contact": Object {
+          "name": "Solana Spaces Breakpoint",
+          "number": "",
+        },
+        "logoUri": Object {
+          "cdn": "https://ik.imagekit.io/r3y94jb5zai/firebasePROD/o/images%2Fusers%2FMZcVyOrfU8dWUd7U5lKVWDAJX1k1%2Flogo%2F4b8ce112-0a84-4f26-a3f7-6b094f46635a-Solana_logo.png?alt=media",
+          "firebase": "https://firebasestorage.googleapis.com/v0/b/decaf-c57a3.appspot.com/o/images%2Fusers%2FMZcVyOrfU8dWUd7U5lKVWDAJX1k1%2Flogo%2F4b8ce112-0a84-4f26-a3f7-6b094f46635a-Solana_logo.png?alt=media",
+        },
+        "name": "Solana Spaces Breakpoint",
+        "notifications": Array [
+          Object {
+            "id": "DhF84xpim3cPL53vcNRNfJByBKNn73jTaAghSpe3DwRH",
+            "priority": 1,
+            "text": "Wallet balance is low for Breakpoint Prod Fee Payer",
+            "time": 1667844487802,
+          },
+          Object {
+            "id": "DhF84xpim3cPL53vcNRNfJByBKNn73jTaAghSpe3DwRH",
+            "priority": 1,
+            "text": "Wallet balance is low for Breakpoint Prod Fee Payer",
+            "time": 1667934392665,
+          },
+        ],
+        "settings": Object {
+          "acceptBitcoin": false,
+          "acceptCard": false,
+          "acceptCash": true,
+          "acceptSolana": true,
+          "acceptSolanaCounterWalletPayment": false,
+          "acceptSolanaInAppWalletPayment": false,
+          "activeOrdering": false,
+          "bitcoinAddress": "",
+          "currency": Object {
+            "id": "usd",
+            "name": "USD",
+          },
+          "exchangeFeePercentageCard": 0,
+          "exchangeFeePercentageCash": 0,
+          "exchangeWallet": Object {
+            "walletLabel": "Breakpoint Prod Fee Payer",
+            "walletPublicKey": "DhF84xpim3cPL53vcNRNfJByBKNn73jTaAghSpe3DwRH",
+          },
+          "isExchangeActive": true,
+          "require2FA": false,
+          "requireSquareSync": true,
+          "requireTable": false,
+          "solanaAddress": "4iDRFnp2N4UAsZEePHAxs7ozBanQcGtLYd12HG2HJm4s",
+          "solanaWalletFeePayer": Object {
+            "walletLabel": "Breakpoint Prod Fee Payer",
+            "walletPublicKey": "DhF84xpim3cPL53vcNRNfJByBKNn73jTaAghSpe3DwRH",
+          },
+          "taxPercentage": 0,
+          "taxes": Array [],
+          "tippingPercentage": 0,
+          "transactionFeesPaidFor": true,
+        },
+        "slug": "spacesbreakpoint",
+      },
+    },
+  },
+  "query": Object {
+    "receiptId": "XgVU1qK4i4zXKanjHZpr",
+  },
+  "scriptLoader": Array [],
+}
+`;
