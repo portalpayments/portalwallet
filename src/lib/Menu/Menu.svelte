@@ -13,7 +13,12 @@
   import { log } from "../../backend/functions";
   import { getCurrencyName } from "../../backend/vmwallet";
   import Contact from "../Shared/Contact.svelte";
-  import { ICONS } from "../constants";
+
+  const ICONS = {
+    USDC: "../assets/Icons/usdc-coin.svg",
+    USDT: "../assets/Icons/usdt-coin.svg",
+    USDH: "../assets/Icons/usdh-coin.svg",
+  };
 
   export let user: ContactType | null;
 

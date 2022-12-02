@@ -2,11 +2,17 @@
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
   import { log } from "../../backend/functions";
   import type { AccountSummary } from "../types";
-  import { ICONS } from "../constants";
+
   import { getCurrencyName } from "../../backend/vmwallet";
 
   export let account: AccountSummary;
   export let noUSDCAccountYet: boolean;
+
+  const ICONS = {
+    USDC: "../assets/Icons/usdc-coin.svg",
+    USDT: "../assets/Icons/usdt-coin.svg",
+    USDH: "../assets/Icons/usdh-coin.svg",
+  };
 
   // Explicitly mark these values as reactive as they depend on other data
   // being updated (they're derived from usdcAccounts)
