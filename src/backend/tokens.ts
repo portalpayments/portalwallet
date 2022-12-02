@@ -37,7 +37,7 @@ export const createMintAccount = async (
       connection,
       payer,
       mintAuthority,
-      null, // Don't both with a freeze address
+      null, // Don't bother with a freeze address
       USD_VISUAL_DECIMALS
     );
     return mintAccountPublicKey;

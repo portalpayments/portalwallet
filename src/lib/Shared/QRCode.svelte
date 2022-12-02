@@ -27,8 +27,6 @@
         margin: 0,
       });
 
-      log(canvas.constructor.name);
-
       // Add a logo at center
       const logoDimensions = { width: LOGO_SIZE, height: LOGO_SIZE };
       var context = canvas.getContext("2d");

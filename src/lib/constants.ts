@@ -1,3 +1,6 @@
+// Frontend-specific constants
+// Backend constants are in the backend constants file.
+
 export enum LabelColor {
   Grey = "grey",
   Green = "green",

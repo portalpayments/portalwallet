@@ -175,3 +175,8 @@ input:focus {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+
+.polymer {
+  background-color: hsla(0,0%,100%,.6);
+  backdrop-filter: blur(24px);
+}

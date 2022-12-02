@@ -30,13 +30,14 @@ enum customProgramErrors {
 
 export const getABetterErrorMessage = (errorMessage: string) => {
   const customErrorExpression =
-    /.*custom program error: 0x(?<errorNumber>[0-9ABCDEF])/;
+    /.*custom program error: 0x(?<errorNumber>[0-9abcdef])/;
 
   let match = customErrorExpression.exec(errorMessage);
   const errorNumberFound = match?.groups?.errorNumber;
   if (!errorNumberFound) {
     return null;
   }
-  const errorNumber = Number(errorNumberFound);
+  // errorNumberFound is a base16 string
+  const errorNumber = parseInt(errorNumberFound, 16);
   return customProgramErrors[errorNumber] || null;
 };

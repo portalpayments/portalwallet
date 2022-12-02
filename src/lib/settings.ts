@@ -120,8 +120,8 @@ export const saveSettings = async (
     encodedText
   );
   // 4. Save to localforage
-  const result = await localforage.setItem("PORTAL_SETTINGS", encrypted);
-  log(`Saved PORTAL_SETTINGS result is`, result);
+  await localforage.setItem("PORTAL_SETTINGS", encrypted);
+  log(`Saved PORTAL_SETTINGS.`);
   return;
 };
 

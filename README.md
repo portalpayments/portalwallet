@@ -12,23 +12,43 @@ See [coding guidelines](CODING_GUIDELINES.md).
 
 ## To package the Web Extension and run a User Test
 
+> ⚠️ WHEN DONE, CLOSE THE TERMINAL WINDOW. OTHERWISE YOU WILL MINT ADDITIONAL TOKENS WHEN YOU ARE RUNNING TESTS.
+
+In the top level of this repo (eg, where this `README.md` file is):
+
 ### Make zip file
 
 ```
 npm run make-zip-file
 ```
 
+### Get Selfie and Wallet Address from User
+
+Save the selfie as a `jpeg` or `png` image in the top level of this repo.
+
 ### Set options for identity token
 
-Then edit `mint-identity-token.ts` with the wallet address, first name, etc.
+Then edit `src/backend/mint-identity-token.test.ts` with the wallet address, first name, etc.
+
+Eg:
+
+```
+const WALLET_ADDRESS = "2R1Qv2fDwfBo9XtMxS1Ca6EhrW7nmczYyATpuLcr6N1p";
+const GIVEN_NAME = "Janet";
+const FAMILY_NAME = "Testuser";
+const IMAGE_FILE = "janet.jpeg";
+```
 
 ### Make identity token
 
-Then run:
+Then **open a new terminal** and run:
 
 ```
-npm run mint-identity-token
+export RUN_SKIPPED_TESTS='true'
+npx jest src/backend/mint-identity-token.test.ts
 ```
+
+> ⚠️ WHEN DONE, CLOSE THE TERMINAL WINDOW. OTHERWISE YOU WILL MINT ADDITIONAL TOKENS WHEN YOU ARE RUNNING TESTS.
 
 ## For browser work
 
