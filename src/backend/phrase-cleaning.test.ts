@@ -1,5 +1,7 @@
 import { cleanPhrase } from "./phrase-cleaning";
 
+jest.mock("./functions");
+
 // Put these at the top to avoid indentation issues
 export const dirtyPersonalPhrase = `Say your prayers, little one
 Don't forget, my son

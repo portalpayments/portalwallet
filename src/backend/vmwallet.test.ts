@@ -44,6 +44,8 @@ import { Currency, Direction } from "../lib/types";
 import { getABetterErrorMessage } from "./errors";
 import { createMintAccount } from "./tokens";
 
+jest.mock("./functions");
+
 dotenv.config();
 
 const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;

@@ -9,6 +9,8 @@ import { mikesKeypair } from "./get-mikes-keypair";
 import { ThreadMemberScope } from "@dialectlabs/sdk";
 import { rawReceipt } from "./__mocks__/receipt";
 
+jest.mock("./functions");
+
 describe(`dialect`, () => {
   test(`getting messages`, async () => {
     // Date Mike bought a t shirt

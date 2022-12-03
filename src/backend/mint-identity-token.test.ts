@@ -11,6 +11,8 @@ import dotenv from "dotenv";
 import { getKeypairFromString } from "./vmwallet";
 import { SECOND, SECONDS } from "./constants";
 
+jest.mock("./functions");
+
 dotenv.config();
 
 const WALLET_ADDRESS = "";

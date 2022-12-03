@@ -15,6 +15,8 @@ import {
 } from "./functions";
 import { SECOND, SECONDS } from "./constants";
 
+jest.mock("./functions");
+
 describe(`deepClone`, () => {
   it(`Deep clones object`, () => {
     const names = ["frank"];

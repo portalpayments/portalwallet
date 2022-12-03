@@ -13,6 +13,8 @@ import * as dotenv from "dotenv";
 import * as base58 from "bs58";
 import { expectedCleanedPersonalPhrase } from "./phrase-cleaning.test";
 
+jest.mock("./functions");
+
 const firstName = `Joe`;
 const lastName = `Cottoneye`;
 
