@@ -24,6 +24,8 @@ import {
   sendingSolWithNote,
 } from "./__mocks__/transactions/sendingSol";
 
+jest.mock("./functions");
+
 const GREGS_WALLET = "CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs";
 
 describe(`transaction summaries`, () => {

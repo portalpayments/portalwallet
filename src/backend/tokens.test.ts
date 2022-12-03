@@ -21,6 +21,8 @@ import {
   getTransactionsForAddress,
 } from "./vmwallet";
 
+jest.mock("./functions");
+
 const AMOUNT_OF_USDC_TO_SEND = 50;
 
 describe("minting and USDC-like transfers", () => {
