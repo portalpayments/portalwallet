@@ -1,4 +1,6 @@
-const testOrSkip = process.env.RUN_SKIPPED_TESTS ? test : test.skip;
+const testOrSkip = process.env.MINT_IDENTITY_TOKENS_USING_TEST_HACK
+  ? test
+  : test.skip;
 
 // Run with 'npx tsx mint-identity-token.ts'
 // because 'ts-node' has issues:
