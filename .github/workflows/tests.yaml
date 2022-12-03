@@ -17,6 +17,7 @@ jobs:
 
     env:
       TWITTER_API_KEY_BEARER_TOKEN: ${{ secrets.TWITTER_API_KEY_BEARER_TOKEN }}
+      IDENTITY_TOKEN_SECRET_KEY: ${{ secrets.IDENTITY_TOKEN_SECRET_KEY }}
       MIKES_SECRET_KEY: ${{ secrets.MIKES_SECRET_KEY }}
       # Program locations are not a secret so don't
       # worry about including them in this file

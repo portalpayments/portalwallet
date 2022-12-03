@@ -111,7 +111,6 @@ describe(`basic wallet functionality on local validator`, () => {
 
 describe(`mainnet integration tests`, () => {
   let mainNetConnection: Connection | null = null;
-  process.env.IDENTITY_TOKEN_SECRET_KEY;
 
   const mikeKeypair = getKeypairFromEnvFile("MIKES_SECRET_KEY");
   const mikePublicKey = mikeKeypair.publicKey;
