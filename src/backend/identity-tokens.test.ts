@@ -25,10 +25,12 @@ import {
 import { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
 
+const testUnlessOnGitHub = process.env.ON_GITHUB ? test.skip : test;
+
 jest.mock("./functions");
 
 describe(`arWeave`, () => {
-  test(
+  testUnlessOnGitHub(
     `We can upload an image to arWeave`,
     async () => {
       const result = await uploadImageToArweave("./public/icon16.png");

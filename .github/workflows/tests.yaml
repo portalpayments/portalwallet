@@ -24,6 +24,8 @@ jobs:
       # worry about including them in this file
       METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS: "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
       MEMO_PROGRAM_ADDRESS: "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
+      # We skip certain network-using tests on GitHub
+      ON_GITHUB: "true"
 
     steps:
       - uses: actions/checkout@v3
