@@ -110,7 +110,7 @@ describe("minting and USDC-like transfers", () => {
     );
 
     const NO_TOKENS_MINTED_YET = 0;
-    expect(tokenAmount).toEqual({
+    expect(tokenAmount).toMatchObject({
       context: {
         slot: expect.any(Number),
       },
@@ -142,7 +142,7 @@ describe("minting and USDC-like transfers", () => {
       alicesTokenAccount.address
     );
 
-    expect(alicesTokens).toEqual({
+    expect(alicesTokens).toMatchObject({
       context: {
         slot: expect.any(Number),
       },
