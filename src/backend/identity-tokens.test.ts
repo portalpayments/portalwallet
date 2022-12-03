@@ -20,6 +20,7 @@ import {
   ONE,
   ZERO,
   SOLANA_SYSTEM_PROGRAM,
+  SECONDS,
 } from "./constants";
 import { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
@@ -27,10 +28,14 @@ import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
 jest.mock("./functions");
 
 describe(`arWeave`, () => {
-  test(`We can upload an image to arWeave`, async () => {
-    const result = await uploadImageToArweave("./public/icon16.png");
-    expect(result).toMatch(/https:\/\/arweave.net\/.*/);
-  });
+  test(
+    `We can upload an image to arWeave`,
+    async () => {
+      const result = await uploadImageToArweave("./public/icon16.png");
+      expect(result).toMatch(/https:\/\/arweave.net\/.*/);
+    },
+    10 * SECONDS
+  );
 });
 
 describe(`identity tokens`, () => {
