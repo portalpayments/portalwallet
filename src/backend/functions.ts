@@ -82,24 +82,6 @@ export const makePromise = <T>(item: unknown): Promise<T> => {
   return Promise.resolve(item as T);
 };
 
-export function withTimeout<T>(
-  promise: Promise<T>,
-  timeoutMs: number,
-  message?: string
-): Promise<T> {
-  return Promise.race([
-    promise,
-    new Promise<T>((_resolve, reject) => {
-      setTimeout(() => {
-        reject(
-          message ??
-            `Timeout! Operation did not complete within ${timeoutMs} ms`
-        );
-      }, timeoutMs);
-    }),
-  ]);
-}
-
 // From https://fettblog.eu/typescript-hasownproperty/
 // TODO: node 18 and onwards can use
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn

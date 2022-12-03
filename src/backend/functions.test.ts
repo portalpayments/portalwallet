@@ -5,7 +5,6 @@ import {
   stringify,
   nonNullable,
   makePromise,
-  withTimeout,
   hasOwnProperty,
   isEmpty,
   toUnique,
@@ -79,46 +78,6 @@ describe(`makePromise`, () => {
   it(`Makes promises`, async () => {
     const promise: Promise<string> = makePromise("some Value");
     expect(await promise).toEqual("some Value");
-  });
-});
-
-describe("withTimeout", () => {
-  it("should not throw error if promise is resolved before timeout", async () => {
-    jest.useFakeTimers();
-    const promise = makePromise("ok");
-    const result = withTimeout(promise, 1 * SECOND);
-    jest.runAllTimers();
-    expect(await result).toEqual("ok");
-    jest.useRealTimers();
-  });
-
-  it("should reject with default message if promise is not resolved before timeout", async () => {
-    jest.useFakeTimers();
-    const promise = makePromise(sleep(2 * SECONDS));
-    const result = withTimeout(promise, 1 * SECOND);
-    jest.runAllTimers();
-    await expect(result).rejects.toEqual(
-      "Timeout! Operation did not complete within 1000 ms"
-    );
-    jest.useRealTimers();
-  });
-
-  it("should reject with custom message if promise is not resolved before timeout", async () => {
-    jest.useFakeTimers();
-    const promise = makePromise(sleep(2 * SECONDS));
-    const result = withTimeout(promise, 1 * SECOND, "custom");
-    jest.runAllTimers();
-    await expect(result).rejects.toEqual("custom");
-    jest.useRealTimers();
-  });
-
-  it("should throw error if promise is rejected", async () => {
-    jest.useFakeTimers();
-    const promise = Promise.reject("Boom!!!");
-    const result = withTimeout(promise, 1 * SECOND, "custom");
-    jest.runAllTimers();
-    await expect(result).rejects.toEqual("Boom!!!");
-    jest.useRealTimers();
   });
 });
 
