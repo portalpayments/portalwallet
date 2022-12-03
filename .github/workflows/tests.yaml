@@ -17,6 +17,7 @@ jobs:
 
     env:
       TWITTER_API_KEY_BEARER_TOKEN: ${{ secrets.TWITTER_API_KEY_BEARER_TOKEN }}
+      MIKES_SECRET_KEY: ${{ secrets.MIKES_SECRET_KEY }}
       # Program locations are not a secret so don't
       # worry about including them in this file
       METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS: "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
