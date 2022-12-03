@@ -5,6 +5,8 @@ import { stringify, log } from "../backend/functions";
 
 const fakeLocalForageStore: Record<string, any> = {};
 
+jest.mock("./functions");
+
 // localforage doesn't work in node, so simulate it
 jest.mock("localforage", () => ({
   getItem: (key) => fakeLocalForageStore[key] || null,
