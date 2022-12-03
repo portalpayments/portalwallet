@@ -33,7 +33,7 @@ jobs:
       - run: sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
       - run: export PATH="~/.local/share/solana/install/active_release/bin:$PATH"
       # Run Solana validator with Metaplex program
-      - run: ~/.local/share/solana/install/active_release/bin/solana-test-validator --bpf-program ${METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS} metaplex_token_metadata_program.so --reset &
+      - run: ~/.local/share/solana/install/active_release/bin/solana-test-validator --bpf-program ${METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS} on-chain-programs/metaplex_token_metadata_program.so --reset &
       # Run tests
       - run: npm ci
       - run: npm run build:extension --if-present
