@@ -13,12 +13,6 @@ import { SECOND, SECONDS } from "./constants";
 
 dotenv.config();
 
-const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;
-
-if (!identityTokenSecretKey) {
-  throw new Error(`Please set IDENTITY_TOKEN_SECRET_KEY in .env file`);
-}
-
 const WALLET_ADDRESS = "";
 const GIVEN_NAME = "";
 const FAMILY_NAME = "";
@@ -28,6 +22,14 @@ testOrSkip(
   "Mints a real identity token",
   async () => {
     log(`🎟️ Running Portal Identity token minter ...`);
+
+    // Check process.env inside the test so GitHub doesn't complain when this
+    // value is missing (we never want to run this on GitHub)
+    const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;
+
+    if (!identityTokenSecretKey) {
+      throw new Error(`Please set IDENTITY_TOKEN_SECRET_KEY in .env file`);
+    }
 
     log(
       stringify({
