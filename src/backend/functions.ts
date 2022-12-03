@@ -82,18 +82,6 @@ export const makePromise = <T>(item: unknown): Promise<T> => {
   return Promise.resolve(item as T);
 };
 
-// From https://fettblog.eu/typescript-hasownproperty/
-// TODO: node 18 and onwards can use
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function hasOwnProperty<X extends {}, Y extends PropertyKey>(
-  object: X,
-  property: Y
-): object is X & Record<Y, unknown> {
-  // eslint-disable-next-line no-prototype-builtins
-  return object.hasOwnProperty(property);
-}
-
 export const log = console.log.bind(console);
 
 // From https://stackoverflow.com/questions/60504945/javascript-encode-decode-utf8-to-hex-and-hex-to-utf8

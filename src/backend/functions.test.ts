@@ -5,7 +5,6 @@ import {
   stringify,
   nonNullable,
   makePromise,
-  hasOwnProperty,
   isEmpty,
   toUnique,
   encodeToBase64,
@@ -85,16 +84,6 @@ describe(`toUnique`, () => {
   it(`returns a unique set of items`, () => {
     const items = toUnique(["one", "two", "one"]);
     expect(items).toEqual(["one", "two"]);
-  });
-});
-
-describe(`hasOwnProperty`, () => {
-  it(`find properties where they exist`, () => {
-    expect(hasOwnProperty({ name: "steve" }, "name")).toBeTruthy();
-  });
-
-  it(`doesn't find properties where they don't exist`, () => {
-    expect(hasOwnProperty({ name: "steve" }, "shoeSize")).toBeFalsy();
   });
 });
 
