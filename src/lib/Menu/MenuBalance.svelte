@@ -2,7 +2,6 @@
   import { getCurrencyName } from "../../backend/vmwallet";
   import { amountAndDecimalsToString } from "../utils";
   import type { AccountSummary } from "../../lib/types";
-  import { ICONS } from "../constants";
 
   export let account: AccountSummary;
   export let changeAccount: Function;
