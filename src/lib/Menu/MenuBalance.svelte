@@ -1,21 +1,16 @@
 <script lang="ts">
   import { getCurrencyName } from "../../backend/vmwallet";
   import { amountAndDecimalsToString } from "../utils";
+  import { CURRENCY_ICONS } from "../constants";
   import type { AccountSummary } from "../../lib/types";
 
   export let account: AccountSummary;
   export let changeAccount: Function;
-
-  const ICONS = {
-    USDC: "../../assets/Icons/usdc-coin.svg",
-    USDT: "../../assets/Icons/usdt-coin.svg",
-    USDH: "../../assets/Icons/usdh-coin.svg",
-  };
 </script>
 
 <button type="button" class="with-icon" on:click={() => changeAccount()}>
   <img
-    src={ICONS[getCurrencyName(account.currency)]}
+    src={CURRENCY_ICONS[getCurrencyName(account.currency)]}
     alt="{getCurrencyName(account.currency)} account"
   />
   <div class="text">
@@ -29,11 +24,6 @@
 </button>
 
 <style>
-  /* :global(a.button):active {
-    color: var(--white);
-    background-color: var(--mid-blue);
-  } */
-
   button.with-icon .text {
     grid-auto-flow: row;
     grid-template-rows: 18px 10px;

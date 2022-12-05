@@ -5,18 +5,13 @@
   import { getCurrencyName } from "../../backend/vmwallet";
   import type { AccountSummary } from "../../lib/types";
   import SkeletonBalance from "../Shared/Skeletons/SkeletonBalance.svelte";
+  import { CURRENCY_ICONS } from "../constants";
 
   import {
     hasUSDCAccountStore,
     haveAccountsLoadedStore,
     onChangeActiveAccount,
   } from "../stores";
-
-  const ICONS = {
-    USDC: "../../assets/Icons/usdc-coin.svg",
-    USDT: "../../assets/Icons/usdt-coin.svg",
-    USDH: "../../assets/Icons/usdh-coin.svg",
-  };
 
   let majorAndMinor: Array<string | null> = [null, null];
 
@@ -56,14 +51,16 @@
         <img
           class="symbol"
           alt="{currencyName} logo"
-          src={activeAccount ? ICONS[currencyName] : ICONS.USDC}
+          src={activeAccount
+            ? CURRENCY_ICONS[currencyName]
+            : CURRENCY_ICONS.USDC}
         />
         <div class="major">{majorAndMinor[0]}</div>
         <div class="minor">.{majorAndMinor[1]}</div>
       </div>
     {:else}
       <div class="symbol-major-minor">
-        <img class="symbol" alt="USDC logo" src={ICONS.USDC} />
+        <img class="symbol" alt="USDC logo" src={CURRENCY_ICONS.USDC} />
         <div class="major">0</div>
         <div class="minor">.0</div>
       </div>
