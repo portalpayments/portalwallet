@@ -4,7 +4,8 @@
 // and https://github.com/GoogleChrome/chrome-extensions-samples
 
 // TODO: imports do not yet work in service-workers
-// https://github.com/w3c/ServiceWorker/issues/1585
+// https://github.com/w3c/ServiceWorker/issues/1585// but also
+// https://stackoverflow.com/questions/44118600/web-workers-how-to-import-modules
 
 const log = console.log.bind(console);
 
