@@ -49,6 +49,7 @@ jest.mock("./functions");
 dotenv.config();
 
 const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;
+const mikesSecretKey = process.env.MIKES_SECRET_KEY;
 
 describe(`basic wallet functionality on local validator`, () => {
   let connection: Connection | null = null;
@@ -368,7 +369,7 @@ describe(`mainnet integration tests`, () => {
     async () => {
       const accountSummaries = await getTokenAccountSummaries(
         mainNetConnection,
-        new PublicKey(MIKES_WALLET)
+        getKeypairFromString(mikesSecretKey)
       );
 
       // Doesn't consistently return in order so let's sort() it

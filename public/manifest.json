@@ -22,7 +22,8 @@
     "background"
   ],
   "background": {
-    "service_worker": "service-worker.js"
+    "service_worker": "service-worker.js",
+    "type": "module"
   },
   "content_security_policy": {
     "script-src": "self ",

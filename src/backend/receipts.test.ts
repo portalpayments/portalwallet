@@ -10,6 +10,7 @@ import { ThreadMemberScope } from "@dialectlabs/sdk";
 import { rawReceipt } from "./__mocks__/receipt";
 
 jest.mock("./functions");
+jest.mock("./html-extract");
 
 describe(`dialect`, () => {
   test(`getting messages`, async () => {
@@ -46,7 +47,6 @@ describe(`dialect`, () => {
 
   test(`Getting receiptSummary from raw receipts`, async () => {
     const receiptSummary = getReceiptSummaryFromRawReceipt(rawReceipt);
-    log(stringify(receiptSummary));
     expect(receiptSummary).toMatchObject({
       items: [
         {

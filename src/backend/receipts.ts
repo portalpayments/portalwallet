@@ -17,16 +17,15 @@ import {
 import type { Keypair } from "@solana/web3.js";
 import { MINUTE, SECONDS } from "./constants";
 
-import { JSDOM } from "jsdom";
-
 const RECEIPT_DELAY = 15 * SECONDS;
 
 import { log, stringify } from "./functions";
 import { httpGet } from "../lib/utils";
 import type { RawDecafReceipt } from "./types";
 import type { ReceiptSummary, TransactionSummary } from "src/lib/types";
+import { receiptHTMLToObject } from "./html-extract";
 
-const memoRegex = /[A-Za-z0-9]{20}/; // "qqS5qxxEjMg7mSup0rBI"
+const memoRegex = /[A-Za-z0-9]{20}/;
 
 const DECAF_POINT_OF_SALE = "dcafKdWLATod3BLRngsqZ7CrQwcrUxrLjFWYJwYP1Fy";
 
@@ -99,14 +98,19 @@ export const getDecafReceiptMessage = async (
 };
 
 export const getRawReceiptFromMessage = async (message: ThreadMessage) => {
-  const url = message.text.split(": ")[1].trim();
-  const html = await httpGet(url);
-  const dom = new JSDOM(html);
-  const jsonInsideHTML =
-    dom.window.document.getElementById("__NEXT_DATA__").textContent;
+  const url = message.text.split(": ").at(-1).trim();
 
-  const receipt = JSON.parse(jsonInsideHTML) as RawDecafReceipt;
+  // https://www.decaf.so/receipt/XgVU1qK4i4zXKanjHZpr
+  // http://localhost:8010/proxy/receipt/XgVU1qK4i4zXKanjHZpr
 
+  const corsProxyURL = url.replace(
+    `https://www.decaf.so`,
+    `http://localhost:8010/proxy`
+  );
+
+  const html = await httpGet(corsProxyURL, "text/html");
+
+  let receipt = receiptHTMLToObject(html);
   return receipt;
 };
 
@@ -136,6 +140,7 @@ export const getReceiptForTransactionSummary = async (
   transactionDate: number
 ): Promise<ReceiptSummary> => {
   const hasReceipt = checkIfTransactionSummaryHasReceipt(transactionMemo);
+
   if (!hasReceipt) {
     return null;
   }
@@ -145,5 +150,6 @@ export const getReceiptForTransactionSummary = async (
   );
   const rawReceipt = await getRawReceiptFromMessage(decafReceiptMessage);
   const receiptSummary = getReceiptSummaryFromRawReceipt(rawReceipt);
+
   return receiptSummary;
 };

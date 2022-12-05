@@ -238,7 +238,8 @@ export const getTransactionSummariesForAddress = async (
   connection: Connection,
   walletAddress: PublicKey,
   tokenAccount: PublicKey | null,
-  limit: number
+  limit: number,
+  secretKey: Uint8Array | null = null
 ) => {
   // For token accounts, we must get transactions for the token account specifically
   // - getting transactions for the parent wallet won't show deposits by other people
@@ -260,7 +261,13 @@ export const getTransactionSummariesForAddress = async (
   let transactionSummaries = (await asyncMap(
     rawTransactions,
     (rawTransaction) => {
-      return summarizeTransaction(rawTransaction, walletAddress);
+      return summarizeTransaction(
+        rawTransaction,
+        walletAddress,
+        null,
+        true,
+        secretKey
+      );
     }
   )) as Array<TransactionSummary>;
 
@@ -282,11 +289,11 @@ export const getTransactionSummariesForAddress = async (
 
 export const getTokenAccountSummaries = async (
   connection: Connection,
-  walletAddress: PublicKey
+  keyPair: Keypair
 ): Promise<Array<AccountSummary>> => {
   const tokenAccounts = await getTokenAccountsByOwner(
     connection,
-    walletAddress
+    keyPair.publicKey
   );
   // TODO: fix asyncmap
   // @ts-ignore
@@ -304,9 +311,10 @@ export const getTokenAccountSummaries = async (
       log(`Getting transactions for ${currencyName} account`);
       const transactionSummaries = await getTransactionSummariesForAddress(
         connection,
-        walletAddress,
+        keyPair.publicKey,
         tokenAccount.address,
-        HOW_MANY_TRANSACTIONS_TO_SHOW
+        HOW_MANY_TRANSACTIONS_TO_SHOW,
+        keyPair.secretKey
       );
       const accountSummary: AccountSummary = {
         address: tokenAccount.address,
@@ -326,24 +334,25 @@ export const getTokenAccountSummaries = async (
 
 export const getNativeAccountSummary = async (
   connection: Connection,
-  walletAddress: PublicKey
+  keyPair: Keypair
 ): Promise<AccountSummary> => {
   log(`Getting transactions for native account`);
   let accountBalance = 0;
   let transactionSummaries: Array<TransactionSummary> = [];
   try {
-    accountBalance = await getAccountBalance(connection, walletAddress);
+    accountBalance = await getAccountBalance(connection, keyPair.publicKey);
     transactionSummaries = await getTransactionSummariesForAddress(
       connection,
-      walletAddress,
-      walletAddress,
-      HOW_MANY_TRANSACTIONS_TO_SHOW
+      keyPair.publicKey,
+      keyPair.publicKey,
+      HOW_MANY_TRANSACTIONS_TO_SHOW,
+      keyPair.secretKey
     );
   } catch (error) {
-    log(`No sol account balance for ${walletAddress}`);
+    log(`No sol account balance for ${keyPair.publicKey}`);
   }
   const accountSummary: AccountSummary = {
-    address: walletAddress,
+    address: keyPair.publicKey,
     currency: Currency.SOL,
     balance: accountBalance,
     decimals: SOLANA_DECIMALS,

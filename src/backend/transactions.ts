@@ -3,6 +3,7 @@ import {
   Currency,
   Direction,
   type CurrencyDetails,
+  type ReceiptSummary,
   type TransactionsByDay,
   type TransactionSummary,
 } from "../lib/types";
@@ -15,11 +16,12 @@ import {
 } from "./constants";
 import { getReceiptForTransactionSummary } from "./receipts";
 import { getKeypairFromString } from "./vmwallet";
-import type {
-  ParsedInstruction,
-  PartiallyDecodedInstruction,
-  ParsedTransactionWithMeta,
-  PublicKey,
+import {
+  type ParsedInstruction,
+  type PartiallyDecodedInstruction,
+  type ParsedTransactionWithMeta,
+  type PublicKey,
+  Keypair,
 } from "@solana/web3.js";
 
 export const solanaBlocktimeToJSTime = (blockTime: number) => {
@@ -137,16 +139,21 @@ const getWalletDifference = (
   return difference;
 };
 
+// TODO - maybe just use a keyPair?
 export const summarizeTransaction = async (
   rawTransaction: ParsedTransactionWithMeta,
   walletAccount: PublicKey,
   fakeMintToCurrencyMap: Record<string, CurrencyDetails> | null = null,
   enableReceipts: boolean = false,
-  secretKeyForReceipts: string | null = null
+  secretKeyForReceipts: Uint8Array | null = null
 ): Promise<TransactionSummary> => {
   // https://docs.solana.com/terminology#transaction-id
   // The first signature in a transaction, which can be used to uniquely identify the transaction across the complete ledger.
   const id = rawTransaction?.transaction?.signatures?.[0];
+
+  const date = solanaBlocktimeToJSTime(rawTransaction.blockTime);
+
+  let receipt: null | ReceiptSummary = null;
 
   // ie, Sol native currency, not a token account
   const isSolTransaction = rawTransaction.meta.preTokenBalances.length === 0;
@@ -205,9 +212,14 @@ export const summarizeTransaction = async (
         );
       }
 
+      if (enableReceipts && secretKeyForReceipts) {
+        const keyPair = Keypair.fromSecretKey(secretKeyForReceipts);
+        receipt = await getReceiptForTransactionSummary(keyPair, memo, date);
+      }
+
       const transactionSummary = {
         id,
-        date: solanaBlocktimeToJSTime(rawTransaction.blockTime),
+        date,
         status: rawTransaction.meta.err === null,
         networkFee: rawTransaction.meta.fee,
         direction,
@@ -216,17 +228,8 @@ export const summarizeTransaction = async (
         from: onlyInstruction.parsed.info.source,
         to: onlyInstruction.parsed.info.destination,
         memo,
-        receipt: null,
+        receipt,
       };
-
-      if (enableReceipts && secretKeyForReceipts) {
-        const keyPair = getKeypairFromString(secretKeyForReceipts);
-        transactionSummary.receipt = await getReceiptForTransactionSummary(
-          keyPair,
-          transactionSummary.memo,
-          transactionSummary.date
-        );
-      }
 
       return transactionSummary;
     }
@@ -279,9 +282,14 @@ export const summarizeTransaction = async (
       to = walletAccount.toBase58();
     }
 
+    if (enableReceipts && secretKeyForReceipts) {
+      const keyPair = Keypair.fromSecretKey(secretKeyForReceipts);
+
+      receipt = await getReceiptForTransactionSummary(keyPair, memo, date);
+    }
     const transactionSummary: TransactionSummary = {
       id,
-      date: solanaBlocktimeToJSTime(rawTransaction.blockTime),
+      date,
       status: rawTransaction.meta.err === null,
       networkFee: rawTransaction.meta.fee,
       direction,
@@ -290,25 +298,17 @@ export const summarizeTransaction = async (
       from,
       to,
       memo,
-      receipt: null,
+      receipt,
     };
-
-    if (enableReceipts && secretKeyForReceipts) {
-      const keyPair = getKeypairFromString(secretKeyForReceipts);
-      transactionSummary.receipt = await getReceiptForTransactionSummary(
-        keyPair,
-        transactionSummary.memo,
-        transactionSummary.date
-      );
-    }
 
     return transactionSummary;
   } catch (thrownObject) {
     const error = thrownObject as Error;
-    // log(
-    //   `Warning: could not summarize transaction ID: ${id} - see the block explorer for more info, ${error.message}`
-    // );
-    // TODO: throw error (once we can handle more types of transactions in future)
+    // TODO: throw error instead of just log
+    // (once we can handle more types of transactions in future)
+    log(
+      `Warning: could not summarize transaction ID: ${id} - see the block explorer for more info, ${error.message}`
+    );
     return null;
   }
 };

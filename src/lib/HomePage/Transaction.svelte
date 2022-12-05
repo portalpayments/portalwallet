@@ -39,7 +39,11 @@
   );
 </script>
 
-<div class={`transaction ${transaction.id}`}>
+<div
+  class={`transaction ${transaction.id} ${
+    transaction.receipt ? "with-receipt" : ""
+  }`}
+>
   {#if contact}
     <!-- TODO src={contact.verifiedClaims?.imageUrl} -->
     <img
@@ -51,14 +55,16 @@
     />
     <div class="name-and-memo">
       <div class="name">
-        {#if !isEmpty(contact?.verifiedClaims)}
+        {#if transaction?.receipt?.shop}
+          {transaction.receipt.shop}
+        {:else if !isEmpty(contact?.verifiedClaims)}
           {contact.verifiedClaims?.givenName}
           {contact.verifiedClaims?.familyName}
         {:else}
           Unverified {truncateWallet(contact.walletAddress)}
         {/if}
       </div>
-      {#if transaction.memo}
+      {#if transaction.memo && !transaction.receipt}
         <div class="memo">{transaction.memo}</div>
       {/if}
     </div>
@@ -71,6 +77,22 @@
     {transaction.direction === Direction.recieved ? "+" : ""}
     {majorAndMinor[0]}.{majorAndMinor[1]}
   </div>
+  {#if transaction.receipt}
+    <div class="receipt">
+      {#each transaction.receipt.items as item, index}
+        <div class="receipt-item">
+          <div class="receipt-item-name">{item.quantity} × {item.name}</div>
+          <div class="receipt-item-price">${item.price}</div>
+        </div>
+      {/each}
+      <div class="receipt-item total">
+        <div class="receipt-item-name">TOTAL</div>
+        <div class="receipt-item-price">
+          {majorAndMinor[0]}.{majorAndMinor[1]}
+        </div>
+      </div>
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -81,6 +103,40 @@
     grid-template-columns: 42px 1fr 64px;
     align-items: center;
     gap: 8px;
+  }
+
+  .transaction.with-receipt {
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 42px 1fr 64px;
+  }
+
+  .receipt {
+    grid-row-start: 2;
+    grid-column-start: 1;
+
+    grid-row-end: 3;
+    grid-column-end: 4;
+
+    font-size: 14px;
+  }
+
+  .receipt .total {
+    font-weight: 600;
+  }
+
+  .receipt-item {
+    width: 100%;
+    grid-template-columns: 1fr 64px;
+  }
+
+  .receipt-item-name {
+    width: 100%;
+    text-align: left;
+  }
+
+  .receipt-item-price {
+    width: 100%;
+    text-align: right;
   }
 
   .profile-pic {

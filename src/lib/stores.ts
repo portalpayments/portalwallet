@@ -94,13 +94,13 @@ const updateAccounts = async () => {
   log(`Updating Solana account....`);
   const nativeAccountSummary: AccountSummary = await getNativeAccountSummary(
     connection,
-    keyPair.publicKey
+    keyPair
   );
   nativeAccountStore.set(nativeAccountSummary);
 
   log(`Updating token accounts...`);
   const tokenAccountSummaries: Array<AccountSummary> =
-    await getTokenAccountSummaries(connection, keyPair.publicKey);
+    await getTokenAccountSummaries(connection, keyPair);
   tokenAccountsStore.set(tokenAccountSummaries);
 
   haveAccountsLoadedStore.set(true);
