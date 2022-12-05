@@ -2,12 +2,12 @@ import { getTransactionsByDays, summarizeTransaction } from "./transactions";
 import {
   MOCK_SENDER_PUBLIC_KEY,
   MOCK_RECIPIENT_PUBLIC_KEY,
-} from "./__mocks__/mocks";
+} from "./test-data/transactions/mocks";
 import { PublicKey, type ParsedTransactionWithMeta } from "@solana/web3.js";
 import {
   sendToExistingTokenAccountSenderComesFirst,
   sendToExistingTokenAccountSenderComesSecond,
-} from "./__mocks__/transactions/sendToExistingTokenAccount";
+} from "./test-data/transactions/sendToExistingTokenAccount";
 import {
   JOHN_TESTUSER_DEMO_WALLET,
   MIKES_WALLET,
@@ -16,13 +16,13 @@ import {
 import { Currency, type TransactionSummary } from "../lib/types";
 import { Direction } from "../lib/types";
 import { hexToUtf8, log, stringify } from "./functions";
-import { sendFiveUSDC } from "./__mocks__/transactions/sendFiveUSDC";
-import { sendingMoneyToSelf } from "./__mocks__/transactions/sendingMoneyToSelf";
+import { sendFiveUSDC } from "./test-data/transactions/sendFiveUSDC";
+import { sendingMoneyToSelf } from "./test-data/transactions/sendingMoneyToSelf";
 import {
   sendingSol,
   sendingSolWithMemo,
   sendingSolWithNote,
-} from "./__mocks__/transactions/sendingSol";
+} from "./test-data/transactions/sendingSol";
 
 jest.mock("./functions");
 

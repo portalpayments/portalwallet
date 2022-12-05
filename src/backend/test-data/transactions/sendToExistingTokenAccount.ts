@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 import { SPL_TOKEN_PROGRAM } from "../../constants";
-import { MOCK_SENDER_PUBLIC_KEY, MOCK_RECIPIENT_PUBLIC_KEY } from "../mocks";
+import { MOCK_SENDER_PUBLIC_KEY, MOCK_RECIPIENT_PUBLIC_KEY } from "./mocks";
 
 // Sending to an existing token account, with no memo
 

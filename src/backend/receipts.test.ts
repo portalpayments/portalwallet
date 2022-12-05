@@ -7,7 +7,7 @@ import {
 import { stringify, log } from "./functions";
 import { mikesKeypair } from "./get-mikes-keypair";
 import { ThreadMemberScope } from "@dialectlabs/sdk";
-import { rawReceipt } from "./__mocks__/receipt";
+import { rawReceipt } from "./test-data/transactions/receipt";
 
 jest.mock("./functions");
 jest.mock("./html-extract");
