@@ -40,7 +40,7 @@ jobs:
       # Run Solana validator with Metaplex program
       - run: ~/.local/share/solana/install/active_release/bin/solana-test-validator --bpf-program ${METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS} on-chain-programs/metaplex_token_metadata_program.so --reset &
       # Run CORS proxy (needed to access Decaf receipts)
-      - run: npm run start-decaf-proxy-server &
+      - run: lcp --proxyUrl https://www.decaf.so &
       # Run tests
       - run: npm ci
       - run: npm run build:extension --if-present
