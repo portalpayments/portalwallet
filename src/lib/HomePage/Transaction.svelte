@@ -85,12 +85,6 @@
           <div class="receipt-item-price">${item.price}</div>
         </div>
       {/each}
-      <div class="receipt-item total">
-        <div class="receipt-item-name">TOTAL</div>
-        <div class="receipt-item-price">
-          {majorAndMinor[0]}.{majorAndMinor[1]}
-        </div>
-      </div>
     </div>
   {/if}
 </div>
@@ -106,7 +100,7 @@
   }
 
   .transaction.with-receipt {
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr 24px;
     grid-template-columns: 42px 1fr 64px;
   }
 
@@ -118,10 +112,6 @@
     grid-column-end: 4;
 
     font-size: 14px;
-  }
-
-  .receipt .total {
-    font-weight: 600;
   }
 
   .receipt-item {
