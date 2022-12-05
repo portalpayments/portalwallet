@@ -42,7 +42,7 @@ jobs:
       # Install everything
       - run: npm ci
       # Run CORS proxy (needed to access Decaf receipts)
-      - run: npm run start-decaf-proxy-server
+      - run: npm run start-decaf-proxy-server &
       # Run tests
       - run: npm run build:extension --if-present
       - run: npm test
