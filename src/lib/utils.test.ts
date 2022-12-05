@@ -5,7 +5,7 @@ import {
   getMultiplier,
 } from "./utils";
 
-jest.mock("./functions");
+jest.mock("../backend/functions");
 
 describe(`utils`, () => {
   describe(`amountAndDecimalsToMajorAndMinor`, () => {
