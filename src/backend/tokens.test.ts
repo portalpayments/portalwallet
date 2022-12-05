@@ -237,6 +237,7 @@ describe("minting and USDC-like transfers", () => {
                 // Bob has recievd the fifty cents
                 amount: String(AMOUNT_OF_USDC_TO_SEND),
                 decimals: 2,
+                // TODO - use constants here
                 uiAmount: AMOUNT_OF_USDC_TO_SEND / 100,
                 uiAmountString: String(AMOUNT_OF_USDC_TO_SEND / 100),
               },
