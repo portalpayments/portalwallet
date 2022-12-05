@@ -82,7 +82,8 @@
       {#each transaction.receipt.items as item, index}
         <div class="receipt-item">
           <div class="receipt-item-name">{item.quantity} × {item.name}</div>
-          <div class="receipt-item-price">${item.price}</div>
+          <!-- Oddly Decaf receipts are in major units -->
+          <div class="receipt-item-price">{item.price}.00</div>
         </div>
       {/each}
     </div>
