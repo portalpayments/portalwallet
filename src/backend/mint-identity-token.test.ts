@@ -13,7 +13,6 @@ import dotenv from "dotenv";
 import { getKeypairFromString } from "./vmwallet";
 import { SECOND, SECONDS } from "./constants";
 
-jest.mock("./functions");
 
 dotenv.config();
 
@@ -61,5 +60,5 @@ testOrSkip(
 
     log(`✅ Completed successfully`);
   },
-  30 * SECONDS
+  60 * SECONDS
 );
