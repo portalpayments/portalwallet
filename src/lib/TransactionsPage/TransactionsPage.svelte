@@ -7,7 +7,9 @@
 <div class="transactions-page">
   <BackButton />
   <div class="feature">
-    <Heading>Transactions</Heading>
+    <div class="header">
+      <Heading>Transactions</Heading>
+    </div>
     <Transactions />
   </div>
 </div>
@@ -27,5 +29,9 @@
 
     /* Cool subtle background borrowed from website */
     background: radial-gradient(at 50% 50%, #efddff 0, #fff 80%, #fff 100%);
+  }
+
+  .header {
+    padding: 0 12px;
   }
 </style>
