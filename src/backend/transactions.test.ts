@@ -23,6 +23,7 @@ import {
   sendingSolWithMemo,
   sendingSolWithNote,
 } from "./test-data/transactions/sendingSol";
+import { sendingUSDH } from "./test-data/transactions/sendingUSDH";
 
 jest.mock("./functions");
 
@@ -78,6 +79,31 @@ describe(`transaction summaries`, () => {
       to: GREGS_WALLET,
       memo: "Hey Greg! 🙋🏻‍♂️",
       receipt: null,
+    });
+  });
+
+  test(`We can produce a transaction summary from someone sending us USDH`, async () => {
+    // Same transaction as before but with perspective shifted to greg
+    const portalTransactionSummary = await summarizeTransaction(
+      // TODO: fix 'transaction.message.accountKeys' (is a string, should be somethign else)
+      // in the demo transaction below
+      // @ts-ignore
+      sendingUSDH,
+      new PublicKey(MIKES_WALLET)
+    );
+
+    expect(portalTransactionSummary).toEqual({
+      id: "4gknQh12svZHqrZN9sKCHetaP87TbPns6pd83jknZPA3vEjN7jQ53sA3xpVs7ZH2oeCKnjrgHDqVMMxf3vBMoTwz",
+      amount: 1000000,
+      currency: 1,
+      date: 1667306128000,
+      direction: 1,
+      from: "BfkRD3gGQGLjHxUw7oqhizkaxrDrw7itHT98f9j2gh6t",
+      memo: null,
+      networkFee: 10000,
+      receipt: null,
+      status: true,
+      to: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
     });
   });
 

@@ -74,20 +74,10 @@ const checkIsCreatingTokenAccount = (instruction: ParsedInstruction) => {
   );
 };
 
-
+// See constants.ts for details re: notes vs memos
 const getNoteOrMemo = (
   rawTransaction: ParsedTransactionWithMeta
 ): string | null => {
-  // typical combination of instructions
-  // for USDH
-  // program "spl-associated-token-account" parsed.type create
-  // program "spl-token", parsed.type transfer
-  //
-  // for USDC
-  // program "spl-associated-token-account" parsed.type create
-  // program "spl-token", parsed.type transferChecked
-  // program none, programId "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93" with dat (a note_)
-
   const instructions = rawTransaction.transaction.message.instructions;
 
   const memoInstruction = instructions.find((instruction) => {
@@ -95,15 +85,11 @@ const getNoteOrMemo = (
   });
 
   if (memoInstruction) {
-    // OK this is just sending Sol with a memo
-
     // @ts-ignore this definitely exists, see sendingSolWithNote
     const memo = memoInstruction.parsed;
     return memo;
   }
 
-  // The 'Note program' is exactly like the 'memo program'
-  // Just run by someone else.
   const noteInstruction = instructions.find((instruction) => {
     return instruction.programId.toBase58() === NOTE_PROGRAM;
   });

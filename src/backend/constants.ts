@@ -177,5 +177,5 @@ export const SOLANA_SYSTEM_PROGRAM = new PublicKey(
 // The standard Solana SPL MEMO program
 export const MEMO_PROGRAM = "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr";
 
-// Similar to MEMO but added by Glow
+// Similar to MEMO but added by Glow (has a longer length)
 export const NOTE_PROGRAM = "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93";
