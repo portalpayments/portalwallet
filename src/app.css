@@ -159,7 +159,7 @@ input:focus {
 }
 
 .colorful-text {
-  /* Colored background techique used on website */
+  /* Gradient text techique used on website */
   color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
