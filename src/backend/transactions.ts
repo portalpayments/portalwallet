@@ -82,40 +82,47 @@ const checkIsSendingUSDC = (instruction: ParsedInstruction) => {
 };
 
 const getNoteOrMemo = (
-  instruction: ParsedInstruction | PartiallyDecodedInstruction
+  rawTransaction: ParsedTransactionWithMeta
 ): string | null => {
-  const instructionProgram = instruction.programId.toBase58();
+  // typical combination of instructions
+  // for USDH
+  // program "spl-associated-token-account" parsed.type create
+  // program "spl-token", parsed.type transfer
+  //
+  // for USDC
+  // program "spl-associated-token-account" parsed.type create
+  // program "spl-token", parsed.type transferChecked
+  // program none, programId "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93" with dat (a note_)
 
-  // The 'Note program' is exactly like the 'memo program'
-  // Just run by someone else.
-  if (instructionProgram === MEMO_PROGRAM) {
+  const instructions = rawTransaction.transaction.message.instructions;
+
+  const memoInstruction = instructions.find((instruction) => {
+    return instruction.programId.toBase58() === MEMO_PROGRAM;
+  });
+
+  if (memoInstruction) {
     // OK this is just sending Sol with a memo
 
     // @ts-ignore this definitely exists, see sendingSolWithNote
-    const memo = instruction.parsed;
+    const memo = memoInstruction.parsed;
     return memo;
   }
 
   // The 'Note program' is exactly like the 'memo program'
   // Just run by someone else.
-  if (instructionProgram === NOTE_PROGRAM) {
-    // OK this is just sending Sol with a note
+  const noteInstruction = instructions.find((instruction) => {
+    return instruction.programId.toBase58() === NOTE_PROGRAM;
+  });
 
+  // The 'Note program' is exactly like the 'memo program'
+  // Just run by someone else.
+  if (noteInstruction) {
     // @ts-ignore this definitely exists, see sendingSolWithNote
-    const instructionData = instruction.data;
-
+    const instructionData = noteInstruction.data;
     const noteData = instructionDataToNote(instructionData);
     return noteData;
   }
   return null;
-};
-
-const checkIsMakingUSDCAccount = (instructions: Array<ParsedInstruction>) => {
-  return (
-    instructions.length === 3 &&
-    checkIsCreatingTokenAccount(instructions[0]) &&
-    checkIsSendingUSDC(instructions[1])
-  );
 };
 
 const getWalletDifference = (
@@ -165,36 +172,17 @@ export const summarizeTransaction = async (
 
   let memo: string | null = null;
   try {
-    const hasMultipleInstructions = instructions.length > 1;
-    if (!hasMultipleInstructions) {
-      if (
-        firstInstruction.parsed.info.source ===
-        firstInstruction.parsed.info.destination
-      ) {
-        log(
-          `Ignoring transaction sending money to self (probably a user mistake)`
-        );
-        return null;
-      }
+    if (
+      firstInstruction.parsed.info.source ===
+      firstInstruction.parsed.info.destination
+    ) {
+      log(
+        `Ignoring transaction sending money to self (probably a user mistake)`
+      );
+      return null;
     }
 
-    if (hasMultipleInstructions) {
-      if (checkIsMakingUSDCAccount(instructions)) {
-        // Typical Glow sending USDC to new account
-        memo = getNoteOrMemo(instructions[2]);
-      } else {
-        // TODO add comment here describing the common scenario we go down this code path
-        // eg what app was used to make this transaction?
-
-        memo = getNoteOrMemo(instructions[1]);
-
-        if (!memo) {
-          throw new Error(
-            `Don't know how to summarize this transaction - second instruction isn't a memo or note`
-          );
-        }
-      }
-    }
+    memo = getNoteOrMemo(rawTransaction);
 
     if (isSolTransaction) {
       const onlyInstruction = instructions[0] as ParsedInstruction;
