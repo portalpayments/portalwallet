@@ -10,7 +10,7 @@
 
 <button type="button" class="with-icon" on:click={() => changeAccount()}>
   <img
-    src={CURRENCY_ICONS[getCurrencyName(account.currency)]}
+    src={CURRENCY_ICONS[getCurrencyName(account.currency)].grey}
     alt="{getCurrencyName(account.currency)} account"
   />
   <div class="text">

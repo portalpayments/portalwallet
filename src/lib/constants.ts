@@ -2,10 +2,22 @@
 // Backend constants are in the backend constants file.
 
 export const CURRENCY_ICONS = {
-  USDC: "/src/assets/Icons/usdc-coin-grey.svg",
-  USDT: "/src/assets/Icons/usdt-coin-grey.svg",
-  USDH: "/src/assets/Icons/usdh-coin-grey.svg",
-  SOL: "/src/assets/Icons/sol-coin-grey.svg",
+  USDC: {
+    grey: "/src/assets/Icons/usdc-coin-grey.svg",
+    blue: "/src/assets/Icons/usdc-coin.svg",
+  },
+  USDT: {
+    grey: "/src/assets/Icons/usdt-coin-grey.svg",
+    blue: "/src/assets/Icons/usdt-coin.svg",
+  },
+  USDH: {
+    grey: "/src/assets/Icons/usdh-coin-grey.svg",
+    blue: "/src/assets/Icons/usdh-coin.svg",
+  },
+  SOL: {
+    grey: "/src/assets/Icons/sol-coin-grey.svg",
+    blue: "/src/assets/Icons/sol-coin.svg",
+  },
 };
 
 export enum LabelColor {
