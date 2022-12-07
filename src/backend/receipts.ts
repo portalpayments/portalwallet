@@ -139,6 +139,9 @@ export const getReceiptForTransactionSummary = async (
   transactionMemo: string,
   transactionDate: number
 ): Promise<ReceiptSummary> => {
+  if (!transactionMemo) {
+    return null;
+  }
   const hasReceipt = checkIfTransactionSummaryHasReceipt(transactionMemo);
 
   if (!hasReceipt) {
