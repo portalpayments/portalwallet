@@ -74,12 +74,6 @@ const checkIsCreatingTokenAccount = (instruction: ParsedInstruction) => {
   );
 };
 
-const checkIsSendingUSDC = (instruction: ParsedInstruction) => {
-  return (
-    instruction.programId.toBase58() === SPL_TOKEN_PROGRAM &&
-    instruction.parsed.type === "transferChecked"
-  );
-};
 
 const getNoteOrMemo = (
   rawTransaction: ParsedTransactionWithMeta
