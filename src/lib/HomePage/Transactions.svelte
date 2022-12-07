@@ -38,35 +38,36 @@
 
 {#if transactionsByDays}
   {#if !isLoadingTransactionSummaries}
-    <div class="days">
-      {#each transactionsByDays as transactionsByDay}
-        <div class="day">
-          <div class="day-summary">
-            <div class="day-name">
-              {isoDateToFriendlyName(transactionsByDay.isoDate)}
+    {#if transactionsByDays.length}
+      <div class="days">
+        {#each transactionsByDays as transactionsByDay}
+          <div class="day">
+            <div class="day-summary">
+              <div class="day-name">
+                {isoDateToFriendlyName(transactionsByDay.isoDate)}
+              </div>
+
+              <div class="day-total">
+                {amountAndDecimalsToMajorAndMinor(
+                  transactionsByDay.totalSpending,
+                  decimals
+                )[0]}.{amountAndDecimalsToMajorAndMinor(
+                  transactionsByDay.totalSpending,
+                  decimals
+                )[1]}
+              </div>
             </div>
 
-            <div class="day-total">
-              {amountAndDecimalsToMajorAndMinor(
-                transactionsByDay.totalSpending,
-                decimals
-              )[0]}.{amountAndDecimalsToMajorAndMinor(
-                transactionsByDay.totalSpending,
-                decimals
-              )[1]}
+            <div class="transactions">
+              {#each transactionsByDay.transactions as transaction}
+                <TransactionComponent {transaction} {decimals} />
+              {/each}
             </div>
           </div>
-
-          <div class="transactions">
-            {#each transactionsByDay.transactions as transaction}
-              <TransactionComponent {transaction} {decimals} />
-            {/each}
-          </div>
-        </div>
-      {/each}
-    </div>
-    {#if !transactionsByDays.length}
-      <p>No transactions</p>
+        {/each}
+      </div>
+    {:else}
+      <p>No transactions.</p>
     {/if}
   {:else}
     <div class="days mock-days">
