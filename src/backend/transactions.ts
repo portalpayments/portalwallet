@@ -220,10 +220,6 @@ export const summarizeTransaction = async (
     }
 
     const currencyId = currencyDetails.id;
-    if (currencyId !== Currency.USDC) {
-      log(`Found USDH transaction:`);
-      log(stringify(rawTransaction));
-    }
 
     if (rawTransaction.meta.postTokenBalances.length > 2) {
       throw new Error(`Can't parse this transaction`);
