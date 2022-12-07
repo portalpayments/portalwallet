@@ -45,7 +45,6 @@
   }`}
 >
   {#if contact}
-    <!-- TODO src={contact.verifiedClaims?.imageUrl} -->
     <img
       class="profile-pic"
       src={!isEmpty(contact?.verifiedClaims)
