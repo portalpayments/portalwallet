@@ -72,32 +72,35 @@
 </script>
 
 <div class="input-and-label">
-  <input
-    bind:value
-    type="text"
-    class={isAmount ? "usdc-amount" : ""}
-    use:maybeFocus
-    required
-    on:keyup|preventDefault={debounce((event) => {
-      if (isAmount) {
-        if (value > 0) {
-          showGasFee = true;
-        } else {
-          showGasFee = false;
+  <div class="gradient-border">
+    <input
+      bind:value
+      type="text"
+      class={isAmount ? "usdc-amount" : ""}
+      use:maybeFocus
+      required
+      on:keyup|preventDefault={debounce((event) => {
+        if (isAmount) {
+          if (value > 0) {
+            showGasFee = true;
+          } else {
+            showGasFee = false;
+          }
         }
-      }
-      if (onTypingPause) {
-        onTypingPause(event);
-      }
-    }, 1 * SECOND)}
-    on:input|capture={filterInput}
-  />
-  <span class="floating-label"
-    >{label}
-    {#if isAmount}
-      <img class="inline-usdc" src={USDClogo} alt="usdc logo" />
-    {/if}
-  </span>
+        if (onTypingPause) {
+          onTypingPause(event);
+        }
+      }, 1 * SECOND)}
+      on:input|capture={filterInput}
+    />
+    <span class="floating-label">
+      {label}
+      {#if isAmount}
+        <!-- TODO: set currency properly -->
+        <img class="inline-usdc" src={USDClogo} alt="usdc logo" />
+      {/if}
+    </span>
+  </div>
 
   {#if isAmount}
     {#if Number(value) !== 0 && value !== null}
@@ -108,18 +111,13 @@
 
 <style>
   input {
-    border-radius: 0;
-    padding: 12px 12px 0px 12px;
-    border-top: none;
-    border-right: none;
-    border-left: none;
-    border-bottom: 1px solid var(--mid-grey);
-    font-size: 14px;
     width: 100%;
-    height: 56px;
-    font-size: 18px;
-    color: var(--actually-dark-grey);
-    font-weight: 600;
+    transition: all 200ms ease-out;
+    height: 100%;
+    border-radius: 22px;
+    background-color: white;
+    border: none;
+    padding: 0 12px;
   }
 
   .inline-usdc {
@@ -130,9 +128,7 @@
   }
   input:focus {
     outline: none !important;
-    border: 2px solid rgba(65, 156, 253, 0.8);
     box-shadow: 0 0 2px rgba(65, 156, 253, 0.3);
-    border-radius: 6px;
   }
   input:focus ~ .floating-label,
   input:not(:focus):valid ~ .floating-label {
@@ -167,6 +163,12 @@
     position: relative;
     display: grid;
   }
+
+  .gradient-border {
+    height: 48px;
+    border-radius: 24px;
+  }
+
   .gas-fee {
     font-size: 0.65rem;
     color: var(--black);

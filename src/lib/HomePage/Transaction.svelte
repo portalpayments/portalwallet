@@ -143,6 +143,7 @@
 
   .memo {
     font-size: 14px;
+    line-height: 18px;
     /* Solana pay writes long unreadable memos */
     overflow: hidden;
   }
