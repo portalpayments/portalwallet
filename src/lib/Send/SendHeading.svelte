@@ -12,7 +12,7 @@
 
 <div class="transfer-heading">
   <BackButton />
-  <Heading>Transfer</Heading>
+  <Heading>Send money</Heading>
   {#if hasLoadedVerificationStateFromNetwork}
     <div class="verification-status">
       <div class="verified-header">
