@@ -174,7 +174,7 @@
         {#if stepName === "first"}
           <div class="content">
             <img class="logo" src={Logo} alt="Portal logo" />
-            <p>Instant global payments for less than a penny.</p>
+            <p>Instant global payments<br /> for less than a penny.</p>
           </div>
           <div class="buttons">
             <button
