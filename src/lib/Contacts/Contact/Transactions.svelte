@@ -61,7 +61,7 @@
     width: 36px;
   }
 
-  /* TODO: what is this? */
+  /* Make a white version of the icon so it looks good against a blue background */
   .white-usdc {
     filter: brightness(0) invert(1);
   }
