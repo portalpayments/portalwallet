@@ -74,15 +74,15 @@
   }
 
   buttongroup button.transfer {
-    background-image: url("/src/assets/transferActive.svg");
+    background-image: url("/src/assets/transfer.svg");
   }
 
   buttongroup button.contacts {
-    background-image: url("/src/assets/contactsActive.svg");
+    background-image: url("/src/assets/contacts.svg");
   }
 
   buttongroup button.collectables {
-    background-image: url("/src/assets/collectablesActive.svg");
+    background-image: url("/src/assets/collectables.svg");
   }
 
   * {
