@@ -11,7 +11,7 @@
 </script>
 
 <div class="header">
-  <div class="gradient-border">
+  <div class="gradient-border shadow">
     <button class="menu" on:click={onClick}>
       {#if isEmpty(user?.verifiedClaims)}
         <img class="avatar" src={AnonymousImage} alt="Anonymous" />
@@ -59,6 +59,7 @@
   button img {
     vertical-align: middle;
   }
+
   button img.avatar {
     width: 32px;
     height: 32px;

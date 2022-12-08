@@ -69,10 +69,10 @@
   });
 </script>
 
+<div class="heading">
+  <Heading theme="purple-orange">Gallery</Heading>
+</div>
 <div class="feature">
-  <div class="heading">
-    <Heading>Gallery</Heading>
-  </div>
   {#if isLoading}
     <SkeletonGallery />
   {:else if collectables.length}
@@ -92,8 +92,16 @@
 
 <style>
   .heading {
+    text-align: left;
     padding: 0 12px;
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--black);
   }
+
   .feature {
     background: radial-gradient(at 50% 50%, #ffe7dd 0, #fff 80%, #fff 100%);
   }

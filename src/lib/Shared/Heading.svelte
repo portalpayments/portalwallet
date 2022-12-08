@@ -1,9 +1,9 @@
 <script lang="ts">
   export let size: "large" | "medium" = "large";
-  export let isColorful = true;
+  export let theme: "blue-green" | "purple-orange" = "blue-green";
 </script>
 
-<h1 class="{size} {isColorful ? 'colorful-text' : ''}"><slot /></h1>
+<h1 class="{size} {theme}"><slot /></h1>
 
 <style>
   h1 {
@@ -15,7 +15,6 @@
     font-size: 24px;
     line-height: 28px;
     text-align: left;
-    padding-bottom: 8px;
   }
 
   .medium {

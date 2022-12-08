@@ -6,7 +6,7 @@
     null;
 </script>
 
-<div class="back-button colorful-text">
+<div class="back-button">
   {#if !clickHandler}
     <Link to="/">‹<span><slot /></span></Link>
   {:else}

@@ -51,6 +51,8 @@
     #38ceac,
     #6ed199
   );
+
+  --purple-orange-gradient: linear-gradient(90deg, #9e17eb, #da00c8, #fc00a6, #ff2388, #ff5571, #ff7a63, #ff9961, #ffb56b);
 }
 
 *,
@@ -158,12 +160,20 @@ input:focus {
   height: var(--wallet-height);
 }
 
-.colorful-text {
+.blue-green {
   /* Gradient text techique used on website */
   color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
   background-image: var(--blue-green-gradient);
+}
+
+.purple-orange {
+  /* Gradient text techique used on website */
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: var(--purple-orange-gradient);
 }
 
 .gradient-border {

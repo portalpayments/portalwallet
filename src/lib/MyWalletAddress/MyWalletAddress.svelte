@@ -28,7 +28,7 @@
       </div>
       <button on:click={copyPhrase} class="copy-to-clipboard">
         <img src={CopyToClipboard} alt="copy address to clipboard" />
-        <span class="colorful-text">{copied ? "copied!" : "copy"}</span>
+        <span>{copied ? "copied!" : "copy"}</span>
       </button>
     </div>
     <QRCode {walletAddress} />
