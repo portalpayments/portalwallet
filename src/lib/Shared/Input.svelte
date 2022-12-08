@@ -72,7 +72,7 @@
 </script>
 
 <div class="input-and-label">
-  <div class="gradient-border">
+  <div class="border">
     <input
       bind:value
       type="text"
@@ -110,6 +110,20 @@
 </div>
 
 <style>
+  .border {
+    height: 48px;
+    border-radius: 24px;
+    background: var(--light-grey);
+    padding: 2px;
+  }
+
+  /* Enable a gradient border when the input inside is focused
+  CSS doesn't curretly let us use borders for gradients */
+
+  .border:has(input:focus) {
+    background: var(--blue-green-gradient);
+  }
+
   input {
     width: 100%;
     transition: all 200ms ease-out;
@@ -117,7 +131,7 @@
     border-radius: 22px;
     background-color: white;
     border: none;
-    padding: 0 12px;
+    padding: 12px 12px 0 12px;
   }
 
   .inline-usdc {
@@ -148,8 +162,8 @@
     position: absolute;
     pointer-events: none;
     color: #9d9d9d;
-    left: 12px;
-    top: 16px;
+    left: 14px;
+    top: 12px;
     transition: 0.2s ease all;
     font-size: 16px;
   }
@@ -162,11 +176,6 @@
   .input-and-label {
     position: relative;
     display: grid;
-  }
-
-  .gradient-border {
-    height: 48px;
-    border-radius: 24px;
   }
 
   .gas-fee {
