@@ -42,6 +42,7 @@
     z-index: 1;
   }
   buttongroup {
+    box-shadow: 1px 5px 15px 0px rgb(0 0 0 / 33%);
     height: 48px;
     justify-self: center;
     display: grid;
