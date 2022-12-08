@@ -11,7 +11,7 @@ import {
   createMintAccount,
   mintTokens,
   makeTokenAccount,
-  sendUSDC,
+  sendTokens,
 } from "./tokens";
 import {
   connect,
@@ -200,7 +200,7 @@ describe("minting and USDC-like transfers", () => {
       ENOUGH_TO_MAKE_A_NEW_TOKEN
     );
 
-    const signature = await sendUSDC(
+    const signature = await sendTokens(
       connection,
       alice,
       alicesTokenAccount,

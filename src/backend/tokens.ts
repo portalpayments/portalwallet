@@ -88,7 +88,7 @@ export const makeTokenAccount = async (
   return recipientTokenAccount;
 };
 
-export const sendUSDC = async (
+export const sendTokens = async (
   connection: Connection,
   sender: Keypair,
   senderTokenAccount: Account,
@@ -97,15 +97,13 @@ export const sendUSDC = async (
   memo: null | string = null
 ) => {
   try {
-    log(`Inside sendUSDC:`, {
+    log(`Inside sendTokens:`, {
       senderTokenAccount: senderTokenAccount.address.toBase58(),
       recipientTokenAccount: recipientTokenAccount.address.toBase58(),
       senderPublicKey: sender.publicKey.toBase58(),
       amount,
       memo,
     });
-
-    log(typeof memo);
 
     const signature = await transferWithMemo(
       connection,
@@ -196,7 +194,7 @@ export const makeAccountsAndDoTransfer = async (
     recipientTokenAccount.address.toBase58()
   );
 
-  const signature = await sendUSDC(
+  const signature = await sendTokens(
     connection,
     senderKeyPair,
     senderTokenAccount,
