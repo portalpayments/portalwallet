@@ -14,22 +14,24 @@
 </script>
 
 <div class="transaction-details">
-  <Heading>Transaction Complete!</Heading>
+  <Heading
+    ><img
+      class="usdc-symbol"
+      src={USDClogo}
+      alt="usdc symbol"
+    />{transferAmount} recieved by<br />
+    {#if verifiedClaims}
+      {verifiedClaims.givenName} {verifiedClaims.familyName}!
+    {:else}
+      {truncateWallet(destinationWalletAddress)}!
+    {/if}
+  </Heading>
   <img
     class="success-icon"
     src={SuccessfulAction}
     alt="money sent successfully"
   />
-  <span class="recipient-and-amount">
-    Sent <img
-      class="usdc-symbol"
-      src={USDClogo}
-      alt="usdc symbol"
-    />{transferAmount} to {#if verifiedClaims}{verifiedClaims.givenName}
-      {verifiedClaims.familyName}{:else}{truncateWallet(
-        destinationWalletAddress
-      )}{/if}
-  </span>
+  <span class="recipient-and-amount"> Transaction complete. </span>
 </div>
 
 <style>
@@ -41,7 +43,7 @@
 
   .usdc-symbol {
     display: inline;
-    height: 16px;
+    height: 22px;
     /* Hack to get baseline of $ to line up with baseline of text */
     transform: translateY(2px);
   }

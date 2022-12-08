@@ -9,8 +9,6 @@
   h1 {
     font-size: 24px;
     margin: 0;
-    display: grid;
-    align-content: center;
   }
 
   .large {
