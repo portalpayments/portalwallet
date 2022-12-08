@@ -3,8 +3,8 @@
 </script>
 
 <div class="add-and-send-buttons">
-  <Link class="button" to="/addMoneyToAccount">Add money</Link>
-  <Link class="button" to="/sendMoney">Send money</Link>
+  <Link class="button shadow" to="/addMoneyToAccount">Add money</Link>
+  <Link class="button shadow" to="/sendMoney">Send money</Link>
 </div>
 
 <style>
