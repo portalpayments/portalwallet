@@ -78,7 +78,11 @@
   {:else if collectables.length}
     <div class="nfts">
       {#each collectables as collectable}
-        <img src={collectable.image} alt={collectable.description} />
+        <img
+          src={collectable.image}
+          alt={collectable.description}
+          class="shadow"
+        />
       {/each}
     </div>
   {:else}

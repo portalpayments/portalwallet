@@ -180,3 +180,7 @@ input:focus {
   background-color: hsla(0,0%,100%,.6);
   backdrop-filter: blur(24px);
 }
+
+.shadow {
+  box-shadow: 2px 3px 10px -4px rgb(0 0 0 / 33%);
+}
