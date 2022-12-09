@@ -20,6 +20,7 @@ import {
   getTokenAccountsByOwner,
   getTransactionsForAddress,
 } from "./vmwallet";
+import type { BasicTokenAccount } from "./types";
 
 jest.mock("./functions");
 
@@ -31,8 +32,8 @@ describe("minting and USDC-like transfers", () => {
   let mintAccountPublicKey: PublicKey;
   const alice = new Keypair();
   const bob = new Keypair();
-  let alicesTokenAccount: Account;
-  let bobsTokenAccount: Account;
+  let alicesTokenAccount: BasicTokenAccount;
+  let bobsTokenAccount: BasicTokenAccount;
   beforeAll(async () => {
     connection = await connect("localhost");
   });

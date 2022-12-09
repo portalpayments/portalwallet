@@ -19,7 +19,7 @@ import base58 from "bs58";
 import { AccountLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import type { RawAccount } from "@solana/spl-token";
 import { getIdentityTokensFromWallet } from "./identity-tokens";
-import type { TokenMetaData, VerifiedClaims } from "./types";
+import type { BasicTokenAccount, TokenMetaData, VerifiedClaims } from "./types";
 import { summarizeTransaction } from "./transactions";
 import { httpGet, toUniqueStringArray } from "../lib/utils";
 import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "./constants";
@@ -110,20 +110,12 @@ export const getKeypairFromEnvFile = (envFileKey: string) => {
   return keyPair;
 };
 
-// Make a custom object that combined the decoded rawAccount
-// with the public key in the token Accounts address
-// So we have all the useful detauls for an Associated Token Account
-// in one object
-interface TokenAccount extends RawAccount {
-  address: PublicKey;
-}
-
-// Just a wrapper with sensible defaults
+// Get the token accounts, and return only the details we care about
 export const getTokenAccountsByOwner = async (
   connection: Connection,
   publicKey: PublicKey
-): Promise<Array<TokenAccount>> => {
-  const tokenAccountsByOwner = await connection.getTokenAccountsByOwner(
+): Promise<Array<BasicTokenAccount>> => {
+  const rawTokenAccountsByOwner = await connection.getTokenAccountsByOwner(
     publicKey,
     {
       programId: TOKEN_PROGRAM_ID,
@@ -131,18 +123,22 @@ export const getTokenAccountsByOwner = async (
   );
 
   const tokenAccounts = await asyncMap(
-    tokenAccountsByOwner.value,
-    async (tokenAccount) => {
-      const rawAccountWithAddress: Partial<TokenAccount> = AccountLayout.decode(
-        tokenAccount.account.data
-      );
-      rawAccountWithAddress.address = tokenAccount.pubkey;
+    rawTokenAccountsByOwner.value,
+    async (rawTokenAccount) => {
+      // A Partial since we don't add 'address' until the next line
+      const rawAccount = AccountLayout.decode(rawTokenAccount.account.data);
 
-      return rawAccountWithAddress;
+      const rawAccountBasics = {
+        address: rawTokenAccount.pubkey,
+        amount: rawAccount.amount,
+        mint: rawAccount.mint,
+      };
+
+      return rawAccountBasics;
     }
   );
 
-  return tokenAccounts as Array<TokenAccount>;
+  return tokenAccounts;
 };
 
 export const verifyWallet = async (
@@ -295,8 +291,6 @@ export const getTokenAccountSummaries = async (
     connection,
     keyPair.publicKey
   );
-  // TODO: fix asyncmap
-  // @ts-ignore
   const accountSummariesOrNulls: Array<AccountSummary | null> = await asyncMap(
     tokenAccounts,
     async (tokenAccount) => {

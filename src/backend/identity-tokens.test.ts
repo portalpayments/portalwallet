@@ -268,16 +268,7 @@ describe(`identity tokens`, () => {
       {
         address: expect.any(PublicKey),
         amount: 1n,
-        closeAuthority: SOLANA_SYSTEM_PROGRAM,
-        closeAuthorityOption: 0,
-        delegate: SOLANA_SYSTEM_PROGRAM,
-        delegateOption: 0,
-        delegatedAmount: 0n,
-        isNative: 0n,
-        isNativeOption: 0,
         mint: expect.any(PublicKey),
-        owner: testIdentityTokenIssuer.publicKey,
-        state: 1,
       },
     ]);
 
@@ -298,16 +289,7 @@ describe(`identity tokens`, () => {
     expect(destinationTokenAccount).toEqual({
       address: expect.any(PublicKey),
       amount: 0n,
-      closeAuthority: null,
-      delegate: null,
-      delegatedAmount: 0n,
-      isFrozen: false,
-      isInitialized: true,
-      isNative: false,
       mint: mintAddress,
-      owner: alice.publicKey,
-      rentExemptReserve: null,
-      tlvData: expect.anything(),
     });
 
     const tokenAccountsByOwner = await getTokenAccountsByOwner(
@@ -319,16 +301,7 @@ describe(`identity tokens`, () => {
       {
         address: expect.any(PublicKey),
         amount: 0n,
-        closeAuthority: SOLANA_SYSTEM_PROGRAM,
-        closeAuthorityOption: 0,
-        delegate: SOLANA_SYSTEM_PROGRAM,
-        delegateOption: 0,
-        delegatedAmount: 0n,
-        isNative: 0n,
-        isNativeOption: 0,
         mint: mintAddress,
-        owner: alice.publicKey,
-        state: 1,
       },
     ]);
 
@@ -362,16 +335,7 @@ describe(`identity tokens`, () => {
         address: expect.any(PublicKey),
         // The token has now arrived in Alice's account
         amount: 1n,
-        closeAuthority: SOLANA_SYSTEM_PROGRAM,
-        closeAuthorityOption: 0,
-        delegate: SOLANA_SYSTEM_PROGRAM,
-        delegateOption: 0,
-        delegatedAmount: 0n,
-        isNative: 0n,
-        isNativeOption: 0,
         mint: mintAddress,
-        owner: alice.publicKey,
-        state: 1,
       },
     ]);
   });

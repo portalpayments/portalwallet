@@ -23,6 +23,7 @@ import { USDC_MAINNET_MINT_ACCOUNT, USD_VISUAL_DECIMALS } from "./constants";
 import { getABetterErrorMessage } from "./errors";
 import { log, stringify } from "./functions";
 import { transferWithMemo } from "./transfer-with-memo";
+import type { BasicTokenAccount } from "./types";
 
 // Mint accounts hold information about the token such as how many decimals the token has and who can mint new tokens, and is  is later used to mint tokens to a token account and create the initial supply.
 export const createMintAccount = async (
@@ -76,7 +77,7 @@ export const makeTokenAccount = async (
   payer: Keypair,
   mintAccountPublicKey: PublicKey,
   recipientPublicKey: PublicKey
-) => {
+): Promise<BasicTokenAccount> => {
   // Create recipient's token account
   const recipientTokenAccount = await getOrCreateAssociatedTokenAccount(
     connection,
@@ -85,14 +86,18 @@ export const makeTokenAccount = async (
     recipientPublicKey,
     false
   );
-  return recipientTokenAccount;
+  return {
+    address: recipientTokenAccount.address,
+    amount: recipientTokenAccount.amount,
+    mint: recipientTokenAccount.mint,
+  };
 };
 
 export const sendTokens = async (
   connection: Connection,
   sender: Keypair,
-  senderTokenAccount: Account,
-  recipientTokenAccount: Account,
+  senderTokenAccount: BasicTokenAccount,
+  recipientTokenAccount: BasicTokenAccount,
   amount: number,
   memo: null | string = null
 ) => {

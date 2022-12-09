@@ -1,3 +1,5 @@
+import type { PublicKey } from "@solana/web3.js";
+
 // Shouldn't be necessary but the metaplex will return an awway of 3 possible data types
 export interface ExpandedNFT {
   model: string;
@@ -56,6 +58,13 @@ export interface TokenMetaData {
   version: number;
   issuedAgainst: string;
   claims: VerifiedClaims;
+}
+
+// A token account, with just the properties we care about
+export interface BasicTokenAccount {
+  address: PublicKey;
+  mint: PublicKey;
+  amount: bigint;
 }
 
 export interface VerifiedClaims {
