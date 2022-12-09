@@ -174,13 +174,13 @@ export const verifyWallet = async (
     return null;
   }
 
-  const tokensMetadata = (await asyncMap(
+  const tokensMetadata = await asyncMap(
     identityTokens,
     async (identityTokens) => {
-      const metadata = await httpGet(identityTokens.uri);
+      const metadata = (await httpGet(identityTokens.uri)) as TokenMetaData;
       return metadata;
     }
-  )) as Array<TokenMetaData>;
+  );
 
   const currentTokenMetadata = await tokensMetadata.filter((tokenMetadata) => {
     // Don't support older, beta tokens.
@@ -258,7 +258,7 @@ export const getTransactionSummariesForAddress = async (
     );
   }
 
-  let transactionSummaries = (await asyncMap(
+  let transactionSummaries = await asyncMap(
     rawTransactions,
     (rawTransaction) => {
       return summarizeTransaction(
@@ -269,7 +269,7 @@ export const getTransactionSummariesForAddress = async (
         secretKey
       );
     }
-  )) as Array<TransactionSummary>;
+  );
 
   // We can't summarize all transactions yet
   transactionSummaries = transactionSummaries.filter(
@@ -393,8 +393,7 @@ export const getContactsFromTransactions = async (
     `We need to verify ${uniqueTransactionWalletAddresses.length} uniqueTransactionWalletAddresses:`
   );
 
-  // TODO - Fix 'as' - asyncMap may need some work.
-  const contacts = (await asyncMap(
+  const contacts = await asyncMap(
     uniqueTransactionWalletAddresses,
     async (walletAddress): Promise<Contact> => {
       const verifiedClaims = await verifyWallet(
@@ -411,7 +410,7 @@ export const getContactsFromTransactions = async (
       };
       return contact;
     }
-  )) as Array<Contact>;
+  );
 
   log(`Got ${contacts.length} contacts used in transactions`);
 

@@ -44,11 +44,14 @@ export const asyncFilter = async <T>(
   return array.filter((_, i) => results[i]);
 };
 
-export const asyncMap = async <T>(
-  array: Array<T>,
-  iterator: (value: T, index?: number) => Promise<unknown>
-): Promise<Array<unknown>> => {
-  const promises: Array<Promise<unknown>> = [];
+export const asyncMap = async <ArrayItemType, IteratorReturnType>(
+  array: Array<ArrayItemType>,
+  iterator: (
+    value: ArrayItemType,
+    index?: number
+  ) => Promise<IteratorReturnType>
+): Promise<Array<IteratorReturnType>> => {
+  const promises: Array<Promise<IteratorReturnType>> = [];
   for (const [index, item] of array.entries()) {
     promises.push(iterator(item, index));
   }

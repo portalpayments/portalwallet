@@ -30,7 +30,7 @@
       keypair.publicKey
     );
 
-    collectables = (await asyncMap(allNftsFromAWallet, async (nft) => {
+    collectables = await asyncMap(allNftsFromAWallet, async (nft) => {
       const data = await httpGet(nft.uri);
       const firstFile = data?.properties?.files?.[0];
       const image = firstFile?.uri || null;
@@ -41,9 +41,9 @@
         image,
         type,
       };
-    })) as Array<Collectable>;
-    // Filter out non-collectible NFTs
+    });
 
+    // Filter out non-collectible NFTs
     collectables = collectables.filter((collectable) => {
       return Boolean(collectable.image);
     });
