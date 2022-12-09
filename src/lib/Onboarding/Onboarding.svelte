@@ -21,6 +21,8 @@
   const MINIMUM_PASSWORD_LENGTH = 8;
   const MINIMUM_PERSONAL_PHRASE_LENGTH = 30;
 
+  const WALLET_WIDTH = 300;
+
   const steps = ["first", "second", "third", "final"];
   const stepCount = steps.length;
   let currentStep = 0;
@@ -166,8 +168,8 @@
   <!-- All the steps, beside each other in a columnn -->
   <div
     class="steps"
-    style="width:{stepCount * 300}px; transform: translateX(-{currentStep *
-      300}px);"
+    style="width:{stepCount *
+      WALLET_WIDTH}px; transform: translateX(-{currentStep * WALLET_WIDTH}px);"
   >
     {#each steps as stepName, stepNumber}
       <div class="step {stepName}">
