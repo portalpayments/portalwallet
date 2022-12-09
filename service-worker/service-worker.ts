@@ -10,12 +10,14 @@ const stringify = (object: any) => {
 };
 // From https://dev.to/wtho/custom-service-worker-logic-in-typescript-on-vite-4f27
 
-log(`Hello from service worker`);
+log(`Hello from service worker FRIDAY NIGHT`);
 
 // https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/how-to/service-workers
 self.addEventListener("install", function (event) {
-  // self.skipWaiting();
-  log("WORKER: install event in progress.");
+  // From https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope/skipWaiting
+  // 'forces the waiting service worker to become the active service worker.'
+  self.skipWaiting();
+  log("WORKER: install event in progress FRIDAY NIGHT.");
   log(`globalThis is`, globalThis);
 });
 
