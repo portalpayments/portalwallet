@@ -37,13 +37,13 @@
     height: 150px;
     justify-content: center;
     align-items: baseline;
+    padding: 0 24px;
   }
 
   .verification-status {
     display: grid;
     grid-auto-flow: row;
     grid-template-rows: 64px 1fr;
-    padding: 0 24px;
     gap: 12px;
     margin: auto;
     justify-content: stretch;

@@ -170,7 +170,7 @@
 
       <Input
         bind:value={memo}
-        label="Message (optional)"
+        label="Message (eg 'Thanks!')"
         isFocused={false}
         isAmount={false}
         filterField={null}
