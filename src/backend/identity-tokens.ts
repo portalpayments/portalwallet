@@ -221,7 +221,7 @@ export const getFullNFTsFromWallet = async (
     );
   });
 
-  const nftData = await asyncMap(nfts as Array<ExpandedNFT>, async (nft) => {
+  const nftData = await asyncMap(nfts, async (nft) => {
     try {
       const response = await axios.get(nft.uri);
       const datum = response.data;
