@@ -2,7 +2,7 @@
 
 exports[`dialect Getting receipts from messages 1`] = `
 Object {
-  "buildId": "s_U2jOX4q6ShosslyfVMJ",
+  "buildId": Any<String>,
   "gsp": true,
   "isFallback": false,
   "page": "/receipt/[receiptId]",

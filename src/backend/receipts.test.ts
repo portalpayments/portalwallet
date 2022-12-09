@@ -42,7 +42,9 @@ describe(`dialect`, () => {
       text: "Thank you for your order! You can find your receipt here: https://www.decaf.so/receipt/XgVU1qK4i4zXKanjHZpr",
     });
 
-    expect(rawReceipt).toMatchSnapshot();
+    expect(rawReceipt).toMatchSnapshot({
+      buildId: expect.any(String),
+    });
   });
 
   test(`Getting receiptSummary from raw receipts`, async () => {
