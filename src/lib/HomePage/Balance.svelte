@@ -52,8 +52,8 @@
           class="symbol"
           alt="{currencyName} logo"
           src={activeAccount
-            ? CURRENCY_ICONS[currencyName]["blue"]
-            : CURRENCY_ICONS.USDC.blue}
+            ? CURRENCY_ICONS[currencyName]["grey"]
+            : CURRENCY_ICONS.USDC.grey}
         />
         <div class="major">{majorAndMinor[0]}</div>
         <div class="minor">.{majorAndMinor[1]}</div>
@@ -80,7 +80,7 @@
   }
 
   .symbol-major-minor {
-    color: var(--mid-blue);
+    color: var(--black);
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: max-content;
