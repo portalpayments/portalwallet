@@ -1,16 +1,12 @@
 // @ts-nocheck
 // Nocheck because TS doesn't know about service worker types
 
-const VERSION = 1;
+const VERSION = 6;
+import { log, stringify } from "./helpers";
 
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 // and https://github.com/GoogleChrome/chrome-extensions-samples
 
-const log = console.log.bind(console);
-
-const stringify = (object: any) => {
-  return JSON.stringify(object, null, 2);
-};
 // From https://dev.to/wtho/custom-service-worker-logic-in-typescript-on-vite-4f27
 
 log(`Parsing service worker version: ${VERSION}`);
