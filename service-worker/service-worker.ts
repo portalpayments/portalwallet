@@ -1,8 +1,13 @@
 // @ts-nocheck
 // Nocheck because TS doesn't know about service worker types
 
-const VERSION = 6;
-import { log, stringify } from "./helpers";
+const VERSION = 11;
+// import { log, stringify } from "./helpers";
+
+const log = console.log.bind(console);
+export var stringify = function (object) {
+  return JSON.stringify(object, null, 2);
+};
 
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 // and https://github.com/GoogleChrome/chrome-extensions-samples
