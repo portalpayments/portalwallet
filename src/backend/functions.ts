@@ -41,7 +41,7 @@ export const asyncFilter = async <T>(
   const results: boolean[] = await Promise.all(
     array.map((value, index) => filter(value, index))
   );
-  return array.filter((_, i) => results[i]);
+  return array.filter((_, index) => results[index]);
 };
 
 export const asyncMap = async <ArrayItemType, IteratorReturnType>(
