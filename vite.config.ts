@@ -45,6 +45,8 @@ export default defineConfig({
     // false to help debug issues during alpha testing
     // true to send demos to investors
     minify: true,
+    // We use tsc to build the service worker, so don't destroy that built file.
+    emptyOutDir: false,
   },
   optimizeDeps: {
     // From https://github.com/vitejs/vite/issues/9703#issuecomment-1216662109
