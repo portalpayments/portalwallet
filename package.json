@@ -9,7 +9,6 @@
     "dev:vite": "vite",
     "dev:serviceworker": "tsc --watch --project tsconfig.serviceworker.json",
     "dev:manifest": "bash watch-manifest.bash",
-    "dev:icons": "bash copy-icons.bash",
     "build": "run-p --print-label build:*",
     "build:frontend": "vite build",
     "build:serviceworker": "rm tsconfig.serviceworker.tsbuildinfo; npx tsc --project tsconfig.serviceworker.json",
