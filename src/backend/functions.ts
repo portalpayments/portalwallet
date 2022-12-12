@@ -51,11 +51,7 @@ export const asyncMap = async <ArrayItemType, IteratorReturnType>(
     index?: number
   ) => Promise<IteratorReturnType>
 ): Promise<Array<IteratorReturnType>> => {
-  const promises: Array<Promise<IteratorReturnType>> = [];
-  for (const [index, item] of array.entries()) {
-    promises.push(iterator(item, index));
-  }
-  return Promise.all(promises);
+  return Promise.all(array.map(iterator));
 };
 
 export const sleep = async (timeInMs: number): Promise<void> => {
