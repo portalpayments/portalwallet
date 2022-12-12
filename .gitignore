@@ -6,11 +6,5 @@ test-ledger
 dist/*
 *.DS_Store
 *.afdesign
-public/service-worker.js
-public/service-worker.js.map
-public/service-worker/service-worker.js
-public/service-worker/service-worker.js.map
-public/src/backend/functions.js
-public/src/backend/functions.js.map
 arweave-wallet.json
 *.tsbuildinfo

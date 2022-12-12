@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
+    "rootDir": "src",
     "composite": true,
     "module": "es2020",
     "moduleResolution": "Node",
     // Resulting files will be in dist/service-worker.js
     "outDir": "dist"
   },
-  "include": ["service-worker/*.ts"]
+  "include": ["src/service-worker.ts"]
 }

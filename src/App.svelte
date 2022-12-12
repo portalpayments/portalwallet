@@ -75,7 +75,7 @@
       let registration: ServiceWorkerRegistration | null = null;
       try {
         registration = await navigator.serviceWorker.register(
-          "/service-worker.js"
+          "./service-worker.js"
         );
         log("Service worker registration succeeded:", registration);
         navigator.serviceWorker.controller.postMessage({

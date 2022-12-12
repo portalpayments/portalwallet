@@ -1,11 +1,13 @@
 // @ts-nocheck
 // Nocheck because TS doesn't know about service worker types
 
-const VERSION = 11;
-// import { log, stringify } from "./helpers";
+// For some reason have to shut up TS yet again (see above)
+// @ts-ignore
+const VERSION = 666;
 
 const log = console.log.bind(console);
-export var stringify = function (object) {
+
+const stringify = function (object) {
   return JSON.stringify(object, null, 2);
 };
 
