@@ -1,16 +1,10 @@
-// See comment at https://dev.to/wtho/custom-service-worker-logic-in-typescript-on-vite-4f27#comment-1n0i7
-
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "lib": ["ESNext", "WebWorker"],
-    "noEmit": false,
-    "strict": false,
-    "outDir": "dist",
-    "target": "ESNext",
-    // Makes script require 'export' and Chrome will fail to load extensions with
-    // "Unexpected token 'export'"
-    "isolatedModules": false
+    "composite": true,
+    "module": "es2020",
+    "moduleResolution": "Node",
+    // Resulting files will be in dist/service-worker.js
+    "outDir": "dist"
   },
-  "include": ["service-worker/service-worker.ts"]
+  "include": ["service-worker/*.ts"]
 }
