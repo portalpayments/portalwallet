@@ -8,6 +8,7 @@
     "dev": "run-p --print-label dev:*",
     "dev:vite": "vite",
     "dev:serviceworker": "tsc --watch --project tsconfig.serviceworker.json",
+    "dev:manifest": "bash watch-manifest.bash",
     "build": "run-p build:frontend build:serviceworker",
     "build:frontend": "vite build",
     "build:serviceworker": "tsc --project tsconfig.serviceworker.json",
