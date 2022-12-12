@@ -65,36 +65,6 @@
 
   (async () => {
     isOnboarded = await checkIfOnboarded();
-    log(`isOnboarded is`, isOnboarded);
-
-    log(`Not contacting background page as not loaded as an extension`);
-    if ("serviceWorker" in navigator) {
-      // Register a service worker hosted at the root of the
-      // site using the default scope.
-      log(`Registering service worker...`);
-      let registration: ServiceWorkerRegistration | null = null;
-      try {
-        registration = await navigator.serviceWorker.register(
-          "./service-worker.js"
-        );
-        log("Service worker registration succeeded:", registration);
-        navigator.serviceWorker.controller.postMessage({
-          greeting: "hello from App.svelte",
-        });
-
-        // messages from service worker.
-
-        navigator.serviceWorker.onmessage = function (event) {
-          log("🟦 Got a message from the service worker", event.data);
-        };
-
-        return;
-      } catch (error) {
-        throw new Error(`Service worker registration failed`, error.message);
-      }
-    } else {
-      throw new Error("Service workers are not supported.");
-    }
   })();
 </script>
 

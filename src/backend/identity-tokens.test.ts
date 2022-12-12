@@ -22,6 +22,7 @@ import {
   SOLANA_SYSTEM_PROGRAM,
   SECONDS,
 } from "./constants";
+import base58 from "bs58";
 import { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
 
@@ -56,6 +57,11 @@ describe(`identity tokens`, () => {
       testIdentityTokenIssuer.publicKey,
       1_000_000_000
     );
+  });
+
+  test(`we can save Alice's secret key as a string`, async () => {
+    const stringKeypair = base58.encode(alice.secretKey);
+    expect(typeof stringKeypair === "string");
   });
 
   test(`we can mint an identity token for Alice`, async () => {

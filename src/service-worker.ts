@@ -3,13 +3,15 @@
 
 // For some reason have to shut up TS yet again (see above)
 // @ts-ignore
-const VERSION = 666;
+const VERSION = 21;
 
 const log = console.log.bind(console);
 
 const stringify = function (object) {
   return JSON.stringify(object, null, 2);
 };
+
+let secretKey: string;
 
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 // and https://github.com/GoogleChrome/chrome-extensions-samples
@@ -36,11 +38,28 @@ self.addEventListener("message", (event) => {
   log("✅: recieved message", stringify(event.data));
   log(event.data);
 
-  self.clients.matchAll(/* search options */).then((clients) => {
-    if (clients && clients.length) {
-      // you need to decide which clients you want to send the message to..
-      const firstClient = clients[0];
-      firstClient.postMessage("your message");
+  if (event.data.topic === "requestSecretKey") {
+    log(`Service worker: we recieved a request for the secret key`);
+    if (secretKey) {
+      log(`Service worker: good news, we have the secret key`);
+      // TODO: use await if possible
+      self.clients.matchAll(/* search options */).then((clients) => {
+        if (clients && clients.length) {
+          // TODO: sending to all clients, probably not necessary
+          const firstClient = clients[0];
+          firstClient.postMessage({
+            topic: "replySecretKey",
+            secretKey,
+          });
+        }
+      });
+    } else {
+      log(`bad news, we do not have the secret key`);
     }
-  });
+  }
+
+  if (event.data.topic === "setSecretKey") {
+    log(`Service worker: we recieved a request to get the secret key`);
+    secretKey = event.data.secretKey;
+  }
 });

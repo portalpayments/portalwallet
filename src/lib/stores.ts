@@ -10,13 +10,18 @@ import {
 import { asyncMap, log, stringify } from "../backend/functions";
 import {
   getContactsFromTransactions,
+  getKeypairFromString,
   getNativeAccountSummary,
   getTokenAccountSummaries,
 } from "../backend/vmwallet";
 import { NOT_FOUND } from "../backend/constants";
+import base58 from "bs58";
 
 let connection: Connection | null;
 let keyPair: Keypair | null;
+
+const SERVICE_WORKER = globalThis?.navigator?.serviceWorker || null;
+const HAS_SERVICE_WORKER = Boolean(SERVICE_WORKER);
 
 // Our connection to Solana
 export const connectionStore: Writable<null | Connection> = writable(null);
@@ -141,6 +146,61 @@ authStore.subscribe((newValue) => {
   if (newValue.keyPair) {
     log(`🗝️ keyPair has changed, updating accounts`);
     keyPair = newValue.keyPair;
+    if (HAS_SERVICE_WORKER) {
+      log(`Setting secret key on service worker`);
+      SERVICE_WORKER.controller.postMessage({
+        // Post a message telling the serviceWorker about the secretKey
+        topic: "setSecretKey",
+        secretKey: base58.encode(newValue.keyPair.secretKey),
+      });
+    }
+
     updateAccounts();
   }
 });
+
+const setupServiceWorker = async () => {
+  if (HAS_SERVICE_WORKER) {
+    // Register a service worker hosted at the root of the
+    // site using the default scope.
+    log(`Registering service worker...`);
+    let registration: ServiceWorkerRegistration | null = null;
+    try {
+      registration = await SERVICE_WORKER.register("./service-worker.js");
+    } catch (error) {
+      throw new Error(`Service worker registration failed`, error.message);
+    }
+
+    log("Service worker registration succeeded:", registration);
+    SERVICE_WORKER.controller.postMessage({
+      // Post a message asking for secret key
+      topic: "requestSecretKey",
+    });
+
+    // messages from service worker
+    SERVICE_WORKER.onmessage = function (event) {
+      log(
+        "🟦 Got a message from the service worker - we might have a cached secret key",
+        event.data
+      );
+      if (event.data.topic === "replySecretKey") {
+        log(`secret key is `, event.data.secretKey);
+        if (event.data.secretKey) {
+          log(`we have a secret key! Setting it.`);
+          authStore.set({
+            isLoggedIn: true,
+            keyPair: getKeypairFromString(event.data.secretKey),
+          });
+        } else {
+          log(`We don't have a cached secret key`);
+        }
+      }
+    };
+  } else {
+    log(
+      `Not contacting service worker as not loaded as an extension (or running in node)`
+    );
+  }
+};
+
+setupServiceWorker();
