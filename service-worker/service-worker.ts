@@ -1,4 +1,7 @@
 // @ts-nocheck
+// Nocheck because TS doesn't know about service worker types
+
+const VERSION = 1;
 
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 // and https://github.com/GoogleChrome/chrome-extensions-samples
@@ -10,19 +13,19 @@ const stringify = (object: any) => {
 };
 // From https://dev.to/wtho/custom-service-worker-logic-in-typescript-on-vite-4f27
 
-log(`Hello from service worker FRIDAY NIGHT`);
+log(`Parsing service worker version: ${VERSION}`);
 
 // https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/how-to/service-workers
 self.addEventListener("install", function (event) {
   // From https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope/skipWaiting
   // 'forces the waiting service worker to become the active service worker.'
   self.skipWaiting();
-  log("WORKER: install event in progress FRIDAY NIGHT.");
+  log(`INSTALL service worker version: ${VERSION}`);
   log(`globalThis is`, globalThis);
 });
 
 self.addEventListener("activate", (event) => {
-  log("WORKER: activate event in progress.");
+  log(`ACTIVATE service worker version: ${VERSION}`);
   log(event);
 });
 
