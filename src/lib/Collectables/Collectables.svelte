@@ -78,11 +78,16 @@
   {:else if collectables.length}
     <div class="nfts">
       {#each collectables as collectable}
-        <img
-          src={collectable.image}
-          alt={collectable.description}
-          class="shadow"
-        />
+        <div class="collectable">
+          <img
+            src={collectable.image}
+            alt={collectable.description}
+            class="shadow"
+          />
+          <div class="description">
+            <div class="name">{collectable.name}</div>
+          </div>
+        </div>
       {/each}
     </div>
   {:else}
@@ -110,13 +115,19 @@
     padding: 12px;
     gap: 12px;
     grid-template-columns: 1fr 1fr;
-    grid-auto-rows: 165px;
+    grid-auto-rows: 192px;
   }
   img {
     width: 100%;
-    height: 100%;
+    height: 172px;
     border-radius: 10px;
     object-fit: cover;
     background-color: var(--light-grey);
+  }
+
+  .description {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
   }
 </style>
