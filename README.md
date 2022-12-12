@@ -1,6 +1,5 @@
 # Portal Wallet
 
-**[Investors - see README-TEST-WALLET.md](./README-TEST-WALLET.md)**
 
 ## A crypto wallet for regular people
 
