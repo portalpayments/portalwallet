@@ -65,6 +65,7 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    background-color: transparent;
     /* Let's animate the button fade */
     transition: all 200ms ease-in-out;
   }
