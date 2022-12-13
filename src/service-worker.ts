@@ -1,10 +1,9 @@
-// @ts-nocheck
-// Nocheck because TS service worker types support has a number of major bugs
+// Service worker types support has a number of major bugs
 // See https://joshuatz.com/posts/2021/strongly-typed-service-workers/
 // Compiling with tsconfig specified in that blog post creates a service worker that won't install.
+// Proper TS support is a huge time suck, be warned! Best wait until bugs mentioned above are fixed.
 
-// For some reason have to shut up TS yet again (see above)
-// @ts-ignore
+// @ts-ignore see top of file
 const VERSION = 21;
 
 const log = console.log.bind(console);
@@ -28,6 +27,7 @@ const handleMessage = async (eventData) => {
     if (secretKey) {
       log(`Service worker: good news, we have the secret key`);
 
+      // @ts-ignore see top of file
       const clients = await self.clients.matchAll();
       if (clients && clients.length) {
         // TODO: we always send to first client. Not sure if this is correct.
@@ -52,6 +52,8 @@ const handleMessage = async (eventData) => {
 self.addEventListener("install", function (event) {
   // From https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope/skipWaiting
   // 'forces the waiting service worker to become the active service worker.'
+
+  // @ts-ignore see top of file
   self.skipWaiting();
   log(`INSTALL service worker version: ${VERSION}`);
   log(`globalThis is`, globalThis);
