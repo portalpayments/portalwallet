@@ -130,7 +130,6 @@ export const checkIfOnboarded = async () => {
   return Boolean(settings);
 };
 
-// Was getSecretKey
 export const getSettings = async (password: string): Promise<Settings> => {
   const decryptionKey: CryptoKey = await passwordToKey(password);
   const initialisationVector = await getOrSetInitialisationVector();

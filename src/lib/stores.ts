@@ -7,14 +7,14 @@ import {
   type AccountSummary,
   type Contact,
 } from "../lib/types";
-import { asyncMap, log, stringify } from "../backend/functions";
+import { asyncMap, log, sleep, stringify } from "../backend/functions";
 import {
   getContactsFromTransactions,
   getKeypairFromString,
   getNativeAccountSummary,
   getTokenAccountSummaries,
 } from "../backend/vmwallet";
-import { NOT_FOUND } from "../backend/constants";
+import { NOT_FOUND, SECONDS } from "../backend/constants";
 import base58 from "bs58";
 
 let connection: Connection | null;
@@ -86,7 +86,7 @@ export const haveAccountsLoadedStore: Writable<boolean> = writable(false);
 
 export const hasUSDCAccountStore: Writable<boolean | null> = writable(null);
 
-const updateAccounts = async () => {
+const updateAccounts = async (useCache = true) => {
   if (!connection) {
     return;
   }
@@ -97,20 +97,43 @@ const updateAccounts = async () => {
   log(`Updating accounts...`);
 
   log(`Updating Solana account....`);
-  const nativeAccountSummary: AccountSummary = await getNativeAccountSummary(
-    connection,
-    keyPair
-  );
-  nativeAccountStore.set(nativeAccountSummary);
+  if (getFromStore(nativeAccountStore) && useCache) {
+    log(`No need to update Solana account, it's not null`);
+  } else {
+    const nativeAccountSummary: AccountSummary = await getNativeAccountSummary(
+      connection,
+      keyPair
+    );
+    nativeAccountStore.set(nativeAccountSummary);
+    if (HAS_SERVICE_WORKER) {
+      log(`Saving nativeAccountSummary to serviceworker`);
+      SERVICE_WORKER.controller.postMessage({
+        topic: "setNativeAccountSummary",
+        nativeAccountSummary,
+      });
+    }
+  }
 
   log(`Updating token accounts...`);
-  const tokenAccountSummaries: Array<AccountSummary> =
-    await getTokenAccountSummaries(connection, keyPair);
-  tokenAccountsStore.set(tokenAccountSummaries);
+  if (getFromStore(tokenAccountsStore) && useCache) {
+    log(`No need to update Token accounts its previously been set`);
+  } else {
+    const tokenAccountSummaries: Array<AccountSummary> =
+      await getTokenAccountSummaries(connection, keyPair);
+    tokenAccountsStore.set(tokenAccountSummaries);
+    haveAccountsLoadedStore.set(true);
+    if (HAS_SERVICE_WORKER) {
+      log(`Saving tokenAccountSummaries to serviceworker`);
+      SERVICE_WORKER.controller.postMessage({
+        topic: "setTokenAccountSummaries",
+        tokenAccountSummaries,
+      });
+    }
+  }
 
-  haveAccountsLoadedStore.set(true);
-
+  // TODO: add hasUSDCAccount and contacts to Service Worker
   log(`Finding USDC account...`);
+  const tokenAccountSummaries = getFromStore(tokenAccountsStore);
   const usdcAccountIndex = tokenAccountSummaries.findIndex(
     (accountSummary) => accountSummary.currency === Currency.USDC
   );
@@ -125,6 +148,7 @@ const updateAccounts = async () => {
   activeAccountIndexStore.set(usdcAccountIndex);
 
   log(`Getting contacts for all transactions`);
+  const nativeAccountSummary = getFromStore(nativeAccountStore);
   const contacts = await getContactsFromTransactions(
     connection,
     keyPair,
@@ -172,20 +196,25 @@ const setupServiceWorker = async () => {
     }
 
     log("Service worker registration succeeded:", registration);
+
+    // Post messaging asking for all the things we'd like to get from the cache
     SERVICE_WORKER.controller.postMessage({
-      // Post a message asking for secret key
       topic: "getSecretKey",
+    });
+    SERVICE_WORKER.controller.postMessage({
+      topic: "getNativeAccountSummary",
+    });
+    SERVICE_WORKER.controller.postMessage({
+      topic: "getTokenAccountSummaries",
     });
 
     // messages from service worker
     SERVICE_WORKER.onmessage = function (event) {
       log(
-        "🟦 Got a message from the service worker - we might have a cached secret key",
-        event.data
+        `📩 Got a message from the service worker on this topic ${event.data.topic}`
       );
       if (event.data.topic === "replySecretKey") {
         const secretKey = event.data.secretKey;
-        log(`secret key is `, secretKey);
         if (secretKey) {
           log(`we have a secret key! Setting it.`);
           authStore.set({
@@ -194,6 +223,38 @@ const setupServiceWorker = async () => {
           });
         } else {
           log(`We don't have a cached secret key`);
+        }
+      }
+
+      if (event.data.topic === "replyNativeAccountSummary") {
+        const nativeAccountSummary = event.data
+          .nativeAccountSummary as AccountSummary;
+        log(
+          `nativeAccountSummary reply from Service Worker with  ${nativeAccountSummary.transactionSummaries.length} transactions`
+        );
+        if (nativeAccountSummary) {
+          log(
+            `we have recieved a nativeAccountSummary from the service worker! Setting it.`
+          );
+          nativeAccountStore.set(nativeAccountSummary);
+        } else {
+          log(`We don't have a nativeAccountSummary from the service worker`);
+        }
+      }
+
+      if (event.data.topic === "replyTokenAccountSummaries") {
+        const tokenAccountSummaries = event.data
+          .tokenAccountSummaries as Array<AccountSummary>;
+        log(
+          `tokenAccountSummaries reply from Service Worker with  ${tokenAccountSummaries.length} token accounts`
+        );
+        if (tokenAccountSummaries) {
+          log(
+            `we have recieved tokenAccountSummaries from the service worker! Setting it.`
+          );
+          tokenAccountsStore.set(tokenAccountSummaries);
+        } else {
+          log(`We don't have tokenAccountSummaries from the service worker`);
         }
       }
     };

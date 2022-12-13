@@ -14,6 +14,11 @@ const stringify = function (object) {
 
 let secretKey: string | null = null;
 
+// TODO: this is not the correct type (AccountSummary, Array<AccountSummary>) but loading types is currently causing
+// service workers that won't install
+let nativeAccountSummary: Record<string, any> | null = null;
+let tokenAccountSummaries: Array<any> | null = null;
+
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 // and https://github.com/GoogleChrome/chrome-extensions-samples
 
@@ -22,8 +27,9 @@ let secretKey: string | null = null;
 log(`Parsing service worker version: ${VERSION}`);
 
 const handleMessage = async (eventData) => {
+  log(`📩 Got a message from the app on this topic ${eventData.topic}`);
+
   if (eventData.topic === "getSecretKey") {
-    log(`Service worker: we recieved a request for the secret key`);
     if (secretKey) {
       log(`Service worker: good news, we have the secret key`);
 
@@ -43,8 +49,53 @@ const handleMessage = async (eventData) => {
   }
 
   if (eventData.topic === "setSecretKey") {
-    log(`Service worker: we recieved a request to get the secret key`);
     secretKey = eventData.secretKey;
+  }
+
+  if (eventData.topic === "setNativeAccountSummary") {
+    nativeAccountSummary = eventData.nativeAccountSummary;
+  }
+
+  if (eventData.topic === "getNativeAccountSummary") {
+    if (nativeAccountSummary) {
+      log(`Service worker: good news, we have the nativeAccountSummary`);
+
+      // @ts-ignore see top of file
+      const clients = await self.clients.matchAll();
+      if (clients && clients.length) {
+        // TODO: we always send to first client. Not sure if this is correct.
+        const firstClient = clients[0];
+        firstClient.postMessage({
+          topic: "replyNativeAccountSummary",
+          nativeAccountSummary,
+        });
+      }
+    } else {
+      log(`bad news, we do not have the nativeAccountSummary`);
+    }
+  }
+
+  if (eventData.topic === "setTokenAccountSummaries") {
+    tokenAccountSummaries = eventData.tokenAccountSummaries;
+  }
+
+  if (eventData.topic === "getTokenAccountSummaries") {
+    if (tokenAccountSummaries) {
+      log(`Service worker: good news, we have the tokenAccountSummaries`);
+
+      // @ts-ignore see top of file
+      const clients = await self.clients.matchAll();
+      if (clients && clients.length) {
+        // TODO: we always send to first client. Not sure if this is correct.
+        const firstClient = clients[0];
+        firstClient.postMessage({
+          topic: "replyTokenAccountSummaries",
+          tokenAccountSummaries,
+        });
+      }
+    } else {
+      log(`bad news, we do not have the tokenAccountSummaries`);
+    }
   }
 };
 
