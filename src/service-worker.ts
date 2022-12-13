@@ -61,7 +61,6 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("message", (event) => {
-  log("✅: recieved message", stringify(event.data));
-  log(event.data);
+  log("✅: recieved message on topic", stringify(event.data.topic));
   handleMessage(event.data);
 });
