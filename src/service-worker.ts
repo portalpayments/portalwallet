@@ -1,5 +1,7 @@
 // @ts-nocheck
-// Nocheck because TS doesn't know about service worker types
+// Nocheck because TS service worker types support has a number of major bugs
+// See https://joshuatz.com/posts/2021/strongly-typed-service-workers/
+// Compiling with tsconfig specified in that blog post creates a service worker that won't install.
 
 // For some reason have to shut up TS yet again (see above)
 // @ts-ignore
