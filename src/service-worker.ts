@@ -20,6 +20,32 @@ let secretKey: string;
 
 log(`Parsing service worker version: ${VERSION}`);
 
+const handleMessage = async (eventData) => {
+  if (eventData.topic === "requestSecretKey") {
+    log(`Service worker: we recieved a request for the secret key`);
+    if (secretKey) {
+      log(`Service worker: good news, we have the secret key`);
+
+      const clients = await self.clients.matchAll();
+      if (clients && clients.length) {
+        // TODO: we always send to first client. Not sure if this is correct.
+        const firstClient = clients[0];
+        firstClient.postMessage({
+          topic: "replySecretKey",
+          secretKey,
+        });
+      }
+    } else {
+      log(`bad news, we do not have the secret key`);
+    }
+  }
+
+  if (eventData.topic === "setSecretKey") {
+    log(`Service worker: we recieved a request to get the secret key`);
+    secretKey = eventData.secretKey;
+  }
+};
+
 // https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/how-to/service-workers
 self.addEventListener("install", function (event) {
   // From https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope/skipWaiting
@@ -37,29 +63,5 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("message", (event) => {
   log("✅: recieved message", stringify(event.data));
   log(event.data);
-
-  if (event.data.topic === "requestSecretKey") {
-    log(`Service worker: we recieved a request for the secret key`);
-    if (secretKey) {
-      log(`Service worker: good news, we have the secret key`);
-      // TODO: use await if possible
-      self.clients.matchAll(/* search options */).then((clients) => {
-        if (clients && clients.length) {
-          // TODO: sending to all clients, probably not necessary
-          const firstClient = clients[0];
-          firstClient.postMessage({
-            topic: "replySecretKey",
-            secretKey,
-          });
-        }
-      });
-    } else {
-      log(`bad news, we do not have the secret key`);
-    }
-  }
-
-  if (event.data.topic === "setSecretKey") {
-    log(`Service worker: we recieved a request to get the secret key`);
-    secretKey = event.data.secretKey;
-  }
+  handleMessage(event.data);
 });
