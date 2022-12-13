@@ -174,7 +174,7 @@ const setupServiceWorker = async () => {
     log("Service worker registration succeeded:", registration);
     SERVICE_WORKER.controller.postMessage({
       // Post a message asking for secret key
-      topic: "requestSecretKey",
+      topic: "getSecretKey",
     });
 
     // messages from service worker
@@ -184,12 +184,13 @@ const setupServiceWorker = async () => {
         event.data
       );
       if (event.data.topic === "replySecretKey") {
-        log(`secret key is `, event.data.secretKey);
-        if (event.data.secretKey) {
+        const secretKey = event.data.secretKey;
+        log(`secret key is `, secretKey);
+        if (secretKey) {
           log(`we have a secret key! Setting it.`);
           authStore.set({
             isLoggedIn: true,
-            keyPair: getKeypairFromString(event.data.secretKey),
+            keyPair: getKeypairFromString(secretKey),
           });
         } else {
           log(`We don't have a cached secret key`);

@@ -12,7 +12,7 @@ const stringify = function (object) {
   return JSON.stringify(object, null, 2);
 };
 
-let secretKey: string;
+let secretKey: string | null = null;
 
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 // and https://github.com/GoogleChrome/chrome-extensions-samples
@@ -22,7 +22,7 @@ let secretKey: string;
 log(`Parsing service worker version: ${VERSION}`);
 
 const handleMessage = async (eventData) => {
-  if (eventData.topic === "requestSecretKey") {
+  if (eventData.topic === "getSecretKey") {
     log(`Service worker: we recieved a request for the secret key`);
     if (secretKey) {
       log(`Service worker: good news, we have the secret key`);
