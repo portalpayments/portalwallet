@@ -85,13 +85,14 @@ describe("minting and USDC-like transfers", () => {
 
     expect(alicesTokenAccount.address).toBeInstanceOf(PublicKey);
 
-    const alicesTokenAccountInformation = await getAccount(
+    const alicesTokenAccountUpdated = await getAccount(
       connection,
       alicesTokenAccount.address
     );
 
-    expect(alicesTokenAccountInformation).toEqual({
+    expect(alicesTokenAccountUpdated).toEqual({
       address: alicesTokenAccount.address,
+      // No tokens are minted yet
       amount: 0n,
       closeAuthority: null,
       delegate: null,
@@ -105,7 +106,8 @@ describe("minting and USDC-like transfers", () => {
       tlvData: expect.anything(),
     });
 
-    // TODO: not sure if we need to do this as we already have .amount above - we should check later once we have transfers working
+    // Redundant as we already have alicesTokenAccountUpdated.amount above, but let's
+    // test getTokenAccountBalance() anyway
     let tokenAmount = await connection.getTokenAccountBalance(
       alicesTokenAccount.address
     );
