@@ -25,7 +25,10 @@
   let hasUSDCAccount: boolean = false;
 
   hasUSDCAccountStore.subscribe((newValue) => {
-    hasUSDCAccount = newValue;
+    // Distinguish between null (we don't know) and false (we know, they don't have a USDC account)
+    if (newValue !== null) {
+      hasUSDCAccount = newValue;
+    }
   });
 
   haveAccountsLoadedStore.subscribe((newValue) => {
