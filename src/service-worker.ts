@@ -58,7 +58,7 @@ const handleMessage = async (eventData) => {
 
   if (eventData.topic === "getSecretKey") {
     if (secretKey) {
-      log(`Service worker: good news, we have the secret key`);
+      log(`😃 Service worker cache: we have the secret key`);
 
       sendMessage({
         topic: "replySecretKey",
@@ -75,7 +75,7 @@ const handleMessage = async (eventData) => {
 
   if (eventData.topic === "getNativeAccountSummary") {
     if (nativeAccountSummary) {
-      log(`Service worker: good news, we have the nativeAccountSummary`);
+      log(`😃 Service worker cache: we have the nativeAccountSummary`);
 
       sendMessage({
         topic: "replyNativeAccountSummary",
@@ -92,7 +92,7 @@ const handleMessage = async (eventData) => {
 
   if (eventData.topic === "getTokenAccountSummaries") {
     if (tokenAccountSummaries) {
-      log(`Service worker: good news, we have the tokenAccountSummaries`);
+      log(`😃 Service worker cache: we have the tokenAccountSummaries`);
 
       sendMessage({
         topic: "replyTokenAccountSummaries",
@@ -109,7 +109,7 @@ const handleMessage = async (eventData) => {
 
   if (eventData.topic === "getContacts") {
     if (contacts) {
-      log(`Service worker: good news, we have the contacts`);
+      log(`😃 Service worker cache: we have the contacts`);
       sendMessage({
         topic: "replyContacts",
         contacts,
