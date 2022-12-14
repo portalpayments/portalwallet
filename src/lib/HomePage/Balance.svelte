@@ -60,7 +60,7 @@
       </div>
     {:else}
       <div class="symbol-major-minor">
-        <img class="symbol" alt="USDC logo" src={CURRENCY_ICONS.USDC.blue} />
+        <img class="symbol" alt="USDC logo" src={CURRENCY_ICONS.USDC.grey} />
         <div class="major">0</div>
         <div class="minor">.0</div>
       </div>
