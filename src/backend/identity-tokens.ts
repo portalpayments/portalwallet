@@ -23,11 +23,10 @@ import {
 } from "./constants";
 import { stringify } from "./functions";
 
-// TODO maybe use node fetch after node 18
-import axios from "axios";
 import type { TokenMetaData, ExpandedNFT } from "./types";
 import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
 import { connect } from "./vmwallet";
+import { httpGet } from "src/lib/utils";
 
 const name = IDENTITY_TOKEN_NAME;
 
@@ -223,8 +222,8 @@ export const getFullNFTsFromWallet = async (
 
   const nftData = await asyncMap(nfts, async (nft) => {
     try {
-      const response = await axios.get(nft.uri);
-      const datum = response.data;
+      const responseBody = await httpGet(nft.uri);
+      const datum = responseBody;
       return datum;
     } catch (thrownObject) {
       const error = thrownObject as Error;
