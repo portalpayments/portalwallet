@@ -56,8 +56,6 @@ log(`Parsing service worker version: ${VERSION}`);
 const handleMessage = async (eventData) => {
   log(`📩 Got a message from the app on this topic ${eventData.topic}`);
 
-  // TODO: get before set
-
   if (eventData.topic === "getSecretKey") {
     if (secretKey) {
       log(`Service worker: good news, we have the secret key`);
@@ -75,10 +73,6 @@ const handleMessage = async (eventData) => {
     secretKey = eventData.secretKey;
   }
 
-  if (eventData.topic === "setNativeAccountSummary") {
-    nativeAccountSummary = eventData.nativeAccountSummary;
-  }
-
   if (eventData.topic === "getNativeAccountSummary") {
     if (nativeAccountSummary) {
       log(`Service worker: good news, we have the nativeAccountSummary`);
@@ -92,8 +86,8 @@ const handleMessage = async (eventData) => {
     }
   }
 
-  if (eventData.topic === "setTokenAccountSummaries") {
-    tokenAccountSummaries = eventData.tokenAccountSummaries;
+  if (eventData.topic === "setNativeAccountSummary") {
+    nativeAccountSummary = eventData.nativeAccountSummary;
   }
 
   if (eventData.topic === "getTokenAccountSummaries") {
@@ -109,8 +103,8 @@ const handleMessage = async (eventData) => {
     }
   }
 
-  if (eventData.topic === "setContacts") {
-    contacts = eventData.contacts;
+  if (eventData.topic === "setTokenAccountSummaries") {
+    tokenAccountSummaries = eventData.tokenAccountSummaries;
   }
 
   if (eventData.topic === "getContacts") {
@@ -123,6 +117,10 @@ const handleMessage = async (eventData) => {
     } else {
       log(`Service worker does not have Contacts`);
     }
+  }
+
+  if (eventData.topic === "setContacts") {
+    contacts = eventData.contacts;
   }
 };
 
