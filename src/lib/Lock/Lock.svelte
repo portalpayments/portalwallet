@@ -63,7 +63,7 @@
           on:click|preventDefault={() => {
             login(password);
           }}
-          class="primary small-caps login-button">Log in</button
+          class="primary small-caps login-button shadow">Log in</button
         >
       </div>
     </div>
