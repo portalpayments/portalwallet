@@ -1,5 +1,4 @@
 import {
-  deepClone,
   asyncMap,
   sleep,
   stringify,
@@ -14,30 +13,6 @@ import {
 import { SECOND, SECONDS } from "./constants";
 
 jest.mock("./functions");
-
-describe(`deepClone`, () => {
-  it(`Deep clones object`, () => {
-    const names = ["frank"];
-    const original = { names };
-    const clone = deepClone(original);
-    names.push("nancy");
-    expect(clone.names).toEqual(["frank"]);
-  });
-
-  it(`Deep clones arrays`, () => {
-    const shopping = [
-      {
-        bananas: {
-          isPurchased: false,
-        },
-      },
-    ];
-    const original = shopping;
-    const clone = deepClone(original);
-    shopping[0].bananas.isPurchased = true;
-    expect(clone[0].bananas.isPurchased).toBeFalsy();
-  });
-});
 
 describe(`print`, () => {
   it(`formats objects nicely`, () => {

@@ -4,7 +4,6 @@ const actualFunctions = jest.requireActual("../functions");
 export const log = jest.fn();
 
 // Use actual implementation of everything else
-export const deepClone = actualFunctions.deepClone;
 export const toUnique = actualFunctions.toUnique;
 export const adjustYear = actualFunctions.adjustYear;
 export const encodeToBase64 = actualFunctions.encodeToBase64;

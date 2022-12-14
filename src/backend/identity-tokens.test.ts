@@ -14,7 +14,7 @@ import {
   putSolIntoWallet,
   verifyWallet,
 } from "./vmwallet";
-import { deepClone, log, sleep, stringify } from "./functions";
+import { log, sleep, stringify } from "./functions";
 import {
   IDENTITY_TOKEN_NAME,
   ONE,

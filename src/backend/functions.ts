@@ -3,16 +3,6 @@ const decoder = new TextDecoder("utf-8");
 
 import base58 from "bs58";
 
-// TODO: can be replaced with https://developer.mozilla.org/en-US/docs/Web/API/structuredClone
-// once we upgrade to node 18 and later (we could also use a polyfill if we wanted)
-// We need the 'any' below as using 'unknown' will cause cloned objects to have the wrong type
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const deepClone = <Type extends Record<string, any> | Array<unknown>>(
-  object: Type
-): Type => {
-  return JSON.parse(JSON.stringify(object));
-};
-
 export const toUnique = function <T>(array: Array<T>): Array<T> {
   return Array.from(new Set(array));
 };
