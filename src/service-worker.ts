@@ -36,6 +36,16 @@ interface Contact {
 
 let contacts: Array<Contact> | null = null;
 
+const sendMessage = async (message: Record<string, any>) => {
+  // @ts-ignore see top of file
+  const clients = await self.clients.matchAll();
+  if (clients && clients.length) {
+    // TODO: we always send to first client. Not sure if this is correct.
+    const firstClient = clients[0];
+    firstClient.postMessage(message);
+  }
+};
+
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 // and https://github.com/GoogleChrome/chrome-extensions-samples
 
@@ -52,17 +62,10 @@ const handleMessage = async (eventData) => {
     if (secretKey) {
       log(`Service worker: good news, we have the secret key`);
 
-      // TODO: make all this generics
-      // @ts-ignore see top of file
-      const clients = await self.clients.matchAll();
-      if (clients && clients.length) {
-        // TODO: we always send to first client. Not sure if this is correct.
-        const firstClient = clients[0];
-        firstClient.postMessage({
-          topic: "replySecretKey",
-          secretKey,
-        });
-      }
+      sendMessage({
+        topic: "replySecretKey",
+        secretKey,
+      });
     } else {
       log(`bad news, we do not have the secret key`);
     }
@@ -80,16 +83,10 @@ const handleMessage = async (eventData) => {
     if (nativeAccountSummary) {
       log(`Service worker: good news, we have the nativeAccountSummary`);
 
-      // @ts-ignore see top of file
-      const clients = await self.clients.matchAll();
-      if (clients && clients.length) {
-        // TODO: we always send to first client. Not sure if this is correct.
-        const firstClient = clients[0];
-        firstClient.postMessage({
-          topic: "replyNativeAccountSummary",
-          nativeAccountSummary,
-        });
-      }
+      sendMessage({
+        topic: "replyNativeAccountSummary",
+        nativeAccountSummary,
+      });
     } else {
       log(`bad news, we do not have the nativeAccountSummary`);
     }
@@ -103,16 +100,10 @@ const handleMessage = async (eventData) => {
     if (tokenAccountSummaries) {
       log(`Service worker: good news, we have the tokenAccountSummaries`);
 
-      // @ts-ignore see top of file
-      const clients = await self.clients.matchAll();
-      if (clients && clients.length) {
-        // TODO: we always send to first client. Not sure if this is correct.
-        const firstClient = clients[0];
-        firstClient.postMessage({
-          topic: "replyTokenAccountSummaries",
-          tokenAccountSummaries,
-        });
-      }
+      sendMessage({
+        topic: "replyTokenAccountSummaries",
+        tokenAccountSummaries,
+      });
     } else {
       log(`bad news, we do not have the tokenAccountSummaries`);
     }
@@ -125,16 +116,10 @@ const handleMessage = async (eventData) => {
   if (eventData.topic === "getContacts") {
     if (contacts) {
       log(`Service worker: good news, we have the contacts`);
-      // @ts-ignore see top of file
-      const clients = await self.clients.matchAll();
-      if (clients && clients.length) {
-        // TODO: we always send to first client. Not sure if this is correct.
-        const firstClient = clients[0];
-        firstClient.postMessage({
-          topic: "replyContacts",
-          contacts,
-        });
-      }
+      sendMessage({
+        topic: "replyContacts",
+        contacts,
+      });
     } else {
       log(`bad news, we do not have Contacts`);
     }
