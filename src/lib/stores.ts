@@ -29,7 +29,7 @@ connectionStore.subscribe((newValue) => {
   connection = newValue;
 });
 
-export const contactsStore: Writable<Array<Contact>> = writable([]);
+export const contactsStore: Writable<null | Array<Contact>> = writable(null);
 
 // number for a numbered token account, "native" for Solana
 export const activeAccountIndexStore: Writable<number | "native" | null> =
@@ -131,7 +131,26 @@ const updateAccounts = async (useCache = true) => {
     }
   }
 
-  // TODO: add hasUSDCAccount and contacts to Service Worker
+  log(`Getting contacts used in transactions`);
+  if (getFromStore(contactsStore) && useCache) {
+    log(`No need to update Contact as it's previously been set`);
+  } else {
+    // TODO just get these values once earlier in the function
+    const nativeAccountSummary = getFromStore(nativeAccountStore);
+    const tokenAccountsSummaries = getFromStore(tokenAccountsStore);
+    const contacts = await getContactsFromTransactions(
+      connection,
+      keyPair,
+      nativeAccountSummary,
+      tokenAccountsSummaries
+    );
+    contactsStore.set(contacts);
+  }
+
+  // TODO: add to the store wheher the service worker has been checked yet
+  // then have App.js check that value
+
+  // We could add hasUSDCAccount to Service Worker but it's [robbaly easier to just checl
   log(`Finding USDC account...`);
   const tokenAccountSummaries = getFromStore(tokenAccountsStore);
   const usdcAccountIndex = tokenAccountSummaries.findIndex(
@@ -146,16 +165,6 @@ const updateAccounts = async (useCache = true) => {
   log(`Found USDC account`);
   hasUSDCAccountStore.set(true);
   activeAccountIndexStore.set(usdcAccountIndex);
-
-  log(`Getting contacts for all transactions`);
-  const nativeAccountSummary = getFromStore(nativeAccountStore);
-  const contacts = await getContactsFromTransactions(
-    connection,
-    keyPair,
-    nativeAccountSummary,
-    tokenAccountSummaries
-  );
-  contactsStore.set(contacts);
 };
 
 connectionStore.subscribe((newValue) => {

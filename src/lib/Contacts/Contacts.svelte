@@ -9,7 +9,9 @@
   let contacts: Array<Contact>;
 
   contactsStore.subscribe((newValue) => {
-    contacts = newValue;
+    if (newValue) {
+      contacts = newValue;
+    }
   });
 </script>
 

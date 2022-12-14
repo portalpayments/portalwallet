@@ -14,22 +14,32 @@
   export let decimals: number;
 
   // Find the contact for this transaction
+
+  // TODO - we could just make a prop for the contact
+  // and the parent could provide the contact
+  // rather than having every single Transaction subscribe
+
+  // TODO: cache the NFTs
+  // TODO: cache the profile images
+
   let contact: Contact | null = null;
-  contactsStore.subscribe(async (contacts) => {
-    let contactWalletAddress: string | null = null;
-    if (transaction.direction === Direction.sent) {
-      contactWalletAddress = transaction.to;
-    }
-    if (transaction.direction === Direction.recieved) {
-      contactWalletAddress = transaction.from;
-    }
-    contact = contacts.find(
-      (contact) => contact.walletAddress === contactWalletAddress
-    );
-    if (!contact) {
-      log(
-        `Contact for ${contactWalletAddress} used in this transaction hasn't yet loaded in contact store`
+  contactsStore.subscribe(async (newValue) => {
+    if (newValue) {
+      let contactWalletAddress: string | null = null;
+      if (transaction.direction === Direction.sent) {
+        contactWalletAddress = transaction.to;
+      }
+      if (transaction.direction === Direction.recieved) {
+        contactWalletAddress = transaction.from;
+      }
+      contact = newValue.find(
+        (contact) => contact.walletAddress === contactWalletAddress
       );
+      if (!contact) {
+        log(
+          `Contact for ${contactWalletAddress} used in this transaction hasn't yet loaded in contact store`
+        );
+      }
     }
   });
 

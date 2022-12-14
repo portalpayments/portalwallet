@@ -14,10 +14,27 @@ const stringify = function (object) {
 
 let secretKey: string | null = null;
 
+// TODO: load everything in parallel using asyncMap()
+
 // TODO: this is not the correct type (AccountSummary, Array<AccountSummary>) but loading types is currently causing
 // service workers that won't install
 let nativeAccountSummary: Record<string, any> | null = null;
 let tokenAccountSummaries: Array<any> | null = null;
+
+// TODO: copied from contacts
+interface Contact {
+  walletAddress: string;
+  isNew: boolean;
+  isPending: boolean;
+  verifiedClaims: {
+    type: "INDIVIDUAL" | "ORGANIZATION";
+    givenName: string;
+    familyName: string;
+    imageUrl: string;
+  };
+}
+
+let contacts: Array<Contact> | null = null;
 
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 // and https://github.com/GoogleChrome/chrome-extensions-samples
@@ -29,10 +46,13 @@ log(`Parsing service worker version: ${VERSION}`);
 const handleMessage = async (eventData) => {
   log(`📩 Got a message from the app on this topic ${eventData.topic}`);
 
+  // TODO: get before set
+
   if (eventData.topic === "getSecretKey") {
     if (secretKey) {
       log(`Service worker: good news, we have the secret key`);
 
+      // TODO: make all this generics
       // @ts-ignore see top of file
       const clients = await self.clients.matchAll();
       if (clients && clients.length) {
@@ -95,6 +115,28 @@ const handleMessage = async (eventData) => {
       }
     } else {
       log(`bad news, we do not have the tokenAccountSummaries`);
+    }
+  }
+
+  if (eventData.topic === "setContacts") {
+    contacts = eventData.contacts;
+  }
+
+  if (eventData.topic === "getContacts") {
+    if (contacts) {
+      log(`Service worker: good news, we have the contacts`);
+      // @ts-ignore see top of file
+      const clients = await self.clients.matchAll();
+      if (clients && clients.length) {
+        // TODO: we always send to first client. Not sure if this is correct.
+        const firstClient = clients[0];
+        firstClient.postMessage({
+          topic: "replyContacts",
+          contacts,
+        });
+      }
+    } else {
+      log(`bad news, we do not have Contacts`);
     }
   }
 };

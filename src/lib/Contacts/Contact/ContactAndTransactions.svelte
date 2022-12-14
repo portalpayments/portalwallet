@@ -13,13 +13,15 @@
   let contactWalletAddress: string = window.location.href.split("/").pop();
 
   contactsStore.subscribe((newValue) => {
-    const foundContact = newValue.find((contact) => {
-      return contact.walletAddress === contactWalletAddress;
-    });
-    if (!foundContact) {
-      throw new Error(`Could not find contact in contacts store`);
+    if (newValue) {
+      const foundContact = newValue.find((contact) => {
+        return contact.walletAddress === contactWalletAddress;
+      });
+      if (!foundContact) {
+        throw new Error(`Could not find contact in contacts store`);
+      }
+      contact = foundContact;
     }
-    contact = foundContact;
   });
 
   log(`Loading send to contact screen for ${contactWalletAddress}`);
