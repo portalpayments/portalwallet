@@ -166,11 +166,3 @@ HD keypair
 - https://buildspace.so/
 - https://crypto.stackexchange.com/questions/11269/can-keys-from-bitcoins-hierarchical-deterministic-wallets-be-correlated-reduci
 
-### TODO
-
-Make logout a different color
-
-Add version number to settings page
-
-Maybe try gradient underline
-Try just using face for link with blue bordwer
