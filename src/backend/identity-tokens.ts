@@ -26,7 +26,7 @@ import { stringify } from "./functions";
 import type { TokenMetaData, ExpandedNFT } from "./types";
 import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
 import { connect } from "./vmwallet";
-import { httpGet } from "src/lib/utils";
+import { httpGet } from "../lib/utils";
 
 const name = IDENTITY_TOKEN_NAME;
 
