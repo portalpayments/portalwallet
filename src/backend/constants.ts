@@ -71,11 +71,11 @@ export const KIMZO_NFT_ADDRESS = new PublicKey(
 export const USDC_MAINNET_MINT_ACCOUNT =
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 
-// TODO - check official docs, got from explorer
+// 'USDH ID' from https://docs.hubbleprotocol.io/resources/technical-resources
 export const USDH_MAINNET_MINT_ACCOUNT =
   "USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX";
 
-// TODO - check official docs, got from explorer
+// From https://tether.to/en/supported-protocols/
 export const USDT_MAINNET_MINT_ACCOUNT =
   "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB";
 
