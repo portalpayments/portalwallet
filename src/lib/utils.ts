@@ -110,10 +110,15 @@ export const checkIfValidWalletAddress = (walletAddress: string) => {
 
 export const truncateWallet = (wallet: string): string => {
   const start = wallet.slice(0, WALLET_CHARACTERS_TO_SHOW);
-  const lastCharacter = wallet.length - 1;
+  const lastCharacter = wallet.length;
   const end = wallet.slice(
     lastCharacter - WALLET_CHARACTERS_TO_SHOW,
     lastCharacter
   );
   return `${start}...${end}`;
+};
+
+export const copyToClipboard = (string: string) => {
+  // From https://developer.mozilla.org/en-US/docs/Web/API/Navigator/clipboard
+  return navigator.clipboard.writeText(string);
 };

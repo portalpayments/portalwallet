@@ -3,6 +3,7 @@ import {
   getFormattedMajorUnits,
   getFormattedMinorUnits,
   getMultiplier,
+  truncateWallet,
 } from "./utils";
 
 jest.mock("../backend/functions");
@@ -52,5 +53,11 @@ describe(`utils`, () => {
 
   test(`getFormattedMinorUnits returns nothing for .00`, async () => {
     expect(getFormattedMinorUnits(12345600)).toEqual("");
+  });
+
+  test(`truncateWallet truncates wallets properly`, () => {
+    expect(
+      truncateWallet("BfkRD3gGQGLjHxUw7oqhizkaxrDrw7itHT98f9j2gh6t")
+    ).toEqual("BfkRD...2gh6t");
   });
 });

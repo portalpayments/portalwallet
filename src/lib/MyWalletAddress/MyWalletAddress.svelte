@@ -2,17 +2,13 @@
   import BackButton from "../Shared/BackButton.svelte";
   import Heading from "../Shared/Heading.svelte";
   import QRCode from "../Shared/QRCode.svelte";
-  import CopyToClipboard from "../../assets/Icons/copy-gradient-color.svg";
+  import { copyToClipboard } from "../utils";
+  import Clipboard from "../../assets/Icons/copy-gradient-color.svg";
 
-  let copied = false;
+  let isCopied = false;
   export let walletAddress: string | null = window.location.href
     .split("/")
     .pop();
-  const copyPhrase = async () => {
-    //src https://developer.mozilla.org/en-US/docs/Web/API/Navigator/clipboard
-    await navigator.clipboard.writeText(walletAddress);
-    copied = true;
-  };
 </script>
 
 <div class="container">
@@ -26,9 +22,15 @@
       <div class="address-in-text-form">
         {walletAddress}
       </div>
-      <button on:click={copyPhrase} class="copy-to-clipboard">
-        <img src={CopyToClipboard} alt="copy address to clipboard" />
-        <span>{copied ? "copied!" : "copy"}</span>
+      <button
+        on:click={async () => {
+          await copyToClipboard(walletAddress);
+          isCopied = true;
+        }}
+        class="copy-to-clipboard"
+      >
+        <img src={Clipboard} alt="copy address to clipboard" />
+        <span>{isCopied ? "copied!" : "copy"}</span>
       </button>
     </div>
     <QRCode {walletAddress} />

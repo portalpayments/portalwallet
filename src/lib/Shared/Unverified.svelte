@@ -3,18 +3,21 @@
   import Label from "../Shared/Label.svelte";
   import { LabelColor } from "../constants";
   import type { Contact } from "../types";
-  import { truncateWallet } from "../utils";
+  import { truncateWallet, copyToClipboard } from "../utils";
 
   export let contact: Contact;
 
-  // TODO: implement
-  let isPending = false;
   let isNew = false;
 </script>
 
 <img src={AnonymousImage} class="profile-pic" alt="Address is not verified" />
 <div class="recipient-info">
-  {truncateWallet(contact.walletAddress)}
+  <button
+    class="truncated-wallet"
+    on:click={async () => {
+      await copyToClipboard(contact.walletAddress);
+    }}>{truncateWallet(contact.walletAddress)}</button
+  >
   <div class="badges-and-labels">
     <Label color={LabelColor.Grey}>Unverified</Label>
     {#if isNew}
@@ -39,5 +42,11 @@
   .badges-and-labels {
     display: grid;
     align-items: start;
+  }
+
+  .truncated-wallet {
+    cursor: pointer;
+    background-color: transparent;
+    color: var(--black);
   }
 </style>
