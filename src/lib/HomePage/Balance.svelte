@@ -69,7 +69,9 @@
       </div>
     {/if}
   {:else}
-    <SkeletonBalance />
+    <div class="skeleton">
+      <SkeletonBalance />
+    </div>
   {/if}
 </div>
 
@@ -110,5 +112,11 @@
     line-height: 24px;
     font-weight: 500;
     transform: translateY(-1px);
+  }
+
+  /* TODO: skeleton placeholder graphic doesn't seem to have a real height, maybe replace it to avoid hacks like this */
+  .skeleton {
+    height: 96px;
+    width: 300px;
   }
 </style>
