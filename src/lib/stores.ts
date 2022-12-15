@@ -5,6 +5,7 @@ import {
   Currency,
   Direction,
   type AccountSummary,
+  type Collectable,
   type Contact,
 } from "../lib/types";
 import { asyncMap, log, sleep, stringify } from "../backend/functions";
@@ -16,6 +17,8 @@ import {
 } from "../backend/vmwallet";
 import { NOT_FOUND, SECONDS } from "../backend/constants";
 import base58 from "bs58";
+import { getAllNftMetadatasFromAWallet } from "../backend/identity-tokens";
+import { httpGet } from "./utils";
 
 let connection: Connection | null;
 let keyPair: Keypair | null;
@@ -28,10 +31,48 @@ const IS_CHROME_EXTENSION = window.location.protocol === "chrome-extension:";
 // We may change our mind on this
 const HAS_SERVICE_WORKER = IS_CHROME_EXTENSION && Boolean(SERVICE_WORKER);
 
+const updateCollectables = async () => {
+  if (!connection) {
+    return;
+  }
+  if (!keyPair) {
+    return;
+  }
+  const allNftsFromAWallet = await getAllNftMetadatasFromAWallet(
+    connection,
+    keyPair,
+    keyPair.publicKey
+  );
+
+  const collectablesUnfiltered = await asyncMap(
+    allNftsFromAWallet,
+    async (nft) => {
+      const data = await httpGet(nft.uri);
+      const firstFile = data?.properties?.files?.[0];
+      const image = firstFile?.uri || null;
+      const type = firstFile?.type || null;
+      return {
+        name: data.name,
+        description: data.description,
+        image,
+        type,
+      };
+    }
+  );
+
+  // Filter out non-collectible NFTs
+  const collectables = collectablesUnfiltered.filter((collectable) => {
+    return Boolean(collectable.image);
+  });
+
+  collectablesStore.set(collectables);
+};
+
 // Our connection to Solana
 export const connectionStore: Writable<null | Connection> = writable(null);
 connectionStore.subscribe((newValue) => {
   connection = newValue;
+  updateCollectables();
 });
 
 export const contactsStore: Writable<null | Array<Contact>> = writable(null);
@@ -90,6 +131,9 @@ export const authStore: Writable<Auth> = writable({
 export const haveAccountsLoadedStore: Writable<boolean> = writable(false);
 
 export const hasUSDCAccountStore: Writable<boolean | null> = writable(null);
+
+export const collectablesStore: Writable<Array<Collectable> | null> =
+  writable(null);
 
 const updateAccounts = async (useCache = true) => {
   if (!connection) {
@@ -194,6 +238,7 @@ authStore.subscribe((newValue) => {
     }
 
     updateAccounts();
+    updateCollectables();
   }
 });
 

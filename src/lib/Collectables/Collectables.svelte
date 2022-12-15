@@ -1,70 +1,18 @@
 <script lang="ts">
-  import { log, stringify, asyncMap } from "../../backend/functions";
+  import { log, stringify } from "../../backend/functions";
   import Heading from "../Shared/Heading.svelte";
-  import { getAllNftMetadatasFromAWallet } from "../../backend/identity-tokens";
-  import { httpGet } from "../utils";
   import type { Collectable } from "../types";
   import SkeletonGallery from "../Shared/Skeletons/SkeletonGallery.svelte";
 
-  import { connectionStore, authStore } from "../stores";
+  import { collectablesStore } from "../stores";
 
-  import type { Connection, Keypair } from "@solana/web3.js";
-  import { Keypair as KeypairConstructor } from "@solana/web3.js";
-
-  let connection: Connection;
-  let keypair: Keypair;
   let isLoading = false;
-  let collectables: Array<Collectable> = [];
+  let collectables: Array<Collectable> | null = null;
 
-  const updateCollectables = async () => {
-    isLoading = true;
-    if (!connection) {
-      return;
-    }
-    if (!keypair) {
-      return;
-    }
-    const allNftsFromAWallet = await getAllNftMetadatasFromAWallet(
-      connection,
-      keypair,
-      keypair.publicKey
-    );
-
-    collectables = await asyncMap(allNftsFromAWallet, async (nft) => {
-      const data = await httpGet(nft.uri);
-      const firstFile = data?.properties?.files?.[0];
-      const image = firstFile?.uri || null;
-      const type = firstFile?.type || null;
-      return {
-        name: data.name,
-        description: data.description,
-        image,
-        type,
-      };
-    });
-
-    // Filter out non-collectible NFTs
-    collectables = collectables.filter((collectable) => {
-      return Boolean(collectable.image);
-    });
-
-    log("collectables", stringify(collectables));
-    isLoading = false;
-  };
-
-  connectionStore.subscribe((newValue) => {
-    if (newValue) {
-      connection = newValue;
-      log(`🔌 connection has changed, updating collectibles`);
-      updateCollectables();
-    }
-  });
-
-  authStore.subscribe((newValue) => {
-    if (newValue.keyPair) {
-      log(`🗝️ secretKey has changed, updating collectibles`);
-      keypair = newValue.keyPair;
-      updateCollectables();
+  collectablesStore.subscribe((newValue) => {
+    if (newValue !== null) {
+      collectables = newValue;
+      isLoading = false;
     }
   });
 </script>
