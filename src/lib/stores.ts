@@ -21,7 +21,12 @@ let connection: Connection | null;
 let keyPair: Keypair | null;
 
 const SERVICE_WORKER = globalThis?.navigator?.serviceWorker || null;
-const HAS_SERVICE_WORKER = Boolean(SERVICE_WORKER);
+
+const IS_CHROME_EXTENSION = window.location.protocol === "chrome-extension:";
+
+// Right now let's only load our Chrome extension in the service worker
+// We may change our mind on this
+const HAS_SERVICE_WORKER = IS_CHROME_EXTENSION && Boolean(SERVICE_WORKER);
 
 // Our connection to Solana
 export const connectionStore: Writable<null | Connection> = writable(null);
