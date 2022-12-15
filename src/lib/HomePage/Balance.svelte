@@ -20,9 +20,9 @@
   let activeAccount: AccountSummary | null;
   $: activeAccount = null;
 
-  let haveAccountsLoaded: boolean;
+  let haveAccountsLoaded: boolean = false;
 
-  let hasUSDCAccount: boolean = false;
+  let hasUSDCAccount: boolean | null = null;
 
   hasUSDCAccountStore.subscribe((newValue) => {
     // Distinguish between null (we don't know) and false (we know, they don't have a USDC account)
@@ -32,7 +32,9 @@
   });
 
   haveAccountsLoadedStore.subscribe((newValue) => {
-    haveAccountsLoaded = newValue;
+    if (newValue !== null) {
+      haveAccountsLoaded = newValue;
+    }
   });
 
   onChangeActiveAccount((newValue) => {
@@ -48,29 +50,27 @@
 </script>
 
 <div class="balance">
-  {#if haveAccountsLoaded}
-    {#if hasUSDCAccount}
-      <div class="symbol-major-minor">
-        <img
-          class="symbol"
-          alt="{currencyName} logo"
-          src={activeAccount
-            ? CURRENCY_ICONS[currencyName]["grey"]
-            : CURRENCY_ICONS.USDC.grey}
-        />
-        <div class="major">{majorAndMinor[0]}</div>
-        <div class="minor">.{majorAndMinor[1]}</div>
-      </div>
-    {:else}
-      <div class="symbol-major-minor">
-        <img class="symbol" alt="USDC logo" src={CURRENCY_ICONS.USDC.grey} />
-        <div class="major">0</div>
-        <div class="minor">.0</div>
-      </div>
-    {/if}
-  {:else}
+  {#if !haveAccountsLoaded || hasUSDCAccount === null}
     <div class="skeleton">
       <SkeletonBalance />
+    </div>
+  {:else if hasUSDCAccount}
+    <div class="symbol-major-minor">
+      <img
+        class="symbol"
+        alt="{currencyName} logo"
+        src={activeAccount
+          ? CURRENCY_ICONS[currencyName]["grey"]
+          : CURRENCY_ICONS.USDC.grey}
+      />
+      <div class="major">{majorAndMinor[0]}</div>
+      <div class="minor">.{majorAndMinor[1]}</div>
+    </div>
+  {:else}
+    <div class="symbol-major-minor">
+      <img class="symbol" alt="USDC logo" src={CURRENCY_ICONS.USDC.grey} />
+      <div class="major">0</div>
+      <div class="minor">.0</div>
     </div>
   {/if}
 </div>
