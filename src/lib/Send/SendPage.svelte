@@ -22,6 +22,7 @@
   import { SECOND } from "../../backend/constants";
   import type { VerifiedClaims } from "../../backend/types";
   import type { Contact } from "../types";
+  import { updateAccountTransactions } from "../stores";
 
   const ACTUALLY_SEND_MONEY = true;
 
@@ -77,6 +78,8 @@
         );
 
         log(`Finished transfer, signature was`, signature);
+
+        await updateAccountTransactions(signature);
       } else {
         log(`ACTUALLY_SEND_MONEY is false, skipping transfer`);
         await sleep(1 * SECOND);

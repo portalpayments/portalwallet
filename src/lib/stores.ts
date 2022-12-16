@@ -19,6 +19,7 @@ import { NOT_FOUND, SECONDS } from "../backend/constants";
 import base58 from "bs58";
 import { getAllNftMetadatasFromAWallet } from "../backend/identity-tokens";
 import { httpGet } from "./utils";
+import { summarizeTransaction } from "../backend/transactions";
 
 let connection: Connection | null;
 let keyPair: Keypair | null;
@@ -128,6 +129,51 @@ export const authStore: Writable<Auth> = writable({
   isLoggedIn: false,
   keyPair: null,
 });
+
+export const updateAccountTransactions = async (signature: string) => {
+  // We wait a little while for the transaction to go through
+  // as getParsedTransaction() can return null if we do it immediately
+  // TODO: maybe check getParsedTransaction() options?
+  const timeout = setTimeout(async () => {
+    log(`Running delayed function to add to transactions`);
+    const rawTransaction = await connection.getParsedTransaction(signature, {});
+
+    if (rawTransaction === null) {
+      throw new Error(
+        `rawTransaction for transaction signature ${signature} was null`
+      );
+    }
+    const transactionSummary = await summarizeTransaction(
+      rawTransaction,
+      keyPair.publicKey,
+      null,
+      true,
+      keyPair.secretKey
+    );
+
+    log(`Adding this transaction to our USDC account`);
+    const updatedTokenAccounts = getFromStore(tokenAccountsStore);
+    // TODO: support accounts other than USDC
+    // Since transactionSummary just has parent wallet - not token wallet
+    // we can't do that right now.
+    // We need to add a field to transactionSummary maybe
+    const tokenAccountIndex = updatedTokenAccounts.findIndex((tokenAccount) => {
+      return tokenAccount.currency === Currency.USDC;
+    });
+
+    if (tokenAccountIndex === NOT_FOUND) {
+      throw new Error(
+        `Couldn't find USDC account for transaction ${transactionSummary.id}`
+      );
+    }
+    updatedTokenAccounts[tokenAccountIndex].transactionSummaries.push(
+      transactionSummary
+    );
+    tokenAccountsStore.set(updatedTokenAccounts);
+  }, 5 * SECONDS);
+
+  return;
+};
 
 export const haveAccountsLoadedStore: Writable<boolean> = writable(false);
 
