@@ -33,6 +33,7 @@
   .transfer-heading {
     display: grid;
     grid-auto-flow: row;
+    grid-template-columns: 1fr;
     width: 100%;
     height: 150px;
     justify-content: center;
