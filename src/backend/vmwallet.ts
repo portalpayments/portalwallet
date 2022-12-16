@@ -205,7 +205,7 @@ export const getTransactionsForAddress = async (
   connection: Connection,
   address: PublicKey,
   limit: number
-) => {
+): Promise<Array<ParsedTransactionWithMeta>> => {
   const confirmedSignatureInfos = await connection.getSignaturesForAddress(
     address,
     { limit }
