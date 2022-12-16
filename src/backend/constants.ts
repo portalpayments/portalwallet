@@ -96,6 +96,7 @@ export const URLS = {
     "https://proportionate-greatest-needle.solana-mainnet.quiknode.pro/",
 };
 
+// TODO: add to all USD-ish currencies
 // USD-based currencies have more granularity than this,
 // but users want to see these currencies as a dollars and cents
 export const USD_VISUAL_DECIMALS = 2;
