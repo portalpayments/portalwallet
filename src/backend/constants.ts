@@ -126,6 +126,14 @@ export const mintToCurrencyMap: Record<string, CurrencyDetails> = {
   },
 };
 
+export const getMintFromCurrency = (currency: Currency) => {
+  const mints = Object.keys(mintToCurrencyMap);
+  const mintForCurrency = mints.find((mint) => {
+    return mintToCurrencyMap[mint].id === currency;
+  });
+  return mintForCurrency;
+};
+
 // Older were minted with test storage URLs, timed out, etc.
 export const LATEST_IDENTITY_TOKEN_VERSION = 7;
 

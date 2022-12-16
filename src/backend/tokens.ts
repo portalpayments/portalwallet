@@ -19,11 +19,17 @@ import {
 } from "@solana/spl-token";
 import type { Account } from "@solana/spl-token";
 
-import { USDC_MAINNET_MINT_ACCOUNT, USD_VISUAL_DECIMALS } from "./constants";
+import {
+  getMintFromCurrency,
+  USDC_MAINNET_MINT_ACCOUNT,
+  USD_VISUAL_DECIMALS,
+} from "./constants";
 import { getABetterErrorMessage } from "./errors";
 import { log, stringify } from "./functions";
 import { transferWithMemo } from "./transfer-with-memo";
 import type { BasicTokenAccount } from "./types";
+import type { Currency as CurrencyType } from "../lib/types";
+import { Currency } from "../lib/types";
 
 // Mint accounts hold information about the token such as how many decimals the token has and who can mint new tokens, and is  is later used to mint tokens to a token account and create the initial supply.
 export const createMintAccount = async (
@@ -173,12 +179,15 @@ export const makeAccountsAndDoTransfer = async (
     throw new Error(`TODO: implement support for other networks`);
   }
 
-  const usdcMintAccount = new PublicKeyConstructor(USDC_MAINNET_MINT_ACCOUNT);
+  // TODO: support more than USDC (mainly changing functions that use this to provide currency)
+  const currency = Currency.USDC;
+
+  const mintAccount = new PublicKeyConstructor(getMintFromCurrency(currency));
 
   const senderTokenAccount = await makeTokenAccount(
     connection,
     senderKeyPair,
-    usdcMintAccount,
+    mintAccount,
     senderKeyPair.publicKey
   );
 
@@ -190,7 +199,7 @@ export const makeAccountsAndDoTransfer = async (
   const recipientTokenAccount = await makeTokenAccount(
     connection,
     senderKeyPair,
-    usdcMintAccount,
+    mintAccount,
     recipient
   );
 
