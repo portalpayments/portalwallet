@@ -25,7 +25,7 @@ let keyPair: Keypair | null;
 
 const SERVICE_WORKER = globalThis?.navigator?.serviceWorker || null;
 
-const IS_CHROME_EXTENSION = window.location.protocol === "chrome-extension:";
+const IS_CHROME_EXTENSION = window?.location?.protocol === "chrome-extension:";
 
 // Right now let's only load our Chrome extension in the service worker
 // We may change our mind on this
