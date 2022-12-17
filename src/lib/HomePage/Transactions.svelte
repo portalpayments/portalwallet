@@ -7,30 +7,56 @@
     getTransactionsByDays,
     isoDateToFriendlyName,
   } from "../../backend/transactions";
-  import { Currency } from "../../lib/types";
+  import type { Currency } from "../../lib/types";
   import type {
     TransactionSummary,
     TransactionsByDay,
     AccountSummary,
   } from "../../lib/types";
   import { log, stringify } from "../../backend/functions";
+  import { tokenAccountsStore, getActiveAccount } from "../stores";
   import SkeletonTransactions from "../Shared/Skeletons/SkeletonTransactions.svelte";
 
   let transactionsByDays: Array<TransactionsByDay> = [];
   let decimals: number;
   let isLoadingTransactionSummaries: boolean = true;
 
+  const reloadTransactionsByDays = (
+    transactionSummaries: Array<TransactionSummary>,
+    currency: Currency
+  ) => {
+    transactionsByDays = getTransactionsByDays(transactionSummaries, currency);
+  };
+
+  tokenAccountsStore.subscribe((newValue: Array<AccountSummary>) => {
+    if (newValue?.length) {
+      log(`tokenAccountsStore has changed`);
+      const activeAccount = getActiveAccount();
+      if (!activeAccount) {
+        // TODO: maybe change this so transactionsStore always sets the active account?
+        // when it first loads?
+        log(`No active account yet, no transactions store to load`);
+        return;
+      }
+      reloadTransactionsByDays(
+        activeAccount.transactionSummaries,
+        activeAccount.currency
+      );
+    }
+  });
+
   // TODO: maybe move transactionsByDays to the store?
   onChangeActiveAccount((activeAccount) => {
-    log(
-      `Setting transactionsByDays, based on ${activeAccount.transactionSummaries.length} transactionSummaries `
-    );
+    log(`Active account has changed`);
 
-    transactionsByDays = getTransactionsByDays(
+    decimals = activeAccount.decimals;
+
+    isLoadingTransactionSummaries = true;
+
+    reloadTransactionsByDays(
       activeAccount.transactionSummaries,
       activeAccount.currency
     );
-    decimals = activeAccount.decimals;
 
     isLoadingTransactionSummaries = false;
   });

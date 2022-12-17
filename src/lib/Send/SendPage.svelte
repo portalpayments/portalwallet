@@ -22,8 +22,7 @@
   import { SECOND } from "../../backend/constants";
   import type { VerifiedClaims } from "../../backend/types";
   import type { Contact } from "../types";
-  import { updateAccountTransactions } from "../stores";
-
+  import { updateAccountTransactions, getActiveAccount } from "../stores";
   const ACTUALLY_SEND_MONEY = true;
 
   let destinationWalletAddress: string | null = null;
@@ -61,9 +60,11 @@
   }
 
   const doTransfer = async () => {
-    // USDC actually has 6 decimal places
     try {
-      const transferAmountInMinorUnits = Number(transferAmount) * 1e6;
+      // Convert UI displayed major units into minor units
+      const activeAccount = getActiveAccount();
+      const multiplier = 10 ** activeAccount.decimals;
+      const transferAmountInMinorUnits = Number(transferAmount) * multiplier;
 
       if (ACTUALLY_SEND_MONEY) {
         log(`Doing transfer, will send ${transferAmountInMinorUnits} cents`);
@@ -79,7 +80,7 @@
 
         log(`Finished transfer, signature was`, signature);
 
-        await updateAccountTransactions(signature);
+        await updateAccountTransactions(signature, activeAccount.address);
       } else {
         log(`ACTUALLY_SEND_MONEY is false, skipping transfer`);
         await sleep(1 * SECOND);

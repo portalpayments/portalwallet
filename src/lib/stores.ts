@@ -130,11 +130,14 @@ export const authStore: Writable<Auth> = writable({
   keyPair: null,
 });
 
-export const updateAccountTransactions = async (signature: string) => {
+export const updateAccountTransactions = async (
+  signature: string,
+  nativeOrTokenAccountAddress: PublicKey
+) => {
   // We wait a little while for the transaction to go through
   // as getParsedTransaction() can return null if we do it immediately
   // TODO: maybe check getParsedTransaction() options?
-  const timeout = setTimeout(async () => {
+  setTimeout(async () => {
     log(`Running delayed function to add to transactions`);
     const rawTransaction = await connection.getParsedTransaction(signature, {});
 
@@ -151,26 +154,32 @@ export const updateAccountTransactions = async (signature: string) => {
       keyPair.secretKey
     );
 
-    log(`Adding this transaction to our USDC account`);
+    const isUsingSolAccount = nativeOrTokenAccountAddress === keyPair.publicKey;
+
+    if (isUsingSolAccount) {
+      log(`Adding transaction ${transactionSummary.id} to our Sol account`);
+      const updatedNativeAccount = getFromStore(nativeAccountStore);
+      updatedNativeAccount.transactionSummaries.push(transactionSummary);
+      nativeAccountStore.set(updatedNativeAccount);
+      return;
+    }
+
+    log(`Adding transaction ${transactionSummary.id} to our Token account`);
     const updatedTokenAccounts = getFromStore(tokenAccountsStore);
-    // TODO: support accounts other than USDC
-    // Since transactionSummary just has parent wallet - not token wallet
-    // we can't do that right now.
-    // We need to add a field to transactionSummary maybe
     const tokenAccountIndex = updatedTokenAccounts.findIndex((tokenAccount) => {
-      return tokenAccount.currency === Currency.USDC;
+      return tokenAccount.address === nativeOrTokenAccountAddress;
     });
 
     if (tokenAccountIndex === NOT_FOUND) {
       throw new Error(
-        `Couldn't find USDC account for transaction ${transactionSummary.id}`
+        `Couldn't find token account for transaction ${transactionSummary.id} for account address ${nativeOrTokenAccountAddress}`
       );
     }
     updatedTokenAccounts[tokenAccountIndex].transactionSummaries.push(
       transactionSummary
     );
     tokenAccountsStore.set(updatedTokenAccounts);
-  }, 5 * SECONDS);
+  }, 3 * SECONDS);
 
   return;
 };
