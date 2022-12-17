@@ -7,15 +7,22 @@
     getTransactionsByDays,
     isoDateToFriendlyName,
   } from "../../backend/transactions";
-  import type { Currency } from "../../lib/types";
+  import { Currency } from "../../lib/types";
   import type {
     TransactionSummary,
     TransactionsByDay,
     AccountSummary,
   } from "../../lib/types";
   import { log, stringify } from "../../backend/functions";
+  import {
+    SECOND,
+    SECONDS,
+  } from "../../backend/constants";
   import { tokenAccountsStore, getActiveAccount } from "../stores";
   import SkeletonTransactions from "../Shared/Skeletons/SkeletonTransactions.svelte";
+
+  import { slide, fade } from "svelte/transition";
+  import { quintInOut } from "svelte/easing";
 
   let transactionsByDays: Array<TransactionsByDay> = [];
   let decimals: number;
@@ -85,8 +92,13 @@
             </div>
 
             <div class="transactions">
-              {#each transactionsByDay.transactions as transaction}
-                <TransactionComponent {transaction} {decimals} />
+              {#each transactionsByDay.transactions as transaction (transaction.id)}
+                <div
+                  class=""
+                  in:fade|local={{ duration: 200, easing: quintInOut }}
+                >
+                  <TransactionComponent {transaction} {decimals} />
+                </div>
               {/each}
             </div>
           </div>
