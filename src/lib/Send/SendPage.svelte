@@ -250,7 +250,6 @@
     max-height: var(--wallet-height);
     display: grid;
     grid-auto-flow: row;
-    justify-content: center;
     align-items: center;
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 100%;
@@ -262,7 +261,6 @@
     display: grid;
     grid-auto-flow: row;
     grid-template-rows: 1fr;
-    justify-content: center;
     align-self: center;
     width: 100%;
     gap: 12px;
@@ -270,7 +268,6 @@
   }
 
   .transferring-wait {
-    justify-content: center;
     justify-items: center;
     align-content: center;
     gap: 24px;
