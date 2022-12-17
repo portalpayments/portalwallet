@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
-ZIP_FILE_NAME="portal-alpha.zip"
+
+# Export because this is used by vite to minify or not
+export ZIP_FILE_NAME="portal-alpha.zip"
 
 # Zone.Identifier files can cause errors when unzipping
 find . -name '*Zone.Identifier' -exec rm '{}' ';'

@@ -9,8 +9,6 @@ const GIT_VERSION = getGitVersion();
 
 const log = console.log;
 
-log(`Git version is: '${GIT_VERSION}'`);
-
 // Config is based on metaplex + vite example from:
 // https://github.com/metaplex-foundation/js-examples/tree/main/getting-started-vite
 
@@ -18,6 +16,14 @@ log(`Git version is: '${GIT_VERSION}'`);
 // See https://github.com/sveltejs/kit/issues/859
 
 process.env.PORTAL_VERSION = GIT_VERSION;
+
+const isMinifiying = Boolean(process.env.ZIP_FILE_NAME);
+
+log(
+  `Git version is: '${GIT_VERSION}', ${
+    isMinifiying ? "producing minified build to send externally." : ""
+  } `
+);
 
 export default defineConfig({
   plugins: [svelte()],
@@ -42,9 +48,7 @@ export default defineConfig({
     commonjsOptions: {
       include: [],
     },
-    // false to help debug issues during alpha testing
-    // true to send demos to investors
-    minify: false,
+    minify: isMinifiying,
     // We use tsc to build the service worker, so don't destroy that built file.
     emptyOutDir: false,
   },
