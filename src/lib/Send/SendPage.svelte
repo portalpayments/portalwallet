@@ -161,6 +161,7 @@
         isAmount={false}
         filterField={"walletAddress"}
         onTypingPause={handleKeyupDestinationWalletAddress}
+        theme="square"
       />
 
       <Input
@@ -170,6 +171,7 @@
         isAmount={true}
         filterField={"numbers"}
         onTypingPause={null}
+        theme="square"
       />
 
       <Input
@@ -179,6 +181,7 @@
         isAmount={false}
         filterField={null}
         onTypingPause={null}
+        theme="square"
       />
     </FocusContext>
   </div>

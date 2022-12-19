@@ -15,6 +15,8 @@
 
   export let onTypingPause: svelte.JSX.KeyboardEventHandler<HTMLInputElement> | null;
 
+  export let theme: "square" | "round" = "round";
+
   const focus = getFocusContext();
 
   const maybeFocus = (node) => {
@@ -72,7 +74,7 @@
 </script>
 
 <div class="input-and-label">
-  <div class="border">
+  <div class="border {theme === 'square' ? 'square' : ''}">
     <input
       bind:value
       type="text"
@@ -117,6 +119,17 @@
     padding: 2px;
   }
 
+  .border.square {
+    padding: 0px 0px 2px 0px;
+    border-radius: 0;
+  }
+
+  .border.square input {
+    border-radius: 0;
+    border-width: 1px 1px 0 1px;
+    border-color: var(--light-grey);
+  }
+
   /* Enable a gradient border when the input inside is focused
   CSS doesn't curretly let us use borders for gradients */
 
@@ -130,7 +143,7 @@
     height: 100%;
     border-radius: 22px;
     background-color: white;
-    border: none;
+    border-width: 0;
     padding: 12px 12px 0 12px;
   }
 
