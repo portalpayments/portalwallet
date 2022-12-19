@@ -1,0 +1,34 @@
+.blue-green {
+  /* Gradient text techique used on website */
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: var(--blue-green-gradient);
+}
+
+.purple-orange {
+  /* Gradient text techique used on website */
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: var(--purple-orange-gradient);
+}
+
+.gradient-border {
+  background-image: var(--blue-green-gradient);
+  padding: 2px;
+}
+
+.small-caps {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.polymer {
+  background-color: hsla(0,0%,100%,.6);
+  backdrop-filter: blur(24px);
+}
+
+.shadow {
+  box-shadow: 2px 3px 10px -4px rgb(0 0 0 / 33%);
+}
