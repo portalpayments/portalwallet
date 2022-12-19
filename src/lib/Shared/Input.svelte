@@ -119,6 +119,12 @@
     padding: 2px;
   }
 
+  /* Enable a gradient border when the input inside is focused
+  CSS doesn't currently let us use borders for gradients */
+  .border:has(input:focus) {
+    background: var(--blue-green-gradient);
+  }
+
   .border.square {
     padding: 0px 0px 2px 0px;
     border-radius: 0;
@@ -128,13 +134,6 @@
     border-radius: 0;
     border-width: 1px 1px 0 1px;
     border-color: var(--light-grey);
-  }
-
-  /* Enable a gradient border when the input inside is focused
-  CSS doesn't curretly let us use borders for gradients */
-
-  .border:has(input:focus) {
-    background: var(--blue-green-gradient);
   }
 
   input {
@@ -157,16 +156,16 @@
     outline: none !important;
     box-shadow: 0 0 2px rgba(65, 156, 253, 0.3);
   }
-  input:focus ~ .floating-label,
-  input:not(:focus):valid ~ .floating-label {
+  .border:has(input:focus) .floating-label,
+  .border:has(input:valid) .floating-label {
     top: 6px;
     font-size: 12px;
     line-height: 12px;
     opacity: 1;
   }
 
-  input:focus ~ .floating-label .inline-usdc,
-  input:not(:focus):valid ~ .floating-label .inline-usdc {
+  .border:has(input:focus) .floating-label .inline-usdc,
+  .border:has(input:valid) .floating-label .inline-usdc {
     height: 10px;
     transform: translateY(1px);
   }
