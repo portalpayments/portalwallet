@@ -81,7 +81,7 @@
   }
   .amount-received {
     position: relative;
-    background-color: var(--dark-grey);
+    background-color: var(--light-grey);
     color: var(--mid-blue);
     justify-self: start;
   }
@@ -96,7 +96,7 @@
     left: 0.6em;
     border: 0.6rem solid transparent;
     border-bottom: none;
-    border-top-color: var(--dark-grey);
+    border-top-color: var(--light-grey);
   }
   .amount-sent {
     position: relative;

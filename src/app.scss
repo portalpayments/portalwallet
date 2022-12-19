@@ -27,7 +27,6 @@
   --very-light-grey: #e5e5e5;
   --light-grey: #ccc;
   --mid-grey: #999;
-  --dark-grey: #d9d9d9;
   --actually-dark-grey: #7d7d7d;
   --black: #4d4d4d;
   --shade: rgba(217, 217, 217, 0.1);
@@ -142,7 +141,7 @@ a.button.with-icon img {
 input {
   border-radius: 9px;
   padding: 0px 0px 0px 6px;
-  border: 1px solid var(--dark-grey);
+  border: 1px solid var(--light-grey);
   background-color: var(--shade);
   width: 200px;
   height: 42px;
