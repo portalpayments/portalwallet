@@ -53,7 +53,8 @@
   {/if}
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   .buttons {
     display: grid;
     grid-auto-flow: row;
@@ -69,6 +70,7 @@
     font-weight: 600;
     font-size: 1.1rem;
     border-radius: 24px;
+    @include shadow;
   }
 
   .disabled {

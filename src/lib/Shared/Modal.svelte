@@ -11,7 +11,8 @@
   {/if}
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   .modal {
     z-index: 500;
     width: var(--wallet-width);
@@ -46,5 +47,7 @@
     align-self: center;
     align-content: center;
     justify-self: center;
+
+    @include shadow;
   }
 </style>
