@@ -39,7 +39,7 @@
     padding: 12px 6px;
     height: 160px;
     resize: none;
-    color: var(--actually-dark-grey);
+    color: var(--dark-grey);
   }
 
   textarea:focus {

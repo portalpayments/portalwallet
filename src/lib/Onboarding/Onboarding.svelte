@@ -403,7 +403,7 @@
     /* TODO: eyeball, probably better way of doing this */
     transform: translateX(24px);
     font-weight: 600;
-    color: var(--actually-dark-grey);
+    color: var(--dark-grey);
   }
 
   .step.first .buttons {

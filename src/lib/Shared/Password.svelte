@@ -62,7 +62,7 @@
   }
 
   input {
-    color: var(--actually-dark-grey);
+    color: var(--dark-grey);
   }
 
   @keyframes shake {
