@@ -26,6 +26,10 @@ let keyPair: Keypair | null;
 
 const SERVICE_WORKER = globalThis?.navigator?.serviceWorker || null;
 
+// We do optimistic confirmsations on transactions. but we need to wait a few minutes for a
+// proper confirmed transaction ID - in testing, 3 seconds was too little so let's use 5 seconds.
+const TRANSACTION_CONFIRM_DELAY = 5 * SECONDS;
+
 const IS_CHROME_EXTENSION =
   globalThis?.location?.protocol === "chrome-extension:";
 
@@ -179,7 +183,7 @@ export const updateAccountTransactions = async (
       transactionSummary
     );
     tokenAccountsStore.set(updatedTokenAccounts);
-  }, 3 * SECONDS);
+  }, TRANSACTION_CONFIRM_DELAY);
 
   return;
 };
