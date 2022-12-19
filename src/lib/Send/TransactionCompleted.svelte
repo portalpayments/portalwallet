@@ -34,7 +34,7 @@
   <span class="recipient-and-amount"> Transaction complete. </span>
 </div>
 
-<style>
+<style type="text/scss">
   .success-icon {
     width: 64px;
     justify-self: center;

@@ -245,7 +245,7 @@
   {/if}
 </div>
 
-<style>
+<style type="text/scss">
   .transfer-page {
     min-width: var(--wallet-width);
     max-width: var(--wallet-width);

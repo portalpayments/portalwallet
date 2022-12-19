@@ -7,7 +7,7 @@
 <!-- See https://svelte.dev/tutorial/slots -->
 <div class="badge {color} {size}"><slot /></div>
 
-<style>
+<style type="text/scss">
   :root {
     --green: hsl(98, 39%, 56%);
     --green-background: hsl(97, 78%, 95%);

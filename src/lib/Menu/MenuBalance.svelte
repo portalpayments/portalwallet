@@ -23,7 +23,7 @@
   </div>
 </button>
 
-<style>
+<style type="text/scss">
   button.with-icon .text {
     grid-auto-flow: row;
     grid-template-rows: 18px 10px;

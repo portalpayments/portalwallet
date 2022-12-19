@@ -37,7 +37,7 @@
   </div>
 </div>
 
-<style>
+<style type="text/scss">
   .container {
     display: grid;
     height: var(--wallet-height);

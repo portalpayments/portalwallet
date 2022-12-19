@@ -29,7 +29,7 @@
   </div>
 </div>
 
-<style>
+<style type="text/scss">
   .profile-pic {
     width: 100%;
   }

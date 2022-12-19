@@ -18,7 +18,7 @@
   {/if}
 </div>
 
-<style>
+<style type="text/scss">
   .contact {
     display: grid;
     grid-auto-flow: column;

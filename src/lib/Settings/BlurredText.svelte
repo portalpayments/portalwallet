@@ -42,7 +42,7 @@
   </div>
 </div>
 
-<style>
+<style type="text/scss">
   .blurred-text {
     gap: 8px;
   }

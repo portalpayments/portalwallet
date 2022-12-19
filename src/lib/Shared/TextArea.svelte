@@ -30,7 +30,7 @@
   on:keyup|preventDefault={debounce(runKeyUpDelayIfExists)}
 />
 
-<style>
+<style type="text/scss">
   textarea {
     border-radius: 22px;
     border: none;
