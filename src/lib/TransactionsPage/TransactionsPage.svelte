@@ -29,7 +29,8 @@
   </div>
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   .transactions-page {
     min-width: var(--wallet-width);
     max-width: var(--wallet-width);

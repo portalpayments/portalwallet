@@ -79,7 +79,8 @@
   {/if}
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   .feature {
     /* heading, balance, buttons, heading, transactions */
     grid-template-rows: 72px 128px 48px 24px 1fr;

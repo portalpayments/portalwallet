@@ -32,7 +32,8 @@
   {/if}
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   .contacts {
     display: grid;
     grid-auto-flow: row;

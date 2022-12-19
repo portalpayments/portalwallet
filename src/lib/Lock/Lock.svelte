@@ -47,7 +47,7 @@
       <div class="password-container">
         <div class="password-prompt">Enter your password</div>
 
-        <div class="gradient-border">
+        <div class="fancy-border">
           <Password
             bind:value={password}
             onEnter={() => login(password)}
@@ -63,14 +63,16 @@
           on:click|preventDefault={() => {
             login(password);
           }}
-          class="primary small-caps login-button shadow">Log in</button
+          class="login-button primary">Log in</button
         >
       </div>
     </div>
   {/if}
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
+
   .login {
     display: grid;
     grid-auto-flow: row;
@@ -82,7 +84,12 @@
     background: radial-gradient(at 50% 50%, #ddfff6 0, #fff 80%, #fff 100%);
   }
 
-  .gradient-border {
+  .login-button {
+    @include small-caps;
+    @include shadow;
+  }
+
+  .fancy-border {
     height: 48px;
     border-radius: 24px;
   }

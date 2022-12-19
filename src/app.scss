@@ -1,4 +1,4 @@
-@import "./mixins.css";
+@import "./mixins.scss";
 
 :root {
   --wallet-height: 600px;
@@ -106,6 +106,7 @@ button.primary {
   border-radius: 24px;
   font-size: 14px;
   background: var(--blue-green-gradient);
+  
 }
 
 button.with-icon,
@@ -162,3 +163,7 @@ input:focus {
   height: var(--wallet-height);
 }
 
+.fancy-border {
+  @include gradient-border;
+  @include shadow;
+}

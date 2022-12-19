@@ -59,7 +59,7 @@
   {/if}
 </div>
 
-<style>
+<style type="text/scss">
   .contact-page {
     height: var(--wallet-height);
     width: var(--wallet-width);

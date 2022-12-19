@@ -8,7 +8,8 @@
   <Contacts />
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   .feature {
     /* Cool subtle background borrowed from website */
     background: radial-gradient(at 50% 50%, #d8f1ff 0, #fff 80%, #fff 100%);

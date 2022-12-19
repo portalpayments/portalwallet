@@ -11,7 +11,7 @@
 </script>
 
 <div class="header">
-  <div class="gradient-border shadow">
+  <div class="fancy-border">
     <button class="menu" on:click={onClick}>
       {#if isEmpty(user?.verifiedClaims)}
         <img class="avatar" src={AnonymousImage} alt="Anonymous" />
@@ -30,7 +30,8 @@
   </div>
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   .header {
     display: grid;
     grid-auto-flow: column;
@@ -38,11 +39,6 @@
     align-items: center;
     justify-items: start;
     gap: 4px;
-  }
-
-  .gradient-border {
-    height: 36px;
-    border-radius: 18px;
   }
 
   button {
@@ -54,6 +50,11 @@
     font-weight: 600;
     border: 0;
     font-size: 14px;
+  }
+
+  .fancy-border {
+    height: 36px;
+    border-radius: 18px;
   }
 
   button img {

@@ -1,4 +1,4 @@
-import "./app.css";
+import "./app.scss";
 import "normalize.css";
 import "events";
 // @ts-ignore TS reports an error here but everything works fine

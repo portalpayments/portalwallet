@@ -99,7 +99,8 @@
   {/if}
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   .transaction {
     display: grid;
     color: var(--black);

@@ -1,11 +1,13 @@
 <script lang="ts">
   export let size: "large" | "medium" = "large";
-  export let theme: "blue-green" | "purple-orange" = "blue-green";
+  export let theme: "finance" | "art" = "finance";
 </script>
 
 <h1 class="{size} {theme}"><slot /></h1>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
+
   h1 {
     font-size: 24px;
     margin: 0;
@@ -20,5 +22,13 @@
   .medium {
     font-size: 20px;
     text-align: left;
+  }
+
+  .finance {
+    @include blue-green;
+  }
+
+  .art {
+    @include purple-orange;
   }
 </style>

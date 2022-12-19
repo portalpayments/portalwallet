@@ -9,7 +9,7 @@
   <div class="coming-soon">Adding money to your account is coming soon.</div>
 </div>
 
-<style>
+<style type="text/scss">
   .add-money-page {
     min-width: var(--wallet-width);
     max-width: var(--wallet-width);

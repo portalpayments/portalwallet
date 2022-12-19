@@ -19,7 +19,7 @@
 </script>
 
 <nav>
-  <buttongroup class="shadow">
+  <buttongroup>
     {#each features as feature, index}
       <button
         class="{feature.name} {currentFeature === index ? 'active' : ''}"
@@ -31,7 +31,8 @@
   </buttongroup>
 </nav>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   nav {
     width: 100%;
     padding: 8px 0;
@@ -54,6 +55,8 @@
     padding: 0 16px;
     justify-content: center;
     align-items: center;
+
+    @include shadow;
   }
 
   buttongroup button {

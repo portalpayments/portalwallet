@@ -14,10 +14,7 @@
     AccountSummary,
   } from "../../lib/types";
   import { log, stringify } from "../../backend/functions";
-  import {
-    SECOND,
-    SECONDS,
-  } from "../../backend/constants";
+  import { SECOND, SECONDS } from "../../backend/constants";
   import { tokenAccountsStore, getActiveAccount } from "../stores";
   import SkeletonTransactions from "../Shared/Skeletons/SkeletonTransactions.svelte";
 
@@ -114,7 +111,8 @@
   {/if}
 {/if}
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   .transactions {
     display: grid;
     grid-auto-flow: row;

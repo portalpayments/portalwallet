@@ -18,7 +18,7 @@
 </script>
 
 <div class="heading">
-  <Heading theme="purple-orange">Gallery</Heading>
+  <Heading theme="art">Gallery</Heading>
 </div>
 <div class="feature">
   {#if isLoading}
@@ -43,7 +43,8 @@
   {/if}
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   .heading {
     text-align: left;
     padding: 0 12px;

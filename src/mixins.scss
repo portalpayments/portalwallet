@@ -1,4 +1,4 @@
-.blue-green {
+@mixin blue-green {
   /* Gradient text techique used on website */
   color: transparent;
   background-clip: text;
@@ -6,7 +6,7 @@
   background-image: var(--blue-green-gradient);
 }
 
-.purple-orange {
+@mixin purple-orange {
   /* Gradient text techique used on website */
   color: transparent;
   background-clip: text;
@@ -14,21 +14,21 @@
   background-image: var(--purple-orange-gradient);
 }
 
-.gradient-border {
+@mixin gradient-border {
   background-image: var(--blue-green-gradient);
   padding: 2px;
 }
 
-.small-caps {
+@mixin small-caps {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-.polymer {
+@mixin polymer {
   background-color: hsla(0,0%,100%,.6);
   backdrop-filter: blur(24px);
 }
 
-.shadow {
+@mixin shadow {
   box-shadow: 2px 3px 10px -4px rgb(0 0 0 / 33%);
 }

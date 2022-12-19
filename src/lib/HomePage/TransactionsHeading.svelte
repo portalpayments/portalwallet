@@ -6,7 +6,8 @@
   <Link to="/transactions">See all</Link>
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   .heading {
     text-align: left;
     padding: 0 12px;

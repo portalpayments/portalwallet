@@ -3,11 +3,12 @@
 </script>
 
 <div class="add-and-send-buttons">
-  <Link class="button shadow" to="/addMoneyToAccount">Add money</Link>
-  <Link class="button shadow" to="/sendMoney">Send money</Link>
+  <Link class="button" to="/addMoneyToAccount">Add money</Link>
+  <Link class="button" to="/sendMoney">Send money</Link>
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   .add-and-send-buttons {
     display: grid;
     grid-auto-flow: column;
@@ -26,6 +27,7 @@
 
     border-radius: 24px;
     background: var(--blue-green-gradient);
+    @include shadow;
   }
   .add-and-send-buttons :global(a.button):active {
     color: #fff;

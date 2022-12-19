@@ -185,7 +185,7 @@
                 restoringOrMakingNewWallet = "makingNewWallet";
                 move(true);
               }}
-              class="next small-caps ">Make a new wallet</button
+              class="next ">Make a new wallet</button
             >
 
             <button
@@ -207,7 +207,7 @@
             <div class="content">
               <Heading size="large">Import wallet</Heading>
               <p>Paste your secret key or mnemonic phrase below.</p>
-              <div class="gradient-border">
+              <div class="fancy-border">
                 <TextArea
                   placeholder="Secret key or mnemonic phrase"
                   onInputDelay={checkSecretKeyOrMnemonicPhrase}
@@ -233,7 +233,7 @@
                   move(true);
                 }
               }}
-              class="next small-caps  {isSuggestedSecretOrMnemonicPhraseValid
+              class="next  {isSuggestedSecretOrMnemonicPhraseValid
                 ? ''
                 : 'disabled'}">Next</button
             >
@@ -242,7 +242,7 @@
             <div class="content">
               <Heading>Set a password</Heading>
 
-              <div class="gradient-border">
+              <div class="fancy-border">
                 <Password
                   bind:value={passwordToUse}
                   onInputDelay={checkPassword}
@@ -263,8 +263,7 @@
               on:click={async () => {
                 move(true);
               }}
-              class="next small-caps  {isPasswordSecure ? '' : 'disabled'}"
-              >Next</button
+              class="next  {isPasswordSecure ? '' : 'disabled'}">Next</button
             >
           {/if}
         {/if}
@@ -275,7 +274,7 @@
             <ProgressBar steps={steps.length} currentStep={stepNumber} />
             <div class="content">
               <Heading>Set a password</Heading>
-              <div class="gradient-border">
+              <div class="fancy-border">
                 <Password
                   bind:value={passwordToUse}
                   onInputDelay={checkPassword}
@@ -295,7 +294,7 @@
             <button
               type="button"
               on:click={() => makeWallet()}
-              class="next small-caps  {passwordToUse?.length ? '' : 'disabled'}"
+              class="next  {passwordToUse?.length ? '' : 'disabled'}"
               >Open wallet</button
             >
           {:else}
@@ -306,7 +305,7 @@
                 If you lose your devices, you can access your wallet using this
                 phrase.
               </p>
-              <div class="gradient-border">
+              <div class="fancy-border">
                 <TextArea
                   placeholder="When I was six my brother Finian got a train set for Christmas."
                   onInputDelay={checkPersonalPhrase}
@@ -330,8 +329,7 @@
               type="button"
               disabled={!isPersonalPhraseSecure || isBuildingWallet}
               on:click={() => makeWallet()}
-              class="next small-caps  {(!isPersonalPhraseSecure ||
-                isBuildingWallet) &&
+              class="next  {(!isPersonalPhraseSecure || isBuildingWallet) &&
                 'disabled'} {isBuildingWallet && 'building-wallet'}"
             >
               {#if isBuildingWallet}
@@ -349,7 +347,7 @@
           <button
             type="button"
             on:click={() => window.location.reload()}
-            class="next small-caps ">Log in and go!</button
+            class="next ">Log in and go!</button
           >
         {/if}
       </div>
@@ -357,7 +355,8 @@
   </div>
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   .letterbox {
     overflow: hidden;
     width: var(--wallet-width);
@@ -420,11 +419,6 @@
     width: 100%;
   }
 
-  .gradient-border {
-    min-height: 48px;
-    border-radius: 24px;
-  }
-
   /* TODO: make some kind of utility class to use for primary buttons and link buttons */
   button.next {
     align-content: center;
@@ -435,6 +429,7 @@
     border-radius: 24px;
     font-size: 14px;
     background: var(--blue-green-gradient);
+    @include small-caps;
   }
 
   button.subtle {

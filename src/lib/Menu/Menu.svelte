@@ -41,7 +41,7 @@
   };
 </script>
 
-<div class="menu polymer {isMenuActive ? 'active' : ''}">
+<div class="menu  {isMenuActive ? 'active' : ''}">
   <button class="close" on:click={() => onClose()}
     ><img src={closeIconURL} alt="close" /></button
   >
@@ -74,7 +74,8 @@
   </Link>
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   button.wallet {
     background-color: transparent;
     color: var(--black);
@@ -99,6 +100,8 @@
     grid-auto-flow: row;
     color: var(--black);
     z-index: 2;
+
+    @include polymer;
   }
 
   button.close {

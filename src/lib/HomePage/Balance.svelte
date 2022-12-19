@@ -75,7 +75,8 @@
   {/if}
 </div>
 
-<style>
+<style type="text/scss">
+  @import "../../mixins.scss";
   .balance {
     display: grid;
     grid-auto-flow: row;

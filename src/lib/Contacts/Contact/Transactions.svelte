@@ -32,7 +32,7 @@
   </div>
 </div>
 
-<style>
+<style type="text/scss">
   /* TODO cannot scroll */
   .history-container {
     height: 100%;
