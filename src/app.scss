@@ -165,4 +165,7 @@ input:focus {
 .fancy-border {
   @include gradient-border;
   @include shadow;
+  & input {
+    min-height: 44px;
+  }
 }

@@ -430,6 +430,7 @@
     font-size: 14px;
     background: var(--blue-green-gradient);
     @include small-caps;
+    @include shadow;
   }
 
   button.subtle {
