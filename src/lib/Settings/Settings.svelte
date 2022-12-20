@@ -19,6 +19,10 @@
 
   const PORTAL_VERSION = process.env.PORTAL_VERSION || "Unknown";
 
+  // We load up the home page, not this Settings page
+  // thisis why we don't use (window.location.href)
+  const HOME_PAGE = `${window.location.protocol}//${window.location.hostname}/index.html`;
+
   const MOCK_MNEMONIC_FOR_BLURRING =
     "some words that look like they might be a mnemonic but arent";
 
@@ -106,12 +110,20 @@
     <Heading>Settings</Heading>
   </div>
 
-  <p>Portal build: {PORTAL_VERSION}</p>
-
   <Link class="button with-icon" to="mailto:help@getportal.app">
     <img src={helpIconURL} alt="Help" />
     Get help from the Portal team
   </Link>
+
+  <a class="button with-icon" href={HOME_PAGE} target="_blank">
+    <img src={helpIconURL} alt="New tab" />
+    Open Portal in new tab
+  </a>
+
+  <a class="button with-icon" href="https://twitter.com/portalpayments">
+    <img src={helpIconURL} alt="Help" />
+    Follow @portalpayments on Twitter
+  </a>
 
   <BlurredText
     text={mnemonic || MOCK_MNEMONIC_FOR_BLURRING}
@@ -132,6 +144,8 @@
     heading="Secret Key"
     description="secret key"
   />
+
+  <p>Portal version: {PORTAL_VERSION}</p>
 
   <button
     type="button"
