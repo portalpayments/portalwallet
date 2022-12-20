@@ -23,7 +23,10 @@
   import type { VerifiedClaims } from "../../backend/types";
   import type { Contact } from "../types";
   import { updateAccountTransactions, getActiveAccount } from "../stores";
+  import { SECONDS } from "../../backend/constants";
   const ACTUALLY_SEND_MONEY = true;
+
+  const TRANSACTION_TIME_IS_SLOW = 5 * SECONDS;
 
   let destinationWalletAddress: string | null = null;
   let transferAmount: number | null = null;
@@ -35,6 +38,8 @@
   let verifiedClaims: VerifiedClaims | null = null;
 
   let isSendButtonDisabled = true;
+
+  let keepWaitingMessage: string | null = null;
 
   let isAskingWalletOwnerToGetVerified = false;
 
@@ -60,6 +65,9 @@
   }
 
   const doTransfer = async () => {
+    const slowTransactionTimeout = setTimeout(() => {
+      keepWaitingMessage = "Nearly there...";
+    }, TRANSACTION_TIME_IS_SLOW);
     try {
       // Convert UI displayed major units into minor units
       const activeAccount = getActiveAccount();
@@ -85,6 +93,8 @@
         log(`ACTUALLY_SEND_MONEY is false, skipping transfer`);
         await sleep(1 * SECOND);
       }
+
+      clearTimeout(slowTransactionTimeout);
 
       isSending = false;
       isSendingAnyway = false;
@@ -208,6 +218,9 @@
     <Modal>
       <div class="transferring-wait">
         <Heading>Sending money...</Heading>
+        {#if keepWaitingMessage}
+          <p>{keepWaitingMessage}</p>
+        {/if}
         <Circle color="var(--mid-blue)" />
       </div>
     </Modal>
