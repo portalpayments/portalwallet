@@ -31,6 +31,7 @@ import {
   MINUTE,
   MIKES_USDH_ACCOUNT,
   MIKES_USDT_ACCOUNT,
+  getCurrencyByName,
 } from "./constants";
 import {
   getAllNftMetadatasFromAWallet,
@@ -56,6 +57,14 @@ describe(`basic wallet functionality on local validator`, () => {
 
   beforeAll(async () => {
     connection = await connect("localhost");
+  });
+
+  test(`getCurrencyByName works`, () => {
+    expect(getCurrencyByName("USDC")).toMatchObject({
+      decimals: 6,
+      id: 0,
+      name: "USDC",
+    });
   });
 
   test(`wallets can be deposited into`, async () => {
@@ -96,7 +105,8 @@ describe(`basic wallet functionality on local validator`, () => {
       createMintAccount(
         connection,
         testUSDCAuthority,
-        testUSDCAuthority.publicKey
+        testUSDCAuthority.publicKey,
+        getCurrencyByName("USDC").decimals
       )
     ).rejects.toThrow(
       "failed to send transaction: Transaction simulation failed: Attempt to debit an account but found no record of a prior credit."

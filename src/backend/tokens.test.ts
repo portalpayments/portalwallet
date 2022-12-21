@@ -2,11 +2,12 @@ import { getMint, getAccount, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import type { Account } from "@solana/spl-token";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import {
-  USD_VISUAL_DECIMALS,
   SECONDS,
   ENOUGH_TO_MAKE_A_NEW_TOKEN,
+  getCurrencyByName,
+  mintToCurrencyMap,
 } from "./constants";
-import { log, stringify } from "./functions";
+import { log, minorUnitsToDecimal, stringify } from "./functions";
 import {
   createMintAccount,
   mintTokens,
@@ -25,6 +26,9 @@ import type { BasicTokenAccount } from "./types";
 jest.mock("./functions");
 
 const AMOUNT_OF_USDC_TO_SEND = 50;
+
+// Our fake currency will have 6 decimals like USDC
+const DECIMALS = getCurrencyByName("USDC").decimals;
 
 describe("minting and USDC-like transfers", () => {
   let connection: Connection;
@@ -51,7 +55,8 @@ describe("minting and USDC-like transfers", () => {
       mintAccountPublicKey = await createMintAccount(
         connection,
         testUSDCAuthority,
-        testUSDCAuthority.publicKey
+        testUSDCAuthority.publicKey,
+        DECIMALS
       );
       const doesMintAccountExist = await checkAccountExists(
         connection,
@@ -63,7 +68,7 @@ describe("minting and USDC-like transfers", () => {
 
       expect(mintInformation).toEqual({
         address: expect.any(PublicKey),
-        decimals: USD_VISUAL_DECIMALS,
+        decimals: DECIMALS,
         freezeAuthority: null,
         isInitialized: true,
         mintAuthority: testUSDCAuthority.publicKey,
@@ -119,7 +124,7 @@ describe("minting and USDC-like transfers", () => {
       },
       value: {
         amount: String(NO_TOKENS_MINTED_YET),
-        decimals: USD_VISUAL_DECIMALS,
+        decimals: DECIMALS,
         uiAmount: NO_TOKENS_MINTED_YET,
         uiAmountString: String(NO_TOKENS_MINTED_YET),
       },
@@ -128,7 +133,8 @@ describe("minting and USDC-like transfers", () => {
 
   test(`Can mint tokens into Alice's token account`, async () => {
     const MINT_AMOUNT = 420;
-    const MINT_AMOUNT_UI = 4.2;
+    const MINT_AMOUNT_UI = minorUnitsToDecimal(MINT_AMOUNT, DECIMALS);
+
 
     const transactionHash = await mintTokens(
       connection,
@@ -136,7 +142,8 @@ describe("minting and USDC-like transfers", () => {
       mintAccountPublicKey,
       alicesTokenAccount.address,
       testUSDCAuthority.publicKey,
-      MINT_AMOUNT
+      MINT_AMOUNT,
+      DECIMALS
     );
 
     expect(transactionHash).toEqual(expect.any(String));
@@ -151,7 +158,7 @@ describe("minting and USDC-like transfers", () => {
       },
       value: {
         amount: String(MINT_AMOUNT),
-        decimals: USD_VISUAL_DECIMALS,
+        decimals: DECIMALS,
         uiAmount: MINT_AMOUNT_UI,
         uiAmountString: String(MINT_AMOUNT_UI),
       },
@@ -224,6 +231,8 @@ describe("minting and USDC-like transfers", () => {
 
     const firstAccount = parsedTokenAccountsByOwner.value[0];
 
+    const UI_AMOUNT = minorUnitsToDecimal(AMOUNT_OF_USDC_TO_SEND, DECIMALS);
+
     expect(firstAccount).toEqual({
       // Bob's first (and only) USDC account
       account: {
@@ -239,10 +248,9 @@ describe("minting and USDC-like transfers", () => {
               tokenAmount: {
                 // Bob has recievd the fifty cents
                 amount: String(AMOUNT_OF_USDC_TO_SEND),
-                decimals: 2,
-                // TODO - use constants here
-                uiAmount: AMOUNT_OF_USDC_TO_SEND / 100,
-                uiAmountString: String(AMOUNT_OF_USDC_TO_SEND / 100),
+                decimals: DECIMALS,
+                uiAmount: UI_AMOUNT,
+                uiAmountString: String(UI_AMOUNT),
               },
             },
             type: "account",

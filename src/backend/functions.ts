@@ -22,6 +22,15 @@ export const decodeFromBase64 = (stringToDecode: string): string => {
   return Buffer.from(stringToDecode, "base64").toString("ascii");
 };
 
+export const minorUnitsToDecimal = (minorUnits: number, decimal: number) => {
+  // Quick note: we must use division instead of multiplicaton here to fix floating point issues:
+  // > 420 / 1e6
+  // 0.00042
+  // > 420 * 1e-6
+  // 0.00041999999999999996
+  return minorUnits / Math.pow(10, decimal);
+};
+
 // Adapted from https://github.com/mgenware/node-filter-async/blob/main/src/main.ts
 // (which seems to have issues loading its ESM module)
 export const asyncFilter = async <T>(

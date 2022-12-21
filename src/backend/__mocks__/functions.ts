@@ -9,6 +9,7 @@ export const adjustYear = actualFunctions.adjustYear;
 export const encodeToBase64 = actualFunctions.encodeToBase64;
 export const decodeFromBase64 = actualFunctions.decodeFromBase64;
 export const asyncFilter = actualFunctions.asyncFilter;
+export const minorUnitsToDecimal = actualFunctions.minorUnitsToDecimal;
 export const asyncMap = actualFunctions.asyncMap;
 export const sleep = actualFunctions.sleep;
 export const stringify = actualFunctions.stringify;

@@ -19,11 +19,7 @@ import {
 } from "@solana/spl-token";
 import type { Account } from "@solana/spl-token";
 
-import {
-  getMintFromCurrency,
-  USDC_MAINNET_MINT_ACCOUNT,
-  USD_VISUAL_DECIMALS,
-} from "./constants";
+import { getMintFromCurrency, USDC_MAINNET_MINT_ACCOUNT } from "./constants";
 import { getABetterErrorMessage } from "./errors";
 import { log, stringify } from "./functions";
 import { transferWithMemo } from "./transfer-with-memo";
@@ -37,7 +33,8 @@ export const createMintAccount = async (
   // The fee payer used to create the mint
   payer: Keypair,
   // The one account that can mint tokens for this token (this account does not hold the balance)
-  mintAuthority: PublicKey
+  mintAuthority: PublicKey,
+  decimals: number
 ) => {
   try {
     const mintAccountPublicKey = await createMint(
@@ -45,7 +42,7 @@ export const createMintAccount = async (
       payer,
       mintAuthority,
       null, // Don't bother with a freeze address
-      USD_VISUAL_DECIMALS
+      decimals
     );
     return mintAccountPublicKey;
   } catch (thrownObject) {
@@ -64,7 +61,8 @@ export const mintTokens = async (
   mintAccountPublicKey: PublicKey,
   tokenAccountPublicKey: PublicKey,
   mintAuthorityPublicKey: PublicKey,
-  amount: number
+  amount: number,
+  decimals: number
 ) => {
   let transactionHash = await mintToChecked(
     connection, // connection
@@ -73,7 +71,7 @@ export const mintTokens = async (
     tokenAccountPublicKey, // receiver (sholud be a token account)
     mintAuthorityPublicKey, // mint authority
     amount,
-    USD_VISUAL_DECIMALS
+    decimals
   );
   return transactionHash;
 };
