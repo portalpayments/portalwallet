@@ -24,7 +24,7 @@ import {
 import { stringify } from "./functions";
 
 import type { TokenMetaData, ExpandedNFT } from "./types";
-import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
+import { makeTokenAccount, sendTokens } from "./tokens";
 import { connect } from "./vmwallet";
 import { httpGet } from "../lib/utils";
 
@@ -142,11 +142,12 @@ export const mintAndTransferIdentityToken = async (
     recipientTokenAccount.toBase58()
   );
 
-  const signature = await transferPortalIdentityToken(
+  const signature = await sendTokens(
     connection,
     identityTokenIssuer,
     senderTokenAccount,
-    recipientTokenAccount
+    recipientTokenAccount,
+    1
   );
 
   log(`Transferred token to final destination!`, signature);

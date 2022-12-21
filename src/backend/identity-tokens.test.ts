@@ -24,7 +24,7 @@ import {
 } from "./constants";
 import base58 from "bs58";
 import { BN as BigNumber } from "bn.js";
-import { makeTokenAccount, transferPortalIdentityToken } from "./tokens";
+import { makeTokenAccount, sendTokens } from "./tokens";
 
 const testUnlessOnGitHub = process.env.ON_GITHUB ? test.skip : test;
 
@@ -322,11 +322,12 @@ describe(`identity tokens`, () => {
     if (!alicesTokenAccount) {
       throw new Error(`Haven't set alicesTokenAccount yet`);
     }
-    const signature = await transferPortalIdentityToken(
+    const signature = await sendTokens(
       connection,
       testIdentityTokenIssuer,
       senderTokenAccount,
-      alicesTokenAccount
+      alicesTokenAccount,
+      1
     );
 
     expect(signature).toEqual(expect.any(String));

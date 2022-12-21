@@ -97,6 +97,7 @@ export const makeTokenAccount = async (
   };
 };
 
+// See https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 export const sendTokens = async (
   connection: Connection,
   sender: Keypair,
@@ -121,35 +122,6 @@ export const sendTokens = async (
       sender,
       amount,
       memo
-    );
-
-    return signature;
-  } catch (thrownObject) {
-    const error = thrownObject as Error;
-    const fullErrorMessage = getABetterErrorMessage(error.message);
-    if (fullErrorMessage) {
-      throw new Error(fullErrorMessage);
-    }
-    throw error;
-  }
-};
-
-// See https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
-export const transferPortalIdentityToken = async (
-  connection: Connection,
-  sender: Keypair,
-  senderTokenAccount: PublicKey,
-  recipientTokenAccount: PublicKey
-) => {
-  try {
-    const signature = await transfer(
-      connection,
-      sender,
-      senderTokenAccount,
-      recipientTokenAccount,
-      sender.publicKey,
-      1,
-      []
     );
 
     return signature;
