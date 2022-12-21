@@ -1,6 +1,6 @@
 import type { PublicKey } from "@solana/web3.js";
 
-// Shouldn't be necessary but the metaplex will return an awway of 3 possible data types
+// Shouldn't be necessary but the metaplex will return an array of 3 possible data types
 export interface ExpandedNFT {
   model: string;
   updateAuthorityAddress: string;
@@ -54,10 +54,26 @@ export interface ExpandedNFT {
   };
 }
 
+// TODO: retire in favour of NonFungibleTokenMetadataStandard below
+// and update verification to handle the new standard
 export interface TokenMetaData {
   version: number;
   issuedAgainst: string;
   claims: VerifiedClaims;
+}
+
+// TODO: see above
+// From https://docs.metaplex.com/programs/token-metadata/token-standard#the-non-fungible-standard
+// We could also use JsonMetadata<MetaplexFile | string>;
+export interface NonFungibleTokenMetadataStandard {
+  name: string;
+  description: string;
+  image: string;
+  external_url: string;
+  attributes: Array<{
+    trait_type: string;
+    value: string;
+  }>;
 }
 
 // A token account, with just the properties we care about

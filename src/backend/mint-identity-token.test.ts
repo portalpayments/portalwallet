@@ -11,8 +11,7 @@ import { mintAndTransferIdentityToken } from "./identity-tokens";
 import { uploadImageToArweave } from "./arweave";
 import dotenv from "dotenv";
 import { getKeypairFromString } from "./vmwallet";
-import { SECOND, SECONDS } from "./constants";
-
+import { MINUTES, SECOND, SECONDS } from "./constants";
 
 dotenv.config();
 
@@ -60,5 +59,5 @@ testOrSkip(
 
     log(`✅ Completed successfully`);
   },
-  60 * SECONDS
+  2 * MINUTES
 );

@@ -58,7 +58,7 @@ export async function transferWithMemo(
     commitment: "confirmed",
   };
 
-  log(`Sending USDC with memo "${memo}"`);
+  log(`Sending tokens with memo "${memo}"`);
   const [ownerPublicKey, signers] = getSigners(ownerAndPayer, multiSigners);
 
   const transaction = new Transaction().add(

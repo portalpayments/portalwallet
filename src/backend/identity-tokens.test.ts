@@ -75,6 +75,11 @@ describe(`identity tokens`, () => {
     );
 
     const name = IDENTITY_TOKEN_NAME;
+
+    // QUESTION / TODO
+    // I do not understand how mintIdentityToken() for metadata
+    // can produce such large output
+    // I guess it has some defaults?
     const createOutput = await mintIdentityToken(
       connection,
       testIdentityTokenIssuer,
@@ -186,10 +191,10 @@ describe(`identity tokens`, () => {
           model: "nftEdition",
           isOriginal: true,
           address: masterEditionAddress,
-          // TODO: this is zero, but in a lsightly different form
+          // TODO: this is zero, but in a slightly different form
           // from new BigNum(0). Actually check value.
           supply: expect.any(BigNumber),
-          // TODO: this is zero, but in a lsightly different form
+          // TODO: this is zero, but in a slightly different form
           // from new BigNum(0). Actually check value.
           maxSupply: expect.any(BigNumber),
         },

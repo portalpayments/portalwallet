@@ -23,12 +23,10 @@ import {
 } from "./constants";
 import { stringify } from "./functions";
 
-import type { TokenMetaData, ExpandedNFT } from "./types";
+import type { TokenMetaData, ExpandedNFT, BasicTokenAccount } from "./types";
 import { makeTokenAccount, sendTokens } from "./tokens";
 import { connect } from "./vmwallet";
 import { httpGet } from "../lib/utils";
-
-const name = IDENTITY_TOKEN_NAME;
 
 export const getMetaplex = (
   connection: Connection,
@@ -45,10 +43,20 @@ export const getMetaplex = (
     .use(mockStorage());
 };
 
+// Problem is in the form of
+// "The account of type [MintAccount] was not found at the provided address [4DuUeum1r4MP19SAYfg57LdeqeWui7Z5a8mc1KCTiS1N]."
+const getAddressFromProblem = (problem: string) => {
+  const regex = /provided address \[(.*)\]/g;
+  const matches = [...problem.matchAll(regex)];
+  // First match, item 2
+  return matches[0][1];
+};
+
 // Create an identityToken, it will be owned by identityTokenIssuer
 export const mintIdentityToken = async (
   connection: Connection,
   identityTokenIssuer: Keypair,
+  // TODO: use NonFungibleTokenMetadataStandard
   metadata: Record<string, any>,
   isProduction: boolean
 ) => {
@@ -68,17 +76,37 @@ export const mintIdentityToken = async (
     createOutput = await metaplexNFTs
       .create({
         uri: uploadResponse.uri, // "https://arweave.net/123",
-        name,
+        name: IDENTITY_TOKEN_NAME,
         sellerFeeBasisPoints: 0, // 500 would represent 5.00%.
       })
       .run();
   } catch (thrownError) {
     const error = thrownError as Error;
-    log(`Unexpected error`, error.message);
+
     // See https://github.com/metaplex-foundation/js/issues/148
-    throw new Error(
-      `Check Sol balance of wallet for token issuer ${identityTokenIssuer.publicKey.toBase58()}`
-    );
+    if (error.message.includes("Failed to pack instruction data")) {
+      throw new Error(
+        `Increase Sol balance of wallet for token issuer ${identityTokenIssuer.publicKey.toBase58()}`
+      );
+    }
+
+    // Another possible error - this may be a metaplex bug
+    // Unexpected error Account Not Found
+    // >> Source: SDK
+    // >> Problem: The account of type [MintAccount] was not found at the provided address [51pE2seG8HAk9ToWrKQfakMWrp3dJ8RPqRnnXu9jqyzV].
+    // >> Solution: Ensure the provided address is correct and that an account exists at this address.
+    log(`Potential metaplex bug found when creating NFT: ${error.message}`);
+
+    // @ts-ignore
+    const mintAddressInProblem = getAddressFromProblem(error.problem);
+    if (mintAddressInProblem) {
+      throw new Error(
+        `Metaplex couldn't find the mint account, but https://explorer.solana.com/address/${mintAddressInProblem}`
+      );
+    }
+
+    log(`Unexpected error creating NFT:`, error.message);
+    throw error;
   }
 
   return createOutput;
@@ -88,22 +116,27 @@ export const mintIdentityToken = async (
 // https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 
 export const mintAndTransferIdentityToken = async (
-  wallet: string,
+  recipientWallet: string,
   givenName: string,
   familyName: string,
   uploadedImageUrl: string,
   identityTokenIssuer: Keypair
 ) => {
-  log(`🏦 Minting identity token`);
   const connection = await connect("quickNodeMainNetBeta");
 
+  log(`🏦 Minting identity token...`);
   let tokenCreateOutput: CreateNftOutput;
 
   try {
     tokenCreateOutput = await mintIdentityToken(
       connection,
       identityTokenIssuer,
-      makeTokenMetaData(wallet, givenName, familyName, uploadedImageUrl),
+      makeTokenMetaData(
+        recipientWallet,
+        givenName,
+        familyName,
+        uploadedImageUrl
+      ),
       true
     );
   } catch (thrownObject) {
@@ -113,44 +146,54 @@ export const mintAndTransferIdentityToken = async (
         `⚠️ The token mint account has run out of Sol. Please send Sol to the Token issuer account ${identityTokenIssuer.publicKey.toBase58()}`
       );
     }
-    log(`Unexpected error making NFT`);
+    log(`Unexpected error making NFT: ${error.message}`);
     throw error;
   }
 
   const mintAddress = tokenCreateOutput.mintAddress;
-  const tokenAddress = tokenCreateOutput.tokenAddress;
+  const senderTokenAccount = tokenCreateOutput.tokenAddress;
 
-  log(`🎟️ The token for ${givenName} has been created.`, {
-    mintAddress: mintAddress.toBase58(),
-    tokenAddress: tokenAddress.toBase58(),
-  });
+  log(`🎟️ The token for ${givenName} has been created.`);
 
-  // Yes really, the sender token account is the token address
-  const senderTokenAccount = tokenAddress;
+  // Get the token account of the fromWallet address, and if it does not exist, create it
 
-  const tokenAccountResults = await makeTokenAccount(
-    connection,
-    identityTokenIssuer,
-    mintAddress,
-    new PublicKey(wallet)
-  );
+  log(`STEP 2: Making a token account for the recipient...`);
 
-  const recipientTokenAccount = tokenAccountResults.address;
+  let recipientTokenAccount: BasicTokenAccount;
+  try {
+    recipientTokenAccount = await makeTokenAccount(
+      connection,
+      identityTokenIssuer,
+      mintAddress,
+      new PublicKey(recipientWallet)
+    );
+    log(`👛 made token account for this mint on ${givenName}'s wallet`);
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    // error.message is blank for some reason
+    log(
+      `⚠️Could not make token account for this mint on ${givenName}'s wallet: ${error.name}`
+    );
+  }
 
-  log(
-    `👛 made token account for this mint on ${givenName}'s wallet, recipient token account is`,
-    recipientTokenAccount.toBase58()
-  );
+  log(`Making a token account for the recipient...`);
 
-  const signature = await sendTokens(
-    connection,
-    identityTokenIssuer,
-    senderTokenAccount,
-    recipientTokenAccount,
-    1
-  );
-
-  log(`Transferred token to final destination!`, signature);
+  log(`Transferring token to final destination...`);
+  let signature: string;
+  try {
+    signature = await sendTokens(
+      connection,
+      identityTokenIssuer,
+      senderTokenAccount,
+      recipientTokenAccount.address,
+      1
+    );
+    log(`Transferred token to final destination!`, signature);
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    log(`⚠️ Could not transfer token to final destination: ${error.message}`);
+    throw error;
+  }
 
   return signature;
 };
@@ -174,6 +217,8 @@ export const getAllNftMetadatasFromAWallet = async (
   return findNftsByOwnerOutput;
 };
 
+// TODO: comply with https://docs.metaplex.com/programs/token-metadata/token-standard
+// See types.ts
 export const makeTokenMetaData = (
   wallet: string,
   givenName: string,
