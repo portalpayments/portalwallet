@@ -100,15 +100,15 @@ export const makeTokenAccount = async (
 export const sendTokens = async (
   connection: Connection,
   sender: Keypair,
-  senderTokenAccount: BasicTokenAccount,
-  recipientTokenAccount: BasicTokenAccount,
+  senderTokenAccountAddress: PublicKey,
+  recipientTokenAccountAddress: PublicKey,
   amount: number,
   memo: null | string = null
 ) => {
   try {
     log(`Inside sendTokens:`, {
-      senderTokenAccount: senderTokenAccount.address.toBase58(),
-      recipientTokenAccount: recipientTokenAccount.address.toBase58(),
+      senderTokenAccount: senderTokenAccountAddress.toBase58(),
+      recipientTokenAccount: recipientTokenAccountAddress.toBase58(),
       senderPublicKey: sender.publicKey.toBase58(),
       amount,
       memo,
@@ -116,8 +116,8 @@ export const sendTokens = async (
 
     const signature = await transferWithMemo(
       connection,
-      senderTokenAccount.address,
-      recipientTokenAccount.address,
+      senderTokenAccountAddress,
+      recipientTokenAccountAddress,
       sender,
       amount,
       memo
@@ -209,8 +209,8 @@ export const makeAccountsAndDoTransfer = async (
   const signature = await sendTokens(
     connection,
     senderKeyPair,
-    senderTokenAccount,
-    recipientTokenAccount,
+    senderTokenAccount.address,
+    recipientTokenAccount.address,
     transferAmountInMinorUnits,
     memo
   );

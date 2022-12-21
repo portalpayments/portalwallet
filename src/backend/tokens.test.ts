@@ -135,7 +135,6 @@ describe("minting and USDC-like transfers", () => {
     const MINT_AMOUNT = 420;
     const MINT_AMOUNT_UI = minorUnitsToDecimal(MINT_AMOUNT, DECIMALS);
 
-
     const transactionHash = await mintTokens(
       connection,
       testUSDCAuthority,
@@ -213,8 +212,8 @@ describe("minting and USDC-like transfers", () => {
     const signature = await sendTokens(
       connection,
       alice,
-      alicesTokenAccount,
-      bobsTokenAccount,
+      alicesTokenAccount.address,
+      bobsTokenAccount.address,
       AMOUNT_OF_USDC_TO_SEND,
       "Cinema tickets"
     );
