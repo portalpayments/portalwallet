@@ -27,7 +27,7 @@ import type { BasicTokenAccount } from "./types";
 import type { Currency as CurrencyType } from "../lib/types";
 import { Currency } from "../lib/types";
 
-// Mint accounts hold information about the token such as how many decimals the token has and who can mint new tokens, and is  is later used to mint tokens to a token account and create the initial supply.
+// Mint accounts hold information about the token such as how many decimals the token has and who can mint new tokens, and the mint account is later used to mint tokens to a token account and create the initial supply.
 export const createMintAccount = async (
   connection: Connection,
   // The fee payer used to create the mint
@@ -49,7 +49,7 @@ export const createMintAccount = async (
     const error = thrownObject as Error;
     const fullErrorMessage = getABetterErrorMessage(error.message);
     if (fullErrorMessage) {
-      throw new Error(fullErrorMessage);
+      error.message = fullErrorMessage;
     }
     throw error;
   }
