@@ -159,6 +159,7 @@
   .border:has(input:focus) .floating-label,
   .border:has(input:valid) .floating-label {
     top: 6px;
+    height: 16px;
     font-size: 12px;
     line-height: 12px;
     opacity: 1;
@@ -172,12 +173,18 @@
 
   .floating-label {
     position: absolute;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    padding: 0 12px;
+    align-content: center;
+
+    text-align: left;
+
     pointer-events: none;
     color: #9d9d9d;
-    left: 14px;
-    top: 12px;
     transition: 0.2s ease all;
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .floating-label .inline-usdc {
