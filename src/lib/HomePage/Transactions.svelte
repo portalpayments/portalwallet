@@ -7,7 +7,8 @@
     getTransactionsByDays,
     isoDateToFriendlyName,
   } from "../../backend/transactions";
-  import { Currency } from "../../lib/types";
+  import type { Currency } from "../../lib/types";
+  import LoadingImage from "../../assets/transactions-loading.svg";
   import type {
     TransactionSummary,
     TransactionsByDay,
@@ -64,12 +65,25 @@
 
     isLoadingTransactionSummaries = false;
   });
+
+  const loadMoreTransactions = (event) => {
+    const element = event.currentTarget;
+
+    // Round because sometimes an element that's 70 pixels high scan be scrolled 69.7 pixels down (and that's 'all the way')
+    const howFarScrolled = Math.round(element.scrollTop + element.clientHeight);
+    const scrollableArea = element.scrollHeight;
+
+    if (howFarScrolled === scrollableArea) {
+      // The element has been scrolled all the way down
+      console.log("Element scrolled all the way down");
+    }
+  };
 </script>
 
 {#if transactionsByDays}
   {#if !isLoadingTransactionSummaries}
     {#if transactionsByDays.length}
-      <div class="days">
+      <div class="days" on:scroll={loadMoreTransactions}>
         {#each transactionsByDays as transactionsByDay}
           <div class="day">
             <div class="day-summary">
@@ -100,6 +114,9 @@
             </div>
           </div>
         {/each}
+        <div class="loading-more">
+          <img src={LoadingImage} alt="Loading more transactions" />
+        </div>
       </div>
     {:else}
       <p>No transactions.</p>
@@ -157,5 +174,17 @@
     text-transform: uppercase;
     font-weight: 600;
     color: #7d7d7d;
+  }
+
+  .loading-more {
+    height: 128px;
+    justify-items: center;
+    align-items: center;
+    padding-bottom: 64px;
+  }
+
+  .loading-more img {
+    width: 32px;
+    aspect-ratio: 1 1;
   }
 </style>
