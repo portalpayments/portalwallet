@@ -15,9 +15,9 @@
 
   // Find the contact for this transaction
 
-  // TODO - we could just make a prop for the contact
+  // TODO - we could just make a prop for the contact on the transaction
   // and the parent could provide the contact
-  // rather than having every single Transaction subscribe
+  // rather than having every single Transaction subscribe to contact store
 
   // TODO: cache the NFTs
   // TODO: cache the profile images
