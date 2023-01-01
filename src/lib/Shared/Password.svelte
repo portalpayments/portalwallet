@@ -8,6 +8,7 @@
   export let isBadPassword = false;
   export let onInputDelay: Function | null = null;
   export let onMount: Function | null = null;
+  export let isNewPassword: boolean = false;
 
   let element;
 
@@ -31,6 +32,7 @@
   bind:value
   bind:this={element}
   required
+  autocomplete={isNewPassword ? "new-password" : "current-password"}
   class="password {isBadPassword ? 'bad-password' : ''}"
   on:keydown={(event) => {
     if (onEnter) {
