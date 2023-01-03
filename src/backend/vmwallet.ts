@@ -34,6 +34,8 @@ import { identityTokenIssuerPublicKey } from "../lib/stores";
 
 const VERIFIED_CLAIMS_BY_ADDRESS: Record<string, VerifiedClaims> = {};
 
+const debug = (_unused) => {};
+
 export const getKeypairFromString = (secretKeyString: string) => {
   let decodedSecretKey: Uint8Array;
   try {
@@ -297,7 +299,7 @@ export const getTokenAccountSummaries = async (
       const currencyInfo = mintToCurrencyMap[tokenAccount.mint.toBase58()];
 
       if (!currencyInfo) {
-        log(`Unknown currency for mint ${tokenAccount.mint}`);
+        debug(`Unknown currency for mint ${tokenAccount.mint}`);
         return null;
       }
 

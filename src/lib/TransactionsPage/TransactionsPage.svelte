@@ -5,42 +5,52 @@
   import Input from "../Shared/Input.svelte";
   import { log, stringify } from "../../backend/functions";
 
-  let filterValue = "";
+  const EMPTY = "";
 
-  const filterEvents = (event) => {
-    log(`Searching for`, event.target.value);
+  let filterValue: string;
+  $: filterValue = EMPTY;
+
+  const filterTransactions = (event) => {
+    log(`Searching for ...`, event.target.value);
+    filterValue = event.target.value;
+  };
+
+  const clearTransactionFilter = () => {
+    log(`Clearing filterValue...`);
+    filterValue = EMPTY;
   };
 </script>
 
-<div class="transactions-page">
+<div class="transactions-screen">
   <BackButton />
   <div class="header">
     <Heading>Transactions</Heading>
-    <Input
-      value={filterValue}
-      isAmount={false}
-      isFocused={false}
-      label="Search people and purchases."
-      onTypingPause={filterEvents}
-    />
   </div>
+  <Input
+    value={filterValue}
+    isAmount={false}
+    isFocused={false}
+    label="Search people, days and purchases."
+    onTypingPause={filterTransactions}
+    onClear={clearTransactionFilter}
+    theme="square"
+    showClearButton={true}
+  />
+
   <div class="x">
-    <Transactions />
+    <Transactions {filterValue} />
   </div>
 </div>
 
 <style type="text/scss">
   @import "../../mixins.scss";
-  .transactions-page {
-    min-width: var(--wallet-width);
-    max-width: var(--wallet-width);
-    min-height: var(--wallet-height);
-    max-height: var(--wallet-height);
-    display: grid;
+  .transactions-screen {
+    width: var(--wallet-width);
+    height: var(--wallet-height);
     grid-auto-flow: row;
     justify-content: center;
     align-items: center;
-    grid-template-rows: 128px 1fr;
+    grid-template-rows: 96px 48px calc(var(--wallet-height) - 96px - 48px);
     grid-template-columns: 100%;
 
     overflow: hidden;
@@ -51,5 +61,9 @@
 
   .header {
     padding: 12px 24px;
+  }
+
+  .x {
+    height: 100%;
   }
 </style>

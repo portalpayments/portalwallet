@@ -14,8 +14,14 @@
   export let filterField: "numbers" | "walletAddress" | null = null;
 
   export let onTypingPause: svelte.JSX.KeyboardEventHandler<HTMLInputElement> | null;
+  export let onClear: svelte.JSX.MouseEventHandler<HTMLButtonElement> | null =
+    null;
 
   export let theme: "square" | "round" = "round";
+
+  export let showClearButton = false;
+
+  const EMPTY = "";
 
   const focus = getFocusContext();
 
@@ -36,7 +42,7 @@
     } else {
       log(`No bad characters`);
     }
-    return string.replace(regex, "");
+    return string.replace(regex, EMPTY);
   };
 
   const filterInput = (event) => {
@@ -95,13 +101,16 @@
       }, 1 * SECOND)}
       on:input|capture={filterInput}
     />
-    <span class="floating-label">
+    <div class="floating-label">
       {label}
       {#if isAmount}
         <!-- TODO: set currency properly -->
         <img class="inline-usdc" src={USDClogo} alt="usdc logo" />
       {/if}
-    </span>
+    </div>
+    {#if showClearButton && value !== EMPTY}
+      <button class="clear" on:click={onClear}>×</button>
+    {/if}
   </div>
 
   {#if isAmount}
@@ -203,5 +212,16 @@
     justify-self: end;
     font-weight: 600;
     padding: 3px 4px 0px 0px;
+  }
+
+  button.clear {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 23px;
+    display: grid;
+    background: transparent;
+    align-content: center;
+    color: var(--black);
   }
 </style>

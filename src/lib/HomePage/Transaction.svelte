@@ -54,6 +54,7 @@
     transaction.receipt ? "with-receipt" : ""
   }`}
 >
+  <textarea class="debug">{stringify(transaction)}</textarea>
   {#if contact}
     <img
       class="profile-pic"
@@ -108,6 +109,10 @@
     grid-template-columns: 42px 1fr 64px;
     align-items: center;
     gap: 8px;
+  }
+
+  .debug {
+    display: none;
   }
 
   .transaction.with-receipt {

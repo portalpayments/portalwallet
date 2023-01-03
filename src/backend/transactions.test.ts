@@ -13,8 +13,8 @@ import {
   MIKES_WALLET,
   YCOMBINATOR_DEMO_WALLET_FOR_JARED,
 } from "./constants";
-import { Currency, type TransactionSummary } from "../lib/types";
-import { Direction } from "../lib/types";
+import { Currency, type TransactionSummary, Direction } from "../lib/types";
+
 import { hexToUtf8, log, stringify } from "./functions";
 import { sendFiveUSDC } from "./test-data/transactions/sendFiveUSDC";
 import { sendingMoneyToSelf } from "./test-data/transactions/sendingMoneyToSelf";
@@ -28,6 +28,130 @@ import { sendingUSDH } from "./test-data/transactions/sendingUSDH";
 jest.mock("./functions");
 
 const GREGS_WALLET = "CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs";
+
+const contacts = [
+  {
+    walletAddress: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
+    isNew: false,
+    isPending: false,
+    verifiedClaims: {
+      // TODO: kinda odd but we have to satify the TS compiler
+      type: "INDIVIDUAL" as "INDIVIDUAL",
+      givenName: "Jared",
+      familyName: "Friedman",
+      imageUrl:
+        "https://arweave.net/wthKTNtIJezFDl3uevmGfGLiYdZ-5IN5LlfvLJNWc9U",
+    },
+  },
+];
+
+const transactionSummaries: Array<TransactionSummary> = [
+  {
+    id: "1",
+    date: 1662985498000,
+    status: true,
+    networkFee: 5000,
+    direction: 0,
+    amount: 1000000,
+    currency: Currency.USDC,
+    from: MIKES_WALLET,
+    to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
+    memo: null,
+    receipt: null,
+  },
+  {
+    id: "2",
+    date: 1662741437000,
+    status: true,
+    networkFee: 5000,
+    direction: 0,
+    amount: 500000,
+    currency: Currency.USDC,
+    from: MIKES_WALLET,
+    to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+    memo: null,
+    receipt: null,
+  },
+  // Sneaky sol transaction - we don't want to see this in our USDC transaction summary!
+  {
+    id: "3",
+    date: 1662733089000,
+    status: true,
+    networkFee: 5000,
+    direction: 0,
+    amount: 30000000,
+    currency: Currency.SOL,
+    from: MIKES_WALLET,
+    to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
+    memo: null,
+    receipt: null,
+  },
+  {
+    id: "4",
+    date: 1662657138000,
+    status: true,
+    networkFee: 5000,
+    direction: 0,
+    amount: 70000,
+    currency: Currency.USDC,
+    from: MIKES_WALLET,
+    to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+    memo: null,
+    receipt: null,
+  },
+  {
+    id: "5",
+    date: 1662656099000,
+    status: true,
+    networkFee: 5000,
+    direction: 0,
+    amount: 210000,
+    currency: Currency.USDC,
+    from: MIKES_WALLET,
+    to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+    memo: null,
+    receipt: null,
+  },
+  {
+    id: "6",
+    date: 1662654222000,
+    status: true,
+    networkFee: 5000,
+    direction: 0,
+    amount: 230000,
+    currency: Currency.USDC,
+    from: MIKES_WALLET,
+    to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+    memo: null,
+    receipt: null,
+  },
+  {
+    id: "7",
+    date: 1662653886000,
+    status: true,
+    networkFee: 5000,
+    direction: 0,
+    amount: 210000,
+    currency: Currency.USDC,
+    from: MIKES_WALLET,
+    to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+    memo: null,
+    receipt: null,
+  },
+  {
+    id: "8",
+    date: 1662643371000,
+    status: true,
+    networkFee: 5000,
+    direction: 0,
+    amount: 70000,
+    currency: Currency.USDC,
+    from: MIKES_WALLET,
+    to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+    memo: null,
+    receipt: null,
+  },
+];
 
 describe(`transaction summaries`, () => {
   // Mike sending CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs with glow
@@ -246,117 +370,9 @@ describe(`transaction summaries`, () => {
 
 describe(`grouping transactions`, () => {
   test(`grouping transactions`, () => {
-    const transactionSummaries: Array<TransactionSummary> = [
-      {
-        id: "1",
-        date: 1662985498000,
-        status: true,
-        networkFee: 5000,
-        direction: 0,
-        amount: 1000000,
-        currency: Currency.USDC,
-        from: MIKES_WALLET,
-        to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
-        memo: null,
-        receipt: null,
-      },
-      {
-        id: "2",
-        date: 1662741437000,
-        status: true,
-        networkFee: 5000,
-        direction: 0,
-        amount: 500000,
-        currency: Currency.USDC,
-        from: MIKES_WALLET,
-        to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-        memo: null,
-        receipt: null,
-      },
-      // Sneaky sol transaction - we don't want to see this in our USDC transaction summary!
-      {
-        id: "3",
-        date: 1662733089000,
-        status: true,
-        networkFee: 5000,
-        direction: 0,
-        amount: 30000000,
-        currency: Currency.SOL,
-        from: MIKES_WALLET,
-        to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
-        memo: null,
-        receipt: null,
-      },
-      {
-        id: "4",
-        date: 1662657138000,
-        status: true,
-        networkFee: 5000,
-        direction: 0,
-        amount: 70000,
-        currency: Currency.USDC,
-        from: MIKES_WALLET,
-        to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-        memo: null,
-        receipt: null,
-      },
-      {
-        id: "5",
-        date: 1662656099000,
-        status: true,
-        networkFee: 5000,
-        direction: 0,
-        amount: 210000,
-        currency: Currency.USDC,
-        from: MIKES_WALLET,
-        to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-        memo: null,
-        receipt: null,
-      },
-      {
-        id: "6",
-        date: 1662654222000,
-        status: true,
-        networkFee: 5000,
-        direction: 0,
-        amount: 230000,
-        currency: Currency.USDC,
-        from: MIKES_WALLET,
-        to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-        memo: null,
-        receipt: null,
-      },
-      {
-        id: "7",
-        date: 1662653886000,
-        status: true,
-        networkFee: 5000,
-        direction: 0,
-        amount: 210000,
-        currency: Currency.USDC,
-        from: MIKES_WALLET,
-        to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-        memo: null,
-        receipt: null,
-      },
-      {
-        id: "8",
-        date: 1662643371000,
-        status: true,
-        networkFee: 5000,
-        direction: 0,
-        amount: 70000,
-        currency: Currency.USDC,
-        from: MIKES_WALLET,
-        to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-        memo: null,
-        receipt: null,
-      },
-    ];
-
     const transactionsByDays = getTransactionsByDays(
       transactionSummaries,
-      Currency.USDC
+      contacts
     );
 
     expect(transactionsByDays).toEqual([
@@ -464,6 +480,98 @@ describe(`grouping transactions`, () => {
             currency: 0,
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+            memo: null,
+            receipt: null,
+          },
+        ],
+      },
+    ]);
+  });
+
+  test(`grouping transactions with a filter for Mike's wallet address`, () => {
+    const transactionSummariesSmall = [
+      {
+        id: "1",
+        date: 1662985498000,
+        status: true,
+        networkFee: 5000,
+        direction: 0,
+        amount: 1000000,
+        currency: 0,
+        from: MIKES_WALLET,
+        to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
+        memo: null,
+        receipt: null,
+      },
+    ];
+
+    const transactionsByDays = getTransactionsByDays(
+      transactionSummariesSmall,
+      contacts,
+      MIKES_WALLET
+    );
+
+    expect(transactionsByDays).toEqual([
+      {
+        isoDate: "2022-09-12",
+        totalSpending: 1000000,
+        transactions: [
+          {
+            id: "1",
+            date: 1662985498000,
+            status: true,
+            networkFee: 5000,
+            direction: 0,
+            amount: 1000000,
+            currency: 0,
+            from: MIKES_WALLET,
+            to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
+            memo: null,
+            receipt: null,
+          },
+        ],
+      },
+    ]);
+  });
+
+  test(`grouping transactions with a filter for Jared's name`, () => {
+    const transactionSummariesSmall = [
+      {
+        id: "1",
+        date: 1662985498000,
+        status: true,
+        networkFee: 5000,
+        direction: 0,
+        amount: 1000000,
+        currency: 0,
+        from: MIKES_WALLET,
+        to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
+        memo: null,
+        receipt: null,
+      },
+    ];
+
+    const transactionsByDays = getTransactionsByDays(
+      transactionSummariesSmall,
+      contacts,
+      "jared"
+    );
+
+    expect(transactionsByDays).toEqual([
+      {
+        isoDate: "2022-09-12",
+        totalSpending: 1000000,
+        transactions: [
+          {
+            id: "1",
+            date: 1662985498000,
+            status: true,
+            networkFee: 5000,
+            direction: 0,
+            amount: 1000000,
+            currency: 0,
+            from: MIKES_WALLET,
+            to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
             memo: null,
             receipt: null,
           },

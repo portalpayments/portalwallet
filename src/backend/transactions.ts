@@ -12,6 +12,7 @@ import {
   MEMO_PROGRAM,
   mintToCurrencyMap,
   NOTE_PROGRAM,
+  SOLANA_WALLET_REGEX,
   SPL_TOKEN_PROGRAM,
 } from "./constants";
 import { getReceiptForTransactionSummary } from "./receipts";
@@ -27,6 +28,8 @@ import {
 export const solanaBlocktimeToJSTime = (blockTime: number) => {
   return blockTime * 1000;
 };
+
+export const debug = (_ignored) => {};
 
 // May be unnecessary but 'absolute value' isn't necessaryilt a well known concept
 export const removeSign = (number: number) => {
@@ -270,21 +273,78 @@ export const summarizeTransaction = async (
     const error = thrownObject as Error;
     // TODO: throw error instead of just log
     // (once we can handle more types of transactions in future)
-    log(
+    debug(
       `Warning: could not summarize transaction ID: ${id} - see the block explorer for more info, ${error.message}`
     );
     return null;
   }
 };
 
+export const findContactByAddress = (
+  contacts: Array<Contact>,
+  walletAddress: string
+) => {
+  return contacts.find((contact) => contact.walletAddress === walletAddress);
+};
+
+export const getContactMatch = (contact: Contact, filterValue: string) => {
+  if (!contact?.verifiedClaims) {
+    return false;
+  }
+  return (
+    contact.verifiedClaims.givenName.toLowerCase().includes(filterValue) ||
+    contact.verifiedClaims.familyName.toLowerCase().includes(filterValue)
+  );
+};
+
 export const getTransactionsByDays = (
   // It is assumed that all transactionSummaries are for the same currency
   transactions: Array<TransactionSummary>,
-  currency: Currency
+  contacts: Array<Contact>,
+  filterValue: string = ""
 ): Array<TransactionsByDay> => {
-  transactions = transactions
-    .sort(byDateNewestToOldest)
-    .filter((transaction) => transaction.currency === currency);
+  transactions = transactions.sort(byDateNewestToOldest);
+
+  log(
+    `In getTransactionsByDays, ${transactions.length} transactions before filtering`
+  );
+
+  if (filterValue.length) {
+    transactions = transactions.filter((transaction) => {
+      let isWalletAddressMatch = false;
+      if (SOLANA_WALLET_REGEX.match(filterValue)) {
+        isWalletAddressMatch =
+          transaction.from.includes(filterValue) ||
+          transaction.to.includes(filterValue);
+      }
+
+      let isContactMatch = false;
+
+      const fromContact = findContactByAddress(contacts, transaction.from);
+      const toContact = findContactByAddress(contacts, transaction.to);
+
+      isContactMatch =
+        getContactMatch(fromContact, filterValue) ||
+        getContactMatch(toContact, filterValue);
+
+      let isMemoMatch = transaction?.memo?.includes(filterValue) || false;
+
+      let isReceiptMatch =
+        (transaction?.receipt?.items &&
+          transaction.receipt.items.find((item) =>
+            item.name.includes(filterValue)
+          )) ||
+        false;
+
+      return (
+        isWalletAddressMatch || isContactMatch || isMemoMatch || isReceiptMatch
+      );
+    });
+  }
+
+  log(
+    `In getTransactionsByDays, ${transactions.length} transactions after any filtering`
+  );
 
   const transactionsByDays: Array<TransactionsByDay> = [];
 

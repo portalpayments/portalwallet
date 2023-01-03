@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onChangeActiveAccount } from "../../lib/stores";
+  import Input from "../Shared/Input.svelte";
   import TransactionComponent from "./Transaction.svelte";
   import { amountAndDecimalsToMajorAndMinor } from "../../lib/utils";
   import { get as getFromStore } from "svelte/store";
@@ -16,54 +17,65 @@
   } from "../../lib/types";
   import { log, stringify } from "../../backend/functions";
   import { SECOND, SECONDS } from "../../backend/constants";
-  import { tokenAccountsStore, getActiveAccount } from "../stores";
+  import {
+    tokenAccountsStore,
+    contactsStore,
+    getActiveAccount,
+  } from "../stores";
   import SkeletonTransactions from "../Shared/Skeletons/SkeletonTransactions.svelte";
 
   import { slide, fade } from "svelte/transition";
   import { quintInOut } from "svelte/easing";
 
+  const EMPTY = "";
+
+  export let filterValue: string = EMPTY;
+
+  // TODO: maybe move transactionsByDays to a store?
   let transactionsByDays: Array<TransactionsByDay> = [];
+  let contacts: Array<Contact> = [];
   let decimals: number;
   let isLoadingTransactionSummaries: boolean = true;
 
-  const reloadTransactionsByDays = (
-    transactionSummaries: Array<TransactionSummary>,
-    currency: Currency
-  ) => {
-    transactionsByDays = getTransactionsByDays(transactionSummaries, currency);
-  };
-
-  tokenAccountsStore.subscribe((newValue: Array<AccountSummary>) => {
-    if (newValue?.length) {
-      log(`tokenAccountsStore has changed`);
-      const activeAccount = getActiveAccount();
-      if (!activeAccount) {
-        // TODO: maybe change this so transactionsStore always sets the active account?
-        // when it first loads?
-        log(`No active account yet, no transactions store to load`);
-        return;
-      }
-      reloadTransactionsByDays(
-        activeAccount.transactionSummaries,
-        activeAccount.currency
-      );
+  const updateTransactionsByDays = (activeAccount: AccountSummary) => {
+    log(`In updateTransactionsByDays, filterValue is ${filterValue}`);
+    if (!activeAccount) {
+      // TODO: maybe change this so transactionsStore always sets the active account?
+      // when it first loads?
+      log(`No active account yet, no transactions store to load`);
+      return;
     }
-  });
-
-  // TODO: maybe move transactionsByDays to the store?
-  onChangeActiveAccount((activeAccount) => {
-    log(`Active account has changed`);
-
-    decimals = activeAccount.decimals;
-
     isLoadingTransactionSummaries = true;
 
-    reloadTransactionsByDays(
+    transactionsByDays = getTransactionsByDays(
       activeAccount.transactionSummaries,
-      activeAccount.currency
+      contacts,
+      filterValue
     );
 
     isLoadingTransactionSummaries = false;
+  };
+
+  contactsStore.subscribe(async (newValue) => {
+    if (newValue) {
+      contacts = newValue;
+    }
+  });
+
+  tokenAccountsStore.subscribe((newValue: Array<AccountSummary>) => {
+    if (newValue?.length) {
+      log(
+        `tokenAccountsStore has changed (eg a token account had been added or removed)`
+      );
+      const activeAccount = getActiveAccount();
+      updateTransactionsByDays(activeAccount);
+    }
+  });
+
+  onChangeActiveAccount((activeAccount) => {
+    log(`Active account has changed`);
+    decimals = activeAccount.decimals;
+    updateTransactionsByDays(activeAccount);
   });
 
   const loadMoreTransactions = (event) => {
@@ -78,6 +90,17 @@
       console.log("Element scrolled all the way down");
     }
   };
+
+  const onFilterValueChanged = () => {
+    log(`Filter value has changed! New value is: "${filterValue}"`);
+    const activeAccount = getActiveAccount();
+    updateTransactionsByDays(activeAccount);
+  };
+
+  $: {
+    log(`filterValue has changed: ${filterValue}`);
+    onFilterValueChanged();
+  }
 </script>
 
 {#if transactionsByDays}
@@ -114,12 +137,16 @@
             </div>
           </div>
         {/each}
-        <div class="loading-more">
-          <img src={LoadingImage} alt="Loading more transactions" />
-        </div>
+        {#if filterValue === EMPTY}
+          <div class="loading-more">
+            <img src={LoadingImage} alt="Loading more transactions" />
+          </div>
+        {/if}
       </div>
-    {:else}
+    {:else if filterValue === EMPTY}
       <p>No transactions.</p>
+    {:else}
+      <p>No matching transactions.</p>
     {/if}
   {:else}
     <div class="days mock-days">
@@ -185,6 +212,6 @@
 
   .loading-more img {
     width: 32px;
-    aspect-ratio: 1 1;
+    aspect-ratio: 1 / 1;
   }
 </style>

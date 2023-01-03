@@ -57,6 +57,7 @@ export const toUniqueStringArray = (array: Array<string>): Array<string> => {
   return [...new Set(array)];
 };
 
+// TODO: Maybe change this to return { major: x, minor: y}
 export const amountAndDecimalsToMajorAndMinor = (
   amount: number,
   decimals: number

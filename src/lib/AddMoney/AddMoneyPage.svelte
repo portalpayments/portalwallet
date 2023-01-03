@@ -3,14 +3,14 @@
   import Heading from "../Shared/Heading.svelte";
 </script>
 
-<div class="add-money-page">
+<div class="add-money-screen">
   <BackButton />
   <Heading>Transfer</Heading>
   <div class="coming-soon">Adding money to your account is coming soon.</div>
 </div>
 
 <style type="text/scss">
-  .add-money-page {
+  .add-money-screen {
     min-width: var(--wallet-width);
     max-width: var(--wallet-width);
     min-height: var(--wallet-height);

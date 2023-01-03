@@ -46,7 +46,7 @@
   });
 </script>
 
-<div class="contact-page">
+<div class="contact-screen">
   {#if contact}
     <div class="heading">
       <BackButton />
@@ -60,7 +60,7 @@
 </div>
 
 <style type="text/scss">
-  .contact-page {
+  .contact-screen {
     height: var(--wallet-height);
     width: var(--wallet-width);
     display: grid;
