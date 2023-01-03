@@ -12,6 +12,7 @@
   export let showGasFee: boolean = false;
   export let label: string;
   export let filterField: "numbers" | "walletAddress" | null = null;
+  export let isSpellChecked: boolean = false;
 
   export let onTypingPause: svelte.JSX.KeyboardEventHandler<HTMLInputElement> | null;
   export let onClear: svelte.JSX.MouseEventHandler<HTMLButtonElement> | null =
@@ -87,6 +88,7 @@
       class={isAmount ? "usdc-amount" : ""}
       use:maybeFocus
       required
+      spellcheck={isSpellChecked}
       on:keyup|preventDefault={debounce((event) => {
         if (isAmount) {
           if (value > 0) {
