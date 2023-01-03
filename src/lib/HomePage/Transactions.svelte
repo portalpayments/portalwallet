@@ -50,7 +50,8 @@
     transactionsByDays = getTransactionsByDays(
       activeAccount.transactionSummaries,
       contacts,
-      filterValue
+      filterValue,
+      activeAccount.decimals
     );
 
     isLoadingTransactionSummaries = false;
@@ -115,13 +116,7 @@
               </div>
 
               <div class="day-total">
-                {amountAndDecimalsToMajorAndMinor(
-                  transactionsByDay.totalSpending,
-                  decimals
-                )[0]}.{amountAndDecimalsToMajorAndMinor(
-                  transactionsByDay.totalSpending,
-                  decimals
-                )[1]}
+                {transactionsByDay.totalSpendingDisplay}
               </div>
             </div>
 

@@ -78,5 +78,6 @@ export interface TransactionSummary {
 export interface TransactionsByDay {
   isoDate: string;
   totalSpending: number;
+  totalSpendingDisplay: string;
   transactions: Array<TransactionSummary>;
 }

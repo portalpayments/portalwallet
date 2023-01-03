@@ -24,6 +24,7 @@ import {
   type PublicKey,
   Keypair,
 } from "@solana/web3.js";
+import { amountAndDecimalsToMajorAndMinor } from "../lib/utils";
 
 export const solanaBlocktimeToJSTime = (blockTime: number) => {
   return blockTime * 1000;
@@ -301,7 +302,8 @@ export const getTransactionsByDays = (
   // It is assumed that all transactionSummaries are for the same currency
   transactions: Array<TransactionSummary>,
   contacts: Array<Contact>,
-  filterValue: string = ""
+  filterValue: string = "",
+  decimals: number
 ): Array<TransactionsByDay> => {
   transactions = transactions.sort(byDateNewestToOldest);
 
@@ -366,10 +368,16 @@ export const getTransactionsByDays = (
       lastDay.totalSpending += toSpendingAmount(transaction);
     } else {
       // Create a new TransactionsByDay item
-      const spendingAmount = toSpendingAmount(transaction);
+      const totalSpending = toSpendingAmount(transaction);
+      // TODO: we could neaten this to not use the join()
+      const totalSpendingDisplay = amountAndDecimalsToMajorAndMinor(
+        totalSpending,
+        decimals
+      ).join(".");
       transactionsByDays.push({
         isoDate,
-        totalSpending: spendingAmount,
+        totalSpending,
+        totalSpendingDisplay,
         transactions: [transaction],
       });
     }
