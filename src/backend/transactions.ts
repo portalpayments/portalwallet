@@ -71,13 +71,6 @@ const byDateNewestToOldest = (a, b) => {
   return -1;
 };
 
-const checkIsCreatingTokenAccount = (instruction: ParsedInstruction) => {
-  return (
-    instruction.program === "spl-associated-token-account" &&
-    instruction.parsed.type === "create"
-  );
-};
-
 // See constants.ts for details re: notes vs memos
 const getNoteOrMemo = (
   rawTransaction: ParsedTransactionWithMeta
