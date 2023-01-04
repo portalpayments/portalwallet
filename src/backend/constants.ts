@@ -102,6 +102,8 @@ export const SOL = LAMPORTS_PER_SOL;
 
 export const NOT_FOUND = -1;
 
+export const EMPTY = "";
+
 export const mintToCurrencyMap: Record<string, CurrencyDetails> = {
   [USDC_MAINNET_MINT_ACCOUNT]: {
     id: Currency.USDC,

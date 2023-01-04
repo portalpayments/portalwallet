@@ -9,6 +9,8 @@ import {
   sendToExistingTokenAccountSenderComesSecond,
 } from "./test-data/transactions/sendToExistingTokenAccount";
 import {
+  EMPTY,
+  getCurrencyByName,
   JOHN_TESTUSER_DEMO_WALLET,
   MIKES_WALLET,
   YCOMBINATOR_DEMO_WALLET_FOR_JARED,
@@ -372,13 +374,16 @@ describe(`grouping transactions`, () => {
   test(`grouping transactions`, () => {
     const transactionsByDays = getTransactionsByDays(
       transactionSummaries,
-      contacts
+      contacts,
+      EMPTY,
+      getCurrencyByName("USDC").decimals
     );
 
     expect(transactionsByDays).toEqual([
       {
         isoDate: "2022-09-12",
         totalSpending: 1000000,
+        totalSpendingDisplay: "1.00",
         transactions: [
           {
             id: "1",
@@ -397,7 +402,8 @@ describe(`grouping transactions`, () => {
       },
       {
         isoDate: "2022-09-09",
-        totalSpending: 500000,
+        totalSpending: 30500000,
+        totalSpendingDisplay: "0.50",
         transactions: [
           {
             id: "2",
@@ -412,11 +418,25 @@ describe(`grouping transactions`, () => {
             memo: null,
             receipt: null,
           },
+          {
+            amount: 30000000,
+            currency: 3,
+            date: 1662733089000,
+            direction: 0,
+            from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            id: "3",
+            memo: null,
+            networkFee: 5000,
+            receipt: null,
+            status: true,
+            to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
+          },
         ],
       },
       {
         isoDate: "2022-09-08",
         totalSpending: 790000,
+        totalSpendingDisplay: "0.07",
         transactions: [
           {
             id: "4",
@@ -508,7 +528,8 @@ describe(`grouping transactions`, () => {
     const transactionsByDays = getTransactionsByDays(
       transactionSummariesSmall,
       contacts,
-      MIKES_WALLET
+      MIKES_WALLET,
+      getCurrencyByName("USDC").decimals
     );
 
     expect(transactionsByDays).toEqual([
@@ -554,13 +575,15 @@ describe(`grouping transactions`, () => {
     const transactionsByDays = getTransactionsByDays(
       transactionSummariesSmall,
       contacts,
-      "jared"
+      "jared",
+      getCurrencyByName("USDC").decimals
     );
 
     expect(transactionsByDays).toEqual([
       {
         isoDate: "2022-09-12",
         totalSpending: 1000000,
+        totalSpendingDisplay: "1.00",
         transactions: [
           {
             id: "1",
@@ -569,6 +592,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 1000000,
+
             currency: 0,
             from: MIKES_WALLET,
             to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
