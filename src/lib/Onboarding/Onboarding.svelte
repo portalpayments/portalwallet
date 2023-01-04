@@ -421,6 +421,7 @@
 
   /* TODO: make some kind of utility class to use for primary buttons and link buttons */
   button.next {
+    width: 100%;
     align-content: center;
     color: white;
     font-weight: 600;
