@@ -22,7 +22,7 @@ import { getIdentityTokensFromWallet } from "./identity-tokens";
 import type { BasicTokenAccount, TokenMetaData, VerifiedClaims } from "./types";
 import { summarizeTransaction } from "./transactions";
 import { httpGet, toUniqueStringArray } from "../lib/utils";
-import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "./constants";
+import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../lib/constants";
 import {
   Currency,
   Direction,

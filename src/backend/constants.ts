@@ -98,8 +98,6 @@ export const URLS = {
 
 export const SOLANA_DECIMALS = Math.log10(LAMPORTS_PER_SOL);
 
-export const HOW_MANY_TRANSACTIONS_TO_SHOW = 30;
-
 export const SOL = LAMPORTS_PER_SOL;
 
 export const NOT_FOUND = -1;
