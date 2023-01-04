@@ -25,6 +25,11 @@ import {
   Keypair,
 } from "@solana/web3.js";
 import { amountAndDecimalsToMajorAndMinor } from "../lib/utils";
+import { isDateTime } from "@metaplex-foundation/js";
+
+import DateTimeRecognizer, {
+  recognizeDateTime,
+} from "@microsoft/recognizers-text-date-time";
 
 export const solanaBlocktimeToJSTime = (blockTime: number) => {
   return blockTime * 1000;
@@ -305,36 +310,63 @@ export const getTransactionsByDays = (
   );
 
   if (filterValue.length) {
-    transactions = transactions.filter((transaction) => {
-      let isWalletAddressMatch = false;
-      if (SOLANA_WALLET_REGEX.match(filterValue)) {
-        isWalletAddressMatch =
-          transaction.from.includes(filterValue) ||
-          transaction.to.includes(filterValue);
+    const recognizedDateTimes = recognizeDateTime(filterValue, "English");
+    if (recognizedDateTimes.length) {
+      const firstResult = recognizedDateTimes[0];
+      // eg if the user enters 'october'
+      // values[0] is in the past
+      // values[1] is in the future
+      // we always want the past, hence picking 0.
+      const firstResolution = firstResult?.resolution?.values[0] || null;
+
+      if (!firstResolution) {
+        log(`Date recogniser didn't have a start or end`);
+        return;
       }
 
-      let isContactMatch = false;
+      const start = new Date(firstResolution.start).valueOf();
+      const end = new Date(firstResolution.end).valueOf();
 
-      const fromContact = findContactByAddress(contacts, transaction.from);
-      const toContact = findContactByAddress(contacts, transaction.to);
+      transactions = transactions.filter((transaction) => {
+        return transaction.date >= start && transaction.date <= end;
+      });
 
-      isContactMatch =
-        getContactMatch(fromContact, filterValue) ||
-        getContactMatch(toContact, filterValue);
+      log(`${transactions.length} transactions left after filter.`);
+    } else {
+      transactions = transactions.filter((transaction) => {
+        let isWalletAddressMatch = false;
+        if (SOLANA_WALLET_REGEX.match(filterValue)) {
+          isWalletAddressMatch =
+            transaction.from.includes(filterValue) ||
+            transaction.to.includes(filterValue);
+        }
 
-      let isMemoMatch = transaction?.memo?.includes(filterValue) || false;
+        let isContactMatch = false;
 
-      let isReceiptMatch =
-        (transaction?.receipt?.items &&
-          transaction.receipt.items.find((item) =>
-            item.name.includes(filterValue)
-          )) ||
-        false;
+        const fromContact = findContactByAddress(contacts, transaction.from);
+        const toContact = findContactByAddress(contacts, transaction.to);
 
-      return (
-        isWalletAddressMatch || isContactMatch || isMemoMatch || isReceiptMatch
-      );
-    });
+        isContactMatch =
+          getContactMatch(fromContact, filterValue) ||
+          getContactMatch(toContact, filterValue);
+
+        let isMemoMatch = transaction?.memo?.includes(filterValue) || false;
+
+        let isReceiptMatch =
+          (transaction?.receipt?.items &&
+            transaction.receipt.items.find((item) =>
+              item.name.includes(filterValue)
+            )) ||
+          false;
+
+        return (
+          isWalletAddressMatch ||
+          isContactMatch ||
+          isMemoMatch ||
+          isReceiptMatch
+        );
+      });
+    }
   }
 
   log(
