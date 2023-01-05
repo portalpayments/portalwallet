@@ -176,7 +176,7 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     (async () => {
       // @ts-ignore see top of file
-      log("🖼️: Using Service Worker for Arweave request", event.url);
+      // log("🖼️: Using Service Worker for Arweave request", event.url);
       // @ts-ignore see top of file
       const eventRequest = event.request;
       // Try to get the response from a cache.
@@ -187,11 +187,11 @@ self.addEventListener("fetch", (event) => {
       if (cachedResponse) {
         // If we found a match in the cache, return it.
 
-        log(
-          "✨: Using Service Worker cached response for Arweave request",
-          // @ts-ignore see top of file
-          url
-        );
+        // log(
+        //   // "✨: Using Service Worker cached response for Arweave request",
+        //   // @ts-ignore see top of file
+        //   url
+        // );
         return cachedResponse;
       }
 
