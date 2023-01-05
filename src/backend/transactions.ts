@@ -312,12 +312,16 @@ export const getTransactionsByDays = (
   if (filterValue.length) {
     const recognizedDateTimes = recognizeDateTime(filterValue, "English");
     if (recognizedDateTimes.length) {
-      const firstResult = recognizedDateTimes[0];
+      // TODO: what is distinct between each recognizedDateTime?
+      // Feels like these are the 'recognisable items' that were found but I can't find docs.
+      const firstEntity = recognizedDateTimes[0];
+      // TODO: what is a resolution?
+      // Guessing this is each possible value for each recognisable item but I can't find docs.
       // eg if the user enters 'october'
       // values[0] is in the past
       // values[1] is in the future
       // we always want the past, hence picking 0.
-      const firstResolution = firstResult?.resolution?.values[0] || null;
+      const firstResolution = firstEntity?.resolution?.values[0] || null;
 
       if (!firstResolution) {
         log(`Date recogniser didn't have a start or end`);
