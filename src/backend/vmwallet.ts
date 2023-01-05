@@ -193,6 +193,7 @@ export const verifyWallet = async (
   });
 
   if (!currentTokenMetadata.length) {
+    // TODO: this seems to fire even with verified wallets
     log(`No current identity token was issued to this wallet`);
     return null;
   }
