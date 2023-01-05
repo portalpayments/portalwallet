@@ -204,15 +204,15 @@ const updateAccounts = async (useCache = true) => {
   }
 
   log(`Updating accounts...`);
+  let nativeAccountSummary = getFromStore(nativeAccountStore);
+  let tokenAccountsSummaries = getFromStore(tokenAccountsStore);
+  let contacts = getFromStore(contactsStore);
 
   log(`Updating Solana account....`);
-  if (getFromStore(nativeAccountStore) && useCache) {
+  if (nativeAccountSummary && useCache) {
     log(`No need to update Solana account, it's not null`);
   } else {
-    const nativeAccountSummary: AccountSummary = await getNativeAccountSummary(
-      connection,
-      keyPair
-    );
+    nativeAccountSummary = await getNativeAccountSummary(connection, keyPair);
     nativeAccountStore.set(nativeAccountSummary);
     if (HAS_SERVICE_WORKER) {
       log(`Saving nativeAccountSummary to serviceworker`);
@@ -224,30 +224,29 @@ const updateAccounts = async (useCache = true) => {
   }
 
   log(`Updating token accounts...`);
-  if (getFromStore(tokenAccountsStore) && useCache) {
+  if (tokenAccountsSummaries?.length && useCache) {
     log(`No need to update Token accounts its previously been set`);
   } else {
-    const tokenAccountSummaries: Array<AccountSummary> =
-      await getTokenAccountSummaries(connection, keyPair);
-    tokenAccountsStore.set(tokenAccountSummaries);
+    tokenAccountsSummaries = await getTokenAccountSummaries(
+      connection,
+      keyPair
+    );
+    tokenAccountsStore.set(tokenAccountsSummaries);
     haveAccountsLoadedStore.set(true);
     if (HAS_SERVICE_WORKER) {
       log(`Saving tokenAccountSummaries to serviceworker`);
       SERVICE_WORKER.controller.postMessage({
         topic: "setTokenAccountSummaries",
-        tokenAccountSummaries,
+        tokenAccountsSummaries,
       });
     }
   }
 
   log(`Getting contacts used in transactions`);
-  if (getFromStore(contactsStore) && useCache) {
+  if (contacts?.length && useCache) {
     log(`No need to update Contact as it's previously been set`);
   } else {
-    // TODO just get these values once earlier in the function
-    const nativeAccountSummary = getFromStore(nativeAccountStore);
-    const tokenAccountsSummaries = getFromStore(tokenAccountsStore);
-    const contacts = await getContactsFromTransactions(
+    contacts = await getContactsFromTransactions(
       connection,
       keyPair,
       nativeAccountSummary,
