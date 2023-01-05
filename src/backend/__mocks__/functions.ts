@@ -1,9 +1,20 @@
 const actualFunctions = jest.requireActual("../functions");
 
-// Mock this
+// Mock this, so we don't get logs during tests.
 export const log = jest.fn();
 
 // Use actual implementation of everything else
+export const debug = actualFunctions.debug;
+export const solanaBlocktimeToJSTime = actualFunctions.solanaBlocktimeToJSTime;
+export const isIncludedCaseInsensitive =
+  actualFunctions.isIncludedCaseInsensitive;
+export const removeSign = actualFunctions.removeSign;
+export const invertNumber = actualFunctions.invertNumber;
+export const flipZeroAndOne = actualFunctions.flipZeroAndOne;
+export const isPositive = actualFunctions.isPositive;
+export const dateToISODate = actualFunctions.dateToISODate;
+export const isoDateToFriendlyName = actualFunctions.isoDateToFriendlyName;
+export const byDateNewestToOldest = actualFunctions.byDateNewestToOldest;
 export const toUnique = actualFunctions.toUnique;
 export const adjustYear = actualFunctions.adjustYear;
 export const encodeToBase64 = actualFunctions.encodeToBase64;

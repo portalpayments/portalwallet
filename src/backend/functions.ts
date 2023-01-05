@@ -31,6 +31,58 @@ export const minorUnitsToDecimal = (minorUnits: number, decimal: number) => {
   return minorUnits / Math.pow(10, decimal);
 };
 
+export const debug = (_ignored) => {};
+
+export const solanaBlocktimeToJSTime = (blockTime: number) => {
+  return blockTime * 1000;
+};
+
+export const isIncludedCaseInsensitive = (
+  string: string,
+  substring: string
+) => {
+  return string.toLowerCase().includes(substring.toLowerCase());
+};
+
+// May be unnecessary but 'absolute value' isn't necessaryilt a well known concept
+export const removeSign = (number: number) => {
+  return Math.abs(number);
+};
+
+export const invertNumber = (number: number) => {
+  return -number;
+};
+
+export const flipZeroAndOne = (number: 0 | 1) => {
+  return Number(!number);
+};
+
+export const isPositive = (number: number) => {
+  return Math.sign(number) === 1;
+};
+
+export const dateToISODate = (date: number) => {
+  return new Date(date).toISOString().slice(0, 10);
+};
+
+export const isoDateToFriendlyName = (isoDate: string) => {
+  return new Date(isoDate).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
+};
+
+export const byDateNewestToOldest = (a, b) => {
+  if (a.date === b.date) {
+    return 0;
+  }
+  if (a.date < b.date) {
+    return 1;
+  }
+  return -1;
+};
+
 // Adapted from https://github.com/mgenware/node-filter-async/blob/main/src/main.ts
 // (which seems to have issues loading its ESM module)
 export const asyncFilter = async <T>(

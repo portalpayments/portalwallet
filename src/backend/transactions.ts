@@ -1,4 +1,14 @@
-import { log, stringify, hexToUtf8, instructionDataToNote } from "./functions";
+import {
+  log,
+  instructionDataToNote,
+  debug,
+  byDateNewestToOldest,
+  dateToISODate,
+  isIncludedCaseInsensitive,
+  isPositive,
+  removeSign,
+  solanaBlocktimeToJSTime,
+} from "./functions";
 import {
   Currency,
   Direction,
@@ -8,80 +18,17 @@ import {
   type TransactionSummary,
 } from "../lib/types";
 
-import {
-  MEMO_PROGRAM,
-  mintToCurrencyMap,
-  NOTE_PROGRAM,
-  SOLANA_WALLET_REGEX,
-  SPL_TOKEN_PROGRAM,
-} from "./constants";
+import { MEMO_PROGRAM, mintToCurrencyMap, NOTE_PROGRAM } from "./constants";
 import { getReceiptForTransactionSummary } from "./receipts";
-import { getKeypairFromString } from "./vmwallet";
 import {
   type ParsedInstruction,
-  type PartiallyDecodedInstruction,
   type ParsedTransactionWithMeta,
   type PublicKey,
   Keypair,
 } from "@solana/web3.js";
 import { amountAndDecimalsToMajorAndMinor } from "../lib/utils";
-import { isDateTime } from "@metaplex-foundation/js";
 
-import DateTimeRecognizer, {
-  recognizeDateTime,
-} from "@microsoft/recognizers-text-date-time";
-
-export const solanaBlocktimeToJSTime = (blockTime: number) => {
-  return blockTime * 1000;
-};
-
-export const debug = (_ignored) => {};
-
-export const isIncludedCaseInsensitive = (
-  string: string,
-  substring: string
-) => {
-  return string.toLowerCase().includes(substring.toLowerCase());
-};
-
-// May be unnecessary but 'absolute value' isn't necessaryilt a well known concept
-export const removeSign = (number: number) => {
-  return Math.abs(number);
-};
-
-export const invertNumber = (number: number) => {
-  return -number;
-};
-
-export const flipZeroAndOne = (number: 0 | 1) => {
-  return Number(!number);
-};
-
-export const isPositive = (number: number) => {
-  return Math.sign(number) === 1;
-};
-
-const dateToISODate = (date: number) => {
-  return new Date(date).toISOString().slice(0, 10);
-};
-
-export const isoDateToFriendlyName = (isoDate: string) => {
-  return new Date(isoDate).toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  });
-};
-
-const byDateNewestToOldest = (a, b) => {
-  if (a.date === b.date) {
-    return 0;
-  }
-  if (a.date < b.date) {
-    return 1;
-  }
-  return -1;
-};
+import { recognizeDateTime } from "@microsoft/recognizers-text-date-time";
 
 // See constants.ts for details re: notes vs memos
 const getNoteOrMemo = (

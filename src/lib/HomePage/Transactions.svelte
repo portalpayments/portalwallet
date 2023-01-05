@@ -1,22 +1,14 @@
 <script lang="ts">
   import { onChangeActiveAccount } from "../../lib/stores";
-  import Input from "../Shared/Input.svelte";
   import TransactionComponent from "./Transaction.svelte";
-  import { amountAndDecimalsToMajorAndMinor } from "../../lib/utils";
-  import { get as getFromStore } from "svelte/store";
-  import {
-    getTransactionsByDays,
-    isoDateToFriendlyName,
-  } from "../../backend/transactions";
-  import type { Currency } from "../../lib/types";
+  import { getTransactionsByDays } from "../../backend/transactions";
   import LoadingImage from "../../assets/transactions-loading.svg";
-  import type {
-    TransactionSummary,
-    TransactionsByDay,
-    AccountSummary,
-  } from "../../lib/types";
-  import { log, stringify } from "../../backend/functions";
-  import { SECOND, SECONDS } from "../../backend/constants";
+  import type { TransactionsByDay, AccountSummary } from "../../lib/types";
+  import {
+    log,
+    stringify,
+    isoDateToFriendlyName,
+  } from "../../backend/functions";
   import {
     tokenAccountsStore,
     contactsStore,
