@@ -41,7 +41,7 @@
     grid-auto-rows: 70px;
     gap: 0px;
     height: auto;
-    overflow-y: hidden;
+    overflow-y: scroll;
   }
 
   .contact {
