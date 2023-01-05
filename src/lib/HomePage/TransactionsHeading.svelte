@@ -1,15 +1,44 @@
 <script lang="ts">
   import { Link } from "svelte-navigator";
+  import { haveAccountsLoadedStore, hasUSDCAccountStore } from "../stores";
+
+  let haveAccountsLoaded: boolean = false;
+
+  let hasUSDCAccount: boolean | null = null;
+
+  hasUSDCAccountStore.subscribe((newValue) => {
+    // Distinguish between null (we don't know) and false (we know, they don't have a USDC account)
+    if (newValue !== null) {
+      hasUSDCAccount = newValue;
+    }
+  });
+
+  haveAccountsLoadedStore.subscribe((newValue) => {
+    if (newValue !== null) {
+      haveAccountsLoaded = newValue;
+    }
+  });
 </script>
 
 <div class="heading">
-  <Link to="/transactions">See all</Link>
+  {#if !haveAccountsLoaded || hasUSDCAccount === null}
+    <div class="skeleton" />
+  {:else}
+    <Link to="/transactions">See all</Link>
+  {/if}
 </div>
 
 <style type="text/scss">
   @import "../../mixins.scss";
+
+  .skeleton {
+    width: 46px;
+    height: 24px;
+    @include skeleton-background;
+  }
+
   .heading {
-    text-align: left;
+    justify-items: right;
     padding: 0 12px;
     display: grid;
     grid-auto-flow: column;

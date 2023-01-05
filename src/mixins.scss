@@ -33,3 +33,23 @@
 @mixin shadow {
   box-shadow: 2px 3px 10px -4px rgb(0 0 0 / 33%);
 }
+
+@keyframes skeleton-background-shine {
+  to {
+    background-position: 100% 0, /* move highlight to right */ 0 0;
+  }
+}
+
+@mixin skeleton-background {
+  background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 80%
+    ),
+    lightgray;
+  background-repeat: repeat-y;
+  background-size: 50px 200px;
+  background-position: 0 0;
+  animation: skeleton-background-shine 1s infinite;
+}

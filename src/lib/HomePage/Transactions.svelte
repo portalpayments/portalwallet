@@ -96,50 +96,48 @@
   }
 </script>
 
-{#if transactionsByDays}
-  {#if !isLoadingTransactionSummaries}
-    {#if transactionsByDays.length}
-      <div class="days" on:scroll={loadMoreTransactions}>
-        {#each transactionsByDays as transactionsByDay}
-          <div class="day">
-            <div class="day-summary">
-              <div class="day-name">
-                {isoDateToFriendlyName(transactionsByDay.isoDate)}
-              </div>
-
-              <div class="day-total">
-                {transactionsByDay.totalSpendingDisplay}
-              </div>
+{#if !isLoadingTransactionSummaries}
+  {#if transactionsByDays.length}
+    <div class="days" on:scroll={loadMoreTransactions}>
+      {#each transactionsByDays as transactionsByDay}
+        <div class="day">
+          <div class="day-summary">
+            <div class="day-name">
+              {isoDateToFriendlyName(transactionsByDay.isoDate)}
             </div>
 
-            <div class="transactions">
-              {#each transactionsByDay.transactions as transaction (transaction.id)}
-                <div
-                  class=""
-                  in:fade|local={{ duration: 200, easing: quintInOut }}
-                >
-                  <TransactionComponent {transaction} {decimals} />
-                </div>
-              {/each}
+            <div class="day-total">
+              {transactionsByDay.totalSpendingDisplay}
             </div>
           </div>
-        {/each}
-        {#if filterValue === EMPTY}
-          <div class="loading-more">
-            <img src={LoadingImage} alt="Loading more transactions" />
+
+          <div class="transactions">
+            {#each transactionsByDay.transactions as transaction (transaction.id)}
+              <div
+                class=""
+                in:fade|local={{ duration: 200, easing: quintInOut }}
+              >
+                <TransactionComponent {transaction} {decimals} />
+              </div>
+            {/each}
           </div>
-        {/if}
-      </div>
-    {:else if filterValue === EMPTY}
-      <p>No transactions.</p>
-    {:else}
-      <p>No matching transactions.</p>
-    {/if}
-  {:else}
-    <div class="days mock-days">
-      <SkeletonTransactions />
+        </div>
+      {/each}
+      {#if filterValue === EMPTY}
+        <div class="loading-more">
+          <img src={LoadingImage} alt="Loading more transactions" />
+        </div>
+      {/if}
     </div>
+  {:else if filterValue === EMPTY}
+    <p>No transactions.</p>
+  {:else}
+    <p>No matching transactions.</p>
   {/if}
+{:else}
+  <div class="days mock-days">
+    <SkeletonTransactions />
+  </div>
 {/if}
 
 <style type="text/scss">
