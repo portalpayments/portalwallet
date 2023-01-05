@@ -338,12 +338,11 @@ export const getTransactionsByDays = (
       log(`${transactions.length} transactions left after filter.`);
     } else {
       transactions = transactions.filter((transaction) => {
-        let isWalletAddressMatch = false;
-        if (SOLANA_WALLET_REGEX.match(filterValue)) {
-          isWalletAddressMatch =
-            transaction.from.includes(filterValue) ||
-            transaction.to.includes(filterValue);
-        }
+        // Don't bother checking SOLANA_WALLET_REGEX as the user may not enter the entire wallet
+        // address, but still want results
+        let isWalletAddressMatch =
+          transaction.from.includes(filterValue) ||
+          transaction.to.includes(filterValue);
 
         let isContactMatch = false;
 

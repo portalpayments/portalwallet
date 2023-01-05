@@ -536,6 +536,7 @@ describe(`grouping transactions`, () => {
       {
         isoDate: "2022-09-12",
         totalSpending: 1000000,
+        totalSpendingDisplay: "1.00",
         transactions: [
           {
             id: "1",
