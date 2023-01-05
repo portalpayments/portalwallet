@@ -199,6 +199,7 @@ const getNativeAccountSummariesOrCached = async (useCache: boolean) => {
   let nativeAccountSummary = getFromStore(nativeAccountStore);
   if (nativeAccountSummary && useCache) {
     log(`No need to update Solana account, we already have it`);
+    return nativeAccountSummary;
   }
   console.time("Getting Solana account");
   nativeAccountSummary = await getNativeAccountSummary(connection, keyPair);
