@@ -195,6 +195,44 @@ export const hasUSDCAccountStore: Writable<boolean | null> = writable(null);
 export const collectablesStore: Writable<Array<Collectable> | null> =
   writable(null);
 
+const getNativeAccountSummariesOrCached = async (useCache: boolean) => {
+  let nativeAccountSummary = getFromStore(nativeAccountStore);
+  if (nativeAccountSummary && useCache) {
+    log(`No need to update Solana account, we already have it`);
+  }
+  console.time("Getting Solana account");
+  nativeAccountSummary = await getNativeAccountSummary(connection, keyPair);
+  console.timeEnd("Getting Solana account");
+
+  if (HAS_SERVICE_WORKER) {
+    log(`Saving nativeAccountSummary to serviceworker`);
+    SERVICE_WORKER.controller.postMessage({
+      topic: "setNativeAccountSummary",
+      nativeAccountSummary,
+    });
+  }
+  return nativeAccountSummary;
+};
+
+const getTokenAccountSummariesOrCached = async (useCache: boolean) => {
+  let tokenAccountsSummaries = getFromStore(tokenAccountsStore);
+  if (tokenAccountsSummaries?.length && useCache) {
+    log(`No need to update Token accounts its previously been set`);
+    return tokenAccountsSummaries;
+  }
+  console.time("Getting token accounts");
+  tokenAccountsSummaries = await getTokenAccountSummaries(connection, keyPair);
+  console.timeEnd("Getting token accounts");
+  if (HAS_SERVICE_WORKER) {
+    log(`Saving tokenAccountSummaries to serviceworker`);
+    SERVICE_WORKER.controller.postMessage({
+      topic: "setTokenAccountSummaries",
+      tokenAccountsSummaries,
+    });
+  }
+  return tokenAccountsSummaries;
+};
+
 const updateAccounts = async (useCache = true) => {
   if (!connection) {
     return;
@@ -203,46 +241,20 @@ const updateAccounts = async (useCache = true) => {
     return;
   }
 
-  log(`Updating accounts...`);
-  let nativeAccountSummary = getFromStore(nativeAccountStore);
-  let tokenAccountsSummaries = getFromStore(tokenAccountsStore);
-  let contacts = getFromStore(contactsStore);
+  // Get both Solana account and token accounts at same time
+  console.time("Getting all accounts");
+  const [nativeAccountSummary, tokenAccountsSummaries] = await Promise.all([
+    getNativeAccountSummariesOrCached(useCache),
+    getTokenAccountSummariesOrCached(useCache),
+  ]);
+  console.timeEnd("Getting all accounts");
+  nativeAccountStore.set(nativeAccountSummary);
+  tokenAccountsStore.set(tokenAccountsSummaries);
+  haveAccountsLoadedStore.set(true);
 
-  log(`Updating Solana account....`);
-  if (nativeAccountSummary && useCache) {
-    log(`No need to update Solana account, it's not null`);
-  } else {
-    nativeAccountSummary = await getNativeAccountSummary(connection, keyPair);
-    nativeAccountStore.set(nativeAccountSummary);
-    if (HAS_SERVICE_WORKER) {
-      log(`Saving nativeAccountSummary to serviceworker`);
-      SERVICE_WORKER.controller.postMessage({
-        topic: "setNativeAccountSummary",
-        nativeAccountSummary,
-      });
-    }
-  }
-
-  log(`Updating token accounts...`);
-  if (tokenAccountsSummaries?.length && useCache) {
-    log(`No need to update Token accounts its previously been set`);
-  } else {
-    tokenAccountsSummaries = await getTokenAccountSummaries(
-      connection,
-      keyPair
-    );
-    tokenAccountsStore.set(tokenAccountsSummaries);
-    haveAccountsLoadedStore.set(true);
-    if (HAS_SERVICE_WORKER) {
-      log(`Saving tokenAccountSummaries to serviceworker`);
-      SERVICE_WORKER.controller.postMessage({
-        topic: "setTokenAccountSummaries",
-        tokenAccountsSummaries,
-      });
-    }
-  }
-
+  // Get contacts now we have the accounts (and their transactions)
   log(`Getting contacts used in transactions`);
+  let contacts = getFromStore(contactsStore);
   if (contacts?.length && useCache) {
     log(`No need to update Contact as it's previously been set`);
   } else {
