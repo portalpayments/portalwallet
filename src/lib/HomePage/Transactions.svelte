@@ -91,8 +91,9 @@
   };
 
   $: {
-    log(`filterValue has changed: ${filterValue}`);
-    onFilterValueChanged();
+    if (filterValue !== EMPTY) {
+      onFilterValueChanged();
+    }
   }
 </script>
 
