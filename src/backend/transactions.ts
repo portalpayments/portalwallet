@@ -37,6 +37,13 @@ export const solanaBlocktimeToJSTime = (blockTime: number) => {
 
 export const debug = (_ignored) => {};
 
+export const isIncludedCaseInsensitive = (
+  string: string,
+  substring: string
+) => {
+  return string.toLowerCase().includes(substring.toLowerCase());
+};
+
 // May be unnecessary but 'absolute value' isn't necessaryilt a well known concept
 export const removeSign = (number: number) => {
   return Math.abs(number);
@@ -291,8 +298,8 @@ export const getContactMatch = (contact: Contact, filterValue: string) => {
     return false;
   }
   return (
-    contact.verifiedClaims.givenName.toLowerCase().includes(filterValue) ||
-    contact.verifiedClaims.familyName.toLowerCase().includes(filterValue)
+    isIncludedCaseInsensitive(contact.verifiedClaims.givenName, filterValue) ||
+    isIncludedCaseInsensitive(contact.verifiedClaims.familyName, filterValue)
   );
 };
 
@@ -310,11 +317,18 @@ export const getTransactionsByDays = (
   );
 
   if (filterValue.length) {
-    const recognizedDateTimes = recognizeDateTime(filterValue, "English");
-    if (recognizedDateTimes.length) {
-      // TODO: what is distinct between each recognizedDateTime?
-      // Feels like these are the 'recognisable items' that were found but I can't find docs.
-      const firstEntity = recognizedDateTimes[0];
+    // TODO: this code works but library has no docs
+    // See https://github.com/microsoft/Recognizers-Text/issues/3064
+    // TODO: what does recognizeDateTime() actually return
+    // Feels like these are the 'recognisable entities' that were found but I can't find docs.
+    const recognizedDateTimeEntities = recognizeDateTime(
+      filterValue,
+      // This is just 'string' in the types but it seems to work.
+      // TODO: find docs, check if this is valid.
+      "English"
+    );
+    if (recognizedDateTimeEntities.length) {
+      const firstEntity = recognizedDateTimeEntities[0];
       // TODO: what is a resolution?
       // Guessing this is each possible value for each recognisable item but I can't find docs.
       // eg if the user enters 'october'
@@ -341,8 +355,8 @@ export const getTransactionsByDays = (
         // Don't bother checking SOLANA_WALLET_REGEX as the user may not enter the entire wallet
         // address, but still want results
         let isWalletAddressMatch =
-          transaction.from.includes(filterValue) ||
-          transaction.to.includes(filterValue);
+          isIncludedCaseInsensitive(transaction.from, filterValue) ||
+          isIncludedCaseInsensitive(transaction.to, filterValue);
 
         let isContactMatch = false;
 
@@ -353,12 +367,14 @@ export const getTransactionsByDays = (
           getContactMatch(fromContact, filterValue) ||
           getContactMatch(toContact, filterValue);
 
-        let isMemoMatch = transaction?.memo?.includes(filterValue) || false;
+        let isMemoMatch = transaction?.memo
+          ? isIncludedCaseInsensitive(transaction.memo, filterValue)
+          : false;
 
         let isReceiptMatch =
           (transaction?.receipt?.items &&
             transaction.receipt.items.find((item) =>
-              item.name.includes(filterValue)
+              isIncludedCaseInsensitive(item.name, filterValue)
             )) ||
           false;
 
