@@ -1,3 +1,7 @@
+// Do not move this file into a folder!
+// Service workers must be in location that 'manages' the result on the content
+// See https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/how-to/service-workers
+
 // Service worker types support has a number of major bugs
 // See https://joshuatz.com/posts/2021/strongly-typed-service-workers/
 // Compiling with tsconfig specified in that blog post creates a service worker that won't install.
