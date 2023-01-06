@@ -170,6 +170,9 @@ export const EXTERNAL_CHAIN = 0;
 // 'Generate a keypair from a 32 byte seed.'
 export const SOLANA_SEED_SIZE_BYTES = 32;
 
+export const MILLISECOND = 1;
+export const MILLISECONDS = MILLISECOND;
+
 export const SECOND = 1000;
 export const SECONDS = SECOND;
 
