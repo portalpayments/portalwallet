@@ -15,7 +15,7 @@ import {
   getNativeAccountSummary,
   getTokenAccountSummaries,
 } from "../backend/vmwallet";
-import { NOT_FOUND, SECONDS } from "../backend/constants";
+import { MILLISECONDS, NOT_FOUND, SECONDS } from "../backend/constants";
 import base58 from "bs58";
 import { getAllNftMetadatasFromAWallet } from "../backend/identity-tokens";
 import { httpGet } from "./utils";
@@ -197,10 +197,16 @@ export const collectablesStore: Writable<Array<Collectable> | null> =
 
 const getNativeAccountSummariesOrCached = async (useCache: boolean) => {
   let nativeAccountSummary = getFromStore(nativeAccountStore);
+
+  // TODO - this is always null, even when Service Worker should have saved it in background memory
+
+  // Try the store first
   if (nativeAccountSummary && useCache) {
     log(`No need to update Solana account, we already have it`);
     return nativeAccountSummary;
   }
+
+  // Not already in the store, let's get it from the blockchain (and save it to the store)
   console.time("Getting Solana account");
   nativeAccountSummary = await getNativeAccountSummary(connection, keyPair);
   console.timeEnd("Getting Solana account");
@@ -314,19 +320,24 @@ authStore.subscribe((newValue) => {
   }
 });
 
+// After wallet is launched for first time
+// - This script asks Service Worker for cache, gets any responses
+// and *THEN* loads the accounts.
+
 const setupServiceWorker = async () => {
   if (HAS_SERVICE_WORKER) {
-    // Register a service worker hosted at the root of the
+    // Register ('install') a service worker hosted at the root of the
     // site using the default scope.
     log(`Registering service worker...`);
     let registration: ServiceWorkerRegistration | null = null;
     try {
+      // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer/register
       registration = await SERVICE_WORKER.register("./service-worker.js");
     } catch (error) {
       throw new Error(`Service worker registration failed`, error.message);
     }
 
-    log("Service worker registration succeeded:", registration);
+    log("⚡Service worker registration succeeded:", registration);
 
     // Post messaging asking for all the things we'd like to get from the cache
     console.time("getSecretKey");
@@ -347,6 +358,7 @@ const setupServiceWorker = async () => {
       log(
         `📩 Got a message from the service worker on this topic ${event.data.topic}`
       );
+
       if (event.data.topic === "replySecretKey") {
         console.timeEnd("getSecretKey");
         const secretKey = event.data.secretKey;
