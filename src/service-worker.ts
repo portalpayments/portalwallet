@@ -69,7 +69,7 @@ const handleMessage = async (eventData) => {
         secretKey,
       });
     } else {
-      log(`Service worker does not have the secret key`);
+      log(`☹️ Service worker does not have the secret key`);
     }
   }
 
@@ -86,7 +86,7 @@ const handleMessage = async (eventData) => {
         nativeAccountSummary,
       });
     } else {
-      log(`Service worker does not have the nativeAccountSummary`);
+      log(`☹️ Service worker does not have the nativeAccountSummary`);
     }
   }
 
@@ -103,7 +103,7 @@ const handleMessage = async (eventData) => {
         tokenAccountSummaries,
       });
     } else {
-      log(`Service worker does not have the tokenAccountSummaries`);
+      log(`☹️ Service worker does not have the tokenAccountSummaries`);
     }
   }
 
@@ -119,7 +119,7 @@ const handleMessage = async (eventData) => {
         contacts,
       });
     } else {
-      log(`Service worker does not have Contacts`);
+      log(`☹️ Service worker does not have Contacts`);
     }
   }
 
