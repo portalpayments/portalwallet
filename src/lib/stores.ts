@@ -292,7 +292,7 @@ connectionStore.subscribe((newValue) => {
   if (newValue) {
     log(`🔌 connection has changed, updating accounts`);
     connection = newValue;
-    updateAccounts();
+    updateAccounts(true);
   }
 });
 
@@ -309,7 +309,7 @@ authStore.subscribe((newValue) => {
       });
     }
 
-    updateAccounts();
+    updateAccounts(true);
     updateCollectables();
   }
 });
