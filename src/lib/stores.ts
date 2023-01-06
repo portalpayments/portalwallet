@@ -222,22 +222,26 @@ const getNativeAccountSummariesOrCached = async (useCache: boolean) => {
 };
 
 const getTokenAccountSummariesOrCached = async (useCache: boolean) => {
-  let tokenAccountsSummaries = getFromStore(tokenAccountsStore);
-  if (tokenAccountsSummaries?.length && useCache) {
+  let tokenAccountSummaries = getFromStore(tokenAccountsStore);
+  if (tokenAccountSummaries?.length && useCache) {
     log(`No need to update Token accounts its previously been set`);
-    return tokenAccountsSummaries;
+    return tokenAccountSummaries;
   }
   console.time("Getting token accounts");
-  tokenAccountsSummaries = await getTokenAccountSummaries(connection, keyPair);
+  tokenAccountSummaries = await getTokenAccountSummaries(connection, keyPair);
   console.timeEnd("Getting token accounts");
+
+  // SW doesn't have tokenAccountSummaries
+  // are we setting them?
+  debugger;
   if (HAS_SERVICE_WORKER) {
     log(`Saving tokenAccountSummaries to serviceworker`);
     SERVICE_WORKER.controller.postMessage({
       topic: "setTokenAccountSummaries",
-      tokenAccountsSummaries,
+      tokenAccountSummaries,
     });
   }
-  return tokenAccountsSummaries;
+  return tokenAccountSummaries;
 };
 
 const updateAccounts = async (useCache = true) => {
@@ -250,13 +254,13 @@ const updateAccounts = async (useCache = true) => {
 
   // Get both Solana account and token accounts at same time
   console.time("Getting all accounts");
-  const [nativeAccountSummary, tokenAccountsSummaries] = await Promise.all([
+  const [nativeAccountSummary, tokenAccountSummaries] = await Promise.all([
     getNativeAccountSummariesOrCached(useCache),
     getTokenAccountSummariesOrCached(useCache),
   ]);
   console.timeEnd("Getting all accounts");
   nativeAccountStore.set(nativeAccountSummary);
-  tokenAccountsStore.set(tokenAccountsSummaries);
+  tokenAccountsStore.set(tokenAccountSummaries);
   haveAccountsLoadedStore.set(true);
 
   // Get contacts now we have the accounts (and their transactions)
@@ -269,7 +273,7 @@ const updateAccounts = async (useCache = true) => {
       connection,
       keyPair,
       nativeAccountSummary,
-      tokenAccountsSummaries
+      tokenAccountSummaries
     );
     contactsStore.set(contacts);
   }
@@ -279,7 +283,6 @@ const updateAccounts = async (useCache = true) => {
 
   // We could add hasUSDCAccount to Service Worker but it's [robbaly easier to just checl
   log(`Finding USDC account...`);
-  const tokenAccountSummaries = getFromStore(tokenAccountsStore);
   const usdcAccountIndex = tokenAccountSummaries.findIndex(
     (accountSummary) => accountSummary.currency === Currency.USDC
   );
