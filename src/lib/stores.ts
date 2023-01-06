@@ -329,12 +329,15 @@ const setupServiceWorker = async () => {
     log("Service worker registration succeeded:", registration);
 
     // Post messaging asking for all the things we'd like to get from the cache
+    console.time("getSecretKey");
     SERVICE_WORKER.controller.postMessage({
       topic: "getSecretKey",
     });
+    console.time("getNativeAccountSummary");
     SERVICE_WORKER.controller.postMessage({
       topic: "getNativeAccountSummary",
     });
+    console.time("getTokenAccountSummaries");
     SERVICE_WORKER.controller.postMessage({
       topic: "getTokenAccountSummaries",
     });
@@ -345,6 +348,7 @@ const setupServiceWorker = async () => {
         `📩 Got a message from the service worker on this topic ${event.data.topic}`
       );
       if (event.data.topic === "replySecretKey") {
+        console.timeEnd("getSecretKey");
         const secretKey = event.data.secretKey;
         if (secretKey) {
           log(`we have a secret key! Setting it.`);
@@ -358,6 +362,8 @@ const setupServiceWorker = async () => {
       }
 
       if (event.data.topic === "replyNativeAccountSummary") {
+        console.timeEnd("getNativeAccountSummary");
+
         const nativeAccountSummary = event.data
           .nativeAccountSummary as AccountSummary;
         log(
@@ -374,6 +380,8 @@ const setupServiceWorker = async () => {
       }
 
       if (event.data.topic === "replyTokenAccountSummaries") {
+        console.timeEnd("replyTokenAccountSummaries");
+
         const tokenAccountSummaries = event.data
           .tokenAccountSummaries as Array<AccountSummary>;
         log(
