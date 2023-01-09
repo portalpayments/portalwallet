@@ -6,8 +6,6 @@ export const runRepeatedlyWithTimeout = async function (
   interval: number,
   timeout: number
 ): Promise<any> {
-  let result: any;
-  let lastError: Error;
   let intervalId: NodeJS.Timeout;
   let timeoutId: NodeJS.Timeout;
   let currentAttempt = 1;
@@ -28,25 +26,23 @@ export const runRepeatedlyWithTimeout = async function (
 
         // Stop the repeated running
         clearInterval(intervalId);
-        // TODO: kinda a bit weird, this function returns null in it's own promise
-        // but does set 'result' in the parent so technically it works
-        // We should refactor and make less weird.
-        // I *guess* it's because error is the last thrown error
         result = resultFromIntervalFunction;
-        lastError = null;
-        resolve(null);
+        resolve(resultFromIntervalFunction);
       } catch (error) {
-        lastError = error;
+        // We don't ever throw errors, we just run infinitely.
       }
       currentAttempt = currentAttempt + 1;
     }, interval);
   });
 
-  await Promise.race([timeoutPromise, intervalPromise]);
+  let result: any;
+  try {
+    result = await Promise.race([timeoutPromise, intervalPromise]);
+    clearInterval(timeoutId);
+    clearInterval(intervalId);
 
-  if (lastError) {
-    throw lastError;
+    return result;
+  } catch (error) {
+    throw error;
   }
-
-  return result;
 };
