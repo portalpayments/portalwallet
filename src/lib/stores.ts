@@ -20,6 +20,7 @@ import base58 from "bs58";
 import { getAllNftMetadatasFromAWallet } from "../backend/identity-tokens";
 import { httpGet } from "./utils";
 import { summarizeTransaction } from "../backend/transactions";
+import { runRepeatedlyWithTimeout } from "../backend/run-with-timeout";
 
 let connection: Connection | null;
 let keyPair: Keypair | null;
@@ -195,56 +196,94 @@ export const hasUSDCAccountStore: Writable<boolean | null> = writable(null);
 export const collectablesStore: Writable<Array<Collectable> | null> =
   writable(null);
 
-const getNativeAccountSummariesOrCached = async (useCache: boolean) => {
-  let nativeAccountSummary = getFromStore(nativeAccountStore);
+const getNativeAccountSummaryOrCached = async (useCache: boolean) => {
+  let nativeAccountSummary: AccountSummary;
+  try {
+    nativeAccountSummary = await runRepeatedlyWithTimeout(
+      async () => {
+        let nativeAccountSummaryFromStore = getFromStore(nativeAccountStore);
+        if (nativeAccountSummaryFromStore) {
+          return nativeAccountSummaryFromStore;
+        } else {
+          throw new Error(
+            `Store not ready yet, background page may have not responded to our getNativeAccountSummary message yet`
+          );
+        }
+      },
+      500 * MILLISECONDS,
+      3 * SECONDS
+    );
 
-  // TODO - this is always null, even when Service Worker should have saved it in background memory
-
-  // Try the store first
-  if (nativeAccountSummary && useCache) {
-    log(`No need to update Solana account, we already have it`);
     return nativeAccountSummary;
-  }
+  } catch (error) {
+    if (error.message.includes("Timeout")) {
+      // Not already in the store, let's get it from the blockchain (and save it to the store)
+      console.time("Getting Solana account");
+      nativeAccountSummary = await getNativeAccountSummary(connection, keyPair);
+      console.timeEnd("Getting Solana account");
 
-  // Not already in the store, let's get it from the blockchain (and save it to the store)
-  console.time("Getting Solana account");
-  nativeAccountSummary = await getNativeAccountSummary(connection, keyPair);
-  console.timeEnd("Getting Solana account");
-
-  if (HAS_SERVICE_WORKER) {
-    log(`Saving nativeAccountSummary to serviceworker`);
-    SERVICE_WORKER.controller.postMessage({
-      topic: "setNativeAccountSummary",
-      nativeAccountSummary,
-    });
+      if (HAS_SERVICE_WORKER) {
+        log(`Saving nativeAccountSummary to serviceworker`);
+        SERVICE_WORKER.controller.postMessage({
+          topic: "setNativeAccountSummary",
+          nativeAccountSummary,
+        });
+      }
+      return nativeAccountSummary;
+    }
+    log(
+      `Got an error we didn't expect when getting native account: ${error.message}`
+    );
+    throw error;
   }
-  return nativeAccountSummary;
 };
 
-const getTokenAccountSummariesOrCached = async (useCache: boolean) => {
-  let tokenAccountSummaries = getFromStore(tokenAccountsStore);
-  if (tokenAccountSummaries?.length && useCache) {
-    log(`No need to update Token accounts its previously been set`);
+const getTokenAccountSummariesOrCached = async () => {
+  let tokenAccountSummaries: Array<AccountSummary>;
+  try {
+    // checks, every 500ms, for a max of 3 seconds, if the background page has the account summaries.
+    tokenAccountSummaries = await runRepeatedlyWithTimeout(
+      async () => {
+        const tokenAccountSummariesFromStore = getFromStore(tokenAccountsStore);
+
+        if (tokenAccountSummariesFromStore) {
+          return tokenAccountSummariesFromStore;
+        } else {
+          throw new Error(
+            `Store not ready yet, background page may have not responded to our getTokenAccountSummaries message yet`
+          );
+        }
+      },
+      500 * MILLISECONDS,
+      3 * SECONDS
+    );
     return tokenAccountSummaries;
-  }
-  console.time("Getting token accounts");
-  tokenAccountSummaries = await getTokenAccountSummaries(connection, keyPair);
-  console.timeEnd("Getting token accounts");
+  } catch (error) {
+    if (error.message.includes("Timeout")) {
+      console.time("Getting token accounts");
+      tokenAccountSummaries = await getTokenAccountSummaries(
+        connection,
+        keyPair
+      );
+      console.timeEnd("Getting token accounts");
 
-  // SW doesn't have tokenAccountSummaries
-  // are we setting them?
-  debugger;
-  if (HAS_SERVICE_WORKER) {
-    log(`Saving tokenAccountSummaries to serviceworker`);
-    SERVICE_WORKER.controller.postMessage({
-      topic: "setTokenAccountSummaries",
-      tokenAccountSummaries,
-    });
+      if (HAS_SERVICE_WORKER) {
+        log(`Saving tokenAccountSummaries to serviceworker`);
+        SERVICE_WORKER.controller.postMessage({
+          topic: "setTokenAccountSummaries",
+          tokenAccountSummaries,
+        });
+      }
+      return tokenAccountSummaries;
+    }
+    log(
+      `Got an error we didn't expect when getting token accounts: ${error.message}`
+    );
+    throw error;
   }
-  return tokenAccountSummaries;
 };
 
-const updateAccounts = async (useCache = true) => {
+const updateAccounts = async () => {
   if (!connection) {
     return;
   }
@@ -255,8 +294,8 @@ const updateAccounts = async (useCache = true) => {
   // Get both Solana account and token accounts at same time
   console.time("Getting all accounts");
   const [nativeAccountSummary, tokenAccountSummaries] = await Promise.all([
-    getNativeAccountSummariesOrCached(useCache),
-    getTokenAccountSummariesOrCached(useCache),
+    getNativeAccountSummaryOrCached(),
+    getTokenAccountSummariesOrCached(),
   ]);
   console.timeEnd("Getting all accounts");
   nativeAccountStore.set(nativeAccountSummary);
