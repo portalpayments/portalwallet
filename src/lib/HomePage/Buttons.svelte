@@ -60,7 +60,6 @@
     width: 120px;
     height: 38px;
     border-radius: 24px;
-    @include shadow;
   }
 
   /* global is needed for 'a' element under Link */
@@ -70,6 +69,7 @@
     padding: 7px 0px;
     font-size: 14px;
     background: var(--blue-green-gradient);
+    @include shadow;
   }
   .add-and-send-buttons :global(a.button):active {
     color: #fff;
