@@ -30,7 +30,7 @@
   let isLoadingTransactionSummaries: boolean = true;
 
   const updateTransactionsByDays = (activeAccount: AccountSummary) => {
-    log(`In updateTransactionsByDays, filterValue is ${filterValue}`);
+    log(`In updateTransactionsByDays, filterValue is '${filterValue}'`);
     if (!activeAccount) {
       // TODO: maybe change this so transactionsStore always sets the active account?
       // when it first loads?
