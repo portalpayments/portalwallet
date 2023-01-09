@@ -58,7 +58,7 @@ const sendMessage = async (message: Record<string, any>) => {
 log(`Parsing service worker version: ${VERSION}`);
 
 const handleMessage = async (eventData) => {
-  log(`📩 Got a message from the app on this topic ${eventData.topic}`);
+  log(`📩 Got a message from the app on this topic: ${eventData.topic}`);
 
   if (eventData.topic === "getSecretKey") {
     if (secretKey) {

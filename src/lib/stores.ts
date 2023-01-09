@@ -395,7 +395,7 @@ const setupServiceWorker = async () => {
       }
 
       if (event.data.topic === "replyTokenAccountSummaries") {
-        console.timeEnd("replyTokenAccountSummaries");
+        console.timeEnd("getTokenAccountSummaries");
 
         const tokenAccountSummaries = event.data
           .tokenAccountSummaries as Array<AccountSummary>;
