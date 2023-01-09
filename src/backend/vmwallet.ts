@@ -227,7 +227,12 @@ export const getTransactionsForAddress = async (
   const transactions: Array<ParsedTransactionWithMeta> =
     await connection.getParsedTransactions(signatures, {
       // NOTE: we can't use commitment: finalised in our localhost validator
+      // (it's a limitation of the localhost validator)
       // commitment: "finalized",
+
+      // Fixes:
+      // SolanaJSONRPCError: failed to get transactions: Transaction version (0) is not supported
+      maxSupportedTransactionVersion: 0,
     });
 
   return transactions;
