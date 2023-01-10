@@ -103,6 +103,9 @@ export const URLS = {
     "https://proportionate-greatest-needle.solana-mainnet.quiknode.pro/",
 };
 
+export const HELIUS_RPC_URL =
+  "https://rpc.helius.xyz/?api-key=9e66be52-acf4-44a1-8bbe-a9852f8ab3c7";
+
 export const SOLANA_DECIMALS = Math.log10(LAMPORTS_PER_SOL);
 
 export const SOL = LAMPORTS_PER_SOL;

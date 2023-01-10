@@ -20,6 +20,7 @@ jobs:
       IDENTITY_TOKEN_SECRET_KEY: ${{ secrets.IDENTITY_TOKEN_SECRET_KEY }}
       MIKES_MNEMONIC: ${{ secrets.MIKES_MNEMONIC }}
       MIKES_SECRET_KEY: ${{ secrets.MIKES_SECRET_KEY }}
+      HELIUS_API_KEY: ${{ secrets.HELIUS_API_KEY }}
       # Program locations are not a secret so don't
       # worry about including them in this file
       METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS: "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
