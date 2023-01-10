@@ -367,7 +367,7 @@ describe(`mainnet integration tests`, () => {
         // we should check for either using toBeOneOf()
         // but jest-extended does not fucking work after an hour
         // of fucking round with it.
-        memo: expect.any(String),
+        memo: expect.anything(),
         receipt: null,
       });
     },
