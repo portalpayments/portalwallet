@@ -196,7 +196,7 @@ export const hasUSDCAccountStore: Writable<boolean | null> = writable(null);
 export const collectablesStore: Writable<Array<Collectable> | null> =
   writable(null);
 
-const getNativeAccountSummaryOrCached = async (useCache: boolean) => {
+const getNativeAccountSummaryOrCached = async () => {
   let nativeAccountSummary: AccountSummary;
   try {
     nativeAccountSummary = await runRepeatedlyWithTimeout(
@@ -305,7 +305,7 @@ const updateAccounts = async () => {
   // Get contacts now we have the accounts (and their transactions)
   log(`Getting contacts used in transactions`);
   let contacts = getFromStore(contactsStore);
-  if (contacts?.length && useCache) {
+  if (contacts?.length) {
     log(`No need to update Contact as it's previously been set`);
   } else {
     contacts = await getContactsFromTransactions(
@@ -340,7 +340,7 @@ connectionStore.subscribe((newValue) => {
   if (newValue) {
     log(`🔌 connection has changed, updating accounts`);
     connection = newValue;
-    updateAccounts(true);
+    updateAccounts();
   }
 });
 
@@ -357,7 +357,7 @@ authStore.subscribe((newValue) => {
       });
     }
 
-    updateAccounts(true);
+    updateAccounts();
     updateCollectables();
   }
 });
