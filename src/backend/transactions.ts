@@ -1,5 +1,6 @@
 import {
   log,
+  stringify,
   instructionDataToNote,
   debug,
   byDateNewestToOldest,
@@ -18,7 +19,12 @@ import {
   type TransactionSummary,
 } from "../lib/types";
 
-import { MEMO_PROGRAM, mintToCurrencyMap, NOTE_PROGRAM } from "./constants";
+import {
+  MEMO_PROGRAM,
+  mintToCurrencyMap,
+  NOTE_PROGRAM,
+  ORCA_WHIRLPOOL_MAINNET_ACCOUNT,
+} from "./constants";
 import { getReceiptForTransactionSummary } from "./receipts";
 import {
   type ParsedInstruction,
@@ -108,14 +114,18 @@ export const summarizeTransaction = async (
 
   let memo: string | null = null;
   try {
-    if (
-      firstInstruction.parsed.info.source ===
-      firstInstruction.parsed.info.destination
-    ) {
-      log(
-        `Ignoring transaction sending money to self (probably a user mistake)`
-      );
-      return null;
+    // Check 'parsed' exists explicitly .....
+    if (firstInstruction?.parsed) {
+      // ...so we don't compare undefined and undefined in this test.
+      if (
+        firstInstruction.parsed?.info?.source ===
+        firstInstruction.parsed.info.destination
+      ) {
+        log(
+          `Ignoring transaction sending money to self (probably a user mistake)`
+        );
+        return null;
+      }
     }
 
     memo = getNoteOrMemo(rawTransaction);
@@ -178,7 +188,26 @@ export const summarizeTransaction = async (
     const currencyId = currencyDetails.id;
 
     if (rawTransaction.meta.postTokenBalances.length > 2) {
-      throw new Error(`Can't parse this transaction`);
+      // We can parse transactions with more accounts if one is using Whirlpool
+      // - eg it's whirlpool swapping some tokens around
+      const isUsingWhirlPool =
+        rawTransaction.transaction.message.accountKeys.find(
+          (parsedMessageAccount) => {
+            log(`@@@`, parsedMessageAccount.pubkey.toBase58());
+            return (
+              parsedMessageAccount.pubkey.toBase58() ===
+              ORCA_WHIRLPOOL_MAINNET_ACCOUNT
+            );
+          }
+        ) || null;
+
+      log(`isUsingWhirlPool`, isUsingWhirlPool);
+      if (
+        rawTransaction.meta.postTokenBalances.length === 3 &&
+        !isUsingWhirlPool
+      ) {
+        throw new Error(`Can't parse this transaction`);
+      }
     }
 
     const otherWallet = rawTransaction.meta.postTokenBalances.find(
@@ -226,9 +255,11 @@ export const summarizeTransaction = async (
     const error = thrownObject as Error;
     // TODO: throw error instead of just log
     // (once we can handle more types of transactions in future)
-    debug(
+    log(
       `Warning: could not summarize transaction ID: ${id} - see the block explorer for more info, ${error.message}`
     );
+    log(error.stack);
+    // log(stringify(rawTransaction));
     return null;
   }
 };

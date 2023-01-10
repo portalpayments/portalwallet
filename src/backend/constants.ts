@@ -86,6 +86,10 @@ export const USDT_MAINNET_MINT_ACCOUNT =
 export const USDC_SOLANA_SPL_TOKEN_ON_DEVNET =
   "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
 
+// https://orca-so.gitbook.io/orca-developer-portal/whirlpools/interacting-with-the-protocol/orca-whirlpools-parameters
+export const ORCA_WHIRLPOOL_MAINNET_ACCOUNT =
+  "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc";
+
 // https://solana.com/rpc
 export const URLS = {
   // From https://solanacookbook.com/references/local-development.html#connecting-to-environments

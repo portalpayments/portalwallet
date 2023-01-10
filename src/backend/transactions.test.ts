@@ -19,6 +19,7 @@ import { Currency, type TransactionSummary, Direction } from "../lib/types";
 
 import { hexToUtf8, log, stringify } from "./functions";
 import { sendFiveUSDC } from "./test-data/transactions/sendFiveUSDC";
+import { swapSolWithUSDCOnJupiter } from "./test-data/transactions/swapSolWithUSDC";
 import { sendingMoneyToSelf } from "./test-data/transactions/sendingMoneyToSelf";
 import {
   sendingSol,
@@ -156,6 +157,33 @@ const transactionSummaries: Array<TransactionSummary> = [
 ];
 
 describe(`transaction summaries`, () => {
+  // Mike using Jupiter DEX, picking Orca, swapping some Sol for USDC
+  test(`We can produce a transaction summary from swapping Sol for USDC on Jupiter`, async () => {
+    const portalTransactionSummary = await summarizeTransaction(
+      // TODO: fix 'transaction.message.accountKeys' (is a string, should be something else)
+      // in the demo transaction below
+      // @ts-ignore
+      swapSolWithUSDCOnJupiter,
+      new PublicKey(MIKES_WALLET),
+      null,
+      false
+    );
+
+    expect(portalTransactionSummary).toEqual({
+      amount: 32903572,
+      currency: 4,
+      date: 1673260796000,
+      direction: 1,
+      from: "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
+      id: "4SBiyR6rrie4M78S2dLQjkcb8Ja1mFmuAL4furw5NcpKZkYjsC31EWtycLY3WdatngkiLPEqGwTPncAg41fQATFW",
+      memo: null,
+      networkFee: 5000,
+      receipt: null,
+      status: true,
+      to: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+    });
+  });
+
   // Mike sending CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs with glow
   test(`We can produce a transaction summary from us sending someone money with glow`, async () => {
     const portalTransactionSummary = await summarizeTransaction(
