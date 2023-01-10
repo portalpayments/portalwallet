@@ -45,6 +45,7 @@ export enum Currency {
   "USDH",
   "USDT",
   "SOL",
+  "WSOL",
 }
 
 export type CurrencyDetails = {

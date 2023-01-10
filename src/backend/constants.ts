@@ -67,6 +67,9 @@ export const KIMZO_NFT_ADDRESS = new PublicKey(
   "C5veJJL3hUq9s3aUymWjREGYoqbWSzX8aNRaZ9STSCNM"
 );
 
+export const WRAPPED_SOL_MAINNET_MINT_ACCOUNT =
+  "So11111111111111111111111111111111111111112";
+
 // From https://www.circle.com/en/usdc/developers
 export const USDC_MAINNET_MINT_ACCOUNT =
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
@@ -119,6 +122,11 @@ export const mintToCurrencyMap: Record<string, CurrencyDetails> = {
     id: Currency.USDT,
     name: "USDT",
     decimals: 6,
+  },
+  [WRAPPED_SOL_MAINNET_MINT_ACCOUNT]: {
+    id: Currency.WSOL,
+    name: "Wrapped SOL",
+    decimals: 9,
   },
 };
 
