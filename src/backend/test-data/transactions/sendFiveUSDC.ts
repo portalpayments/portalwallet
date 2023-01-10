@@ -1,5 +1,10 @@
 import { PublicKey } from "@solana/web3.js";
-import { SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM } from "../../constants";
+import {
+  MIKES_USDC_ACCOUNT,
+  SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM,
+  SPL_TOKEN_PROGRAM,
+  USDC_MAINNET_MINT_ACCOUNT,
+} from "../../constants";
 
 // Sending 5 USDC to a newly created wallet
 
@@ -17,21 +22,19 @@ export const sendFiveUSDC = {
             parsed: {
               info: {
                 extensionTypes: ["immutableOwner"],
-                mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                mint: USDC_MAINNET_MINT_ACCOUNT,
               },
               type: "getAccountDataSize",
             },
             program: "spl-token",
-            programId: new PublicKey(
-              "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-            ),
+            programId: new PublicKey(SPL_TOKEN_PROGRAM),
           },
           {
             parsed: {
               info: {
                 lamports: 2039280,
                 newAccount: "45hv5bBaXX9vK2zbdsZq526iHjhEPgsF3mascJDFoSuS",
-                owner: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                owner: SPL_TOKEN_PROGRAM,
                 source: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
                 space: 165,
               },
@@ -48,23 +51,19 @@ export const sendFiveUSDC = {
               type: "initializeImmutableOwner",
             },
             program: "spl-token",
-            programId: new PublicKey(
-              "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-            ),
+            programId: new PublicKey(SPL_TOKEN_PROGRAM),
           },
           {
             parsed: {
               info: {
                 account: "45hv5bBaXX9vK2zbdsZq526iHjhEPgsF3mascJDFoSuS",
-                mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                mint: USDC_MAINNET_MINT_ACCOUNT,
                 owner: "CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs",
               },
               type: "initializeAccount3",
             },
             program: "spl-token",
-            programId: new PublicKey(
-              "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-            ),
+            programId: new PublicKey(SPL_TOKEN_PROGRAM),
           },
         ],
       },
@@ -106,9 +105,9 @@ export const sendFiveUSDC = {
     postTokenBalances: [
       {
         accountIndex: 1,
-        mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        mint: USDC_MAINNET_MINT_ACCOUNT,
         owner: "CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs",
-        programId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        programId: SPL_TOKEN_PROGRAM,
         uiTokenAmount: {
           amount: "5000000",
           decimals: 6,
@@ -118,9 +117,9 @@ export const sendFiveUSDC = {
       },
       {
         accountIndex: 2,
-        mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        mint: USDC_MAINNET_MINT_ACCOUNT,
         owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
-        programId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        programId: SPL_TOKEN_PROGRAM,
         uiTokenAmount: {
           amount: "35933485",
           decimals: 6,
@@ -136,9 +135,9 @@ export const sendFiveUSDC = {
     preTokenBalances: [
       {
         accountIndex: 2,
-        mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        mint: USDC_MAINNET_MINT_ACCOUNT,
         owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
-        programId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        programId: SPL_TOKEN_PROGRAM,
         uiTokenAmount: {
           amount: "40933485",
           decimals: 6,
@@ -169,7 +168,7 @@ export const sendFiveUSDC = {
           writable: true,
         },
         {
-          pubkey: new PublicKey("Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc"),
+          pubkey: new PublicKey(MIKES_USDC_ACCOUNT),
           signer: false,
           source: "transaction",
           writable: true,
@@ -193,7 +192,7 @@ export const sendFiveUSDC = {
           writable: false,
         },
         {
-          pubkey: new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
+          pubkey: new PublicKey(USDC_MAINNET_MINT_ACCOUNT),
           signer: false,
           source: "transaction",
           writable: false,
@@ -205,7 +204,7 @@ export const sendFiveUSDC = {
           writable: false,
         },
         {
-          pubkey: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
+          pubkey: new PublicKey(SPL_TOKEN_PROGRAM),
           signer: false,
           source: "transaction",
           writable: false,
@@ -223,10 +222,10 @@ export const sendFiveUSDC = {
           parsed: {
             info: {
               account: "45hv5bBaXX9vK2zbdsZq526iHjhEPgsF3mascJDFoSuS",
-              mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              mint: USDC_MAINNET_MINT_ACCOUNT,
               source: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
               systemProgram: "11111111111111111111111111111111",
-              tokenProgram: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              tokenProgram: SPL_TOKEN_PROGRAM,
               wallet: "CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs",
             },
             type: "create",
@@ -239,8 +238,8 @@ export const sendFiveUSDC = {
             info: {
               authority: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
               destination: "45hv5bBaXX9vK2zbdsZq526iHjhEPgsF3mascJDFoSuS",
-              mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-              source: "Tig6ugKWyQqyRgs8CeDCuC3AaenQzRJ5eVpmT5bboDc",
+              mint: USDC_MAINNET_MINT_ACCOUNT,
+              source: MIKES_USDC_ACCOUNT,
               tokenAmount: {
                 amount: "5000000",
                 decimals: 6,
@@ -251,9 +250,7 @@ export const sendFiveUSDC = {
             type: "transferChecked",
           },
           program: "spl-token",
-          programId: new PublicKey(
-            "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-          ),
+          programId: new PublicKey(SPL_TOKEN_PROGRAM),
         },
         {
           accounts: [

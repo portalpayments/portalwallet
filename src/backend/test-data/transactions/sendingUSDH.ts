@@ -1,4 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
+import { SPL_TOKEN_PROGRAM } from "../../constants";
 
 export const sendingUSDH = {
   blockTime: 1667306128,
@@ -18,16 +19,14 @@ export const sendingUSDH = {
               type: "getAccountDataSize",
             },
             program: "spl-token",
-            programId: new PublicKey(
-              "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-            ),
+            programId: new PublicKey(SPL_TOKEN_PROGRAM),
           },
           {
             parsed: {
               info: {
                 lamports: 2039280,
                 newAccount: "6TE68teBQqydhWDze8MzUsySWo926Hs5nFSTXVFszx2",
-                owner: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                owner: SPL_TOKEN_PROGRAM,
                 source: "4DEUD7bafTTotDQ2mroQCdDp4hYLXCepuw4xyzZXUSXu",
                 space: 165,
               },
@@ -44,9 +43,7 @@ export const sendingUSDH = {
               type: "initializeImmutableOwner",
             },
             program: "spl-token",
-            programId: new PublicKey(
-              "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-            ),
+            programId: new PublicKey(SPL_TOKEN_PROGRAM),
           },
           {
             parsed: {
@@ -58,9 +55,7 @@ export const sendingUSDH = {
               type: "initializeAccount3",
             },
             program: "spl-token",
-            programId: new PublicKey(
-              "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-            ),
+            programId: new PublicKey(SPL_TOKEN_PROGRAM),
           },
         ],
       },
@@ -101,7 +96,7 @@ export const sendingUSDH = {
         accountIndex: 2,
         mint: "USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX",
         owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
-        programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
+        programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "1000000",
           decimals: 6,
@@ -113,7 +108,7 @@ export const sendingUSDH = {
         accountIndex: 3,
         mint: "USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX",
         owner: "BfkRD3gGQGLjHxUw7oqhizkaxrDrw7itHT98f9j2gh6t",
-        programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
+        programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "0",
           decimals: 6,
@@ -131,7 +126,7 @@ export const sendingUSDH = {
         accountIndex: 3,
         mint: "USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX",
         owner: "BfkRD3gGQGLjHxUw7oqhizkaxrDrw7itHT98f9j2gh6t",
-        programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
+        programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "1000000",
           decimals: 6,
@@ -198,7 +193,7 @@ export const sendingUSDH = {
           writable: false,
         },
         {
-          pubkey: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          pubkey: SPL_TOKEN_PROGRAM,
           signer: false,
           source: "transaction",
           writable: false,
@@ -220,7 +215,7 @@ export const sendingUSDH = {
               rentSysvar: "SysvarRent111111111111111111111111111111111",
               source: "4DEUD7bafTTotDQ2mroQCdDp4hYLXCepuw4xyzZXUSXu",
               systemProgram: "11111111111111111111111111111111",
-              tokenProgram: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              tokenProgram: SPL_TOKEN_PROGRAM,
               wallet: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
             },
             type: "create",
@@ -241,9 +236,7 @@ export const sendingUSDH = {
             type: "transfer",
           },
           program: "spl-token",
-          programId: new PublicKey(
-            "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-          ),
+          programId: new PublicKey(SPL_TOKEN_PROGRAM),
         },
       ],
       recentBlockhash: "Gz36swvExGLXaUQEhaqJzgymNA8oyukSbrcv1RGJaDFn",
