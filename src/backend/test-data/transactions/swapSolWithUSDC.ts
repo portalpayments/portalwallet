@@ -2,6 +2,7 @@ import { PublicKey } from "@solana/web3.js";
 import {
   MIKES_USDC_ACCOUNT,
   ORCA_WHIRLPOOL_MAINNET_ACCOUNT,
+  SOLANA_SYSTEM_PROGRAM,
   SPL_TOKEN_PROGRAM,
   USDC_MAINNET_MINT_ACCOUNT,
   WRAPPED_SOL_MAINNET_MINT_ACCOUNT,
@@ -39,7 +40,7 @@ export const swapSolWithUSDCOnJupiter = {
               type: "createAccount",
             },
             program: "system",
-            programId: new PublicKey("11111111111111111111111111111111"),
+            programId: new PublicKey(SOLANA_SYSTEM_PROGRAM),
           },
           {
             parsed: {
@@ -303,7 +304,7 @@ export const swapSolWithUSDCOnJupiter = {
           writable: false,
         },
         {
-          pubkey: new PublicKey("11111111111111111111111111111111"),
+          pubkey: new PublicKey(SOLANA_SYSTEM_PROGRAM),
           signer: false,
           source: "transaction",
           writable: false,
@@ -372,7 +373,7 @@ export const swapSolWithUSDCOnJupiter = {
               account: "3rkvt7CX3DcPqAcnU7w6eoruaYLLUp1gh3ZFaVKVDsBS",
               mint: WRAPPED_SOL_MAINNET_MINT_ACCOUNT,
               source: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
-              systemProgram: "11111111111111111111111111111111",
+              systemProgram: SOLANA_SYSTEM_PROGRAM,
               tokenProgram: SPL_TOKEN_PROGRAM,
               wallet: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
             },
@@ -393,7 +394,7 @@ export const swapSolWithUSDCOnJupiter = {
             type: "transfer",
           },
           program: "system",
-          programId: new PublicKey("11111111111111111111111111111111"),
+          programId: new PublicKey(SOLANA_SYSTEM_PROGRAM),
         },
         {
           parsed: {

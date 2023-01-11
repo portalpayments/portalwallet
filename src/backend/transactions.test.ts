@@ -11,6 +11,7 @@ import {
 import {
   EMPTY,
   getCurrencyByName,
+  GREGS_WALLET,
   JOHN_TESTUSER_DEMO_WALLET,
   MIKES_WALLET,
   YCOMBINATOR_DEMO_WALLET_FOR_JARED,
@@ -29,8 +30,6 @@ import {
 import { sendingUSDH } from "./test-data/transactions/sendingUSDH";
 
 jest.mock("./functions");
-
-const GREGS_WALLET = "CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs";
 
 const contacts = [
   {

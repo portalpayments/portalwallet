@@ -113,7 +113,7 @@ export const sendingSolWithNote = {
           writable: true,
         },
         {
-          pubkey: new PublicKey("11111111111111111111111111111111"),
+          pubkey: new PublicKey(SOLANA_SYSTEM_PROGRAM),
           signer: false,
           source: "transaction",
           writable: false,
@@ -137,7 +137,7 @@ export const sendingSolWithNote = {
             type: "transfer",
           },
           program: "system",
-          programId: new PublicKey("11111111111111111111111111111111"),
+          programId: new PublicKey(SOLANA_SYSTEM_PROGRAM),
         },
         {
           accounts: ["FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9"],

@@ -1,5 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
-import { SPL_TOKEN_PROGRAM } from "../../constants";
+import { SOLANA_SYSTEM_PROGRAM, SPL_TOKEN_PROGRAM } from "../../constants";
 
 export const sendingUSDH = {
   blockTime: 1667306128,
@@ -33,7 +33,7 @@ export const sendingUSDH = {
               type: "createAccount",
             },
             program: "system",
-            programId: new PublicKey("11111111111111111111111111111111"),
+            programId: new PublicKey(SOLANA_SYSTEM_PROGRAM),
           },
           {
             parsed: {
@@ -145,61 +145,61 @@ export const sendingUSDH = {
     message: {
       accountKeys: [
         {
-          pubkey: "4DEUD7bafTTotDQ2mroQCdDp4hYLXCepuw4xyzZXUSXu",
+          pubkey: new PublicKey("4DEUD7bafTTotDQ2mroQCdDp4hYLXCepuw4xyzZXUSXu"),
           signer: true,
           source: "transaction",
           writable: true,
         },
         {
-          pubkey: "BfkRD3gGQGLjHxUw7oqhizkaxrDrw7itHT98f9j2gh6t",
+          pubkey: new PublicKey("BfkRD3gGQGLjHxUw7oqhizkaxrDrw7itHT98f9j2gh6t"),
           signer: true,
           source: "transaction",
           writable: false,
         },
         {
-          pubkey: "6TE68teBQqydhWDze8MzUsySWo926Hs5nFSTXVFszx2",
+          pubkey: new PublicKey("6TE68teBQqydhWDze8MzUsySWo926Hs5nFSTXVFszx2"),
           signer: false,
           source: "transaction",
           writable: true,
         },
         {
-          pubkey: "ELbj3dfQsN1Hb3mqjd9LnDjfPMW2QnoxKtaL2WkXeWY5",
+          pubkey: new PublicKey("ELbj3dfQsN1Hb3mqjd9LnDjfPMW2QnoxKtaL2WkXeWY5"),
           signer: false,
           source: "transaction",
           writable: true,
         },
         {
-          pubkey: "11111111111111111111111111111111",
+          pubkey: new PublicKey(SOLANA_SYSTEM_PROGRAM),
           signer: false,
           source: "transaction",
           writable: false,
         },
         {
-          pubkey: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+          pubkey: new PublicKey("5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"),
           signer: false,
           source: "transaction",
           writable: false,
         },
         {
-          pubkey: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+          pubkey: new PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"),
           signer: false,
           source: "transaction",
           writable: false,
         },
         {
-          pubkey: "SysvarRent111111111111111111111111111111111",
+          pubkey: new PublicKey("SysvarRent111111111111111111111111111111111"),
           signer: false,
           source: "transaction",
           writable: false,
         },
         {
-          pubkey: SPL_TOKEN_PROGRAM,
+          pubkey: new PublicKey(SPL_TOKEN_PROGRAM),
           signer: false,
           source: "transaction",
           writable: false,
         },
         {
-          pubkey: "USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX",
+          pubkey: new PublicKey("USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX"),
           signer: false,
           source: "transaction",
           writable: false,
@@ -214,7 +214,7 @@ export const sendingUSDH = {
               mint: "USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX",
               rentSysvar: "SysvarRent111111111111111111111111111111111",
               source: "4DEUD7bafTTotDQ2mroQCdDp4hYLXCepuw4xyzZXUSXu",
-              systemProgram: "11111111111111111111111111111111",
+              systemProgram: SOLANA_SYSTEM_PROGRAM,
               tokenProgram: SPL_TOKEN_PROGRAM,
               wallet: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
             },

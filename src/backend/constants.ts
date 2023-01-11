@@ -38,6 +38,8 @@ export const PORTAL_IDENTITY_TOKEN_ISSUER_WALLET =
 export const JOHN_TESTUSER_DEMO_WALLET =
   "8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7";
 
+export const GREGS_WALLET = "CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs";
+
 export const SOLANA_SPACES_WALLET =
   "4iDRFnp2N4UAsZEePHAxs7ozBanQcGtLYd12HG2HJm4s";
 
