@@ -354,7 +354,9 @@ export const swapSolWithUSDCOnJupiter = {
       ],
       addressTableLookups: [
         {
-          accountKey: "HEHy7kNR3W8fHnA1a7jMBwHEZH3z2MKjaL8Xo69PrNAM",
+          accountKey: new PublicKey(
+            "HEHy7kNR3W8fHnA1a7jMBwHEZH3z2MKjaL8Xo69PrNAM"
+          ),
           readonlyIndexes: [0, 152],
           writableIndexes: [146, 147, 148],
         },
