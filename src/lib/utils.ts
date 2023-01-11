@@ -19,8 +19,26 @@ export const httpGet = async (
   uri: string,
   forceContentType: string | null = null
 ) => {
+  return fetchUnfucked(uri, forceContentType);
+};
+
+export const httpPost = async (
+  uri: string,
+  body: Record<string, unknown>,
+  forceContentType: string | null = null
+) => {
+  return fetchUnfucked(uri, forceContentType, "POST", body);
+};
+
+export const fetchUnfucked = async (
+  uri: string,
+  forceContentType: string | null = null,
+  method = "GET",
+  body: Record<string, unknown> = null
+) => {
   const response = await fetch(uri, {
-    method: "GET",
+    method,
+    body: body ? JSON.stringify(body) : null,
   });
 
   let contentType = forceContentType || CONTENT_TYPES.JSON;
