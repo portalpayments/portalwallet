@@ -193,7 +193,6 @@ export const summarizeTransaction = async (
       const isUsingWhirlPool =
         rawTransaction.transaction.message.accountKeys.find(
           (parsedMessageAccount) => {
-            log(`@@@`, parsedMessageAccount.pubkey.toBase58());
             return (
               parsedMessageAccount.pubkey.toBase58() ===
               ORCA_WHIRLPOOL_MAINNET_ACCOUNT
