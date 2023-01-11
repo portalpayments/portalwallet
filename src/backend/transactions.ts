@@ -79,7 +79,7 @@ const getWalletDifference = (
     (postTokenBalance) => postTokenBalance.owner === wallet
   );
 
-  // It's possible we didn't have thi token before, so we didn't have the token account for it.
+  // It's possible we didn't have this token before, so we didn't have the token account for it.
   const valueBefore = Number(ownerBefore?.uiTokenAmount?.amount || 0);
   const valueAfter = Number(ownerAfter.uiTokenAmount.amount);
 
