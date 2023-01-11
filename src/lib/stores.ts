@@ -18,7 +18,7 @@ import {
 import { MILLISECONDS, NOT_FOUND, SECONDS } from "../backend/constants";
 import base58 from "bs58";
 import { getAllNftMetadatasFromAWallet } from "../backend/identity-tokens";
-import { httpGet } from "./utils";
+import * as http from "./http-client";
 import { summarizeTransaction } from "../backend/transactions";
 import { runRepeatedlyWithTimeout } from "../backend/run-with-timeout";
 
@@ -54,7 +54,7 @@ const updateCollectables = async () => {
   const collectablesUnfiltered = await asyncMap(
     allNftsFromAWallet,
     async (nft) => {
-      const data = await httpGet(nft.uri);
+      const data = await http.get(nft.uri);
       const firstFile = data?.properties?.files?.[0];
       const image = firstFile?.uri || null;
       const type = firstFile?.type || null;

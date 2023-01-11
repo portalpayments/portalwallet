@@ -26,7 +26,7 @@ import { stringify } from "./functions";
 import type { TokenMetaData, ExpandedNFT, BasicTokenAccount } from "./types";
 import { makeTokenAccount, sendTokens } from "./tokens";
 import { connect } from "./vmwallet";
-import { httpGet } from "../lib/utils";
+import * as http from "../lib/http-client";
 
 export const getMetaplex = (
   connection: Connection,
@@ -268,7 +268,7 @@ export const getFullNFTsFromWallet = async (
 
   const nftData = await asyncMap(nfts, async (nft) => {
     try {
-      const responseBody = await httpGet(nft.uri);
+      const responseBody = await http.get(nft.uri);
       const datum = responseBody;
       return datum;
     } catch (thrownObject) {

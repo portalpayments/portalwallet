@@ -21,7 +21,8 @@ import type { RawAccount } from "@solana/spl-token";
 import { getIdentityTokensFromWallet } from "./identity-tokens";
 import type { BasicTokenAccount, TokenMetaData, VerifiedClaims } from "./types";
 import { summarizeTransaction } from "./transactions";
-import { httpGet, toUniqueStringArray } from "../lib/utils";
+import { toUniqueStringArray } from "../lib/utils";
+import * as http from "../lib/http-client";
 import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../lib/constants";
 import {
   Currency,
@@ -175,7 +176,7 @@ export const verifyWallet = async (
   const tokensMetadata = await asyncMap(
     identityTokens,
     async (identityTokens) => {
-      const metadata = (await httpGet(identityTokens.uri)) as TokenMetaData;
+      const metadata = (await http.get(identityTokens.uri)) as TokenMetaData;
       return metadata;
     }
   );

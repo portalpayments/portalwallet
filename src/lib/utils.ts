@@ -2,65 +2,12 @@ import { PublicKey } from "@solana/web3.js";
 import { log } from "../backend/functions";
 const WALLET_CHARACTERS_TO_SHOW = 5;
 
-const CONTENT_TYPES = {
-  JSON: "application/json",
-  TEXT: "text/plain",
-  HTML: "text/html",
-};
-
 // Adds commas to numbers
 // https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-strings
 const numberFormatter = new Intl.NumberFormat("en-US", {
   // Do not show fractions - front end should only handle whole numbers
   maximumFractionDigits: 0,
 });
-
-export const httpGet = async (
-  uri: string,
-  forceContentType: string | null = null
-) => {
-  return fetchUnfucked(uri, forceContentType);
-};
-
-export const httpPost = async (
-  uri: string,
-  body: Record<string, unknown>,
-  forceContentType: string | null = null
-) => {
-  return fetchUnfucked(uri, forceContentType, "POST", body);
-};
-
-export const fetchUnfucked = async (
-  uri: string,
-  forceContentType: string | null = null,
-  method = "GET",
-  body: Record<string, unknown> = null
-) => {
-  const response = await fetch(uri, {
-    method,
-    body: body ? JSON.stringify(body) : null,
-  });
-
-  let contentType = forceContentType || CONTENT_TYPES.JSON;
-  let contentTypeHeader = response.headers.get("Content-Type");
-  if (contentTypeHeader) {
-    contentType = contentTypeHeader.split(";").at(0);
-  } else {
-    log(`No Content Type header. Weird`);
-  }
-
-  if (
-    contentType === CONTENT_TYPES.TEXT ||
-    contentType === CONTENT_TYPES.HTML
-  ) {
-    const htmlOrText = await response.text();
-    return htmlOrText;
-  }
-  if (contentType === "application/json") {
-    return response.json();
-  }
-  throw new Error(`Don't know ho to decode this contentType: ${contentType}`);
-};
 
 export const formatMajorUnits = (number: number | string) => {
   const asNumber = Number(number);
