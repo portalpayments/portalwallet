@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
 
     env:
       TWITTER_API_KEY_BEARER_TOKEN: ${{ secrets.TWITTER_API_KEY_BEARER_TOKEN }}
