@@ -118,6 +118,6 @@
   /* TODO: skeleton placeholder graphic doesn't seem to have a real height, maybe replace it to avoid hacks like this */
   .skeleton {
     height: 96px;
-    width: 300px;
+    width: var(--wallet-width);
   }
 </style>
