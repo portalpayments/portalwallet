@@ -188,7 +188,7 @@ describe(`transaction summaries`, () => {
       amount: 32903572,
       currency: 4,
       date: 1673260796000,
-      direction: 1,
+      direction: Direction.swapped,
       from: "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
       id: "4SBiyR6rrie4M78S2dLQjkcb8Ja1mFmuAL4furw5NcpKZkYjsC31EWtycLY3WdatngkiLPEqGwTPncAg41fQATFW",
       memo: null,
@@ -197,7 +197,7 @@ describe(`transaction summaries`, () => {
       swapAmount: null,
       swapCurrency: null,
       status: true,
-      to: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+      to: MIKES_WALLET,
     });
   });
 
@@ -280,7 +280,7 @@ describe(`transaction summaries`, () => {
       swapAmount: null,
       swapCurrency: null,
       status: true,
-      to: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+      to: MIKES_WALLET,
     });
   });
 
@@ -486,7 +486,7 @@ describe(`grouping transactions`, () => {
             currency: 3,
             date: 1662733089000,
             direction: 0,
-            from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            from: MIKES_WALLET,
             id: "3",
             memo: null,
             networkFee: 5000,

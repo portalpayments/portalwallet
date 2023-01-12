@@ -6,6 +6,7 @@ import {
   USDC_MAINNET_MINT_ACCOUNT,
   GREGS_WALLET,
   SOLANA_SYSTEM_PROGRAM,
+  MIKES_WALLET,
 } from "../../constants";
 
 // Sending 5 USDC to a newly created wallet
@@ -39,9 +40,7 @@ export const sendFiveUSDC = {
                   "45hv5bBaXX9vK2zbdsZq526iHjhEPgsF3mascJDFoSuS"
                 ),
                 owner: SPL_TOKEN_PROGRAM,
-                source: new PublicKey(
-                  "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"
-                ),
+                source: new PublicKey(MIKES_WALLET),
                 space: 165,
               },
               type: "createAccount",
@@ -124,7 +123,7 @@ export const sendFiveUSDC = {
       {
         accountIndex: 2,
         mint: USDC_MAINNET_MINT_ACCOUNT,
-        owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        owner: MIKES_WALLET,
         programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "35933485",
@@ -142,7 +141,7 @@ export const sendFiveUSDC = {
       {
         accountIndex: 2,
         mint: USDC_MAINNET_MINT_ACCOUNT,
-        owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        owner: MIKES_WALLET,
         programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "40933485",
@@ -162,7 +161,7 @@ export const sendFiveUSDC = {
     message: {
       accountKeys: [
         {
-          pubkey: new PublicKey("5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"),
+          pubkey: new PublicKey(MIKES_WALLET),
           signer: true,
           source: "transaction",
           writable: true,
@@ -229,7 +228,7 @@ export const sendFiveUSDC = {
             info: {
               account: "45hv5bBaXX9vK2zbdsZq526iHjhEPgsF3mascJDFoSuS",
               mint: USDC_MAINNET_MINT_ACCOUNT,
-              source: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+              source: MIKES_WALLET,
               systemProgram: SOLANA_SYSTEM_PROGRAM,
               tokenProgram: SPL_TOKEN_PROGRAM,
               wallet: GREGS_WALLET,
@@ -244,7 +243,7 @@ export const sendFiveUSDC = {
         {
           parsed: {
             info: {
-              authority: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+              authority: MIKES_WALLET,
               destination: "45hv5bBaXX9vK2zbdsZq526iHjhEPgsF3mascJDFoSuS",
               mint: USDC_MAINNET_MINT_ACCOUNT,
               source: MIKES_USDC_ACCOUNT,
@@ -261,10 +260,7 @@ export const sendFiveUSDC = {
           programId: new PublicKey(new PublicKey(SPL_TOKEN_PROGRAM)),
         },
         {
-          accounts: [
-            new PublicKey("5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"),
-            new PublicKey(GREGS_WALLET),
-          ],
+          accounts: [new PublicKey(MIKES_WALLET), new PublicKey(GREGS_WALLET)],
           data: "AnWnJTR4tkAQv6QU6qhaVST1ddQ6CKYjbGFcr",
           programId: new PublicKey(
             "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93"

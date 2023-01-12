@@ -1,6 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 import {
   MIKES_USDC_ACCOUNT,
+  MIKES_WALLET,
   ORCA_WHIRLPOOL_MAINNET_ACCOUNT,
   SOLANA_SYSTEM_PROGRAM,
   SPL_TOKEN_PROGRAM,
@@ -34,7 +35,7 @@ export const swapSolWithUSDCOnJupiter = {
                 lamports: 2039280,
                 newAccount: "3rkvt7CX3DcPqAcnU7w6eoruaYLLUp1gh3ZFaVKVDsBS",
                 owner: SPL_TOKEN_PROGRAM,
-                source: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+                source: MIKES_WALLET,
                 space: 165,
               },
               type: "createAccount",
@@ -57,7 +58,7 @@ export const swapSolWithUSDCOnJupiter = {
               info: {
                 account: "3rkvt7CX3DcPqAcnU7w6eoruaYLLUp1gh3ZFaVKVDsBS",
                 mint: WRAPPED_SOL_MAINNET_MINT_ACCOUNT,
-                owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+                owner: MIKES_WALLET,
               },
               type: "initializeAccount3",
             },
@@ -72,7 +73,7 @@ export const swapSolWithUSDCOnJupiter = {
           {
             accounts: [
               SPL_TOKEN_PROGRAM,
-              "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+              MIKES_WALLET,
               "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
               "3rkvt7CX3DcPqAcnU7w6eoruaYLLUp1gh3ZFaVKVDsBS",
               "9RfZwn2Prux6QesG1Noo4HzMEBv3rPndJ2bN2Wwd6a7p",
@@ -90,7 +91,7 @@ export const swapSolWithUSDCOnJupiter = {
             parsed: {
               info: {
                 amount: "2000000000",
-                authority: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+                authority: MIKES_WALLET,
                 destination: "9RfZwn2Prux6QesG1Noo4HzMEBv3rPndJ2bN2Wwd6a7p",
                 source: "3rkvt7CX3DcPqAcnU7w6eoruaYLLUp1gh3ZFaVKVDsBS",
               },
@@ -176,7 +177,7 @@ export const swapSolWithUSDCOnJupiter = {
         accountIndex: 2,
         mint: USDC_MAINNET_MINT_ACCOUNT,
 
-        owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        owner: MIKES_WALLET,
         programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "45087057",
@@ -218,7 +219,7 @@ export const swapSolWithUSDCOnJupiter = {
       {
         accountIndex: 2,
         mint: USDC_MAINNET_MINT_ACCOUNT,
-        owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        owner: MIKES_WALLET,
         programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "12183485",
@@ -262,7 +263,7 @@ export const swapSolWithUSDCOnJupiter = {
     message: {
       accountKeys: [
         {
-          pubkey: new PublicKey("5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"),
+          pubkey: new PublicKey(MIKES_WALLET),
           signer: true,
           source: "transaction",
           writable: true,
@@ -374,10 +375,10 @@ export const swapSolWithUSDCOnJupiter = {
             info: {
               account: "3rkvt7CX3DcPqAcnU7w6eoruaYLLUp1gh3ZFaVKVDsBS",
               mint: WRAPPED_SOL_MAINNET_MINT_ACCOUNT,
-              source: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+              source: MIKES_WALLET,
               systemProgram: SOLANA_SYSTEM_PROGRAM,
               tokenProgram: SPL_TOKEN_PROGRAM,
-              wallet: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+              wallet: MIKES_WALLET,
             },
             type: "create",
           },
@@ -391,7 +392,7 @@ export const swapSolWithUSDCOnJupiter = {
             info: {
               destination: "3rkvt7CX3DcPqAcnU7w6eoruaYLLUp1gh3ZFaVKVDsBS",
               lamports: 2000000000,
-              source: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+              source: MIKES_WALLET,
             },
             type: "transfer",
           },
@@ -411,11 +412,11 @@ export const swapSolWithUSDCOnJupiter = {
         {
           accounts: [
             SPL_TOKEN_PROGRAM,
-            "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            MIKES_WALLET,
             MIKES_USDC_ACCOUNT,
             ORCA_WHIRLPOOL_MAINNET_ACCOUNT,
             SPL_TOKEN_PROGRAM,
-            "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            MIKES_WALLET,
             "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
             "3rkvt7CX3DcPqAcnU7w6eoruaYLLUp1gh3ZFaVKVDsBS",
             "9RfZwn2Prux6QesG1Noo4HzMEBv3rPndJ2bN2Wwd6a7p",
@@ -435,8 +436,8 @@ export const swapSolWithUSDCOnJupiter = {
           parsed: {
             info: {
               account: "3rkvt7CX3DcPqAcnU7w6eoruaYLLUp1gh3ZFaVKVDsBS",
-              destination: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
-              owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+              destination: MIKES_WALLET,
+              owner: MIKES_WALLET,
             },
             type: "closeAccount",
           },

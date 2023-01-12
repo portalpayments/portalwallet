@@ -70,7 +70,7 @@ describe(`dialect`, () => {
       direction: 0,
       amount: 32000000,
       currency: 0,
-      from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+      from: MIKES_WALLET,
       to: "4iDRFnp2N4UAsZEePHAxs7ozBanQcGtLYd12HG2HJm4s",
       memo: "qqS5qxxEjMg7mSup0rBI",
     };

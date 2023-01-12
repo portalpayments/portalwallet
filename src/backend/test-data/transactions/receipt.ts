@@ -1,10 +1,12 @@
+import { MIKES_WALLET } from "src/backend/constants";
+
 export const rawReceipt = {
   props: {
     pageProps: {
       order: {
         restaurantId: "mtJcsdB9ETLJdmjrOLff",
         discountItem: {},
-        payingPubKey: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        payingPubKey: MIKES_WALLET,
         squarePaymentIds: ["LNkSvZUuVADHFaAXHpFoS3uqEt9YY"],
         discountBreakdown: {
           "solana-or-not-financial-advice-tee": {

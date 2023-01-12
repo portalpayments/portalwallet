@@ -1,3 +1,5 @@
+import { MIKES_WALLET } from "src/backend/constants";
+
 export const threads = [
   {
     dataServiceDialectsApi: {
@@ -121,7 +123,7 @@ export const threads = [
         },
         tokenStore: {
           tokens: {
-            "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM":
+            MIKES_WALLET:
               "eyJhbGciOiJzb2xhbmEtZWQyNTUxOSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1Rkh3a3JkeG50ZEsyNGhnUVU4cWdCam4zNVkxendoejFHWndDa1AyVUpuTSIsInN1Yl9qd2siOiI1Rkh3a3JkeG50ZEsyNGhnUVU4cWdCam4zNVkxendoejFHWndDa1AyVUpuTSIsImlhdCI6MTY2OTkxNTAzNCwiZXhwIjoxNjcwMDAxNDM0fQ.UJuTI5guJ8itDyGT9fcbiOqPwRxLp6EHZZcn_4fKSZlgkQ7cJgopss4c7SEvvYQwOao0DjRkd4gAQK-qtRf6BA",
           },
         },
@@ -130,9 +132,9 @@ export const threads = [
           tokenHeaderParser: {},
         },
         tokenValidator: {},
-        subject: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        subject: MIKES_WALLET,
         delegateGetPromises: {
-          "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM": {},
+          MIKES_WALLET: {},
         },
       },
     },
@@ -255,7 +257,7 @@ export const threads = [
     },
     address: "ab1c54db-4654-483a-80e9-5f30d2d41a1a",
     me: {
-      address: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+      address: MIKES_WALLET,
       scopes: ["ADMIN", "WRITE"],
     },
     otherMembers: [

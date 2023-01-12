@@ -1,5 +1,10 @@
 import { PublicKey } from "@solana/web3.js";
-import { SOLANA_SYSTEM_PROGRAM, SPL_TOKEN_PROGRAM } from "../../constants";
+import {
+  MIKES_WALLET,
+  SOLANA_SYSTEM_PROGRAM,
+  SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM,
+  SPL_TOKEN_PROGRAM,
+} from "../../constants";
 
 export const sendingUSDH = {
   blockTime: 1667306128,
@@ -50,7 +55,7 @@ export const sendingUSDH = {
               info: {
                 account: "6TE68teBQqydhWDze8MzUsySWo926Hs5nFSTXVFszx2",
                 mint: "USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX",
-                owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+                owner: MIKES_WALLET,
               },
               type: "initializeAccount3",
             },
@@ -95,7 +100,7 @@ export const sendingUSDH = {
       {
         accountIndex: 2,
         mint: "USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX",
-        owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        owner: MIKES_WALLET,
         programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "1000000",
@@ -175,13 +180,13 @@ export const sendingUSDH = {
           writable: false,
         },
         {
-          pubkey: new PublicKey("5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"),
+          pubkey: new PublicKey(MIKES_WALLET),
           signer: false,
           source: "transaction",
           writable: false,
         },
         {
-          pubkey: new PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"),
+          pubkey: new PublicKey(SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM),
           signer: false,
           source: "transaction",
           writable: false,
@@ -216,14 +221,12 @@ export const sendingUSDH = {
               source: "4DEUD7bafTTotDQ2mroQCdDp4hYLXCepuw4xyzZXUSXu",
               systemProgram: SOLANA_SYSTEM_PROGRAM,
               tokenProgram: SPL_TOKEN_PROGRAM,
-              wallet: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+              wallet: MIKES_WALLET,
             },
             type: "create",
           },
           program: "spl-associated-token-account",
-          programId: new PublicKey(
-            "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
-          ),
+          programId: new PublicKey(SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM),
         },
         {
           parsed: {
