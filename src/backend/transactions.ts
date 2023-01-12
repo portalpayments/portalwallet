@@ -118,18 +118,21 @@ const getInnerInstructionsForProgram = (
   return innerInstructions;
 };
 
-// TODO - maybe just use a keyPair?
 export const summarizeTransaction = async (
   rawTransaction: ParsedTransactionWithMeta,
   walletAccount: PublicKey,
   fakeMintToCurrencyMap: Record<string, CurrencyDetails> | null = null,
   enableReceipts: boolean = false,
+  // Since purchases are private we need the secret key to talk to Dialect.
   secretKeyForReceipts: Uint8Array | null = null
 ): Promise<TransactionSummary> => {
   // https://docs.solana.com/terminology#transaction-id
   // The first signature in a transaction, which can be used to uniquely identify the transaction across the complete ledger.
   const id = rawTransaction?.transaction?.signatures?.[0];
 
+  const networkFee = rawTransaction.meta.fee;
+
+  const status = rawTransaction.meta.err === null;
   const date = solanaBlocktimeToJSTime(rawTransaction.blockTime);
 
   let receipt: null | ReceiptSummary = null;
@@ -163,6 +166,26 @@ export const summarizeTransaction = async (
     if (isSolTransaction) {
       const onlyInstruction = instructions[0] as ParsedInstruction;
 
+      if (onlyInstruction.parsed.type === "createAccountWithSeed") {
+        const transactionSummary = {
+          id,
+          date,
+          status,
+          networkFee,
+          direction: null,
+          amount: onlyInstruction.parsed.info.lamports,
+          currency: null,
+          from: null,
+          to: null,
+          memo: null,
+          receipt: null,
+          swapAmount: null,
+          swapCurrency: null,
+        };
+
+        return transactionSummary;
+      }
+
       const direction =
         onlyInstruction.parsed.info.source === walletAccount.toBase58()
           ? Direction.sent
@@ -184,8 +207,8 @@ export const summarizeTransaction = async (
       const transactionSummary = {
         id,
         date,
-        status: rawTransaction.meta.err === null,
-        networkFee: rawTransaction.meta.fee,
+        status,
+        networkFee,
         direction,
         amount: onlyInstruction.parsed.info.lamports,
         currency: Currency.SOL,
@@ -298,8 +321,8 @@ export const summarizeTransaction = async (
     const transactionSummary: TransactionSummary = {
       id,
       date,
-      status: rawTransaction.meta.err === null,
-      networkFee: rawTransaction.meta.fee,
+      status,
+      networkFee,
       direction,
       amount: removeSign(walletDifference),
       currency: currencyId,

@@ -28,6 +28,7 @@ import {
   sendingSolWithNote,
 } from "./test-data/transactions/sendingSol";
 import { sendingUSDH } from "./test-data/transactions/sendingUSDH";
+import { makingLightShieldAccount } from "./test-data/transactions/makingLightShieldAccount";
 
 // jest.mock("./functions");
 
@@ -172,6 +173,35 @@ const transactionSummaries: Array<TransactionSummary> = [
 ];
 
 describe(`transaction summaries`, () => {
+  // Mike using Jupiter DEX, picking Orca, swapping some Sol for USDC
+  test(`We can produce a transaction summary from making a Light Shield account without transfers`, async () => {
+    const portalTransactionSummary = await summarizeTransaction(
+      // TODO: fix 'transaction.message.accountKeys' (is a string, should be something else)
+      // in the demo transaction below
+      // @ts-ignore
+      makingLightShieldAccount,
+      new PublicKey(MIKES_WALLET),
+      null,
+      false
+    );
+
+    expect(portalTransactionSummary).toEqual({
+      amount: 1572960,
+      currency: null,
+      date: 1673461335000,
+      direction: null,
+      from: null,
+      id: "5egDQUg2pvuTyvdyEnUVmQg3zXr2ZrLWAC33rS7rDxmWJGuprohY8Bj25PAfpwyN3iT6KU5eFg9AojBgC1dRxsq8",
+      memo: null,
+      networkFee: 5000,
+      receipt: null,
+      swapAmount: null,
+      swapCurrency: null,
+      status: true,
+      to: null,
+    });
+  });
+
   // Mike using Jupiter DEX, picking Orca, swapping some Sol for USDC
   test(`We can produce a transaction summary from swapping Sol for USDC on Jupiter`, async () => {
     const portalTransactionSummary = await summarizeTransaction(
