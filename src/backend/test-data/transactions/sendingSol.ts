@@ -63,7 +63,7 @@ export const sendingSol = {
             type: "transfer",
           },
           program: "system",
-          programId: new PublicKey(SOLANA_SYSTEM_PROGRAM),
+          programId: new PublicKey(new PublicKey(SOLANA_SYSTEM_PROGRAM)),
         },
       ],
       recentBlockhash: "BU6JsZVcu75QzX1PCkcemSvdJ2vNSj4zVyfbkqwoss3q",
@@ -137,7 +137,7 @@ export const sendingSolWithNote = {
             type: "transfer",
           },
           program: "system",
-          programId: new PublicKey(SOLANA_SYSTEM_PROGRAM),
+          programId: new PublicKey(new PublicKey(SOLANA_SYSTEM_PROGRAM)),
         },
         {
           accounts: ["FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9"],
@@ -178,7 +178,7 @@ export const sendingSolWithMemo = {
         accountIndex: 1,
         mint: USDC_MAINNET_MINT_ACCOUNT,
         owner: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-        programId: SPL_TOKEN_PROGRAM,
+        programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "7430220",
           decimals: 6,
@@ -190,7 +190,7 @@ export const sendingSolWithMemo = {
         accountIndex: 2,
         mint: USDC_MAINNET_MINT_ACCOUNT,
         owner: MIKES_WALLET,
-        programId: SPL_TOKEN_PROGRAM,
+        programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "12863485",
           decimals: 6,
@@ -205,7 +205,7 @@ export const sendingSolWithMemo = {
         accountIndex: 1,
         mint: USDC_MAINNET_MINT_ACCOUNT,
         owner: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
-        programId: SPL_TOKEN_PROGRAM,
+        programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "7220220",
           decimals: 6,
@@ -217,7 +217,7 @@ export const sendingSolWithMemo = {
         accountIndex: 2,
         mint: USDC_MAINNET_MINT_ACCOUNT,
         owner: MIKES_WALLET,
-        programId: SPL_TOKEN_PROGRAM,
+        programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "13073485",
           decimals: 6,
@@ -279,12 +279,12 @@ export const sendingSolWithMemo = {
             type: "transfer",
           },
           program: "spl-token",
-          programId: new PublicKey(SPL_TOKEN_PROGRAM),
+          programId: new PublicKey(new PublicKey(SPL_TOKEN_PROGRAM)),
         },
         {
           parsed: "basketball",
           program: "spl-memo",
-          programId: new PublicKey(MEMO_PROGRAM),
+          programId: new PublicKey(new PublicKey(MEMO_PROGRAM)),
         },
       ],
       recentBlockhash: "BtkKAM3cfvNfjWM3rR2DkRvM4cW6zRsTGYhyKzZJuABk",

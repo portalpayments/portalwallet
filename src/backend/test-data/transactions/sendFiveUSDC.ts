@@ -29,7 +29,7 @@ export const sendFiveUSDC = {
               type: "getAccountDataSize",
             },
             program: "spl-token",
-            programId: new PublicKey(SPL_TOKEN_PROGRAM),
+            programId: new PublicKey(new PublicKey(SPL_TOKEN_PROGRAM)),
           },
           {
             parsed: {
@@ -47,7 +47,7 @@ export const sendFiveUSDC = {
               type: "createAccount",
             },
             program: "system",
-            programId: new PublicKey(SOLANA_SYSTEM_PROGRAM),
+            programId: new PublicKey(new PublicKey(SOLANA_SYSTEM_PROGRAM)),
           },
           {
             parsed: {
@@ -57,7 +57,7 @@ export const sendFiveUSDC = {
               type: "initializeImmutableOwner",
             },
             program: "spl-token",
-            programId: new PublicKey(SPL_TOKEN_PROGRAM),
+            programId: new PublicKey(new PublicKey(SPL_TOKEN_PROGRAM)),
           },
           {
             parsed: {
@@ -69,7 +69,7 @@ export const sendFiveUSDC = {
               type: "initializeAccount3",
             },
             program: "spl-token",
-            programId: new PublicKey(SPL_TOKEN_PROGRAM),
+            programId: new PublicKey(new PublicKey(SPL_TOKEN_PROGRAM)),
           },
         ],
       },
@@ -113,7 +113,7 @@ export const sendFiveUSDC = {
         accountIndex: 1,
         mint: USDC_MAINNET_MINT_ACCOUNT,
         owner: GREGS_WALLET,
-        programId: SPL_TOKEN_PROGRAM,
+        programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "5000000",
           decimals: 6,
@@ -125,7 +125,7 @@ export const sendFiveUSDC = {
         accountIndex: 2,
         mint: USDC_MAINNET_MINT_ACCOUNT,
         owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
-        programId: SPL_TOKEN_PROGRAM,
+        programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "35933485",
           decimals: 6,
@@ -143,7 +143,7 @@ export const sendFiveUSDC = {
         accountIndex: 2,
         mint: USDC_MAINNET_MINT_ACCOUNT,
         owner: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
-        programId: SPL_TOKEN_PROGRAM,
+        programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "40933485",
           decimals: 6,
@@ -237,7 +237,9 @@ export const sendFiveUSDC = {
             type: "create",
           },
           program: "spl-associated-token-account",
-          programId: new PublicKey(SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM),
+          programId: new PublicKey(
+            new PublicKey(SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM)
+          ),
         },
         {
           parsed: {
@@ -256,7 +258,7 @@ export const sendFiveUSDC = {
             type: "transferChecked",
           },
           program: "spl-token",
-          programId: new PublicKey(SPL_TOKEN_PROGRAM),
+          programId: new PublicKey(new PublicKey(SPL_TOKEN_PROGRAM)),
         },
         {
           accounts: [
