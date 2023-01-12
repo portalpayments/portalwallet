@@ -38,6 +38,7 @@ export interface AccountSummary {
 export enum Direction {
   "sent",
   "recieved",
+  "swapped",
 }
 
 export enum Currency {
@@ -74,6 +75,8 @@ export interface TransactionSummary {
   to: string;
   memo: string | null;
   receipt: ReceiptSummary | null;
+  swapAmount: number | null;
+  swapCurrency: Currency;
 }
 
 export interface TransactionsByDay {

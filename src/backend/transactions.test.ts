@@ -60,6 +60,8 @@ const transactionSummaries: Array<TransactionSummary> = [
     to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
     memo: null,
     receipt: null,
+    swapAmount: null,
+    swapCurrency: null,
   },
   {
     id: "2",
@@ -73,6 +75,8 @@ const transactionSummaries: Array<TransactionSummary> = [
     to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
     memo: null,
     receipt: null,
+    swapAmount: null,
+    swapCurrency: null,
   },
   // Sneaky sol transaction - we don't want to see this in our USDC transaction summary!
   {
@@ -87,6 +91,8 @@ const transactionSummaries: Array<TransactionSummary> = [
     to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
     memo: null,
     receipt: null,
+    swapAmount: null,
+    swapCurrency: null,
   },
   {
     id: "4",
@@ -100,6 +106,8 @@ const transactionSummaries: Array<TransactionSummary> = [
     to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
     memo: null,
     receipt: null,
+    swapAmount: null,
+    swapCurrency: null,
   },
   {
     id: "5",
@@ -113,6 +121,8 @@ const transactionSummaries: Array<TransactionSummary> = [
     to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
     memo: null,
     receipt: null,
+    swapAmount: null,
+    swapCurrency: null,
   },
   {
     id: "6",
@@ -126,6 +136,8 @@ const transactionSummaries: Array<TransactionSummary> = [
     to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
     memo: null,
     receipt: null,
+    swapAmount: null,
+    swapCurrency: null,
   },
   {
     id: "7",
@@ -139,6 +151,8 @@ const transactionSummaries: Array<TransactionSummary> = [
     to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
     memo: null,
     receipt: null,
+    swapAmount: null,
+    swapCurrency: null,
   },
   {
     id: "8",
@@ -152,6 +166,8 @@ const transactionSummaries: Array<TransactionSummary> = [
     to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
     memo: null,
     receipt: null,
+    swapAmount: null,
+    swapCurrency: null,
   },
 ];
 
@@ -178,6 +194,8 @@ describe(`transaction summaries`, () => {
       memo: null,
       networkFee: 5000,
       receipt: null,
+      swapAmount: null,
+      swapCurrency: null,
       status: true,
       to: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
     });
@@ -207,6 +225,8 @@ describe(`transaction summaries`, () => {
       to: GREGS_WALLET,
       memo: "Hey Greg! 🙋🏻‍♂️",
       receipt: null,
+      swapAmount: null,
+      swapCurrency: null,
     });
   });
 
@@ -232,6 +252,8 @@ describe(`transaction summaries`, () => {
       to: GREGS_WALLET,
       memo: "Hey Greg! 🙋🏻‍♂️",
       receipt: null,
+      swapAmount: null,
+      swapCurrency: null,
     });
   });
 
@@ -255,6 +277,8 @@ describe(`transaction summaries`, () => {
       memo: null,
       networkFee: 10000,
       receipt: null,
+      swapAmount: null,
+      swapCurrency: null,
       status: true,
       to: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
     });
@@ -300,6 +324,8 @@ describe(`transaction summaries`, () => {
       to: MOCK_RECIPIENT_PUBLIC_KEY,
       memo: null,
       receipt: null,
+      swapAmount: null,
+      swapCurrency: null,
     });
   });
 
@@ -329,6 +355,8 @@ describe(`transaction summaries`, () => {
       to: MOCK_RECIPIENT_PUBLIC_KEY,
       memo: null,
       receipt: null,
+      swapAmount: null,
+      swapCurrency: null,
     });
   });
 
@@ -359,6 +387,8 @@ describe(`transaction summaries`, () => {
       to: MOCK_RECIPIENT_PUBLIC_KEY,
       memo: null,
       receipt: null,
+      swapAmount: null,
+      swapCurrency: null,
     });
   });
 
@@ -393,6 +423,8 @@ describe(`transaction summaries`, () => {
       to: YCOMBINATOR_DEMO_WALLET_FOR_JARED,
       memo: null,
       receipt: null,
+      swapAmount: null,
+      swapCurrency: null,
     });
   });
 });
@@ -424,6 +456,8 @@ describe(`grouping transactions`, () => {
             to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
             memo: null,
             receipt: null,
+            swapAmount: null,
+            swapCurrency: null,
           },
         ],
       },
@@ -444,6 +478,8 @@ describe(`grouping transactions`, () => {
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
             receipt: null,
+            swapAmount: null,
+            swapCurrency: null,
           },
           {
             amount: 30000000,
@@ -455,6 +491,8 @@ describe(`grouping transactions`, () => {
             memo: null,
             networkFee: 5000,
             receipt: null,
+            swapAmount: null,
+            swapCurrency: null,
             status: true,
             to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
           },
@@ -477,6 +515,8 @@ describe(`grouping transactions`, () => {
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
             receipt: null,
+            swapAmount: null,
+            swapCurrency: null,
           },
           {
             id: "5",
@@ -490,6 +530,8 @@ describe(`grouping transactions`, () => {
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
             receipt: null,
+            swapAmount: null,
+            swapCurrency: null,
           },
           {
             id: "6",
@@ -503,6 +545,8 @@ describe(`grouping transactions`, () => {
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
             receipt: null,
+            swapAmount: null,
+            swapCurrency: null,
           },
           {
             id: "7",
@@ -516,6 +560,8 @@ describe(`grouping transactions`, () => {
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
             receipt: null,
+            swapAmount: null,
+            swapCurrency: null,
           },
           {
             id: "8",
@@ -529,6 +575,8 @@ describe(`grouping transactions`, () => {
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
             receipt: null,
+            swapAmount: null,
+            swapCurrency: null,
           },
         ],
       },
@@ -549,6 +597,8 @@ describe(`grouping transactions`, () => {
         to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
         memo: null,
         receipt: null,
+        swapAmount: null,
+        swapCurrency: null,
       },
     ];
 
@@ -577,6 +627,8 @@ describe(`grouping transactions`, () => {
             to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
             memo: null,
             receipt: null,
+            swapAmount: null,
+            swapCurrency: null,
           },
         ],
       },
@@ -597,6 +649,8 @@ describe(`grouping transactions`, () => {
         to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
         memo: null,
         receipt: null,
+        swapAmount: null,
+        swapCurrency: null,
       },
     ];
 
@@ -626,6 +680,8 @@ describe(`grouping transactions`, () => {
             to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
             memo: null,
             receipt: null,
+            swapAmount: null,
+            swapCurrency: null,
           },
         ],
       },
@@ -654,6 +710,8 @@ describe(`memos and notes`, () => {
       status: true,
       to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
       receipt: null,
+      swapAmount: null,
+      swapCurrency: null,
     });
   });
 
@@ -685,6 +743,8 @@ describe(`memos and notes`, () => {
       to: "8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7",
       memo: "Test note to recipient from Mike",
       receipt: null,
+      swapAmount: null,
+      swapCurrency: null,
     });
   });
 });

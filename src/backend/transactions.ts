@@ -163,6 +163,8 @@ export const summarizeTransaction = async (
         to: onlyInstruction.parsed.info.destination,
         memo,
         receipt,
+        swapAmount: null,
+        swapCurrency: null,
       };
 
       return transactionSummary;
@@ -247,6 +249,8 @@ export const summarizeTransaction = async (
       to,
       memo,
       receipt,
+      swapAmount: null,
+      swapCurrency: null,
     };
 
     return transactionSummary;
