@@ -142,6 +142,11 @@ export const mintToCurrencyMap: Record<string, CurrencyDetails> = {
     name: "Wrapped SOL",
     decimals: 9,
   },
+  ["native"]: {
+    id: Currency.SOL,
+    name: "SOL",
+    decimals: 9,
+  },
 };
 
 export const getCurrencyByName = (name: string) => {
@@ -152,6 +157,18 @@ export const getCurrencyByName = (name: string) => {
       }
     ) || null
   );
+};
+
+// TODO: we should just remove the Currency type
+// And use spl-token-registry
+export const getCurrencyByID = (id: number) => {
+  const currenciesByID = [];
+  currenciesByID[Currency.USDC] = getCurrencyByName("USDC");
+  currenciesByID[Currency.USDH] = getCurrencyByName("USDH");
+  currenciesByID[Currency.USDT] = getCurrencyByName("USDT");
+  currenciesByID[Currency.WSOL] = getCurrencyByName("Wrapped SOL");
+  currenciesByID[Currency.SOL] = getCurrencyByName("SOL");
+  return currenciesByID[id];
 };
 
 export const getMintFromCurrency = (currency: Currency) => {

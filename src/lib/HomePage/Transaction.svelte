@@ -3,6 +3,7 @@
     amountAndDecimalsToMajorAndMinor,
     truncateWallet,
   } from "../../lib/utils";
+  import { getCurrencyByID } from "../../backend/constants";
   import AnonymousImage from "../../assets/anonymous.svg";
   import type { TransactionSummary, Contact } from "../../lib/types";
   import { log, isEmpty, stringify } from "../../backend/functions";
@@ -29,6 +30,9 @@
       if (transaction.direction === Direction.recieved) {
         contactWalletAddress = transaction.from;
       }
+      if (transaction.direction === Direction.swapped) {
+        contactWalletAddress = transaction.from;
+      }
       contact = newValue.find(
         (contact) => contact.walletAddress === contactWalletAddress
       );
@@ -44,6 +48,19 @@
     transaction.amount,
     decimals
   );
+
+  const isRecievedOrSwapped =
+    transaction.direction === Direction.recieved ||
+    transaction.direction === Direction.swapped;
+
+  const swapCurrencyDetails = getCurrencyByID(transaction.swapCurrency) || null;
+  let swapCurrencyMajorAndMinor = null;
+  if (transaction.direction === Direction.swapped) {
+    swapCurrencyMajorAndMinor = amountAndDecimalsToMajorAndMinor(
+      transaction.swapAmount,
+      swapCurrencyDetails.decimals
+    );
+  }
 </script>
 
 <div
@@ -52,36 +69,46 @@
   }`}
 >
   <textarea class="debug">{stringify(transaction)}</textarea>
-  {#if contact}
-    <img
-      class="profile-pic"
-      src={!isEmpty(contact?.verifiedClaims)
-        ? contact.verifiedClaims.imageUrl
-        : AnonymousImage}
-      alt="wallet avatar"
-    />
+  {#if transaction.direction === Direction.swapped}
+    <div class="profile-pic">
+      <div>{swapCurrencyDetails.name}</div>
+    </div>
     <div class="name-and-memo">
       <div class="name">
-        {#if transaction?.receipt?.shop}
-          {transaction.receipt.shop}
-        {:else if !isEmpty(contact?.verifiedClaims)}
-          {contact.verifiedClaims?.givenName}
-          {contact.verifiedClaims?.familyName}
-        {:else}
-          Unverified {truncateWallet(contact.walletAddress)}
-        {/if}
+        Swapped {swapCurrencyMajorAndMinor[0]}.{swapCurrencyMajorAndMinor[1]}
+        {swapCurrencyDetails.name}
       </div>
-      {#if transaction.memo && !transaction.receipt}
-        <div class="memo">{transaction.memo}</div>
-      {/if}
     </div>
   {/if}
-  <div
-    class="amount {transaction.direction === Direction.recieved
-      ? 'positive'
-      : ''}"
-  >
-    {transaction.direction === Direction.recieved ? "+" : ""}
+
+  {#if transaction.direction === Direction.recieved || transaction.direction === Direction.sent}
+    {#if contact}
+      <img
+        class="profile-pic"
+        src={!isEmpty(contact?.verifiedClaims)
+          ? contact.verifiedClaims.imageUrl
+          : AnonymousImage}
+        alt="wallet avatar"
+      />
+      <div class="name-and-memo">
+        <div class="name">
+          {#if transaction?.receipt?.shop}
+            {transaction.receipt.shop}
+          {:else if !isEmpty(contact?.verifiedClaims)}
+            {contact.verifiedClaims?.givenName}
+            {contact.verifiedClaims?.familyName}
+          {:else}
+            Unverified {truncateWallet(contact.walletAddress)}
+          {/if}
+        </div>
+        {#if transaction.memo && !transaction.receipt}
+          <div class="memo">{transaction.memo}</div>
+        {/if}
+      </div>
+    {/if}
+  {/if}
+  <div class="amount {isRecievedOrSwapped ? 'positive' : ''}">
+    {isRecievedOrSwapped ? "+" : ""}
     {majorAndMinor[0]}.{majorAndMinor[1]}
   </div>
   {#if transaction.receipt}
