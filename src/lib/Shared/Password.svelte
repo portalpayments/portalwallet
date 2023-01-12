@@ -65,6 +65,9 @@
 
   input {
     color: var(--dark-grey);
+    // See https://pqina.nl/blog/styling-password-field-dots/
+    font-family: Verdana;
+    letter-spacing: 0.05em;
   }
 
   @keyframes shake {
