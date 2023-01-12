@@ -1,6 +1,5 @@
 import {
   log,
-  stringify,
   instructionDataToNote,
   debug,
   byDateNewestToOldest,
@@ -9,6 +8,7 @@ import {
   isPositive,
   removeSign,
   solanaBlocktimeToJSTime,
+  stringify,
 } from "./functions";
 import {
   Currency,
@@ -20,9 +20,11 @@ import {
 } from "../lib/types";
 
 import {
+  JUPITER,
   MEMO_PROGRAM,
   mintToCurrencyMap,
   NOTE_PROGRAM,
+  NOT_FOUND,
   ORCA_WHIRLPOOL_MAINNET_ACCOUNT,
 } from "./constants";
 import { getReceiptForTransactionSummary } from "./receipts";
@@ -142,7 +144,7 @@ export const summarizeTransaction = async (
       if (!amount) {
         // See https://explorer.solana.com/tx/3DbFFLeUbUGFiQ7oyi3uZddD8qnsvE94VVv8HpNkYozUrKE1ordD74LWXH8di5ywKbCKMBNBYYTRM5Ur8q13fvY6
         throw new Error(
-          `Ignoring transaction where no money was sent (eg, creating wallet without transferring funsds ${id}`
+          `Ignoring transaction where no money was sent (eg, creating wallet without transferring funds ${id}`
         );
       }
 
@@ -189,24 +191,62 @@ export const summarizeTransaction = async (
 
     const currencyId = currencyDetails.id;
 
-    if (rawTransaction.meta.postTokenBalances.length > 2) {
-      // We can parse transactions with more accounts if one is using Whirlpool
-      // - eg it's whirlpool swapping some tokens around
-      const isUsingWhirlPool =
-        rawTransaction.transaction.message.accountKeys.find(
-          (parsedMessageAccount) => {
-            return (
-              parsedMessageAccount.pubkey.toBase58() ===
-              ORCA_WHIRLPOOL_MAINNET_ACCOUNT
-            );
-          }
-        ) || null;
+    const jupiterIndex =
+      rawTransaction.transaction.message.instructions.findIndex(
+        (instruction) => instruction.programId.toBase58() === JUPITER
+      );
 
-      log(`isUsingWhirlPool`, isUsingWhirlPool);
-      if (
-        rawTransaction.meta.postTokenBalances.length === 3 &&
-        !isUsingWhirlPool
-      ) {
+    // TODO: look at swaps outside Jupiter
+    const isSwap = jupiterIndex !== NOT_FOUND;
+
+    let swapAmount: number | null = null;
+    let swapCurrency: Currency | null = null;
+    // https://solana.stackexchange.com/questions/2825/correlate-the-instructions-of-the-innerinstructions
+    if (isSwap) {
+      // Naming is a little weird in web3.js,
+      // 'innerInstructions' is not an array of instructions
+      // but rather an item that contains an object with a 'instructions' key inside it
+      const jupiterInnerInstructionObject =
+        rawTransaction.meta.innerInstructions.find((innerInstruction) => {
+          return innerInstruction.index === jupiterIndex;
+        }) || null;
+      const jupiterInnerInstructions =
+        jupiterInnerInstructionObject.instructions;
+
+      if (jupiterInnerInstructions) {
+        const jupiterInnerInstructionForSwappedToken =
+          jupiterInnerInstructions.find((jupiterInnerInstruction) => {
+            log(`XXXX`, jupiterInnerInstruction);
+            return (
+              // TODO: web3.js types don't include 'parsed' keys
+              // upgrade and remove once they've fixed the bug
+              // @ts-ignore
+              jupiterInnerInstruction?.parsed?.info?.authority ===
+              walletAccount.toBase58()
+            );
+          }) || null;
+
+        log("zzz", jupiterInnerInstructionForSwappedToken);
+        if (jupiterInnerInstructionForSwappedToken) {
+          swapAmount = Number(
+            // TODO: web3.js types don't include 'parsed' keys
+            // upgrade and remove once they've fixed the bug
+            // @ts-ignore
+            jupiterInnerInstructionForSwappedToken?.parsed?.info?.amount
+          );
+
+          // TODO: we're currently setting currency statically
+          // fix, this is a bit embarassing
+          swapCurrency = Currency.SOL;
+        }
+      }
+    }
+
+    if (!isSwap) {
+      if (rawTransaction.meta.postTokenBalances.length > 2) {
+        // We can parse transactions with more accounts if one is using Whirlpool
+        // - eg it's whirlpool swapping some tokens around
+
         throw new Error(`Can't parse this transaction`);
       }
     }
@@ -232,6 +272,10 @@ export const summarizeTransaction = async (
       to = walletAccount.toBase58();
     }
 
+    if (isSwap) {
+      direction = Direction.swapped;
+    }
+
     if (enableReceipts && secretKeyForReceipts) {
       const keyPair = Keypair.fromSecretKey(secretKeyForReceipts);
 
@@ -249,8 +293,8 @@ export const summarizeTransaction = async (
       to,
       memo,
       receipt,
-      swapAmount: null,
-      swapCurrency: null,
+      swapAmount,
+      swapCurrency,
     };
 
     return transactionSummary;

@@ -1,9 +1,11 @@
 import { PublicKey } from "@solana/web3.js";
 import {
+  JUPITER,
   MIKES_USDC_ACCOUNT,
   MIKES_WALLET,
   ORCA_WHIRLPOOL_MAINNET_ACCOUNT,
   SOLANA_SYSTEM_PROGRAM,
+  SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM,
   SPL_TOKEN_PROGRAM,
   USDC_MAINNET_MINT_ACCOUNT,
   WRAPPED_SOL_MAINNET_MINT_ACCOUNT,
@@ -293,7 +295,7 @@ export const swapSolWithUSDCOnJupiter = {
           writable: false,
         },
         {
-          pubkey: new PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"),
+          pubkey: new PublicKey(SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM),
           signer: false,
           source: "transaction",
           writable: false,
@@ -317,7 +319,7 @@ export const swapSolWithUSDCOnJupiter = {
           writable: false,
         },
         {
-          pubkey: new PublicKey("JUP4Fb2cqiRUcaTHdrPC8h2gNsA2ETXiPDD33WcGuJB"),
+          pubkey: new PublicKey(JUPITER),
           signer: false,
           source: "transaction",
           writable: false,
@@ -383,9 +385,7 @@ export const swapSolWithUSDCOnJupiter = {
             type: "create",
           },
           program: "spl-associated-token-account",
-          programId: new PublicKey(
-            "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
-          ),
+          programId: new PublicKey(SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM),
         },
         {
           parsed: {
@@ -428,9 +428,7 @@ export const swapSolWithUSDCOnJupiter = {
             "6vK8gSiRHSnZzAa5JsvBF2ej1LrxpRX21Y185CzP4PeA",
           ],
           data: "PrpFmsY4d26dBnk1dCzKygdiio7bjKPa7pJgbpfBzrxA2WEb",
-          programId: new PublicKey(
-            "JUP4Fb2cqiRUcaTHdrPC8h2gNsA2ETXiPDD33WcGuJB"
-          ),
+          programId: new PublicKey(JUPITER),
         },
         {
           parsed: {

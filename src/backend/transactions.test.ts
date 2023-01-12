@@ -194,8 +194,8 @@ describe(`transaction summaries`, () => {
       memo: null,
       networkFee: 5000,
       receipt: null,
-      swapAmount: null,
-      swapCurrency: null,
+      swapAmount: 2000000000,
+      swapCurrency: Currency.SOL,
       status: true,
       to: MIKES_WALLET,
     });
