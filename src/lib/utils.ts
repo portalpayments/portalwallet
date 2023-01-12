@@ -19,7 +19,9 @@ export const getMultiplier = (digits = 2) => {
 };
 
 export const toUniqueStringArray = (array: Array<string>): Array<string> => {
-  return [...new Set(array)];
+  return [...new Set(array)].filter(function (item) {
+    return item !== null;
+  });
 };
 
 // TODO: Maybe change this to return { major: x, minor: y}
