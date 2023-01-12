@@ -92,6 +92,8 @@ export const USDC_SOLANA_SPL_TOKEN_ON_DEVNET =
 export const ORCA_WHIRLPOOL_MAINNET_ACCOUNT =
   "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc";
 
+export const JUPITER = "JUP4Fb2cqiRUcaTHdrPC8h2gNsA2ETXiPDD33WcGuJB";
+
 // https://solana.com/rpc
 export const URLS = {
   // From https://solanacookbook.com/references/local-development.html#connecting-to-environments
