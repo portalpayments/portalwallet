@@ -219,7 +219,7 @@ describe(`transaction summaries`, () => {
       currency: 4,
       date: 1673260796000,
       direction: Direction.swapped,
-      from: "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
+      from: MIKES_WALLET,
       id: "4SBiyR6rrie4M78S2dLQjkcb8Ja1mFmuAL4furw5NcpKZkYjsC31EWtycLY3WdatngkiLPEqGwTPncAg41fQATFW",
       memo: null,
       networkFee: 5000,

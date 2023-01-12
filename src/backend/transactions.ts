@@ -311,6 +311,8 @@ export const summarizeTransaction = async (
 
     if (isSwap) {
       direction = Direction.swapped;
+      from = walletAccount.toBase58();
+      to = walletAccount.toBase58();
     }
 
     if (enableReceipts && secretKeyForReceipts) {
