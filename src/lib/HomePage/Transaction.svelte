@@ -19,9 +19,6 @@
   // and the parent could provide the contact
   // rather than having every single Transaction subscribe to contact store
 
-  // TODO: cache the NFTs
-  // TODO: cache the profile images
-
   let contact: Contact | null = null;
   contactsStore.subscribe(async (newValue) => {
     if (newValue) {
