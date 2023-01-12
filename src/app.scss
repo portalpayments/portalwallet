@@ -3,6 +3,9 @@
 :root {
   --wallet-height: 600px;
   --wallet-width: 300px;
+  // Phantom is 360 x 540
+  // Glow is 360 x 560
+  // See also WALLET_WIDTH in Onboarding.svelte
 
   /* These are all defaults provided by Vite */
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
