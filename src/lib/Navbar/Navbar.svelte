@@ -56,7 +56,7 @@
     justify-content: center;
     align-items: center;
 
-    @include shadow;
+    @include grey-shadow;
   }
 
   buttongroup button {
