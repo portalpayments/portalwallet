@@ -90,6 +90,34 @@ const getWalletDifference = (
   return difference;
 };
 
+const getInnerInstructionsForProgram = (
+  rawTransaction: ParsedTransactionWithMeta,
+  programAddress: string
+) => {
+  // See https://solana.stackexchange.com/questions/2825/correlate-the-instructions-of-the-innerinstructions
+  const programInstructionIndex =
+    rawTransaction.transaction.message.instructions.findIndex(
+      (instruction) => instruction.programId.toBase58() === programAddress
+    );
+
+  if (programInstructionIndex === NOT_FOUND) {
+    return null;
+  }
+
+  // Naming is a little weird in web3.js,
+  // 'innerInstructions' is not an array of instructions
+  // but rather an item that contains an object with a 'instructions' key inside it
+  const programInnerInstructionObject =
+    rawTransaction.meta.innerInstructions.find((innerInstruction) => {
+      return innerInstruction.index === programInstructionIndex;
+    }) || null;
+  if (!programInnerInstructionObject) {
+    return null;
+  }
+  const innerInstructions = programInnerInstructionObject.instructions;
+  return innerInstructions;
+};
+
 // TODO - maybe just use a keyPair?
 export const summarizeTransaction = async (
   rawTransaction: ParsedTransactionWithMeta,
@@ -191,62 +219,48 @@ export const summarizeTransaction = async (
 
     const currencyId = currencyDetails.id;
 
-    const jupiterIndex =
-      rawTransaction.transaction.message.instructions.findIndex(
-        (instruction) => instruction.programId.toBase58() === JUPITER
-      );
-
-    // TODO: look at swaps outside Jupiter
-    const isSwap = jupiterIndex !== NOT_FOUND;
-
+    let isSwap = false;
     let swapAmount: number | null = null;
     let swapCurrency: Currency | null = null;
-    // https://solana.stackexchange.com/questions/2825/correlate-the-instructions-of-the-innerinstructions
-    if (isSwap) {
-      // Naming is a little weird in web3.js,
-      // 'innerInstructions' is not an array of instructions
-      // but rather an item that contains an object with a 'instructions' key inside it
-      const jupiterInnerInstructionObject =
-        rawTransaction.meta.innerInstructions.find((innerInstruction) => {
-          return innerInstruction.index === jupiterIndex;
-        }) || null;
-      const jupiterInnerInstructions =
-        jupiterInnerInstructionObject.instructions;
 
-      if (jupiterInnerInstructions) {
-        const jupiterInnerInstructionForSwappedToken =
-          jupiterInnerInstructions.find((jupiterInnerInstruction) => {
-            log(`XXXX`, jupiterInnerInstruction);
-            return (
-              // TODO: web3.js types don't include 'parsed' keys
-              // upgrade and remove once they've fixed the bug
-              // @ts-ignore
-              jupiterInnerInstruction?.parsed?.info?.authority ===
-              walletAccount.toBase58()
-            );
-          }) || null;
+    // TODO: look at swaps outside Jupiter
+    const innerInstructionsForJupiter = getInnerInstructionsForProgram(
+      rawTransaction,
+      JUPITER
+    );
 
-        log("zzz", jupiterInnerInstructionForSwappedToken);
-        if (jupiterInnerInstructionForSwappedToken) {
-          swapAmount = Number(
+    if (innerInstructionsForJupiter) {
+      const jupiterInnerInstructionForSwappedToken =
+        innerInstructionsForJupiter.find((jupiterInnerInstruction) => {
+          return (
             // TODO: web3.js types don't include 'parsed' keys
             // upgrade and remove once they've fixed the bug
             // @ts-ignore
-            jupiterInnerInstructionForSwappedToken?.parsed?.info?.amount
+            jupiterInnerInstruction?.parsed?.info?.authority ===
+            walletAccount.toBase58()
           );
+        }) || null;
 
-          // TODO: we're currently setting currency statically
-          // fix, this is a bit embarassing
-          swapCurrency = Currency.SOL;
-        }
+      if (jupiterInnerInstructionForSwappedToken) {
+        swapAmount = Number(
+          // TODO: web3.js types don't include 'parsed' keys
+          // upgrade and remove once they've fixed the bug
+          // @ts-ignore
+          jupiterInnerInstructionForSwappedToken?.parsed?.info?.amount
+        );
+
+        // TODO: we're currently setting currency statically
+        // fix, this is a bit embarassing
+        swapCurrency = Currency.SOL;
+
+        isSwap = true;
       }
     }
 
     if (!isSwap) {
       if (rawTransaction.meta.postTokenBalances.length > 2) {
-        // We can parse transactions with more accounts if one is using Whirlpool
-        // - eg it's whirlpool swapping some tokens around
-
+        // TODO: we're currently limited in parsing transactions
+        // with 2 or more accounts changing.
         throw new Error(`Can't parse this transaction`);
       }
     }

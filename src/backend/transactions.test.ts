@@ -29,7 +29,7 @@ import {
 } from "./test-data/transactions/sendingSol";
 import { sendingUSDH } from "./test-data/transactions/sendingUSDH";
 
-jest.mock("./functions");
+// jest.mock("./functions");
 
 const contacts = [
   {
