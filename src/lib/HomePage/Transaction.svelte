@@ -5,13 +5,13 @@
   } from "../../lib/utils";
   import { getCurrencyByID } from "../../backend/constants";
   import AnonymousImage from "../../assets/anonymous.svg";
-  import type { TransactionSummary, Contact } from "../../lib/types";
+  import type { SimpleTransaction, Contact } from "../../lib/types";
   import { log, isEmpty, stringify } from "../../backend/functions";
   import { Direction } from "../types";
 
   import { contactsStore } from "../stores";
 
-  export let transaction: TransactionSummary | null;
+  export let transaction: SimpleTransaction | null;
   export let decimals: number;
 
   // Find the contact for this transaction

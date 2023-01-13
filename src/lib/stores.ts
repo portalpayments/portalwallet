@@ -151,7 +151,7 @@ export const updateAccountTransactions = async (
         `rawTransaction for transaction signature ${signature} was null`
       );
     }
-    const transactionSummary = await summarizeTransaction(
+    const simpleTransaction = await summarizeTransaction(
       rawTransaction,
       keyPair.publicKey,
       null,
@@ -162,14 +162,14 @@ export const updateAccountTransactions = async (
     const isUsingSolAccount = nativeOrTokenAccountAddress === keyPair.publicKey;
 
     if (isUsingSolAccount) {
-      log(`Adding transaction ${transactionSummary.id} to our Sol account`);
+      log(`Adding transaction ${simpleTransaction.id} to our Sol account`);
       const updatedNativeAccount = getFromStore(nativeAccountStore);
-      updatedNativeAccount.transactionSummaries.push(transactionSummary);
+      updatedNativeAccount.transactionSummaries.push(simpleTransaction);
       nativeAccountStore.set(updatedNativeAccount);
       return;
     }
 
-    log(`Adding transaction ${transactionSummary.id} to our Token account`);
+    log(`Adding transaction ${simpleTransaction.id} to our Token account`);
     const updatedTokenAccounts = getFromStore(tokenAccountsStore);
     const tokenAccountIndex = updatedTokenAccounts.findIndex((tokenAccount) => {
       return tokenAccount.address === nativeOrTokenAccountAddress;
@@ -177,11 +177,11 @@ export const updateAccountTransactions = async (
 
     if (tokenAccountIndex === NOT_FOUND) {
       throw new Error(
-        `Couldn't find token account for transaction ${transactionSummary.id} for account address ${nativeOrTokenAccountAddress}`
+        `Couldn't find token account for transaction ${simpleTransaction.id} for account address ${nativeOrTokenAccountAddress}`
       );
     }
     updatedTokenAccounts[tokenAccountIndex].transactionSummaries.push(
-      transactionSummary
+      simpleTransaction
     );
     tokenAccountsStore.set(updatedTokenAccounts);
   }, TRANSACTION_CONFIRM_DELAY);

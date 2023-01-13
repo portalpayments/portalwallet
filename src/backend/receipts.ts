@@ -22,7 +22,7 @@ const RECEIPT_DELAY = 15 * SECONDS;
 import { log, stringify } from "./functions";
 import * as http from "../lib/http-client";
 import type { RawDecafReceipt } from "./types";
-import type { ReceiptSummary, TransactionSummary } from "src/lib/types";
+import type { ReceiptSummary, SimpleTransaction } from "src/lib/types";
 import { receiptHTMLToObject } from "./html-extract";
 
 const memoRegex = /[A-Za-z0-9]{20}/;
@@ -54,9 +54,7 @@ export const getDialect = (keyPair: Keypair) => {
   return dialectSDK;
 };
 
-export const checkIfTransactionSummaryHasReceipt = (
-  transactionMemo: string
-) => {
+export const checkIfSimpleTransactionHasReceipt = (transactionMemo: string) => {
   if (transactionMemo.match(memoRegex)) {
     return true;
   }
@@ -134,7 +132,7 @@ export const getReceiptSummaryFromRawReceipt = (
   };
 };
 
-export const getReceiptForTransactionSummary = async (
+export const getReceiptForSimpleTransaction = async (
   keyPair: Keypair,
   transactionMemo: string,
   transactionDate: number
@@ -142,7 +140,7 @@ export const getReceiptForTransactionSummary = async (
   if (!transactionMemo) {
     return null;
   }
-  const hasReceipt = checkIfTransactionSummaryHasReceipt(transactionMemo);
+  const hasReceipt = checkIfSimpleTransactionHasReceipt(transactionMemo);
 
   if (!hasReceipt) {
     return null;

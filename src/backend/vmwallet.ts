@@ -28,7 +28,7 @@ import {
   Currency,
   Direction,
   type Contact,
-  type TransactionSummary,
+  type SimpleTransaction,
 } from "../lib/types";
 import type { AccountSummary } from "../lib/types";
 import { identityTokenIssuerPublicKey } from "../lib/stores";
@@ -278,7 +278,7 @@ export const getTransactionSummariesForAddress = async (
 
   // We can't summarize all transactions yet
   transactionSummaries = transactionSummaries.filter(
-    (transactionSummary) => transactionSummary !== null
+    (simpleTransaction) => simpleTransaction !== null
   );
 
   log(
@@ -341,7 +341,7 @@ export const getNativeAccountSummary = async (
 ): Promise<AccountSummary> => {
   log(`Getting transactions for native account`);
   let accountBalance = 0;
-  let transactionSummaries: Array<TransactionSummary> = [];
+  let transactionSummaries: Array<SimpleTransaction> = [];
   try {
     accountBalance = await getAccountBalance(connection, keyPair.publicKey);
     transactionSummaries = await getTransactionSummariesForAddress(

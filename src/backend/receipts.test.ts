@@ -1,13 +1,14 @@
 import {
   getDecafReceiptMessage,
   getRawReceiptFromMessage,
-  getReceiptForTransactionSummary,
+  getReceiptForSimpleTransaction,
   getReceiptSummaryFromRawReceipt,
 } from "./receipts";
 import { stringify, log } from "./functions";
 import { mikesKeypair } from "./get-mikes-keypair";
 import { ThreadMemberScope } from "@dialectlabs/sdk";
 import { rawReceipt } from "./test-data/transactions/receipt";
+import { MIKES_WALLET } from "./constants";
 
 jest.mock("./functions");
 jest.mock("./html-extract");
@@ -62,7 +63,7 @@ describe(`dialect`, () => {
   });
 
   test(`Adds receipts to transaction that have them`, async () => {
-    const transactionSummary = {
+    const simpleTransaction = {
       id: "2Wgzyv1fFFiF4jd8ckPvSJa2eRBHF7pj3wbeTpEzMvqzpfx1jpUgWUZbJW9h915rxWccNqZ9ksFjP7PVVckArZtX",
       date: 1667679002000,
       status: true,
@@ -75,10 +76,10 @@ describe(`dialect`, () => {
       memo: "qqS5qxxEjMg7mSup0rBI",
     };
 
-    const receipt = await getReceiptForTransactionSummary(
+    const receipt = await getReceiptForSimpleTransaction(
       mikesKeypair,
-      transactionSummary.memo,
-      transactionSummary.date
+      simpleTransaction.memo,
+      simpleTransaction.date
     );
     expect(receipt).toMatchObject({});
   });

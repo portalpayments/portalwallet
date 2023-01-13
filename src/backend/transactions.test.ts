@@ -16,7 +16,7 @@ import {
   MIKES_WALLET,
   YCOMBINATOR_DEMO_WALLET_FOR_JARED,
 } from "./constants";
-import { Currency, type TransactionSummary, Direction } from "../lib/types";
+import { Currency, type SimpleTransaction, Direction } from "../lib/types";
 
 import { hexToUtf8, log, stringify } from "./functions";
 import { sendFiveUSDC } from "./test-data/transactions/sendFiveUSDC";
@@ -48,7 +48,7 @@ const contacts = [
   },
 ];
 
-const transactionSummaries: Array<TransactionSummary> = [
+const transactionSummaries: Array<SimpleTransaction> = [
   {
     id: "1",
     date: 1662985498000,
@@ -175,7 +175,7 @@ const transactionSummaries: Array<TransactionSummary> = [
 describe(`transaction summaries`, () => {
   // Mike using Jupiter DEX, picking Orca, swapping some Sol for USDC
   test(`We can produce a transaction summary from making a Light Shield account without transfers`, async () => {
-    const portalTransactionSummary = await summarizeTransaction(
+    const portalSimpleTransaction = await summarizeTransaction(
       // TODO: fix 'transaction.message.accountKeys' (is a string, should be something else)
       // in the demo transaction below
       // @ts-ignore
@@ -185,7 +185,7 @@ describe(`transaction summaries`, () => {
       false
     );
 
-    expect(portalTransactionSummary).toEqual({
+    expect(portalSimpleTransaction).toEqual({
       amount: 1572960,
       currency: null,
       date: 1673461335000,
@@ -204,7 +204,7 @@ describe(`transaction summaries`, () => {
 
   // Mike using Jupiter DEX, picking Orca, swapping some Sol for USDC
   test(`We can produce a transaction summary from swapping Sol for USDC on Jupiter`, async () => {
-    const portalTransactionSummary = await summarizeTransaction(
+    const portalSimpleTransaction = await summarizeTransaction(
       // TODO: fix 'transaction.message.accountKeys' (is a string, should be something else)
       // in the demo transaction below
       // @ts-ignore
@@ -214,7 +214,7 @@ describe(`transaction summaries`, () => {
       false
     );
 
-    expect(portalTransactionSummary).toEqual({
+    expect(portalSimpleTransaction).toEqual({
       amount: 32903572,
       currency: 4,
       date: 1673260796000,
@@ -233,7 +233,7 @@ describe(`transaction summaries`, () => {
 
   // Mike sending CnBEqiUpz9iK45GTsfu3Ckgp9jnjpoCNrRjSPSdQbqGs with glow
   test(`We can produce a transaction summary from us sending someone money with glow`, async () => {
-    const portalTransactionSummary = await summarizeTransaction(
+    const portalSimpleTransaction = await summarizeTransaction(
       // TODO: fix 'transaction.message.accountKeys' (is a string, should be something else)
       // in the demo transaction below
       // @ts-ignore
@@ -243,7 +243,7 @@ describe(`transaction summaries`, () => {
       false
     );
 
-    expect(portalTransactionSummary).toEqual({
+    expect(portalSimpleTransaction).toEqual({
       id: "5e9xViaBigEX6G17PvHt9AizyJwRBHPdxCEkz2eLRYsanr53567SHzULhYT6zk63vbsZ4puN3WY7i5774HS7CneZ",
       date: 1669052844000,
       status: true,
@@ -262,7 +262,7 @@ describe(`transaction summaries`, () => {
 
   test(`We can produce a transaction summary from someone sending us money with glow`, async () => {
     // Same transaction as before but with perspective shifted to greg
-    const portalTransactionSummary = await summarizeTransaction(
+    const portalSimpleTransaction = await summarizeTransaction(
       // TODO: fix 'transaction.message.accountKeys' (is a string, should be something else)
       // in the demo transaction below
       // @ts-ignore
@@ -270,7 +270,7 @@ describe(`transaction summaries`, () => {
       new PublicKey(GREGS_WALLET)
     );
 
-    expect(portalTransactionSummary).toEqual({
+    expect(portalSimpleTransaction).toEqual({
       id: "5e9xViaBigEX6G17PvHt9AizyJwRBHPdxCEkz2eLRYsanr53567SHzULhYT6zk63vbsZ4puN3WY7i5774HS7CneZ",
       date: 1669052844000,
       status: true,
@@ -289,7 +289,7 @@ describe(`transaction summaries`, () => {
 
   test(`We can produce a transaction summary from someone sending us USDH`, async () => {
     // Same transaction as before but with perspective shifted to greg
-    const portalTransactionSummary = await summarizeTransaction(
+    const portalSimpleTransaction = await summarizeTransaction(
       // TODO: fix 'transaction.message.accountKeys' (is a string, should be something else)
       // in the demo transaction below
       // @ts-ignore
@@ -297,7 +297,7 @@ describe(`transaction summaries`, () => {
       new PublicKey(MIKES_WALLET)
     );
 
-    expect(portalTransactionSummary).toEqual({
+    expect(portalSimpleTransaction).toEqual({
       id: "4gknQh12svZHqrZN9sKCHetaP87TbPns6pd83jknZPA3vEjN7jQ53sA3xpVs7ZH2oeCKnjrgHDqVMMxf3vBMoTwz",
       amount: 1000000,
       currency: 1,
@@ -336,13 +336,13 @@ describe(`transaction summaries`, () => {
       sendToExistingTokenAccountSenderComesFirst
     );
 
-    const portalTransactionSummary = await summarizeTransaction(
+    const portalSimpleTransaction = await summarizeTransaction(
       sendToExistingTokenAccountSenderComesFirst,
       new PublicKey(currentUserWallet),
       fakeMintToCurrencyMap
     );
 
-    expect(portalTransactionSummary).toEqual({
+    expect(portalSimpleTransaction).toEqual({
       id: "2PF9JkUYfARqWbxFv5fBNLK7VhQ9NTsSA5QYcUUNDTQZyX4JATE8TjnLBhoaMNsZ1F1ETUxmM8LUygqRUBtbhgFS",
       date: 1663119635000,
       status: true,
@@ -365,7 +365,7 @@ describe(`transaction summaries`, () => {
     const fakeMintToCurrencyMap = getFakeMintToCurrencyMapFromTestTransaction(
       sendToExistingTokenAccountSenderComesSecond
     );
-    const portalTransactionSummary = await summarizeTransaction(
+    const portalSimpleTransaction = await summarizeTransaction(
       // TODO: our logged transaction.message seems to be missing some properties - investigate - could just be typescript types not being up to date
       // @ts-ignore
       sendToExistingTokenAccountSenderComesSecond,
@@ -373,7 +373,7 @@ describe(`transaction summaries`, () => {
       fakeMintToCurrencyMap
     );
 
-    expect(portalTransactionSummary).toEqual({
+    expect(portalSimpleTransaction).toEqual({
       id: "3VsPLbEgjT2YTGp6PWXBDDc6kMFd4UwLHNWWNzjvf1QMutAihtDYzmfUY6Wdr2MffBDmNhP1YPR681d9Y9CgXe2V",
       date: 1663120787000,
       status: true,
@@ -397,7 +397,7 @@ describe(`transaction summaries`, () => {
       sendToExistingTokenAccountSenderComesFirst
     );
 
-    const portalTransactionSummary = await summarizeTransaction(
+    const portalSimpleTransaction = await summarizeTransaction(
       // TODO: our logged transaction.message seems to be missing some properties - investigate - could just be typescript types not being up to date
       // @ts-ignore
       sendToExistingTokenAccountSenderComesFirst,
@@ -405,7 +405,7 @@ describe(`transaction summaries`, () => {
       fakeMintToCurrencyMap
     );
 
-    expect(portalTransactionSummary).toEqual({
+    expect(portalSimpleTransaction).toEqual({
       id: "2PF9JkUYfARqWbxFv5fBNLK7VhQ9NTsSA5QYcUUNDTQZyX4JATE8TjnLBhoaMNsZ1F1ETUxmM8LUygqRUBtbhgFS",
       date: 1663119635000,
       status: true,
@@ -423,25 +423,25 @@ describe(`transaction summaries`, () => {
   });
 
   test(`We ignore a transaction of Mike sending himself some money`, async () => {
-    const portalTransactionSummary =
+    const portalSimpleTransaction =
       // TODO: 'as' shouldn't be necessary, we should tweak our test data
       await summarizeTransaction(
         sendingMoneyToSelf as ParsedTransactionWithMeta,
         new PublicKey(MIKES_WALLET)
       );
 
-    expect(portalTransactionSummary).toEqual(null);
+    expect(portalSimpleTransaction).toEqual(null);
   });
 
   test(`Mike sending Jared some lamports`, async () => {
-    const portalTransactionSummary =
+    const portalSimpleTransaction =
       // TODO: 'as' shouldn't be necessary, we should tweak our test data
       await summarizeTransaction(
         sendingSol as ParsedTransactionWithMeta,
         new PublicKey(MIKES_WALLET)
       );
 
-    expect(portalTransactionSummary).toEqual({
+    expect(portalSimpleTransaction).toEqual({
       id: "5KKQASDKTxoViRWYzN7Rf8X9n3wiiNVztpgpNG1oyyZbkNiai1JVcD4rAV2XYzFPgRP4dXQv7A3Bku68UT4j2FZk",
       amount: 30000000,
       currency: Currency.SOL,
@@ -754,14 +754,14 @@ describe(`memos and notes`, () => {
   });
 
   test(`We can extract a note out of a transaction`, async () => {
-    const portalTransactionSummary =
+    const portalSimpleTransaction =
       // TODO: 'as' shouldn't be necessary, we should tweak our test data
       await summarizeTransaction(
         sendingSolWithNote as ParsedTransactionWithMeta,
         new PublicKey(JOHN_TESTUSER_DEMO_WALLET)
       );
 
-    expect(portalTransactionSummary).toEqual({
+    expect(portalSimpleTransaction).toEqual({
       amount: 100000000,
       currency: Currency.SOL,
       date: 1665584732000,

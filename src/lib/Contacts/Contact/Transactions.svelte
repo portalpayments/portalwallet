@@ -1,9 +1,9 @@
 <script lang="ts">
   import { getFormattedMajorUnits, getFormattedMinorUnits } from "../../utils";
   import USDClogo from "../../../assets/Icons/usdc.svg";
-  import { Direction, type TransactionSummary } from "../../../lib/types";
+  import { Direction, type SimpleTransaction } from "../../../lib/types";
 
-  export let transactions: Array<TransactionSummary>;
+  export let transactions: Array<SimpleTransaction>;
 </script>
 
 <div class="history-container">

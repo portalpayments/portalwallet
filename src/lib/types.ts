@@ -32,7 +32,7 @@ export interface AccountSummary {
   currency: Currency;
   balance: number;
   decimals: number;
-  transactionSummaries: Array<TransactionSummary>;
+  transactionSummaries: Array<SimpleTransaction>;
 }
 
 export enum Direction {
@@ -63,7 +63,7 @@ export interface ReceiptSummary {
     price: number;
   }>;
 }
-export interface TransactionSummary {
+export interface SimpleTransaction {
   id: string;
   date: number;
   status: boolean;
@@ -83,5 +83,5 @@ export interface TransactionsByDay {
   isoDate: string;
   totalSpending: number;
   totalSpendingDisplay: string;
-  transactions: Array<TransactionSummary>;
+  transactions: Array<SimpleTransaction>;
 }

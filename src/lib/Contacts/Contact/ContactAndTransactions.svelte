@@ -2,7 +2,7 @@
   import Transactions from "./Transactions.svelte";
   import { tokenAccountsStore, contactsStore } from "../../stores";
   import { log, stringify } from "../../../backend/functions";
-  import type { Contact as ContactType, TransactionSummary } from "../../types";
+  import type { Contact as ContactType, SimpleTransaction } from "../../types";
   import SendToContact from "./SendToContact.svelte";
   import Contact from "../../Shared/Contact.svelte";
   import BackButton from "../../Shared/BackButton.svelte";
@@ -26,7 +26,7 @@
 
   log(`Loading send to contact screen for ${contactWalletAddress}`);
 
-  let filteredTransactions: Array<TransactionSummary> = [];
+  let filteredTransactions: Array<SimpleTransaction> = [];
 
   tokenAccountsStore.subscribe((newValue) => {
     // Filter our transactions to just the ones from this single contact

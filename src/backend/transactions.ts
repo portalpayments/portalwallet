@@ -16,7 +16,7 @@ import {
   type CurrencyDetails,
   type ReceiptSummary,
   type TransactionsByDay,
-  type TransactionSummary,
+  type SimpleTransaction,
 } from "../lib/types";
 
 import {
@@ -27,7 +27,7 @@ import {
   NOT_FOUND,
   ORCA_WHIRLPOOL_MAINNET_ACCOUNT,
 } from "./constants";
-import { getReceiptForTransactionSummary } from "./receipts";
+import { getReceiptForSimpleTransaction } from "./receipts";
 import {
   type ParsedInstruction,
   type ParsedTransactionWithMeta,
@@ -125,7 +125,7 @@ export const summarizeTransaction = async (
   enableReceipts: boolean = false,
   // Since purchases are private we need the secret key to talk to Dialect.
   secretKeyForReceipts: Uint8Array | null = null
-): Promise<TransactionSummary> => {
+): Promise<SimpleTransaction> => {
   // https://docs.solana.com/terminology#transaction-id
   // The first signature in a transaction, which can be used to uniquely identify the transaction across the complete ledger.
   const id = rawTransaction?.transaction?.signatures?.[0];
@@ -167,7 +167,7 @@ export const summarizeTransaction = async (
       const onlyInstruction = instructions[0] as ParsedInstruction;
 
       if (onlyInstruction.parsed.type === "createAccountWithSeed") {
-        const transactionSummary = {
+        const simpleTransaction = {
           id,
           date,
           status,
@@ -183,7 +183,7 @@ export const summarizeTransaction = async (
           swapCurrency: null,
         };
 
-        return transactionSummary;
+        return simpleTransaction;
       }
 
       const direction =
@@ -201,10 +201,10 @@ export const summarizeTransaction = async (
 
       if (enableReceipts && secretKeyForReceipts) {
         const keyPair = Keypair.fromSecretKey(secretKeyForReceipts);
-        receipt = await getReceiptForTransactionSummary(keyPair, memo, date);
+        receipt = await getReceiptForSimpleTransaction(keyPair, memo, date);
       }
 
-      const transactionSummary = {
+      const simpleTransaction = {
         id,
         date,
         status,
@@ -220,7 +220,7 @@ export const summarizeTransaction = async (
         swapCurrency: null,
       };
 
-      return transactionSummary;
+      return simpleTransaction;
     }
 
     let walletDifference = getWalletDifference(
@@ -318,9 +318,9 @@ export const summarizeTransaction = async (
     if (enableReceipts && secretKeyForReceipts) {
       const keyPair = Keypair.fromSecretKey(secretKeyForReceipts);
 
-      receipt = await getReceiptForTransactionSummary(keyPair, memo, date);
+      receipt = await getReceiptForSimpleTransaction(keyPair, memo, date);
     }
-    const transactionSummary: TransactionSummary = {
+    const simpleTransaction: SimpleTransaction = {
       id,
       date,
       status,
@@ -336,7 +336,7 @@ export const summarizeTransaction = async (
       swapCurrency,
     };
 
-    return transactionSummary;
+    return simpleTransaction;
   } catch (thrownObject) {
     const error = thrownObject as Error;
     // TODO: throw error instead of just log
@@ -369,7 +369,7 @@ export const getContactMatch = (contact: Contact, filterValue: string) => {
 
 export const getTransactionsByDays = (
   // It is assumed that all transactionSummaries are for the same currency
-  transactions: Array<TransactionSummary>,
+  transactions: Array<SimpleTransaction>,
   contacts: Array<Contact>,
   filterValue: string = "",
   decimals: number
@@ -458,7 +458,7 @@ export const getTransactionsByDays = (
 
   const transactionsByDays: Array<TransactionsByDay> = [];
 
-  const toSpendingAmount = (transaction: TransactionSummary) => {
+  const toSpendingAmount = (transaction: SimpleTransaction) => {
     if (transaction.direction === Direction.sent) {
       return transaction.amount;
     } else {
