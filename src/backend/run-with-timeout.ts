@@ -43,6 +43,8 @@ export const runRepeatedlyWithTimeout = async function (
 
     return result;
   } catch (error) {
+    clearInterval(timeoutId);
+    clearInterval(intervalId);
     throw error;
   }
 };
