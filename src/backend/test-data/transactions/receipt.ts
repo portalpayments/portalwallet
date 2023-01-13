@@ -1,4 +1,4 @@
-import { MIKES_WALLET } from "src/backend/constants";
+import { MIKES_WALLET } from "../../constants";
 
 export const rawReceipt = {
   props: {
