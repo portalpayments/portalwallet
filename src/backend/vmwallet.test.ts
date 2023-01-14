@@ -289,7 +289,7 @@ describe(`mainnet integration tests`, () => {
       throw new Error(`Couldn't get a connection, can't continue`);
     }
     if (!identityTokenSecretKey) {
-      throw new Error(`IDENTITY_TOKEN_SECRET_KEY isn't  set in .env file`);
+      throw new Error(`IDENTITY_TOKEN_SECRET_KEY isn't set in .env file`);
     }
 
     const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
