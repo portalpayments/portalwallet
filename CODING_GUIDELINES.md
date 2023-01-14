@@ -5,7 +5,7 @@ Some basic coding guidelines to look for when reviewing code.
 These are focused on keeping us moving quickly:
 
 - Moving quickly makes customers happy.
-- Moving quickly help keep engineers motivated, as they can focus on building things rather wrestling with a giant code base to build things.
+- Moving quickly helps keep engineers motivated, as they can focus on building things rather wrestling with a giant code base to build things.
 
 ## Ask for help
 
@@ -25,7 +25,12 @@ If it feels like a grind:
   - If we're searching for 'wallet', then 'wlt' won't show up. Abbeviations are invariably used inconsistently. It's entirely possible we'll have 'wallet', 'w', 'wlt' and 'wllt' at the same time - maybe referring to slightly different things! Avoid confusion but consistently naming things so we have one implementation of everything.
   - Let the compiler worry about saving characters. Humans are the expensive part - readable names saves them time.
 
-Give things good names. `getBanana()` will obviously return a `banana`. `checkIsBanana()` will return a boolean about whether something is a banana. `isBanana` is a boolean. `bananaById` is an Object of bananas sorted by ID.
+Give things good names. 
+
+ - **Functions do things** `getBanana()` will obviously return a `banana`. `checkIsBanana()` will return a boolean about whether something is a banana. 
+ - **Booleans use `is`**. `isBanana` is a boolean. 
+ - **Key value maps (objects in JS/TS) are named after their value, sorted by key.** -`bananaById` is an Object of bananas sorted by ID.
+ - **Arrays are plurals.** `bananas` is clearly an array of `banana`
 
 ## Use links for issues when working around an issue
 
