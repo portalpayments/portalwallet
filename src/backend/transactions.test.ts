@@ -14,6 +14,7 @@ import {
   GREGS_WALLET,
   JOHN_TESTUSER_DEMO_WALLET,
   MIKES_WALLET,
+  USDC_MAINNET_MINT_ACCOUNT,
   YCOMBINATOR_DEMO_WALLET_FOR_JARED,
 } from "./constants";
 import { Currency, type SimpleTransaction, Direction } from "../lib/types";
@@ -30,7 +31,7 @@ import {
 import { sendingUSDH } from "./test-data/transactions/sendingUSDH";
 import { makingLightShieldAccount } from "./test-data/transactions/makingLightShieldAccount";
 
-// jest.mock("./functions");
+jest.mock("./functions");
 
 const contacts = [
   {
@@ -216,7 +217,7 @@ describe(`transaction summaries`, () => {
 
     expect(portalSimpleTransaction).toEqual({
       amount: 32903572,
-      currency: 4,
+      currency: Currency.WSOL,
       date: 1673260796000,
       direction: Direction.swapped,
       from: MIKES_WALLET,
@@ -250,7 +251,7 @@ describe(`transaction summaries`, () => {
       networkFee: 5000,
       direction: 0,
       amount: 5000000,
-      currency: 0,
+      currency: Currency.USDC,
       from: MIKES_WALLET,
       to: GREGS_WALLET,
       memo: "Hey Greg! 🙋🏻‍♂️",
@@ -300,7 +301,7 @@ describe(`transaction summaries`, () => {
     expect(portalSimpleTransaction).toEqual({
       id: "4gknQh12svZHqrZN9sKCHetaP87TbPns6pd83jknZPA3vEjN7jQ53sA3xpVs7ZH2oeCKnjrgHDqVMMxf3vBMoTwz",
       amount: 1000000,
-      currency: 1,
+      currency: Currency.USDH,
       date: 1667306128000,
       direction: 1,
       from: "BfkRD3gGQGLjHxUw7oqhizkaxrDrw7itHT98f9j2gh6t",
@@ -481,7 +482,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 1000000,
-            currency: 0,
+            currency: Currency.USDC,
             from: MIKES_WALLET,
             to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
             memo: null,
@@ -503,7 +504,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 500000,
-            currency: 0,
+            currency: Currency.USDC,
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
@@ -513,7 +514,7 @@ describe(`grouping transactions`, () => {
           },
           {
             amount: 30000000,
-            currency: 3,
+            currency: Currency.SOL,
             date: 1662733089000,
             direction: 0,
             from: MIKES_WALLET,
@@ -540,7 +541,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 70000,
-            currency: 0,
+            currency: Currency.USDC,
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
@@ -555,7 +556,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 210000,
-            currency: 0,
+            currency: Currency.USDC,
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
@@ -570,7 +571,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 230000,
-            currency: 0,
+            currency: Currency.USDC,
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
@@ -585,7 +586,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 210000,
-            currency: 0,
+            currency: Currency.USDC,
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
@@ -600,7 +601,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 70000,
-            currency: 0,
+            currency: Currency.USDC,
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
@@ -622,7 +623,7 @@ describe(`grouping transactions`, () => {
         networkFee: 5000,
         direction: 0,
         amount: 1000000,
-        currency: 0,
+        currency: Currency.USDC,
         from: MIKES_WALLET,
         to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
         memo: null,
@@ -652,7 +653,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 1000000,
-            currency: 0,
+            currency: Currency.USDC,
             from: MIKES_WALLET,
             to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
             memo: null,
@@ -674,7 +675,7 @@ describe(`grouping transactions`, () => {
         networkFee: 5000,
         direction: 0,
         amount: 1000000,
-        currency: 0,
+        currency: Currency.USDC,
         from: MIKES_WALLET,
         to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
         memo: null,
@@ -704,8 +705,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 1000000,
-
-            currency: 0,
+            currency: Currency.USDC,
             from: MIKES_WALLET,
             to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
             memo: null,
@@ -730,7 +730,7 @@ describe(`memos and notes`, () => {
     );
     expect(summary).toEqual({
       amount: 210000,
-      currency: 0,
+      currency: Currency.USDC,
       date: 1665683493000,
       direction: 0,
       from: MIKES_WALLET,

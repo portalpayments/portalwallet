@@ -9,6 +9,7 @@ import { mikesKeypair } from "./get-mikes-keypair";
 import { ThreadMemberScope } from "@dialectlabs/sdk";
 import { rawReceipt } from "./test-data/transactions/receipt";
 import { MIKES_WALLET } from "./constants";
+import { Currency } from "../lib/types";
 
 jest.mock("./functions");
 jest.mock("./html-extract");
@@ -70,7 +71,7 @@ describe(`dialect`, () => {
       networkFee: 10000,
       direction: 0,
       amount: 32000000,
-      currency: 0,
+      currency: Currency.USDC,
       from: MIKES_WALLET,
       to: "4iDRFnp2N4UAsZEePHAxs7ozBanQcGtLYd12HG2HJm4s",
       memo: "qqS5qxxEjMg7mSup0rBI",

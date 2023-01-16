@@ -42,11 +42,11 @@ export enum Direction {
 }
 
 export enum Currency {
-  "USDC",
-  "USDH",
-  "USDT",
-  "SOL",
-  "WSOL",
+  "USDC" = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "USDH" = "USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX",
+  "USDT" = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  "SOL" = "native",
+  "WSOL" = "So11111111111111111111111111111111111111112",
 }
 
 export type CurrencyDetails = {
