@@ -6,7 +6,7 @@ import {
   entropyToMnemonic,
   checkIfSecretKeyIsValid,
   checkIfMnemonicPhraseIsValid,
-} from "./brainwallet";
+} from "./recovery-token";
 import { DEPOSIT, SECONDS } from "./constants";
 import { connect, getAccountBalance, putSolIntoWallet } from "./vmwallet";
 import * as dotenv from "dotenv";

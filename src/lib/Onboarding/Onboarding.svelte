@@ -12,7 +12,7 @@
     mnemonicToKeypairs,
     checkIfSecretKeyIsValid,
     checkIfMnemonicPhraseIsValid,
-  } from "../../backend/brainwallet";
+  } from "../../backend/recovery-token";
   import base58 from "bs58";
   import { saveSettings, checkIfOnboarded } from "../settings";
 
