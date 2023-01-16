@@ -13,6 +13,7 @@ if (!globalThis.setImmediate) {
   globalThis.setImmediate = (func: Function) => setTimeout(func, 0);
 }
 
+// Looks like a small bug in scryptsy types
 // @ts-ignore
 import { async as scryptAsync } from "scryptsy";
 

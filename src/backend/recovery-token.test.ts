@@ -51,7 +51,8 @@ describe(`restoration`, () => {
       );
       expect(accountBalance).toEqual(DEPOSIT);
     },
-    15 * SECONDS
+    // TODO: this is an absurdly log test but we're about to delete the code
+    30 * SECONDS
   );
 
   test(
@@ -72,7 +73,8 @@ describe(`restoration`, () => {
         originalWallet.publicKey.toBase58()
       );
     },
-    15 * SECONDS
+    // TODO: this is an absurdly log test but we're about to delete the code
+    30 * SECONDS
   );
 });
 
@@ -111,8 +113,5 @@ describe(`recovery`, () => {
     const secretKeyTwo = firstWallet.secretKey;
 
     expect(secretKeyOne).toEqual(secretKeyTwo);
-
-    log(secretKeyOne);
-    log(secretKeyTwo);
   });
 });

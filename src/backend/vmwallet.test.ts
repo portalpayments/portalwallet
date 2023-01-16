@@ -29,8 +29,6 @@ import {
   VAHEHS_WALLET,
   MIKES_USDC_ACCOUNT,
   MINUTE,
-  MIKES_USDH_ACCOUNT,
-  MIKES_USDT_ACCOUNT,
   getCurrencyByName,
   USDC_MAINNET_MINT_ACCOUNT,
 } from "./constants";
@@ -148,21 +146,26 @@ describe(`mainnet integration tests`, () => {
     expect(identityTokens.length).toBeGreaterThan(0);
   });
 
-  test(`We can verify Vaheh`, async () => {
-    const claims = await verifyWallet(
-      mainNetConnection,
-      // Connect to Metaplex as Mike
-      mikeKeypair,
-      new PublicKey(PORTAL_IDENTITY_TOKEN_ISSUER_WALLET),
-      new PublicKey(VAHEHS_WALLET)
-    );
-    expect(claims).toEqual({
-      familyName: "Hatami",
-      givenName: "Vaheh",
-      imageUrl: expect.stringMatching(/https:\/\/arweave.net\/.*/),
-      type: "INDIVIDUAL",
-    });
-  });
+  test(
+    `We can verify Vaheh`,
+    async () => {
+      const claims = await verifyWallet(
+        mainNetConnection,
+        // Connect to Metaplex as Mike
+        mikeKeypair,
+        new PublicKey(PORTAL_IDENTITY_TOKEN_ISSUER_WALLET),
+        new PublicKey(VAHEHS_WALLET)
+      );
+      expect(claims).toEqual({
+        familyName: "Hatami",
+        givenName: "Vaheh",
+        imageUrl: expect.stringMatching(/https:\/\/arweave.net\/.*/),
+        type: "INDIVIDUAL",
+      });
+    },
+    // Arweave can be slow
+    10 * SECONDS
+  );
 
   test(
     `We can get NFTs from Mike's real-mainnet wallet`,
