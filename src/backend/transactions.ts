@@ -11,15 +11,15 @@ import {
   stringify,
 } from "./functions";
 import {
-  Currency,
+  type Currency,
   Direction,
   type CurrencyDetails,
   type ReceiptSummary,
   type TransactionsByDay,
   type SimpleTransaction,
 } from "../lib/types";
-
 import {
+  getCurrencyByName,
   JUPITER,
   MEMO_PROGRAM,
   mintToCurrencyMap,
@@ -164,9 +164,9 @@ export const summarizeTransaction = async (
     memo = getNoteOrMemo(rawTransaction);
 
     if (isSolTransaction) {
-      const onlyInstruction = instructions[0] as ParsedInstruction;
+      const onlyInstruction = instructions[0];
 
-      if (onlyInstruction.parsed.type === "createAccountWithSeed") {
+      if (onlyInstruction?.parsed?.type === "createAccountWithSeed") {
         const simpleTransaction = {
           id,
           date,
@@ -193,9 +193,8 @@ export const summarizeTransaction = async (
 
       const amount = onlyInstruction.parsed.info.lamports;
       if (!amount) {
-        // See https://explorer.solana.com/tx/3DbFFLeUbUGFiQ7oyi3uZddD8qnsvE94VVv8HpNkYozUrKE1ordD74LWXH8di5ywKbCKMBNBYYTRM5Ur8q13fvY6
         throw new Error(
-          `Ignoring transaction where no money was sent (eg, creating wallet without transferring funds ${id}`
+          `Ignoring transaction where no money was sent (eg, creating wallet without transferring funds) see https://explorer.solana.com/tx/${id}`
         );
       }
 
@@ -211,7 +210,7 @@ export const summarizeTransaction = async (
         networkFee,
         direction,
         amount: onlyInstruction.parsed.info.lamports,
-        currency: Currency.SOL,
+        currency: getCurrencyByName("SOL").id,
         from: onlyInstruction.parsed.info.source,
         to: onlyInstruction.parsed.info.destination,
         memo,
@@ -274,7 +273,7 @@ export const summarizeTransaction = async (
 
         // TODO: we're currently setting currency statically
         // fix, this is a bit embarassing
-        swapCurrency = Currency.SOL;
+        swapCurrency = getCurrencyByName("SOL").id;
 
         isSwap = true;
       }
@@ -342,9 +341,9 @@ export const summarizeTransaction = async (
     // TODO: throw error instead of just log
     // (once we can handle more types of transactions in future)
     log(
-      `Warning: could not summarize transaction ID: ${id} - see the block explorer for more info, ${error.message}`
+      `Warning: could not summarize transaction ID: see https://explorer.solana.com/tx/${id} - for more info, ${error.message}`
     );
-    log(error.stack);
+    // log(error.stack);
     // log(stringify(rawTransaction));
     return null;
   }

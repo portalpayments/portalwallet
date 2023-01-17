@@ -1,6 +1,6 @@
 import { clusterApiUrl, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { BN as BigNumber } from "bn.js";
-import { Currency, type CurrencyDetails } from "../lib/types";
+import type { Currency, CurrencyDetails } from "../lib/types";
 
 export const IDENTITY_TOKEN_NAME = "Portal Identity Token";
 
@@ -123,27 +123,27 @@ export const EMPTY = "";
 
 export const mintToCurrencyMap: Record<string, CurrencyDetails> = {
   [USDC_MAINNET_MINT_ACCOUNT]: {
-    id: Currency.USDC,
+    id: USDC_MAINNET_MINT_ACCOUNT,
     name: "USDC",
     decimals: 6,
   },
   [USDH_MAINNET_MINT_ACCOUNT]: {
-    id: Currency.USDH,
+    id: USDH_MAINNET_MINT_ACCOUNT,
     name: "USDH",
     decimals: 6,
   },
   [USDT_MAINNET_MINT_ACCOUNT]: {
-    id: Currency.USDT,
+    id: USDT_MAINNET_MINT_ACCOUNT,
     name: "USDT",
     decimals: 6,
   },
   [WRAPPED_SOL_MAINNET_MINT_ACCOUNT]: {
-    id: Currency.WSOL,
-    name: "Wrapped SOL",
+    id: WRAPPED_SOL_MAINNET_MINT_ACCOUNT,
+    name: "WSOL",
     decimals: 9,
   },
   ["native"]: {
-    id: Currency.SOL,
+    id: "native",
     name: "SOL",
     decimals: 9,
   },
@@ -159,32 +159,17 @@ export const getCurrencyByName = (name: string) => {
   );
 };
 
-export const getCurrencyNameByMint = (mint: string) => {
+export const getCurrencyByMint = (mint: string) => {
   const isKnownCurrency = Object.hasOwn(mintToCurrencyMap, mint);
   if (!isKnownCurrency) {
     throw new Error(`Unknown currency for mint '${mint}'`);
   }
-  return mintToCurrencyMap[mint].name;
+  return mintToCurrencyMap[mint];
 };
 
-// TODO: we should just remove the Currency type
-// And use spl-token-registry
-export const getCurrencyByID = (id: number) => {
-  const currenciesByID = [];
-  currenciesByID[Currency.USDC] = getCurrencyByName("USDC");
-  currenciesByID[Currency.USDH] = getCurrencyByName("USDH");
-  currenciesByID[Currency.USDT] = getCurrencyByName("USDT");
-  currenciesByID[Currency.WSOL] = getCurrencyByName("Wrapped SOL");
-  currenciesByID[Currency.SOL] = getCurrencyByName("SOL");
-  return currenciesByID[id];
-};
-
-export const getMintFromCurrency = (currency: Currency) => {
-  const mints = Object.keys(mintToCurrencyMap);
-  const mintForCurrency = mints.find((mint) => {
-    return mintToCurrencyMap[mint].id === currency;
-  });
-  return mintForCurrency;
+export const getCurrencyNameByMint = (mint: string) => {
+  const currency = getCurrencyByMint(mint);
+  return currency.name;
 };
 
 // Older were minted with test storage URLs, timed out, etc.

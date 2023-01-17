@@ -13,6 +13,7 @@ import {
   SECOND,
   mintToCurrencyMap,
   SOLANA_DECIMALS,
+  getCurrencyByName,
 } from "./constants";
 import { asyncMap } from "./functions";
 import base58 from "bs58";
@@ -24,12 +25,7 @@ import { summarizeTransaction } from "./transactions";
 import { toUniqueStringArray } from "../lib/utils";
 import * as http from "../lib/http-client";
 import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../lib/constants";
-import {
-  Currency,
-  Direction,
-  type Contact,
-  type SimpleTransaction,
-} from "../lib/types";
+import { Direction, type Contact, type SimpleTransaction } from "../lib/types";
 import type { AccountSummary } from "../lib/types";
 import { identityTokenIssuerPublicKey } from "../lib/stores";
 
@@ -356,7 +352,7 @@ export const getNativeAccountSummary = async (
   }
   const accountSummary: AccountSummary = {
     address: keyPair.publicKey,
-    currency: Currency.SOL,
+    currency: getCurrencyByName("SOL").id,
     balance: accountBalance,
     decimals: SOLANA_DECIMALS,
     transactionSummaries,

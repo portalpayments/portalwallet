@@ -1,13 +1,7 @@
 import { get as getFromStore, writable, type Writable } from "svelte/store";
 import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
 import { identityTokenIssuerPublicKeyString } from "./constants";
-import {
-  Currency,
-  Direction,
-  type AccountSummary,
-  type Collectable,
-  type Contact,
-} from "../lib/types";
+import type { AccountSummary, Collectable, Contact } from "../lib/types";
 import { asyncMap, log, sleep, stringify } from "../backend/functions";
 import {
   getContactsFromTransactions,
@@ -15,7 +9,12 @@ import {
   getNativeAccountSummary,
   getTokenAccountSummaries,
 } from "../backend/vmwallet";
-import { MILLISECONDS, NOT_FOUND, SECONDS } from "../backend/constants";
+import {
+  getCurrencyByName,
+  MILLISECONDS,
+  NOT_FOUND,
+  SECONDS,
+} from "../backend/constants";
 import base58 from "bs58";
 import { getAllNftMetadatasFromAWallet } from "../backend/identity-tokens";
 import * as http from "./http-client";
@@ -323,7 +322,7 @@ const updateAccounts = async () => {
   // We could add hasUSDCAccount to Service Worker but it's [robbaly easier to just checl
   log(`Finding USDC account...`);
   const usdcAccountIndex = tokenAccountSummaries.findIndex(
-    (accountSummary) => accountSummary.currency === Currency.USDC
+    (accountSummary) => accountSummary.currency === getCurrencyByName("USDC").id
   );
   if (usdcAccountIndex === NOT_FOUND) {
     log(`No existing USDC account in this wallet`);

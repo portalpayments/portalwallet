@@ -77,7 +77,7 @@ describe(`dialect`, () => {
         networkFee: 10000,
         direction: 0,
         amount: 32000000,
-        currency: Currency.USDC,
+        currency: getCurrencyByName("USDC").id,
         from: MIKES_WALLET,
         to: "4iDRFnp2N4UAsZEePHAxs7ozBanQcGtLYd12HG2HJm4s",
         memo: "qqS5qxxEjMg7mSup0rBI",

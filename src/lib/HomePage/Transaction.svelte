@@ -3,10 +3,14 @@
     amountAndDecimalsToMajorAndMinor,
     truncateWallet,
   } from "../../lib/utils";
-  import { getCurrencyByID } from "../../backend/constants";
   import AnonymousImage from "../../assets/anonymous.svg";
-  import type { SimpleTransaction, Contact } from "../../lib/types";
+  import type {
+    SimpleTransaction,
+    Contact,
+    CurrencyDetails,
+  } from "../../lib/types";
   import { log, isEmpty, stringify } from "../../backend/functions";
+  import { getCurrencyByMint } from "../../backend/constants";
   import { Direction } from "../types";
 
   import { contactsStore } from "../stores";
@@ -53,9 +57,11 @@
     transaction.direction === Direction.recieved ||
     transaction.direction === Direction.swapped;
 
-  const swapCurrencyDetails = getCurrencyByID(transaction.swapCurrency) || null;
   let swapCurrencyMajorAndMinor = null;
+  let swapCurrencyDetails: CurrencyDetails | null = null;
+
   if (transaction.direction === Direction.swapped) {
+    swapCurrencyDetails = getCurrencyByMint(transaction.swapCurrency) || null;
     swapCurrencyMajorAndMinor = amountAndDecimalsToMajorAndMinor(
       transaction.swapAmount,
       swapCurrencyDetails.decimals
