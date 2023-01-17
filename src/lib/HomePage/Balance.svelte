@@ -1,10 +1,9 @@
 <script lang="ts">
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
   import { log, stringify } from "../../backend/functions";
-  import { getCurrencySymbolByMint } from "../../backend/constants";
-  import type { AccountSummary } from "../../backend/types";
+  import { getCurrencyByMint } from "../../backend/constants";
+  import type { AccountSummary, CurrencyDetails } from "../../backend/types";
   import SkeletonBalance from "../Shared/Skeletons/SkeletonBalance.svelte";
-  import { CURRENCY_ICONS } from "../constants";
 
   import {
     hasUSDCAccountStore,
@@ -12,9 +11,11 @@
     onChangeActiveAccount,
   } from "../stores";
 
+  const USDC_ICON = "/src/assets/Icons/usdc-coin-grey.svg";
+
   let majorAndMinor: Array<string | null> = [null, null];
 
-  let currencySymbol: string = null;
+  let currency: CurrencyDetails | null = null;
 
   let activeAccount: AccountSummary | null;
   $: activeAccount = null;
@@ -42,7 +43,7 @@
       newValue.balance,
       newValue.decimals
     );
-    currencySymbol = getCurrencySymbolByMint(newValue.currency);
+    currency = getCurrencyByMint(newValue.currency);
     haveAccountsLoaded = true;
     activeAccount = newValue;
   });
@@ -57,17 +58,15 @@
     <div class="symbol-major-minor">
       <img
         class="symbol"
-        alt="{currencySymbol} logo"
-        src={activeAccount
-          ? CURRENCY_ICONS[currencySymbol]["grey"]
-          : CURRENCY_ICONS.USDC.grey}
+        alt="{currency.symbol} logo"
+        src={activeAccount ? currency.logo : USDC_ICON}
       />
       <div class="major">{majorAndMinor[0]}</div>
       <div class="minor">.{majorAndMinor[1]}</div>
     </div>
   {:else}
     <div class="symbol-major-minor">
-      <img class="symbol" alt="USDC logo" src={CURRENCY_ICONS.USDC.grey} />
+      <img class="symbol" alt="USDC logo" src={USDC_ICON} />
       <div class="major">0</div>
       <div class="minor">.0</div>
     </div>

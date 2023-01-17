@@ -1,34 +1,6 @@
 // Frontend-specific constants
 // Backend constants are in the backend constants file.
 
-import usdcBlue from "../assets/Icons/usdc-coin.svg";
-import usdcGrey from "../assets/Icons/usdc-coin-grey.svg";
-import usdtBlue from "../assets/Icons/usdt-coin.svg";
-import usdtGrey from "../assets/Icons/usdt-coin-grey.svg";
-import usdhBlue from "../assets/Icons/usdh-coin.svg";
-import usdhGrey from "../assets/Icons/usdh-coin-grey.svg";
-import solBlue from "../assets/Icons/sol-coin.svg";
-import solGrey from "../assets/Icons/sol-coin-grey.svg";
-
-export const CURRENCY_ICONS = {
-  USDC: {
-    grey: usdcGrey,
-    blue: usdcBlue,
-  },
-  USDT: {
-    grey: usdtGrey,
-    blue: usdtBlue,
-  },
-  USDH: {
-    grey: usdhGrey,
-    blue: usdhBlue,
-  },
-  SOL: {
-    grey: solGrey,
-    blue: solBlue,
-  },
-};
-
 export enum LabelColor {
   Grey = "grey",
   Green = "green",

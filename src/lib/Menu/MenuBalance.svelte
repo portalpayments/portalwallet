@@ -1,26 +1,20 @@
 <script lang="ts">
   import { amountAndDecimalsToString } from "../utils";
   import { stringify } from "../../backend/functions";
-  import { CURRENCY_ICONS } from "../constants";
-  import { getCurrencySymbolByMint } from "../../backend/constants";
+  import { getCurrencyByMint } from "../../backend/constants";
   import type { AccountSummary } from "../../backend/types";
 
   export let account: AccountSummary;
   export let changeAccount: Function;
 
-  const currencySymbol = getCurrencySymbolByMint(account.currency);
-
-  let currencyIconMap = CURRENCY_ICONS[currencySymbol];
+  const currency = getCurrencyByMint(account.currency);
 </script>
 
 <button type="button" class="with-icon" on:click={() => changeAccount()}>
-  <img
-    src={currencyIconMap ? currencyIconMap.grey : null}
-    alt="{currencySymbol} account"
-  />
+  <img src={currency.logo} alt="{currency.symbol} account" />
   <div class="text">
     <div class="currency-name">
-      {currencySymbol}
+      {currency.symbol}
     </div>
     <div class="balance">
       {amountAndDecimalsToString(account.balance, account.decimals)}

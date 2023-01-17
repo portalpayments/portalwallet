@@ -7,6 +7,15 @@ const tokenListProvider = new TokenListProvider();
 
 const FILE_NAME = "src/backend/mint-to-currency-map.ts";
 
+const pleasantIcons = {
+  USDC: "/src/assets/Icons/usdc-coin-grey.svg",
+  USDT: "/src/assets/Icons/usdt-coin-grey.svg",
+  USDH: "/src/assets/Icons/usdh-coin-grey.svg",
+  SOL: "/src/assets/Icons/sol-coin-grey.svg",
+  // TODO: make a wrap icon for wSOL
+  WSOL: "/src/assets/Icons/sol-coin-grey.svg",
+};
+
 const main = async () => {
   const tokenListContainer = await tokenListProvider.resolve();
   const tokens = tokenListContainer
@@ -33,6 +42,7 @@ const main = async () => {
       mintAddress: token.address,
       decimals: token.decimals,
       symbol: fixedSymbol,
+      logo: pleasantIcons[fixedSymbol] || token.logoURI || null,
     };
   });
 
@@ -41,6 +51,7 @@ const main = async () => {
     mintAddress: "native",
     symbol: "SOL",
     decimals: 9,
+    logo: pleasantIcons.SOL,
   });
 
   log(currenciesDetails.length);

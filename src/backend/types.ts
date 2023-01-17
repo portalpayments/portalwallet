@@ -275,6 +275,7 @@ export type CurrencyDetails = {
   mintAddress: Currency;
   symbol: string;
   decimals: number;
+  logo: string | null;
 };
 
 export interface ReceiptSummary {
