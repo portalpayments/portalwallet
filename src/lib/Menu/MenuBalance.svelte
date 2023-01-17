@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { getCurrencyName } from "../../backend/vmwallet";
   import { amountAndDecimalsToString } from "../utils";
   import { CURRENCY_ICONS } from "../constants";
+  import { getCurrencyNameByMint } from "../../backend/constants";
   import type { AccountSummary } from "../../lib/types";
 
   export let account: AccountSummary;
@@ -10,12 +10,12 @@
 
 <button type="button" class="with-icon" on:click={() => changeAccount()}>
   <img
-    src={CURRENCY_ICONS[getCurrencyName(account.currency)].grey}
-    alt="{getCurrencyName(account.currency)} account"
+    src={CURRENCY_ICONS[getCurrencyNameByMint(account.currency)].grey}
+    alt="{getCurrencyNameByMint(account.currency)} account"
   />
   <div class="text">
     <div class="currency-name">
-      {getCurrencyName(account.currency)}
+      {getCurrencyNameByMint(account.currency)}
     </div>
     <div class="balance">
       {amountAndDecimalsToString(account.balance, account.decimals)}

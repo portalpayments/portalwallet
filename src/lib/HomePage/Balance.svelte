@@ -1,8 +1,8 @@
 <script lang="ts">
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
   import { log, stringify } from "../../backend/functions";
+  import { getCurrencyNameByMint } from "../../backend/constants";
   import { get as getFromStore } from "svelte/store";
-  import { getCurrencyName } from "../../backend/vmwallet";
   import type { AccountSummary } from "../../lib/types";
   import SkeletonBalance from "../Shared/Skeletons/SkeletonBalance.svelte";
   import { CURRENCY_ICONS } from "../constants";
@@ -43,7 +43,7 @@
       newValue.balance,
       newValue.decimals
     );
-    currencyName = getCurrencyName(newValue.currency);
+    currencyName = getCurrencyNameByMint(newValue.currency);
     haveAccountsLoaded = true;
     activeAccount = newValue;
   });

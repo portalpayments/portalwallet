@@ -364,10 +364,6 @@ export const getNativeAccountSummary = async (
   return accountSummary;
 };
 
-export const getCurrencyName = (currencyNumber: number) => {
-  return Currency[currencyNumber] || null;
-};
-
 export const getContactsFromTransactions = async (
   connection: Connection,
   keyPair: Keypair,

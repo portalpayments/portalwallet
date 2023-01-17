@@ -159,6 +159,14 @@ export const getCurrencyByName = (name: string) => {
   );
 };
 
+export const getCurrencyNameByMint = (mint: string) => {
+  const isKnownCurrency = Object.hasOwn(mintToCurrencyMap, mint);
+  if (!isKnownCurrency) {
+    throw new Error(`Unknown currency for mint '${mint}'`);
+  }
+  return mintToCurrencyMap[mint].name;
+};
+
 // TODO: we should just remove the Currency type
 // And use spl-token-registry
 export const getCurrencyByID = (id: number) => {
