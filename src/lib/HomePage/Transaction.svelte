@@ -86,6 +86,14 @@
       </div>
     </div>
   {/if}
+  {#if transaction.direction === null}
+    <div class="profile-pic">
+      <div>✔️</div>
+    </div>
+    <div class="name-and-memo">
+      <div class="name">Wallet approval</div>
+    </div>
+  {/if}
   {#if transaction.direction === Direction.recieved || transaction.direction === Direction.sent}
     {#if contact}
       <img
