@@ -30,7 +30,7 @@
   </div>
 </div>
 
-<style type="text/scss">
+<style lang="scss">
   .profile-pic {
     border-radius: 50%;
     aspect-ratio: 1 / 1;

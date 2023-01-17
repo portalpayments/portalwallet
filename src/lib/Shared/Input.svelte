@@ -122,7 +122,7 @@
   {/if}
 </div>
 
-<style type="text/scss">
+<style lang="scss">
   .border {
     height: 48px;
     border-radius: 24px;

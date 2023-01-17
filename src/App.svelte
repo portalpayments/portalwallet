@@ -104,7 +104,7 @@
   </main>
 </Router>
 
-<style type="text/scss">
+<style lang="scss">
   /* The entire wallet, contains the header-and-features plus the nav bar */
   main {
     /* Required to absolutely position navbar at bottom 

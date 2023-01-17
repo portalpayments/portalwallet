@@ -29,7 +29,7 @@
   {/if}
 </div>
 
-<style type="text/scss">
+<style lang="scss">
   .transfer-heading {
     display: grid;
     grid-auto-flow: row;

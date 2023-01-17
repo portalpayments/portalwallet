@@ -46,7 +46,7 @@
   </div>
 {/if}
 
-<style type="text/scss">
+<style lang="scss">
   button {
     width: 100%;
     padding: 10px 0px;

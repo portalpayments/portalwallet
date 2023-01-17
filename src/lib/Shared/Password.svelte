@@ -44,7 +44,7 @@
   on:input|preventDefault={debounce(runInputDelayIfExists)}
 />
 
-<style type="text/scss">
+<style lang="scss">
   .password {
     width: 100%;
     transition: all 200ms ease-out;

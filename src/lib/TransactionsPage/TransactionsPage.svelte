@@ -42,7 +42,7 @@
   </div>
 </div>
 
-<style type="text/scss">
+<style lang="scss">
   @import "../../mixins.scss";
   .transactions-screen {
     width: var(--wallet-width);

@@ -59,7 +59,7 @@
   {/if}
 </div>
 
-<style type="text/scss">
+<style lang="scss">
   .contact-screen {
     height: var(--wallet-height);
     width: var(--wallet-width);

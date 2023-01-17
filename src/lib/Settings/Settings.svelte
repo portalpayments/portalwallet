@@ -157,7 +157,7 @@
   </button>
 </div>
 
-<style type="text/scss">
+<style lang="scss">
   /* TODO: stop using absolute position for the back button */
   .hack {
     padding: 18px;

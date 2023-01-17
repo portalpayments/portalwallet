@@ -58,7 +58,7 @@
 
 <div class="qrcode-background" />
 
-<style type="text/scss">
+<style lang="scss">
   .qrcode-background {
     border: 1px solid var(--very-light-grey);
     border-radius: 21px;

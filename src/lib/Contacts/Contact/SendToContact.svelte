@@ -32,7 +32,7 @@
   >
 </div>
 
-<style type="text/scss">
+<style lang="scss">
   .send-money {
     margin-bottom: 10px;
     height: 40px;

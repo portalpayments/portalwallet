@@ -258,7 +258,7 @@
   {/if}
 </div>
 
-<style type="text/scss">
+<style lang="scss">
   .transfer-screen {
     min-width: var(--wallet-width);
     max-width: var(--wallet-width);

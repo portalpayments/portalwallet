@@ -29,7 +29,7 @@
   </div>
 </div>
 
-<style type="text/scss">
+<style lang="scss">
   .fail-icon {
     width: 64px;
     justify-self: center;

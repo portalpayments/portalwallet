@@ -21,7 +21,7 @@
   {/if}
 </div>
 
-<style type="text/scss">
+<style lang="scss">
   .back-button {
     font-size: 2rem;
     position: absolute;

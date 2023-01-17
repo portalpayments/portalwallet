@@ -9,7 +9,7 @@
   <div class="progress" style="width: {progress}%" />
 </div>
 
-<style type="text/scss">
+<style lang="scss">
   .progress-bar {
     background-color: var(--very-light-grey);
     height: 6px;

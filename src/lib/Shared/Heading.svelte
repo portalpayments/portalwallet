@@ -5,7 +5,7 @@
 
 <h1 class="{size} {theme}"><slot /></h1>
 
-<style type="text/scss">
+<style lang="scss">
   @import "../../mixins.scss";
 
   h1 {

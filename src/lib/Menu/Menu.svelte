@@ -76,7 +76,7 @@
   </Link>
 </div>
 
-<style type="text/scss">
+<style lang="scss">
   @import "../../mixins.scss";
   button.wallet {
     background-color: transparent;

@@ -30,7 +30,7 @@
   </div>
 </div>
 
-<style type="text/scss">
+<style lang="scss">
   @import "../../mixins.scss";
   .header {
     display: grid;

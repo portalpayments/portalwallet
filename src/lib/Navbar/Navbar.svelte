@@ -31,7 +31,7 @@
   </buttongroup>
 </nav>
 
-<style type="text/scss">
+<style lang="scss">
   @import "../../mixins.scss";
   nav {
     width: 100%;
