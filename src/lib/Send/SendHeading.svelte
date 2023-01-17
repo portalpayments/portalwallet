@@ -4,7 +4,7 @@
   import Heading from "../Shared/Heading.svelte";
   import Verified from "../Shared/Verified.svelte";
   import { warningUnverifiedAccount } from "../constants";
-  import type { Contact } from "../../lib/types";
+  import type { Contact } from "../../backend/types";
 
   export let contact: Contact;
   export let hasLoadedVerificationStateFromNetwork: boolean = false;

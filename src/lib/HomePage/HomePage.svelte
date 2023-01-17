@@ -7,7 +7,7 @@
   import QRCodeIcon from "../../assets/Icons/get-address-qr.svg";
   import Menu from "../../lib/Menu/Menu.svelte";
   import MenuButton from "../../lib/Menu/MenuButton.svelte";
-  import type { Contact } from "../../lib/types";
+  import type { Contact } from "../../backend/types";
   import { Link } from "svelte-navigator";
 
   import { hasUSDCAccountStore } from "../../lib/stores";

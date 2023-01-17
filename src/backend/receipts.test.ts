@@ -9,7 +9,7 @@ import { mikesKeypair } from "./get-mikes-keypair";
 import { ThreadMemberScope } from "@dialectlabs/sdk";
 import { rawReceipt } from "./test-data/transactions/receipt";
 import { MIKES_WALLET, SECONDS } from "./constants";
-import { Currency } from "../lib/types";
+import { Currency } from "../backend/types";
 
 jest.mock("./functions");
 jest.mock("./html-extract");

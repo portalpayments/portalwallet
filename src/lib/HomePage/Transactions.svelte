@@ -3,7 +3,7 @@
   import TransactionComponent from "./Transaction.svelte";
   import { getTransactionsByDays } from "../../backend/transactions";
   import LoadingImage from "../../assets/transactions-loading.svg";
-  import type { TransactionsByDay, AccountSummary } from "../../lib/types";
+  import type { TransactionsByDay, AccountSummary } from "../../backend/types";
   import {
     log,
     stringify,

@@ -8,10 +8,10 @@
     SimpleTransaction,
     Contact,
     CurrencyDetails,
-  } from "../../lib/types";
+  } from "../../backend/types";
   import { log, isEmpty, stringify } from "../../backend/functions";
   import { getCurrencyByMint } from "../../backend/constants";
-  import { Direction } from "../types";
+  import { Direction } from "../../backend/types";
 
   import { contactsStore } from "../stores";
 
@@ -77,16 +77,15 @@
   <textarea class="debug">{stringify(transaction)}</textarea>
   {#if transaction.direction === Direction.swapped}
     <div class="profile-pic">
-      <div>{swapCurrencyDetails.name}</div>
+      <div>{swapCurrencyDetails.symbol}</div>
     </div>
     <div class="name-and-memo">
       <div class="name">
         Swapped {swapCurrencyMajorAndMinor[0]}.{swapCurrencyMajorAndMinor[1]}
-        {swapCurrencyDetails.name}
+        {swapCurrencyDetails.symbol}
       </div>
     </div>
   {/if}
-
   {#if transaction.direction === Direction.recieved || transaction.direction === Direction.sent}
     {#if contact}
       <img

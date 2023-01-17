@@ -4,7 +4,7 @@ import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import {
   SECONDS,
   ENOUGH_TO_MAKE_A_NEW_TOKEN,
-  getCurrencyByName,
+  getCurrencyBySymbol,
   mintToCurrencyMap,
 } from "./constants";
 import { log, minorUnitsToDecimal, stringify } from "./functions";
@@ -28,7 +28,7 @@ jest.mock("./functions");
 const AMOUNT_OF_USDC_TO_SEND = 50;
 
 // Our fake currency will have 6 decimals like USDC
-const DECIMALS = getCurrencyByName("USDC").decimals;
+const DECIMALS = getCurrencyBySymbol("USDC").decimals;
 
 describe("minting and USDC-like transfers", () => {
   let connection: Connection;

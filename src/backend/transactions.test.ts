@@ -10,14 +10,14 @@ import {
 } from "./test-data/transactions/sendToExistingTokenAccount";
 import {
   EMPTY,
-  getCurrencyByName,
+  getCurrencyBySymbol,
   GREGS_WALLET,
   JOHN_TESTUSER_DEMO_WALLET,
   MIKES_WALLET,
   USDC_MAINNET_MINT_ACCOUNT,
   YCOMBINATOR_DEMO_WALLET_FOR_JARED,
 } from "./constants";
-import { Currency, type SimpleTransaction, Direction } from "../lib/types";
+import { Currency, type SimpleTransaction, Direction } from "../backend/types";
 
 import { hexToUtf8, log, stringify } from "./functions";
 import { sendFiveUSDC } from "./test-data/transactions/sendFiveUSDC";
@@ -57,7 +57,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     networkFee: 5000,
     direction: 0,
     amount: 1000000,
-    currency: getCurrencyByName("USDC").id,
+    currency: getCurrencyBySymbol("USDC").mintAddress,
     from: MIKES_WALLET,
     to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
     memo: null,
@@ -72,7 +72,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     networkFee: 5000,
     direction: 0,
     amount: 500000,
-    currency: getCurrencyByName("USDC").id,
+    currency: getCurrencyBySymbol("USDC").mintAddress,
     from: MIKES_WALLET,
     to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
     memo: null,
@@ -88,7 +88,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     networkFee: 5000,
     direction: 0,
     amount: 30000000,
-    currency: getCurrencyByName("SOL").id,
+    currency: getCurrencyBySymbol("SOL").mintAddress,
     from: MIKES_WALLET,
     to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
     memo: null,
@@ -103,7 +103,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     networkFee: 5000,
     direction: 0,
     amount: 70000,
-    currency: getCurrencyByName("USDC").id,
+    currency: getCurrencyBySymbol("USDC").mintAddress,
     from: MIKES_WALLET,
     to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
     memo: null,
@@ -118,7 +118,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     networkFee: 5000,
     direction: 0,
     amount: 210000,
-    currency: getCurrencyByName("USDC").id,
+    currency: getCurrencyBySymbol("USDC").mintAddress,
     from: MIKES_WALLET,
     to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
     memo: null,
@@ -133,7 +133,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     networkFee: 5000,
     direction: 0,
     amount: 230000,
-    currency: getCurrencyByName("USDC").id,
+    currency: getCurrencyBySymbol("USDC").mintAddress,
     from: MIKES_WALLET,
     to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
     memo: null,
@@ -148,7 +148,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     networkFee: 5000,
     direction: 0,
     amount: 210000,
-    currency: getCurrencyByName("USDC").id,
+    currency: getCurrencyBySymbol("USDC").mintAddress,
     from: MIKES_WALLET,
     to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
     memo: null,
@@ -163,7 +163,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     networkFee: 5000,
     direction: 0,
     amount: 70000,
-    currency: getCurrencyByName("USDC").id,
+    currency: getCurrencyBySymbol("USDC").mintAddress,
     from: MIKES_WALLET,
     to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
     memo: null,
@@ -217,7 +217,7 @@ describe(`transaction summaries`, () => {
 
     expect(portalSimpleTransaction).toEqual({
       amount: 32903572,
-      currency: getCurrencyByName("WSOL").id,
+      currency: getCurrencyBySymbol("WSOL").mintAddress,
       date: 1673260796000,
       direction: Direction.swapped,
       from: MIKES_WALLET,
@@ -226,7 +226,7 @@ describe(`transaction summaries`, () => {
       networkFee: 5000,
       receipt: null,
       swapAmount: 2000000000,
-      swapCurrency: getCurrencyByName("SOL").id,
+      swapCurrency: getCurrencyBySymbol("SOL").mintAddress,
       status: true,
       to: MIKES_WALLET,
     });
@@ -251,7 +251,7 @@ describe(`transaction summaries`, () => {
       networkFee: 5000,
       direction: 0,
       amount: 5000000,
-      currency: getCurrencyByName("USDC").id,
+      currency: getCurrencyBySymbol("USDC").mintAddress,
       from: MIKES_WALLET,
       to: GREGS_WALLET,
       memo: "Hey Greg! 🙋🏻‍♂️",
@@ -278,7 +278,7 @@ describe(`transaction summaries`, () => {
       networkFee: 5000,
       direction: 1,
       amount: 5000000,
-      currency: getCurrencyByName("USDC").id,
+      currency: getCurrencyBySymbol("USDC").mintAddress,
       from: MIKES_WALLET,
       to: GREGS_WALLET,
       memo: "Hey Greg! 🙋🏻‍♂️",
@@ -301,7 +301,7 @@ describe(`transaction summaries`, () => {
     expect(portalSimpleTransaction).toEqual({
       id: "4gknQh12svZHqrZN9sKCHetaP87TbPns6pd83jknZPA3vEjN7jQ53sA3xpVs7ZH2oeCKnjrgHDqVMMxf3vBMoTwz",
       amount: 1000000,
-      currency: getCurrencyByName("USDH").id,
+      currency: getCurrencyBySymbol("USDH").mintAddress,
       date: 1667306128000,
       direction: 1,
       from: "BfkRD3gGQGLjHxUw7oqhizkaxrDrw7itHT98f9j2gh6t",
@@ -322,7 +322,7 @@ describe(`transaction summaries`, () => {
     const fakeUSDCTokenAccount = rawTransaction.meta.preTokenBalances[0].mint;
     const fakeMintToCurrencyMap = {
       [fakeUSDCTokenAccount]: {
-        id: getCurrencyByName("USDC").id,
+        id: getCurrencyBySymbol("USDC").mintAddress,
         name: "USDC local testing",
         decimals: 6,
       },
@@ -350,7 +350,7 @@ describe(`transaction summaries`, () => {
       networkFee: 5000,
       direction: Direction.sent,
       amount: 50,
-      currency: getCurrencyByName("USDC").id,
+      currency: getCurrencyBySymbol("USDC").mintAddress,
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
       memo: null,
@@ -381,7 +381,7 @@ describe(`transaction summaries`, () => {
       networkFee: 5000,
       direction: Direction.sent,
       amount: 50,
-      currency: getCurrencyByName("USDC").id,
+      currency: getCurrencyBySymbol("USDC").mintAddress,
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
       memo: null,
@@ -413,7 +413,7 @@ describe(`transaction summaries`, () => {
       networkFee: 5000,
       direction: Direction.recieved,
       amount: 50,
-      currency: getCurrencyByName("USDC").id,
+      currency: getCurrencyBySymbol("USDC").mintAddress,
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
       memo: null,
@@ -445,7 +445,7 @@ describe(`transaction summaries`, () => {
     expect(portalSimpleTransaction).toEqual({
       id: "5KKQASDKTxoViRWYzN7Rf8X9n3wiiNVztpgpNG1oyyZbkNiai1JVcD4rAV2XYzFPgRP4dXQv7A3Bku68UT4j2FZk",
       amount: 30000000,
-      currency: getCurrencyByName("SOL").id,
+      currency: getCurrencyBySymbol("SOL").mintAddress,
       date: 1662733089000,
       direction: 0,
       from: MIKES_WALLET,
@@ -466,7 +466,7 @@ describe(`grouping transactions`, () => {
       transactionSummaries,
       contacts,
       EMPTY,
-      getCurrencyByName("USDC").decimals
+      getCurrencyBySymbol("USDC").decimals
     );
 
     expect(transactionsByDays).toEqual([
@@ -482,7 +482,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 1000000,
-            currency: getCurrencyByName("USDC").id,
+            currency: getCurrencyBySymbol("USDC").mintAddress,
             from: MIKES_WALLET,
             to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
             memo: null,
@@ -504,7 +504,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 500000,
-            currency: getCurrencyByName("USDC").id,
+            currency: getCurrencyBySymbol("USDC").mintAddress,
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
@@ -514,7 +514,7 @@ describe(`grouping transactions`, () => {
           },
           {
             amount: 30000000,
-            currency: getCurrencyByName("SOL").id,
+            currency: getCurrencyBySymbol("SOL").mintAddress,
             date: 1662733089000,
             direction: 0,
             from: MIKES_WALLET,
@@ -541,7 +541,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 70000,
-            currency: getCurrencyByName("USDC").id,
+            currency: getCurrencyBySymbol("USDC").mintAddress,
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
@@ -556,7 +556,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 210000,
-            currency: getCurrencyByName("USDC").id,
+            currency: getCurrencyBySymbol("USDC").mintAddress,
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
@@ -571,7 +571,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 230000,
-            currency: getCurrencyByName("USDC").id,
+            currency: getCurrencyBySymbol("USDC").mintAddress,
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
@@ -586,7 +586,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 210000,
-            currency: getCurrencyByName("USDC").id,
+            currency: getCurrencyBySymbol("USDC").mintAddress,
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
@@ -601,7 +601,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 70000,
-            currency: getCurrencyByName("USDC").id,
+            currency: getCurrencyBySymbol("USDC").mintAddress,
             from: MIKES_WALLET,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
             memo: null,
@@ -623,7 +623,7 @@ describe(`grouping transactions`, () => {
         networkFee: 5000,
         direction: 0,
         amount: 1000000,
-        currency: getCurrencyByName("USDC").id,
+        currency: getCurrencyBySymbol("USDC").mintAddress,
         from: MIKES_WALLET,
         to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
         memo: null,
@@ -637,7 +637,7 @@ describe(`grouping transactions`, () => {
       transactionSummariesSmall,
       contacts,
       MIKES_WALLET,
-      getCurrencyByName("USDC").decimals
+      getCurrencyBySymbol("USDC").decimals
     );
 
     expect(transactionsByDays).toEqual([
@@ -653,7 +653,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 1000000,
-            currency: getCurrencyByName("USDC").id,
+            currency: getCurrencyBySymbol("USDC").mintAddress,
             from: MIKES_WALLET,
             to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
             memo: null,
@@ -675,7 +675,7 @@ describe(`grouping transactions`, () => {
         networkFee: 5000,
         direction: 0,
         amount: 1000000,
-        currency: getCurrencyByName("USDC").id,
+        currency: getCurrencyBySymbol("USDC").mintAddress,
         from: MIKES_WALLET,
         to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
         memo: null,
@@ -689,7 +689,7 @@ describe(`grouping transactions`, () => {
       transactionSummariesSmall,
       contacts,
       "jared",
-      getCurrencyByName("USDC").decimals
+      getCurrencyBySymbol("USDC").decimals
     );
 
     expect(transactionsByDays).toEqual([
@@ -705,7 +705,7 @@ describe(`grouping transactions`, () => {
             networkFee: 5000,
             direction: 0,
             amount: 1000000,
-            currency: getCurrencyByName("USDC").id,
+            currency: getCurrencyBySymbol("USDC").mintAddress,
             from: MIKES_WALLET,
             to: "Adyu2gX2zmLmHbgAoiXe2n4egp6x8PS7EFAqcFvhqahz",
             memo: null,
@@ -730,7 +730,7 @@ describe(`memos and notes`, () => {
     );
     expect(summary).toEqual({
       amount: 210000,
-      currency: getCurrencyByName("USDC").id,
+      currency: getCurrencyBySymbol("USDC").mintAddress,
       date: 1665683493000,
       direction: 0,
       from: MIKES_WALLET,
@@ -763,7 +763,7 @@ describe(`memos and notes`, () => {
 
     expect(portalSimpleTransaction).toEqual({
       amount: 100000000,
-      currency: getCurrencyByName("SOL").id,
+      currency: getCurrencyBySymbol("SOL").mintAddress,
       date: 1665584732000,
       direction: 1,
       from: "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",

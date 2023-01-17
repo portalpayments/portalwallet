@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getFormattedMajorUnits, getFormattedMinorUnits } from "../../utils";
   import USDClogo from "../../../assets/Icons/usdc.svg";
-  import { Direction, type SimpleTransaction } from "../../../lib/types";
+  import { Direction, type SimpleTransaction } from "../../../backend/types";
 
   export let transactions: Array<SimpleTransaction>;
 </script>

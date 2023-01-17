@@ -29,7 +29,7 @@ import {
   VAHEHS_WALLET,
   MIKES_USDC_ACCOUNT,
   MINUTE,
-  getCurrencyByName,
+  getCurrencyBySymbol,
   USDC_MAINNET_MINT_ACCOUNT,
 } from "./constants";
 import {
@@ -40,7 +40,7 @@ import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
 import { getTransactionSummariesForAddress } from "./vmwallet";
 import { log, stringify } from "./functions";
-import { Currency, Direction } from "../lib/types";
+import { Currency, Direction } from "../backend/types";
 import { getABetterErrorMessage } from "./errors";
 import { createMintAccount } from "./tokens";
 
@@ -59,7 +59,7 @@ describe(`basic wallet functionality on local validator`, () => {
   });
 
   test(`getCurrencyByName works`, () => {
-    expect(getCurrencyByName("USDC")).toMatchObject({
+    expect(getCurrencyBySymbol("USDC")).toMatchObject({
       decimals: 6,
       id: USDC_MAINNET_MINT_ACCOUNT,
       name: "USDC",
@@ -105,7 +105,7 @@ describe(`basic wallet functionality on local validator`, () => {
         connection,
         testUSDCAuthority,
         testUSDCAuthority.publicKey,
-        getCurrencyByName("USDC").decimals
+        getCurrencyBySymbol("USDC").decimals
       )
     ).rejects.toThrow(
       "failed to send transaction: Transaction simulation failed: Attempt to debit an account but found no record of a prior credit."

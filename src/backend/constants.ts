@@ -1,6 +1,7 @@
 import { clusterApiUrl, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { BN as BigNumber } from "bn.js";
-import type { Currency, CurrencyDetails } from "../lib/types";
+import type { Currency, CurrencyDetails } from "../backend/types";
+import { mintToCurrencyMap } from "./mint-to-currency-map";
 
 export const IDENTITY_TOKEN_NAME = "Portal Identity Token";
 
@@ -121,39 +122,11 @@ export const NOT_FOUND = -1;
 
 export const EMPTY = "";
 
-export const mintToCurrencyMap: Record<string, CurrencyDetails> = {
-  [USDC_MAINNET_MINT_ACCOUNT]: {
-    id: USDC_MAINNET_MINT_ACCOUNT,
-    name: "USDC",
-    decimals: 6,
-  },
-  [USDH_MAINNET_MINT_ACCOUNT]: {
-    id: USDH_MAINNET_MINT_ACCOUNT,
-    name: "USDH",
-    decimals: 6,
-  },
-  [USDT_MAINNET_MINT_ACCOUNT]: {
-    id: USDT_MAINNET_MINT_ACCOUNT,
-    name: "USDT",
-    decimals: 6,
-  },
-  [WRAPPED_SOL_MAINNET_MINT_ACCOUNT]: {
-    id: WRAPPED_SOL_MAINNET_MINT_ACCOUNT,
-    name: "WSOL",
-    decimals: 9,
-  },
-  ["native"]: {
-    id: "native",
-    name: "SOL",
-    decimals: 9,
-  },
-};
-
-export const getCurrencyByName = (name: string) => {
+export const getCurrencyBySymbol = (name: string) => {
   return (
     Object.values(mintToCurrencyMap).find(
       (currencyDetails: CurrencyDetails) => {
-        return currencyDetails.name === name;
+        return currencyDetails.symbol === name;
       }
     ) || null
   );
@@ -167,9 +140,9 @@ export const getCurrencyByMint = (mint: string) => {
   return mintToCurrencyMap[mint];
 };
 
-export const getCurrencyNameByMint = (mint: string) => {
+export const getCurrencySymbolByMint = (mint: string) => {
   const currency = getCurrencyByMint(mint);
-  return currency.name;
+  return currency.symbol;
 };
 
 // Older were minted with test storage URLs, timed out, etc.

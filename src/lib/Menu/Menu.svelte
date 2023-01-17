@@ -6,7 +6,7 @@
     nativeAccountStore,
     tokenAccountsStore,
   } from "../stores";
-  import type { AccountSummary } from "../../lib/types";
+  import type { AccountSummary } from "../../backend/types";
   import closeIconURL from "../../assets/Icons/close.svg";
   import settingsIconURL from "../../assets/Icons/settings-grey.svg";
   import type { Contact as ContactType } from "../types";

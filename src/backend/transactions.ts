@@ -17,12 +17,12 @@ import {
   type ReceiptSummary,
   type TransactionsByDay,
   type SimpleTransaction,
-} from "../lib/types";
+} from "../backend/types";
+import { mintToCurrencyMap } from "../backend/mint-to-currency-map";
 import {
-  getCurrencyByName,
+  getCurrencyBySymbol,
   JUPITER,
   MEMO_PROGRAM,
-  mintToCurrencyMap,
   NOTE_PROGRAM,
   NOT_FOUND,
   ORCA_WHIRLPOOL_MAINNET_ACCOUNT,
@@ -210,7 +210,7 @@ export const summarizeTransaction = async (
         networkFee,
         direction,
         amount: onlyInstruction.parsed.info.lamports,
-        currency: getCurrencyByName("SOL").id,
+        currency: getCurrencyBySymbol("SOL").mintAddress,
         from: onlyInstruction.parsed.info.source,
         to: onlyInstruction.parsed.info.destination,
         memo,
@@ -239,7 +239,7 @@ export const summarizeTransaction = async (
       throw new Error(`Unknown currency for mint '${mintAccount}'`);
     }
 
-    const currencyId = currencyDetails.id;
+    const currencyId = currencyDetails.mintAddress;
 
     let isSwap = false;
     let swapAmount: number | null = null;
@@ -273,7 +273,7 @@ export const summarizeTransaction = async (
 
         // TODO: we're currently setting currency statically
         // fix, this is a bit embarassing
-        swapCurrency = getCurrencyByName("SOL").id;
+        swapCurrency = getCurrencyBySymbol("SOL").mintAddress;
 
         isSwap = true;
       }

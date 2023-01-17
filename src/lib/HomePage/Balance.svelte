@@ -1,9 +1,8 @@
 <script lang="ts">
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
   import { log, stringify } from "../../backend/functions";
-  import { getCurrencyNameByMint } from "../../backend/constants";
-  import { get as getFromStore } from "svelte/store";
-  import type { AccountSummary } from "../../lib/types";
+  import { getCurrencySymbolByMint } from "../../backend/constants";
+  import type { AccountSummary } from "../../backend/types";
   import SkeletonBalance from "../Shared/Skeletons/SkeletonBalance.svelte";
   import { CURRENCY_ICONS } from "../constants";
 
@@ -15,7 +14,7 @@
 
   let majorAndMinor: Array<string | null> = [null, null];
 
-  let currencyName: string = null;
+  let currencySymbol: string = null;
 
   let activeAccount: AccountSummary | null;
   $: activeAccount = null;
@@ -43,7 +42,7 @@
       newValue.balance,
       newValue.decimals
     );
-    currencyName = getCurrencyNameByMint(newValue.currency);
+    currencySymbol = getCurrencySymbolByMint(newValue.currency);
     haveAccountsLoaded = true;
     activeAccount = newValue;
   });
@@ -58,9 +57,9 @@
     <div class="symbol-major-minor">
       <img
         class="symbol"
-        alt="{currencyName} logo"
+        alt="{currencySymbol} logo"
         src={activeAccount
-          ? CURRENCY_ICONS[currencyName]["grey"]
+          ? CURRENCY_ICONS[currencySymbol]["grey"]
           : CURRENCY_ICONS.USDC.grey}
       />
       <div class="major">{majorAndMinor[0]}</div>

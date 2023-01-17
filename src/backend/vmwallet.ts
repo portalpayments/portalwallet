@@ -7,13 +7,13 @@ import {
 import type { ParsedTransactionWithMeta } from "@solana/web3.js";
 
 import { log, sleep, stringify } from "./functions";
+import { mintToCurrencyMap } from "./mint-to-currency-map";
 import {
   LATEST_IDENTITY_TOKEN_VERSION,
   URLS,
   SECOND,
-  mintToCurrencyMap,
   SOLANA_DECIMALS,
-  getCurrencyByName,
+  getCurrencyBySymbol,
 } from "./constants";
 import { asyncMap } from "./functions";
 import base58 from "bs58";
@@ -25,8 +25,12 @@ import { summarizeTransaction } from "./transactions";
 import { toUniqueStringArray } from "../lib/utils";
 import * as http from "../lib/http-client";
 import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../lib/constants";
-import { Direction, type Contact, type SimpleTransaction } from "../lib/types";
-import type { AccountSummary } from "../lib/types";
+import {
+  Direction,
+  type Contact,
+  type SimpleTransaction,
+} from "../backend/types";
+import type { AccountSummary } from "../backend/types";
 import { identityTokenIssuerPublicKey } from "../lib/stores";
 
 const VERIFIED_CLAIMS_BY_ADDRESS: Record<string, VerifiedClaims> = {};
@@ -306,7 +310,7 @@ export const getTokenAccountSummaries = async (
         return null;
       }
 
-      const currencyName = currencyInfo.name;
+      const currencyName = currencyInfo.symbol;
       log(`Getting transactions for ${currencyName} account`);
       const transactionSummaries = await getTransactionSummariesForAddress(
         connection,
@@ -317,7 +321,7 @@ export const getTokenAccountSummaries = async (
       );
       const accountSummary: AccountSummary = {
         address: tokenAccount.address,
-        currency: currencyInfo.id,
+        currency: currencyInfo.mintAddress,
         // TODO - converting BigInt to Number may be sketchy
         balance: Number(tokenAccount.amount),
         decimals: currencyInfo.decimals,
@@ -352,7 +356,7 @@ export const getNativeAccountSummary = async (
   }
   const accountSummary: AccountSummary = {
     address: keyPair.publicKey,
-    currency: getCurrencyByName("SOL").id,
+    currency: getCurrencyBySymbol("SOL").mintAddress,
     balance: accountBalance,
     decimals: SOLANA_DECIMALS,
     transactionSummaries,

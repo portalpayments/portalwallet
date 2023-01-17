@@ -12,7 +12,7 @@
   import { Router, Route } from "svelte-navigator";
   import { connect, verifyWallet } from "./backend/vmwallet";
   import { log } from "./backend/functions";
-  import type { Contact as ContactType } from "./lib/types";
+  import type { Contact as ContactType } from "./backend/types";
   import Lock from "./lib/Lock/Lock.svelte";
   import Contact from "./lib/Contacts/Contact/ContactAndTransactions.svelte";
   import {

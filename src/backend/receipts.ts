@@ -22,7 +22,7 @@ const RECEIPT_DELAY = 15 * SECONDS;
 import { log, stringify } from "./functions";
 import * as http from "../lib/http-client";
 import type { RawDecafReceipt } from "./types";
-import type { ReceiptSummary, SimpleTransaction } from "src/lib/types";
+import type { ReceiptSummary, SimpleTransaction } from "src/backend/types";
 import { receiptHTMLToObject } from "./html-extract";
 
 const memoRegex = /[A-Za-z0-9]{20}/;
