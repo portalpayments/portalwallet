@@ -52,11 +52,13 @@
 
   <div class="accounts">
     {#each tokenAccounts as tokenAccount, index}
-      <!-- TODO: store active account index and use it to mark one of these as active -->
-      <MenuBalance
-        account={tokenAccount}
-        changeAccount={() => changeAccount(index)}
-      />
+      {#if tokenAccount.balance !== 0}
+        <!-- TODO: store active account index and use it to mark one of these as active -->
+        <MenuBalance
+          account={tokenAccount}
+          changeAccount={() => changeAccount(index)}
+        />
+      {/if}
     {/each}
 
     <!-- TODO: store active account index and use it to mark one of these as active -->
