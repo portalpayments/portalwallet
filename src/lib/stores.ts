@@ -55,7 +55,9 @@ const updateCollectables = async () => {
     async (nft) => {
       const data = await http.get(nft.uri);
       const firstFile = data?.properties?.files?.[0];
-      const image = firstFile?.uri || null;
+      // Sometimes 'files' is an empty list, but 'image' still exists
+      // See https://crossmint.myfilebase.com/ipfs/bafkreig5nuz3qswtnipclnhdw4kbdn5s6fpujtivyt4jf3diqm4ivpmv5u
+      const image = firstFile?.uri || data.image || null;
       const type = firstFile?.type || null;
       return {
         name: data.name,
