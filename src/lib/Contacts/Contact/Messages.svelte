@@ -38,33 +38,27 @@
   });
 </script>
 
-<div class="history-container">
-  <div class="transaction-history">
-    {#each transactionsAndMessagesByDays.reverse() as transactionsAndMessagesByDay}
-      <div class="day">{transactionsAndMessagesByDay.isoDate}</div>
-      {#each transactionsAndMessagesByDay.transactionsAndMessages as transactionOrMessage}
-        <ChatTransaction {transactionOrMessage} />
-      {/each}
+<div class="transaction-history">
+  {#each transactionsAndMessagesByDays.reverse() as transactionsAndMessagesByDay}
+    <div class="day">{transactionsAndMessagesByDay.isoDate}</div>
+    {#each transactionsAndMessagesByDay.transactionsAndMessages as transactionOrMessage}
+      <ChatTransaction {transactionOrMessage} />
     {/each}
-  </div>
+  {/each}
 </div>
 
 <style lang="scss">
   @import "../../../mixins.scss";
 
-  /* TODO cannot scroll */
-  .history-container {
-    overflow-y: scroll;
-  }
   .transaction-history {
+    overflow-y: scroll;
+    // cool kids
+
+    scroll-snap-type: y proximity;
     gap: 8px;
     color: white;
     font-size: 40px;
     font-weight: 600;
-
-    // cool kids
-
-    scroll-snap-type: y proximity;
   }
 
   .day {
