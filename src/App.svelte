@@ -8,13 +8,12 @@
   import AddMoneyPage from "./lib/AddMoney/AddMoneyPage.svelte";
   import TransactionsPage from "./lib/TransactionsPage/TransactionsPage.svelte";
   import Settings from "./lib/Settings/Settings.svelte";
-  import { Keypair } from "@solana/web3.js";
   import { Router, Route } from "svelte-navigator";
   import { connect, verifyWallet } from "./backend/vmwallet";
   import { log } from "./backend/functions";
   import type { Contact as ContactType } from "./backend/types";
   import Lock from "./lib/Lock/Lock.svelte";
-  import Contact from "./lib/Contacts/Contact/ContactAndTransactions.svelte";
+  import ContactAndMessages from "./lib/Contacts/Contact/ContactAndMessages.svelte";
   import {
     connectionStore,
     authStore,
@@ -83,7 +82,7 @@
         <TransactionsPage />
       </Route>
       <Route path="settings"><Settings /></Route>
-      <Route path="contacts/:address"><Contact /></Route>
+      <Route path="contacts/:address"><ContactAndMessages /></Route>
       <Route primary={false}>
         <div class="header-and-features">
           {#if currentFeature === 0}

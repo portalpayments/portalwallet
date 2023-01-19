@@ -195,8 +195,8 @@
   }
 
   .memo {
-    font-size: 14px;
-    line-height: 18px;
+    font-size: 11px;
+    line-height: 14px;
     /* Solana pay writes long unreadable memos */
     overflow: hidden;
   }

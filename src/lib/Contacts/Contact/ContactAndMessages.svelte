@@ -1,8 +1,11 @@
 <script lang="ts">
-  import Transactions from "./Transactions.svelte";
+  import Messages from "./Messages.svelte";
   import { tokenAccountsStore, contactsStore } from "../../stores";
   import { log, stringify } from "../../../backend/functions";
-  import type { Contact as ContactType, SimpleTransaction } from "../../types";
+  import type {
+    Contact as ContactType,
+    SimpleTransaction,
+  } from "../../../backend/types";
   import SendToContact from "./SendToContact.svelte";
   import Contact from "../../Shared/Contact.svelte";
   import BackButton from "../../Shared/BackButton.svelte";
@@ -26,23 +29,25 @@
 
   log(`Loading send to contact screen for ${contactWalletAddress}`);
 
-  let filteredTransactions: Array<SimpleTransaction> = [];
+  let transactionsForContact: Array<SimpleTransaction> = [];
 
   tokenAccountsStore.subscribe((newValue) => {
     // Filter our transactions to just the ones from this single contact
-    filteredTransactions = newValue
-      .map((account) => {
-        return account.transactionSummaries.filter((transaction) => {
-          if (
-            transaction.from === contactWalletAddress ||
-            transaction.to === contactWalletAddress
-          ) {
-            return true;
-          }
-          return false;
-        });
-      })
-      .flat();
+    if (newValue) {
+      transactionsForContact = newValue
+        .map((account) => {
+          return account.transactionSummaries.filter((transaction) => {
+            if (
+              transaction.from === contactWalletAddress ||
+              transaction.to === contactWalletAddress
+            ) {
+              return true;
+            }
+            return false;
+          });
+        })
+        .flat();
+    }
   });
 </script>
 
@@ -52,7 +57,7 @@
       <BackButton />
       <Contact {contact} />
     </div>
-    <Transactions transactions={filteredTransactions} />
+    <Messages transactions={transactionsForContact} />
     <SendToContact {contact} />
   {:else}
     Loading contact
