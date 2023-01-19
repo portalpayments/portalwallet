@@ -6,7 +6,6 @@
   } from "../../utils";
   import { log, stringify } from "../../../backend/functions";
   import { getCurrencyByMint } from "../../../backend/constants";
-  import USDClogo from "../../../assets/Icons/usdc.svg";
   import { Direction, type SimpleTransaction } from "../../../backend/types";
 
   export let transaction: SimpleTransaction;
@@ -28,9 +27,9 @@
 >
   <textarea class="debug">{stringify(transaction)}</textarea>
   <img
-    src={USDClogo}
-    class={transaction.direction === Direction.recieved ? "" : "white-usdc"}
-    alt="USDC logo"
+    src={currency.logo}
+    class={transaction.direction === Direction.recieved ? "" : "white-logo"}
+    alt="{currency.symbol} logo"
   />
   <div class="amount">
     <span class="major">{major}</span>.<span class="minor">{minor}</span>
@@ -43,7 +42,7 @@
   }
 
   /* Make a white version of the icon so it looks good against a blue background */
-  .white-usdc {
+  .white-logo {
     filter: brightness(0) invert(1);
   }
 
