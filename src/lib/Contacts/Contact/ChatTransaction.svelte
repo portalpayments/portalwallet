@@ -10,8 +10,6 @@
 
   export let transaction: SimpleTransaction;
 
-  log(stringify(transaction));
-
   const currency = getCurrencyByMint(transaction.currency);
 
   const [major, minor] = amountAndDecimalsToMajorAndMinor(
