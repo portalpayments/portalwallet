@@ -1,5 +1,12 @@
 @import "./mixins.scss";
 
+// From https://rsms.me/inter/
+@supports (font-variation-settings: normal) {
+  :root { 
+    font-family: 'Inter var', Avenir, Helvetica, Arial, sans-serif; 
+  }
+}
+
 :root {
   --wallet-height: 600px;
   --wallet-width: 300px;
