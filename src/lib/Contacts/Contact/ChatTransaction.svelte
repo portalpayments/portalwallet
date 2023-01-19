@@ -6,50 +6,72 @@
   } from "../../utils";
   import { log, stringify } from "../../../backend/functions";
   import { getCurrencyByMint } from "../../../backend/constants";
-  import { Direction, type SimpleTransaction } from "../../../backend/types";
+  import {
+    Direction,
+    type SimpleTransaction,
+    type SimpleWalletMessage,
+  } from "../../../backend/types";
 
-  export let transaction: SimpleTransaction;
+  export let transactionOrMessage: SimpleTransaction | SimpleWalletMessage;
 
-  const currency = getCurrencyByMint(transaction.currency);
+  let isTransactionOrMessage: string;
 
-  const [major, minor] = amountAndDecimalsToMajorAndMinor(
-    transaction.amount,
-    currency.decimals
-  );
+  let currency;
+  let major;
+  let minor;
+
+  if (transactionOrMessage.id.startsWith("dialect")) {
+    isTransactionOrMessage = "message";
+    const message = transactionOrMessage as SimpleWalletMessage;
+  } else {
+    isTransactionOrMessage = "transaction";
+    const transaction = transactionOrMessage as SimpleTransaction;
+    currency = getCurrencyByMint(transaction.currency);
+
+    [major, minor] = amountAndDecimalsToMajorAndMinor(
+      transaction.amount,
+      currency.decimals
+    );
+  }
 </script>
 
 <div
-  class="transaction {transaction.direction === Direction.recieved
+  class="transaction-or-message {transactionOrMessage.direction ===
+  Direction.recieved
     ? 'received'
     : 'sent'}"
 >
-  <textarea class="debug">{stringify(transaction)}</textarea>
-  <div class="logo-and-amount">
-    <img
-      src={currency.logo}
-      class={transaction.direction === Direction.recieved ? "" : "white-logo"}
-      alt="{currency.symbol} logo"
-    />
-    <div class="amount">
-      <span class="major">{major}</span>.<span class="minor">{minor}</span>
+  <textarea class="debug">{stringify(transactionOrMessage)}</textarea>
+  {#if isTransactionOrMessage === "transaction"}
+    <div class="logo-and-amount">
+      <img
+        src={currency.logo}
+        class="icon {transactionOrMessage.direction === Direction.recieved
+          ? ''
+          : 'white-logo'}"
+        alt="{currency.symbol} logo"
+      />
+      <div class="amount">
+        <span class="major">{major}</span>.<span class="minor">{minor}</span>
+      </div>
     </div>
-  </div>
-  <div class="memo">{transaction.memo}</div>
+  {/if}
+  <div class="memo">{transactionOrMessage.memo}</div>
 </div>
 
 <style lang="scss">
   @import "../../../mixins.scss";
 
-  img {
+  img.icon {
     width: 36px;
   }
 
   /* Make a white version of the icon so it looks good against a blue background */
-  .white-logo {
+  img .icon .white {
     filter: brightness(0) invert(1);
   }
 
-  .transaction {
+  .transaction-or-message {
     padding: 12px 24px;
     border-radius: 27px;
     align-items: center;
@@ -57,6 +79,7 @@
     display: grid;
     justify-content: center;
     grid-auto-flow: row;
+    max-width: 200px;
   }
   .received {
     position: relative;

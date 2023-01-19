@@ -19,8 +19,8 @@
 
   let contact: ContactType | null = null;
 
-  let transactions: Array<SimpleTransaction> = [];
-  let messages: Array<SimpleWalletMessage> = [];
+  let transactionsAndMessages: Array<SimpleTransaction | SimpleWalletMessage> =
+    [];
 
   let thread: Thread | null;
   $: thread = null;
@@ -39,16 +39,24 @@
       log(`Pulling dialect messages....`);
       thread = await getOrMakeThread(keyPair, walletAddress);
       const rawMessages = await thread.messages();
-      messages = rawMessages.map((rawMessage) => {
-        return {
-          timestamp: new Date(rawMessage.timestamp).valueOf(),
-          memo: rawMessage.text,
-          direction:
-            rawMessage.author.address === keyPair.publicKey.toBase58()
-              ? Direction.sent
-              : Direction.recieved,
-        };
-      });
+      const messages: Array<SimpleWalletMessage> = rawMessages.map(
+        (rawMessage) => {
+          return {
+            id: `dialect-${rawMessage.deduplicationId}`,
+            date: new Date(rawMessage.timestamp).valueOf(),
+            memo: rawMessage.text,
+            direction:
+              rawMessage.author.address === keyPair.publicKey.toBase58()
+                ? Direction.sent
+                : Direction.recieved,
+            isDialectMessage: true,
+          };
+        }
+      );
+      // Join the array with existing values and ensure all values are unique
+      transactionsAndMessages = [
+        ...new Set(transactionsAndMessages.concat(messages)),
+      ];
     };
     // Do this every interval
     setInterval(async () => {
@@ -79,7 +87,7 @@
   tokenAccountsStore.subscribe((newValue) => {
     // Filter our transactions to just the ones from this single contact
     if (newValue) {
-      transactions = newValue
+      const transactions = newValue
         .map((account) => {
           return account.transactionSummaries.filter((transaction) => {
             if (
@@ -92,6 +100,10 @@
           });
         })
         .flat();
+      // Join the array with existing values and ensure all values are unique
+      transactionsAndMessages = [
+        ...new Set(transactionsAndMessages.concat(transactions)),
+      ];
     }
   });
 </script>
@@ -102,7 +114,7 @@
       <BackButton />
       <Contact {contact} />
     </div>
-    <Messages {transactions} {messages} />
+    <Messages {transactionsAndMessages} />
     {#if thread}
       <SendToContact {thread} />
     {/if}

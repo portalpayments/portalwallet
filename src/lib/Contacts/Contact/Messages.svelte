@@ -4,35 +4,54 @@
     SimpleWalletMessage,
   } from "../../../backend/types";
   import ChatTransaction from "./ChatTransaction.svelte";
-  import WalletMessage from "./WalletMessage.svelte";
-  import type { Thread, ThreadMessage } from "@dialectlabs/sdk";
-  import { log, stringify } from "../../../backend/functions";
+  import {
+    log,
+    stringify,
+    dateToISODate,
+    byDateNewestToOldest,
+  } from "../../../backend/functions";
 
-  export let transactions: Array<SimpleTransaction>;
-  export let messages: Array<SimpleWalletMessage>;
+  export let transactionsAndMessages: Array<
+    SimpleTransaction | SimpleWalletMessage
+  >;
 
-  const main = async () => {
-    log(`About to get new messages`);
+  let transactionsAndMessagesByDays: Array<{
+    isoDate: string;
+    transactionsAndMessages: Array<SimpleTransaction | SimpleWalletMessage>;
+  }> = [];
 
-    log(`There are ${messages.length} messages`);
-  };
+  transactionsAndMessages.sort(byDateNewestToOldest);
 
-  main();
+  transactionsAndMessages.forEach((transactionOrMessage) => {
+    const isoDate = dateToISODate(transactionOrMessage.date);
+    const lastDay = transactionsAndMessagesByDays.at(-1) || null;
+    if (lastDay?.isoDate === isoDate) {
+      // Add this transaction to the existing entry for this day
+      lastDay.transactionsAndMessages.push(transactionOrMessage);
+    } else {
+      // Create a new item for this day
+      transactionsAndMessagesByDays.push({
+        isoDate,
+        transactionsAndMessages,
+      });
+    }
+  });
 </script>
 
 <div class="history-container">
   <div class="transaction-history">
-    {#each transactions as transaction}
-      <ChatTransaction {transaction} />
+    {#each transactionsAndMessagesByDays.reverse() as transactionsAndMessagesByDay}
+      <div class="day">{transactionsAndMessagesByDay.isoDate}</div>
+      {#each transactionsAndMessagesByDay.transactionsAndMessages as transactionOrMessage}
+        <ChatTransaction {transactionOrMessage} />
+      {/each}
     {/each}
-    {#each messages as message}
-      <WalletMessage {message} />
-    {/each}
-    <p>end of messages</p>
   </div>
 </div>
 
 <style lang="scss">
+  @import "../../../mixins.scss";
+
   /* TODO cannot scroll */
   .history-container {
     overflow-y: scroll;
@@ -46,5 +65,11 @@
     // cool kids
 
     scroll-snap-type: y proximity;
+  }
+
+  .day {
+    color: var(--black);
+    font-size: 10px;
+    @include small-caps;
   }
 </style>

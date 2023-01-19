@@ -303,9 +303,11 @@ export interface SimpleTransaction {
 }
 
 export interface SimpleWalletMessage {
-  timestamp: number;
+  id: string;
+  date: number;
   memo: string | null;
   direction: Direction;
+  isDialectMessage: true;
 }
 
 export interface TransactionsByDay {
