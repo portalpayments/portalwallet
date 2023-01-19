@@ -8,7 +8,12 @@ import { stringify, log } from "./functions";
 import { mikesKeypair } from "./get-mikes-keypair";
 import { ThreadMemberScope } from "@dialectlabs/sdk";
 import { rawReceipt } from "./test-data/transactions/receipt";
-import { getMintAddressBySymbol, MIKES_WALLET, SECONDS } from "./constants";
+import {
+  DECAF_APP,
+  getMintAddressBySymbol,
+  MIKES_WALLET,
+  SECONDS,
+} from "./constants";
 
 jest.mock("./functions");
 jest.mock("./html-extract");
@@ -27,7 +32,7 @@ describe(`dialect`, () => {
 
       expect(receiptMessage).toEqual({
         author: {
-          address: "dcafKdWLATod3BLRngsqZ7CrQwcrUxrLjFWYJwYP1Fy",
+          address: DECAF_APP,
           scopes: ["ADMIN", "WRITE"],
         },
         timestamp: expect.anything(),
@@ -40,7 +45,7 @@ describe(`dialect`, () => {
   test(`Getting receipts from messages`, async () => {
     const rawReceipt = await getRawReceiptFromMessage({
       author: {
-        address: "dcafKdWLATod3BLRngsqZ7CrQwcrUxrLjFWYJwYP1Fy",
+        address: DECAF_APP,
         scopes: [ThreadMemberScope.ADMIN, ThreadMemberScope.WRITE],
       },
       timestamp: expect.anything(),

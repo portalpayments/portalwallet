@@ -1,4 +1,4 @@
-import { MIKES_WALLET } from "src/backend/constants";
+import { DECAF_APP, MIKES_WALLET } from "src/backend/constants";
 
 export const threads = [
   {
@@ -262,13 +262,13 @@ export const threads = [
     },
     otherMembers: [
       {
-        address: "dcafKdWLATod3BLRngsqZ7CrQwcrUxrLjFWYJwYP1Fy",
+        address: DECAF_APP,
         scopes: ["ADMIN", "WRITE"],
       },
     ],
     otherMembersPks: {
       dcafKdWLATod3BLRngsqZ7CrQwcrUxrLjFWYJwYP1Fy: {
-        address: "dcafKdWLATod3BLRngsqZ7CrQwcrUxrLjFWYJwYP1Fy",
+        address: DECAF_APP,
         scopes: ["ADMIN", "WRITE"],
       },
     },
@@ -279,7 +279,7 @@ export const threads = [
       text: "Thank you for your order! You can find your receipt here: https://www.decaf.so/receipt/XgVU1qK4i4zXKanjHZpr",
       timestamp: "2022-11-05T20:10:08.957Z",
       author: {
-        address: "dcafKdWLATod3BLRngsqZ7CrQwcrUxrLjFWYJwYP1Fy",
+        address: DECAF_APP,
         scopes: ["ADMIN", "WRITE"],
       },
     },

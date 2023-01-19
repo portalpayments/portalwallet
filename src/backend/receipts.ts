@@ -15,7 +15,7 @@ import {
   type Solana,
 } from "@dialectlabs/blockchain-sdk-solana";
 import type { Keypair } from "@solana/web3.js";
-import { MINUTE, SECONDS } from "./constants";
+import { DECAF_APP, MINUTE, SECONDS } from "./constants";
 
 const RECEIPT_DELAY = 15 * SECONDS;
 
@@ -26,8 +26,6 @@ import type { ReceiptSummary, SimpleTransaction } from "src/backend/types";
 import { receiptHTMLToObject } from "./html-extract";
 
 const memoRegex = /[A-Za-z0-9]{20}/;
-
-const DECAF_POINT_OF_SALE = "dcafKdWLATod3BLRngsqZ7CrQwcrUxrLjFWYJwYP1Fy";
 
 let dialectSDK: DialectSdk<Solana> | null = null;
 
@@ -70,7 +68,7 @@ export const getDecafReceiptMessage = async (
   const dialectSDK = getDialect(keyPair);
 
   const decafThread = await dialectSDK.threads.find({
-    otherMembers: [DECAF_POINT_OF_SALE],
+    otherMembers: [DECAF_APP],
   });
 
   // Fetch for a single thread by its id. N.b. the ThreadId type specifies both the address of the thread *as well as* the specified backend; threads of a given id may exist in any kind of backend. See the ThreadId type.
