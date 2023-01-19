@@ -22,7 +22,7 @@
 
 <FocusContext>
   <Input
-    value={messageOrAmountText}
+    bind:value={messageOrAmountText}
     isAmount={false}
     isFocused={true}
     label="Message..."

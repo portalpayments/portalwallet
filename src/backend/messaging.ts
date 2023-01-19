@@ -103,8 +103,13 @@ export const getOrMakeThread = async (
 };
 
 export async function sendDialectMessage(thread: Thread, text: string) {
+  if (text === "") {
+    // Dialect will throw odd errors if we send blank string
+    throw new Error(`Cannot send empty message`);
+  }
   const command: SendMessageCommand = {
     text,
   };
+  log(`Command is: `, stringify(command));
   await thread.send(command);
 }
