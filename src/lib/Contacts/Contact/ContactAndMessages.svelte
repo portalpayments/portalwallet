@@ -81,11 +81,15 @@
 </div>
 
 <style lang="scss">
+  .heading {
+    justify-content: center;
+  }
   .contact-screen {
     height: var(--wallet-height);
     width: var(--wallet-width);
     display: grid;
     grid-auto-flow: row;
     grid-template-rows: 90px 1fr 48px;
+    padding: 2px;
   }
 </style>

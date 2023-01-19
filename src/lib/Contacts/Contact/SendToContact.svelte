@@ -25,7 +25,7 @@
     value={messageOrAmountText}
     isAmount={false}
     isFocused={true}
-    label="Message or amount"
+    label="Message..."
     onTypingPause={() => {
       log(`User finished typing`);
     }}

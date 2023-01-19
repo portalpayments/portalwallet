@@ -59,19 +59,20 @@
   .received {
     position: relative;
     background-color: var(--light-grey);
-    color: var(--mid-blue);
+    color: var(--black);
     justify-self: start;
   }
 
   /* The little bump on the speech bubbles */
   .received::before {
+    transform: translateY(-13px) translateX(-2px) rotate(155deg);
     content: "";
     position: absolute;
     width: 0;
     height: 0;
     top: 100%;
-    left: 0.6em;
-    border: 0.6rem solid transparent;
+    left: 0;
+    border: 10px solid transparent;
     border-bottom: none;
     border-top-color: var(--light-grey);
   }
@@ -82,15 +83,15 @@
   }
 
   /* The little bump on the speech bubbles */
-
   .sent::before {
+    transform: translateY(-13px) translateX(3px) rotate(65deg);
     content: "";
     position: absolute;
     width: 0;
     height: 0;
     top: 100%;
-    left: 2.1em;
-    border: 0.6rem solid transparent;
+    right: 0;
+    border: 10px solid transparent;
     border-bottom: none;
     border-top-color: var(--mid-blue);
   }

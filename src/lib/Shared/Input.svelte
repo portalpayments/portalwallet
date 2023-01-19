@@ -213,10 +213,12 @@
 
   .floating-label {
     position: absolute;
-    height: 100%;
-    width: 100%;
     display: grid;
-    padding: 0 12px;
+
+    left: 15px;
+    padding: 0;
+    top: 12px;
+
     align-content: center;
 
     text-align: left;
