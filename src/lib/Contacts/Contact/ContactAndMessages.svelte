@@ -4,6 +4,7 @@
   import type { Keypair } from "@solana/web3.js";
   import { get as getFromStore } from "svelte/store";
   import { log, stringify } from "../../../backend/functions";
+  import { SECONDS } from "../../../backend/constants";
   import { getOrMakeThread } from "../../../backend/messaging";
   import type {
     Contact as ContactType,
@@ -21,8 +22,23 @@
   // Use the page address to determine the wallet to use
   let contactWalletAddress: string = window.location.href.split("/").pop();
 
-  const getThread = async (keyPair: Keypair, walletAddress: string) => {
-    thread = await getOrMakeThread(keyPair, walletAddress);
+  // As of 2022 01 19 Chris at Dialect mentions their SDK doesn't have thread subscriptions yet
+  // TODO: replace when Dialect add thread subscriptions
+  const startPolling = async (
+    keyPair: Keypair,
+    walletAddress: string,
+    interval: number
+  ) => {
+    const getThread = async () => {
+      log(`Pulling dialect messages....`);
+      thread = await getOrMakeThread(keyPair, walletAddress);
+    };
+    // Do this every interval
+    setInterval(async () => {
+      await getThread();
+    }, interval);
+    // And also on the 'leading edge', ie now
+    await getThread();
   };
 
   contactsStore.subscribe(async (newValue) => {
@@ -37,7 +53,7 @@
 
       const auth = getFromStore(authStore);
 
-      getThread(auth.keyPair, contact.walletAddress);
+      startPolling(auth.keyPair, contact.walletAddress, 30 * SECONDS);
     }
   });
 
@@ -71,7 +87,7 @@
       <BackButton />
       <Contact {contact} />
     </div>
-    <Messages transactions={transactionsForContact} />
+    <Messages transactions={transactionsForContact} {thread} />
     {#if thread}
       <SendToContact {thread} />
     {/if}
