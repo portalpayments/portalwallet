@@ -10,7 +10,7 @@ import * as http from "../lib/http-client";
 import type { RawDecafReceipt } from "./types";
 import type { ReceiptSummary, SimpleTransaction } from "src/backend/types";
 import { receiptHTMLToObject } from "./html-extract";
-import { getDialect } from "./messaging";
+import { getDialect, getMessagesForUser } from "./messaging";
 
 const memoRegex = /[A-Za-z0-9]{20}/;
 
@@ -31,16 +31,7 @@ export const getDecafReceiptMessage = async (
   keyPair: Keypair,
   transactionDate: number
 ) => {
-  // https://docs.dialect.to/documentation/messaging/typescript/getting-creating-and-deleting-threads
-  // Call the messages() method to read messages
-  const dialectSDK = getDialect(keyPair);
-
-  const decafThread = await dialectSDK.threads.find({
-    otherMembers: [DECAF_APP],
-  });
-
-  // Call the messages() method to read messages
-  const messages = await decafThread.messages();
+  const messages = await getMessagesForUser(keyPair, DECAF_APP);
 
   const receiptMessages = messages.filter((message) => {
     const hasReceipt = message.text.includes("You can find your receipt");

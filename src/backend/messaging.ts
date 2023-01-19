@@ -31,3 +31,18 @@ export const getDialect = (keyPair: Keypair) => {
   );
   return dialectSDK;
 };
+
+export const getMessagesForUser = async (keyPair, walletAddress: string) => {
+  // https://docs.dialect.to/documentation/messaging/typescript/getting-creating-and-deleting-threads
+  // Call the messages() method to read messages
+  const dialectSDK = getDialect(keyPair);
+
+  const decafThread = await dialectSDK.threads.find({
+    otherMembers: [walletAddress],
+  });
+
+  // Call the messages() method to read messages
+  const messages = await decafThread.messages();
+
+  return messages;
+};
