@@ -26,14 +26,17 @@
     : 'sent'}"
 >
   <textarea class="debug">{stringify(transaction)}</textarea>
-  <img
-    src={currency.logo}
-    class={transaction.direction === Direction.recieved ? "" : "white-logo"}
-    alt="{currency.symbol} logo"
-  />
-  <div class="amount">
-    <span class="major">{major}</span>.<span class="minor">{minor}</span>
+  <div class="logo-and-amount">
+    <img
+      src={currency.logo}
+      class={transaction.direction === Direction.recieved ? "" : "white-logo"}
+      alt="{currency.symbol} logo"
+    />
+    <div class="amount">
+      <span class="major">{major}</span>.<span class="minor">{minor}</span>
+    </div>
   </div>
+  <div class="memo">{transaction.memo}</div>
 </div>
 
 <style>
@@ -53,7 +56,7 @@
     gap: 5px;
     display: grid;
     justify-content: center;
-    grid-auto-flow: column;
+    grid-auto-flow: row;
   }
   .received {
     position: relative;
@@ -94,11 +97,28 @@
     border-top-color: var(--mid-blue);
   }
 
-  .amount {
+  .logo-and-amount {
     grid-auto-flow: column;
+    /* icon then rest is amount */
+    grid-template-columns: 32px 1fr;
+  }
+
+  .amount {
+    display: block;
+    /* grid-auto-flow: column;
+    grid-template-columns: repeat(auto-fit); */
+  }
+
+  .amount * {
+    display: inline;
   }
 
   .minor {
     font-size: 24px;
+  }
+
+  .memo {
+    font-size: 11px;
+    line-height: 13px;
   }
 </style>
