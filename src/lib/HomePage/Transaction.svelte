@@ -148,10 +148,6 @@
     gap: 8px;
   }
 
-  .debug {
-    display: none;
-  }
-
   .transaction.with-receipt {
     grid-template-rows: 1fr 24px;
     grid-template-columns: 42px 1fr 64px;

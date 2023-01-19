@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { getFormattedMajorUnits, getFormattedMinorUnits } from "../../utils";
-  import USDClogo from "../../../assets/Icons/usdc.svg";
-  import { Direction, type SimpleTransaction } from "../../../backend/types";
+  import type { SimpleTransaction } from "../../../backend/types";
+  import ChatTransaction from "./ChatTransaction.svelte";
 
   export let transactions: Array<SimpleTransaction>;
 </script>
@@ -9,25 +8,7 @@
 <div class="history-container">
   <div class="transaction-history">
     {#each transactions as transaction}
-      <div
-        class="amount {transaction.direction === Direction.recieved
-          ? 'amount-received'
-          : 'amount-sent'}"
-      >
-        <img
-          src={USDClogo}
-          class={transaction.direction === Direction.recieved
-            ? ""
-            : "white-usdc"}
-          alt="USDC logo"
-        />
-        <div>
-          <span class="major">{getFormattedMajorUnits(transaction.amount)}</span
-          ><span class="minor"
-            >{getFormattedMinorUnits(transaction.amount)}</span
-          >
-        </div>
-      </div>
+      <ChatTransaction {transaction} />
     {/each}
   </div>
 </div>
@@ -56,65 +37,5 @@
     position: absolute;
     overflow: hidden;
     bottom: 0px;
-  }
-  img {
-    width: 36px;
-  }
-
-  /* Make a white version of the icon so it looks good against a blue background */
-  .white-usdc {
-    filter: brightness(0) invert(1);
-  }
-
-  .minor {
-    font-size: 24px;
-  }
-
-  .amount {
-    padding: 12px 24px;
-    border-radius: 27px;
-    align-items: center;
-    gap: 5px;
-    display: grid;
-    justify-content: center;
-    grid-auto-flow: column;
-  }
-  .amount-received {
-    position: relative;
-    background-color: var(--light-grey);
-    color: var(--mid-blue);
-    justify-self: start;
-  }
-
-  /* The little bump on the speech bubbles */
-  .amount-received::before {
-    content: "";
-    position: absolute;
-    width: 0;
-    height: 0;
-    top: 100%;
-    left: 0.6em;
-    border: 0.6rem solid transparent;
-    border-bottom: none;
-    border-top-color: var(--light-grey);
-  }
-  .amount-sent {
-    position: relative;
-    justify-self: end;
-    background-color: var(--mid-blue);
-  }
-
-  /* The little bump on the speech bubbles */
-
-  .amount-sent::before {
-    content: "";
-    position: absolute;
-    width: 0;
-    height: 0;
-    top: 100%;
-    left: 2.1em;
-    border: 0.6rem solid transparent;
-    border-bottom: none;
-    border-top-color: var(--mid-blue);
   }
 </style>
