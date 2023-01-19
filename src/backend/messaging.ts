@@ -37,20 +37,29 @@ export const getDialect = (keyPair: Keypair) => {
   return dialectSDK;
 };
 
+export const getThread = async (keyPair: Keypair, walletAddress: string) => {
+  // https://docs.dialect.to/documentation/messaging/typescript/getting-creating-and-deleting-threads
+  // Call the messages() method to read messages
+  const dialectSDK = getDialect(keyPair);
+
+  const thread = await dialectSDK.threads.find({
+    otherMembers: [walletAddress],
+  });
+
+  return thread;
+};
+
 export const getMessagesForUser = async (
   keyPair: Keypair,
   walletAddress: string
 ) => {
   // https://docs.dialect.to/documentation/messaging/typescript/getting-creating-and-deleting-threads
   // Call the messages() method to read messages
-  const dialectSDK = getDialect(keyPair);
 
-  const decafThread = await dialectSDK.threads.find({
-    otherMembers: [walletAddress],
-  });
+  const thread = await getThread(keyPair, walletAddress);
 
   // Call the messages() method to read messages
-  const messages = await decafThread.messages();
+  const messages = await thread.messages();
 
   return messages;
 };
@@ -75,9 +84,23 @@ export async function makeThread(
     ],
   };
   const thread = await dialectSDK.threads.create(command);
-  console.log({ thread });
   return thread;
 }
+
+export const getOrMakeThread = async (
+  keyPair: Keypair,
+  recipientWalletAddress: string
+) => {
+  let thread: Thread;
+  thread = await getThread(keyPair, recipientWalletAddress);
+  if (thread !== null) {
+    log(`Found existing thread with wallet ${recipientWalletAddress}`);
+    return thread;
+  }
+  log(`Made new thread with wallet ${recipientWalletAddress}`);
+  thread = await makeThread(keyPair, recipientWalletAddress);
+  return thread;
+};
 
 export async function sendMessage(thread: Thread, text: string) {
   const command: SendMessageCommand = {

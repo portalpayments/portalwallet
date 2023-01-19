@@ -1,7 +1,10 @@
 <script lang="ts">
   import Messages from "./Messages.svelte";
-  import { tokenAccountsStore, contactsStore } from "../../stores";
+  import { tokenAccountsStore, contactsStore, authStore } from "../../stores";
+  import type { Keypair } from "@solana/web3.js";
+  import { get as getFromStore } from "svelte/store";
   import { log, stringify } from "../../../backend/functions";
+  import { getOrMakeThread } from "../../../backend/messaging";
   import type {
     Contact as ContactType,
     SimpleTransaction,
@@ -9,13 +12,20 @@
   import SendToContact from "./SendToContact.svelte";
   import Contact from "../../Shared/Contact.svelte";
   import BackButton from "../../Shared/BackButton.svelte";
+  import type { Thread } from "@dialectlabs/sdk";
 
   let contact: ContactType | null = null;
+
+  let thread: Thread | null = null;
 
   // Use the page address to determine the wallet to use
   let contactWalletAddress: string = window.location.href.split("/").pop();
 
-  contactsStore.subscribe((newValue) => {
+  const getThread = async (keyPair: Keypair, walletAddress: string) => {
+    thread = await getOrMakeThread(keyPair, walletAddress);
+  };
+
+  contactsStore.subscribe(async (newValue) => {
     if (newValue) {
       const foundContact = newValue.find((contact) => {
         return contact.walletAddress === contactWalletAddress;
@@ -24,6 +34,10 @@
         throw new Error(`Could not find contact in contacts store`);
       }
       contact = foundContact;
+
+      const auth = getFromStore(authStore);
+
+      getThread(auth.keyPair, contact.walletAddress);
     }
   });
 
