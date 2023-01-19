@@ -125,7 +125,7 @@
       {#if hasButton}
         <!-- TODO: handle disable -->
         <button type="button" class="submit-button" on:click={onButtonSubmit}>
-          {buttonText}
+          <slot>▴</slot>
         </button>
       {/if}
     </div>
@@ -261,5 +261,9 @@
     height: 40px;
     background-color: var(--mid-blue);
     border-radius: 22px;
+
+    display: grid;
+    align-content: center;
+    justify-content: center;
   }
 </style>
