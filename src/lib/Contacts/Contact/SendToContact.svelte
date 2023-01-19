@@ -1,45 +1,56 @@
 <script lang="ts">
   import { NUMBERS_OPTIONAL_DECIMAL_PLACE_TWO_NUMBERS } from "../../constants";
-  import type { Contact } from "../../types";
+  import type { Contact } from "../../../backend/types";
+  import Input from "../../Shared/Input.svelte";
   import { log, stringify } from "../../../backend/functions";
-
-  let sendAmount;
-
+  import FocusContext from "../../Shared/FocusContext.svelte";
   export let contact: Contact | null = null;
+
+  let messageOrAmountText = "";
 
   // TODO replace the following code with a backend function sending money to recipient
   // And reload the transaction history to show the latest transaction
-  const sendMoney = () => {
-    if (contact.walletAddress && sendAmount > 0) {
-      log("Sending amount " + sendAmount + " To " + contact.walletAddress);
+  const sendMessage = () => {
+    if (contact.walletAddress && Number(messageOrAmountText) > 0) {
+      log(
+        "Sending amount " + messageOrAmountText + " To " + contact.walletAddress
+      );
       throw new Error(`Not implemented`);
     }
   };
 </script>
 
 <div class="send-money">
-  <input
-    type="text"
-    pattern={NUMBERS_OPTIONAL_DECIMAL_PLACE_TWO_NUMBERS}
-    bind:value={sendAmount}
-  />
+  <FocusContext>
+    <Input
+      value={messageOrAmountText}
+      isAmount={false}
+      isFocused={true}
+      label="Message or amount"
+      onTypingPause={() => {
+        log(`User finished typing`);
+      }}
+    />
 
-  <button
-    type="submit"
-    disabled={sendAmount === 0 || sendAmount === null}
-    class={sendAmount === 0 || sendAmount === null ? "disabled" : ""}
-    on:click={sendMoney}>send</button
-  >
+    <button
+      type="submit"
+      disabled={messageOrAmountText.length === 0}
+      class={messageOrAmountText.length === 0 ? "disabled" : ""}
+      on:click={sendMessage}>▴</button
+    >
+  </FocusContext>
 </div>
 
 <style lang="scss">
   .send-money {
-    margin-bottom: 10px;
-    height: 40px;
+    height: 48px;
+    grid-auto-flow: column;
+    grid-template-columns: 1fr 48px;
+    gap: 2px;
   }
 
   button {
-    width: 45%;
+    width: 48px;
     padding: 0px 0px;
     margin: auto;
     height: 38px;
@@ -50,6 +61,8 @@
   }
 
   .disabled {
-    background-color: #98caff;
+    color: white;
+    border-radius: 24px;
+    background: var(--blue-green-gradient);
   }
 </style>

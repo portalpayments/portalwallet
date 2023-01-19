@@ -204,8 +204,8 @@
   }
 
   .input-and-label {
+    // Explicitly positioned for use by absolutely positioned children
     position: relative;
-    display: grid;
   }
 
   .gas-fee {
