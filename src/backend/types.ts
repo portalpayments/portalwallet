@@ -302,6 +302,12 @@ export interface SimpleTransaction {
   swapCurrency: Currency;
 }
 
+export interface SimpleWalletMessage {
+  timestamp: number;
+  memo: string | null;
+  direction: Direction;
+}
+
 export interface TransactionsByDay {
   isoDate: string;
   totalSpending: number;

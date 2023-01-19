@@ -6,9 +6,11 @@
   import { log, stringify } from "../../../backend/functions";
   import { SECONDS } from "../../../backend/constants";
   import { getOrMakeThread } from "../../../backend/messaging";
-  import type {
-    Contact as ContactType,
-    SimpleTransaction,
+  import {
+    type Contact as ContactType,
+    type SimpleTransaction,
+    type SimpleWalletMessage,
+    Direction,
   } from "../../../backend/types";
   import SendToContact from "./SendToContact.svelte";
   import Contact from "../../Shared/Contact.svelte";
@@ -17,7 +19,11 @@
 
   let contact: ContactType | null = null;
 
-  let thread: Thread | null = null;
+  let transactions: Array<SimpleTransaction> = [];
+  let messages: Array<SimpleWalletMessage> = [];
+
+  let thread: Thread | null;
+  $: thread = null;
 
   // Use the page address to determine the wallet to use
   let contactWalletAddress: string = window.location.href.split("/").pop();
@@ -32,6 +38,17 @@
     const getThread = async () => {
       log(`Pulling dialect messages....`);
       thread = await getOrMakeThread(keyPair, walletAddress);
+      const rawMessages = await thread.messages();
+      messages = rawMessages.map((rawMessage) => {
+        return {
+          timestamp: new Date(rawMessage.timestamp).valueOf(),
+          memo: rawMessage.text,
+          direction:
+            rawMessage.author.address === keyPair.publicKey.toBase58()
+              ? Direction.sent
+              : Direction.recieved,
+        };
+      });
     };
     // Do this every interval
     setInterval(async () => {
@@ -59,12 +76,10 @@
 
   log(`Loading send to contact screen for ${contactWalletAddress}`);
 
-  let transactionsForContact: Array<SimpleTransaction> = [];
-
   tokenAccountsStore.subscribe((newValue) => {
     // Filter our transactions to just the ones from this single contact
     if (newValue) {
-      transactionsForContact = newValue
+      transactions = newValue
         .map((account) => {
           return account.transactionSummaries.filter((transaction) => {
             if (
@@ -87,7 +102,7 @@
       <BackButton />
       <Contact {contact} />
     </div>
-    <Messages transactions={transactionsForContact} {thread} />
+    <Messages {transactions} {messages} />
     {#if thread}
       <SendToContact {thread} />
     {/if}

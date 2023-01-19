@@ -1,18 +1,20 @@
 <script lang="ts">
-  import type { SimpleTransaction } from "../../../backend/types";
+  import type {
+    SimpleTransaction,
+    SimpleWalletMessage,
+  } from "../../../backend/types";
   import ChatTransaction from "./ChatTransaction.svelte";
+  import WalletMessage from "./WalletMessage.svelte";
   import type { Thread, ThreadMessage } from "@dialectlabs/sdk";
-  import { log } from "../../../backend/functions";
+  import { log, stringify } from "../../../backend/functions";
 
   export let transactions: Array<SimpleTransaction>;
-  export let thread: Thread | null;
+  export let messages: Array<SimpleWalletMessage>;
 
-  let messages: Array<ThreadMessage> = [];
   const main = async () => {
-    if (thread) {
-      messages = await thread.messages();
-      log(`There are ${messages.length} messages`);
-    }
+    log(`About to get new messages`);
+
+    log(`There are ${messages.length} messages`);
   };
 
   main();
@@ -24,8 +26,9 @@
       <ChatTransaction {transaction} />
     {/each}
     {#each messages as message}
-      <p>{message.text}</p>
+      <WalletMessage {message} />
     {/each}
+    <p>end of messages</p>
   </div>
 </div>
 
@@ -39,5 +42,9 @@
     color: white;
     font-size: 40px;
     font-weight: 600;
+
+    // cool kids
+
+    scroll-snap-type: y proximity;
   }
 </style>
