@@ -102,7 +102,7 @@ export const getOrMakeThread = async (
   return thread;
 };
 
-export async function sendMessage(thread: Thread, text: string) {
+export async function sendDialectMessage(thread: Thread, text: string) {
   const command: SendMessageCommand = {
     text,
   };

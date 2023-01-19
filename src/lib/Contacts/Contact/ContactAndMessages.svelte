@@ -72,7 +72,9 @@
       <Contact {contact} />
     </div>
     <Messages transactions={transactionsForContact} />
-    <SendToContact {contact} />
+    {#if thread}
+      <SendToContact {thread} />
+    {/if}
   {:else}
     Loading contact
   {/if}

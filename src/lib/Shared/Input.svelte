@@ -22,6 +22,13 @@
 
   export let showClearButton = false;
 
+  export let hasButton = false;
+
+  export let buttonText: string | null = null;
+
+  export let onButtonSubmit: svelte.JSX.MouseEventHandler<HTMLButtonElement> | null =
+    null;
+
   const EMPTY = "";
 
   const focus = getFocusContext();
@@ -81,38 +88,47 @@
 </script>
 
 <div class="input-and-label">
-  <div class="border {theme === 'square' ? 'square' : ''}">
-    <input
-      bind:value
-      type="text"
-      class={isAmount ? "usdc-amount" : ""}
-      use:maybeFocus
-      required
-      spellcheck={isSpellChecked}
-      on:keyup|preventDefault={debounce((event) => {
-        if (isAmount) {
-          if (value > 0) {
-            showGasFee = true;
-          } else {
-            showGasFee = false;
+  <div class="border {theme === 'square' ? 'square' : ''} ">
+    <div class="big-white-area {hasButton ? 'with-submit-button' : ''}">
+      <input
+        bind:value
+        type="text"
+        class={isAmount ? "usdc-amount" : ""}
+        use:maybeFocus
+        required
+        spellcheck={isSpellChecked}
+        on:keyup|preventDefault={debounce((event) => {
+          if (isAmount) {
+            if (value > 0) {
+              showGasFee = true;
+            } else {
+              showGasFee = false;
+            }
           }
-        }
-        if (onTypingPause) {
-          onTypingPause(event);
-        }
-      }, 1 * SECOND)}
-      on:input|capture={filterInput}
-    />
-    <div class="floating-label">
-      {label}
-      {#if isAmount}
-        <!-- TODO: set currency properly -->
-        <img class="inline-usdc" src={USDClogo} alt="usdc logo" />
+          if (onTypingPause) {
+            onTypingPause(event);
+          }
+        }, 1 * SECOND)}
+        on:input|capture={filterInput}
+      />
+      <div class="floating-label">
+        {label}
+        {#if isAmount}
+          <!-- TODO: set currency properly -->
+          <img class="inline-usdc" src={USDClogo} alt="usdc logo" />
+        {/if}
+      </div>
+      {#if showClearButton && value !== EMPTY}
+        <button class="clear" on:click={onClear}>×</button>
+      {/if}
+
+      {#if hasButton}
+        <!-- TODO: handle disable -->
+        <button type="button" class="submit-button" on:click={onButtonSubmit}>
+          {buttonText}
+        </button>
       {/if}
     </div>
-    {#if showClearButton && value !== EMPTY}
-      <button class="clear" on:click={onClear}>×</button>
-    {/if}
   </div>
 
   {#if isAmount}
@@ -128,6 +144,19 @@
     border-radius: 24px;
     background: var(--light-grey);
     padding: 2px;
+  }
+
+  .big-white-area {
+    align-items: center;
+    background-color: white;
+    justify-items: end;
+    padding: 0 2px;
+  }
+
+  .big-white-area.with-submit-button {
+    grid-auto-flow: column;
+    border-radius: 22px;
+    grid-template-columns: 1fr 48px;
   }
 
   /* Enable a gradient border when the input inside is focused
@@ -225,5 +254,12 @@
     background: transparent;
     align-content: center;
     color: var(--black);
+  }
+
+  button.submit-button {
+    width: 40px;
+    height: 40px;
+    background-color: var(--mid-blue);
+    border-radius: 22px;
   }
 </style>
