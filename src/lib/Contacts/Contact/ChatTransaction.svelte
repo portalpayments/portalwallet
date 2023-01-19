@@ -37,7 +37,9 @@
   <div class="memo">{transaction.memo}</div>
 </div>
 
-<style>
+<style lang="scss">
+  @import "../../../mixins.scss";
+
   img {
     width: 36px;
   }
@@ -61,6 +63,7 @@
     background-color: var(--light-grey);
     color: var(--black);
     justify-self: start;
+    @include grey-shadow;
   }
 
   /* The little bump on the speech bubbles */
@@ -75,11 +78,13 @@
     border: 10px solid transparent;
     border-bottom: none;
     border-top-color: var(--light-grey);
+    @include grey-shadow;
   }
   .sent {
     position: relative;
     justify-self: end;
     background-color: var(--mid-blue);
+    @include shadow;
   }
 
   /* The little bump on the speech bubbles */
@@ -94,6 +99,7 @@
     border: 10px solid transparent;
     border-bottom: none;
     border-top-color: var(--mid-blue);
+    @include shadow;
   }
 
   .logo-and-amount {
