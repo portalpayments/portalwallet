@@ -2,7 +2,11 @@
 import {
   Dialect,
   DialectSdk,
+  ThreadMemberScope,
+  type CreateThreadCommand,
   type DialectCloudEnvironment,
+  type SendMessageCommand,
+  type Thread,
 } from "@dialectlabs/sdk";
 import {
   SolanaSdkFactory,
@@ -13,6 +17,7 @@ import type { Keypair } from "@solana/web3.js";
 import { MINUTE, SECONDS } from "./constants";
 
 import { log, stringify } from "./functions";
+import { text } from "svelte/internal";
 
 let dialectSDK: DialectSdk<Solana> | null = null;
 
@@ -32,7 +37,10 @@ export const getDialect = (keyPair: Keypair) => {
   return dialectSDK;
 };
 
-export const getMessagesForUser = async (keyPair, walletAddress: string) => {
+export const getMessagesForUser = async (
+  keyPair: Keypair,
+  walletAddress: string
+) => {
   // https://docs.dialect.to/documentation/messaging/typescript/getting-creating-and-deleting-threads
   // Call the messages() method to read messages
   const dialectSDK = getDialect(keyPair);
@@ -46,3 +54,34 @@ export const getMessagesForUser = async (keyPair, walletAddress: string) => {
 
   return messages;
 };
+
+// Copied directly from
+// https://github.com/dialectlabs/sdk/blob/main/packages/blockchain-sdk-solana/examples/helpers.ts
+export async function makeThread(
+  keyPair: Keypair,
+  recipientWalletAddress: string
+): Promise<Thread> {
+  const dialectSDK = getDialect(keyPair);
+  const command: CreateThreadCommand = {
+    encrypted: false,
+    me: {
+      scopes: [ThreadMemberScope.ADMIN, ThreadMemberScope.WRITE],
+    },
+    otherMembers: [
+      {
+        address: recipientWalletAddress,
+        scopes: [ThreadMemberScope.ADMIN, ThreadMemberScope.WRITE],
+      },
+    ],
+  };
+  const thread = await dialectSDK.threads.create(command);
+  console.log({ thread });
+  return thread;
+}
+
+export async function sendMessage(thread: Thread, text: string) {
+  const command: SendMessageCommand = {
+    text,
+  };
+  await thread.send(command);
+}
