@@ -1,19 +1,5 @@
 // From https://docs.dialect.to/documentation/messaging/typescript/configuration
-import {
-  Dialect,
-  DialectSdk,
-  ThreadId,
-  type DialectCloudEnvironment,
-  type FindThreadByIdQuery,
-  type FindThreadByOtherMemberQuery,
-  type ThreadMessage,
-  type ThreadSummary,
-} from "@dialectlabs/sdk";
-import {
-  SolanaSdkFactory,
-  NodeDialectSolanaWalletAdapter,
-  type Solana,
-} from "@dialectlabs/blockchain-sdk-solana";
+import type { FindThreadByIdQuery, ThreadMessage } from "@dialectlabs/sdk";
 import type { Keypair } from "@solana/web3.js";
 import { DECAF_APP, MINUTE, SECONDS } from "./constants";
 
@@ -24,33 +10,9 @@ import * as http from "../lib/http-client";
 import type { RawDecafReceipt } from "./types";
 import type { ReceiptSummary, SimpleTransaction } from "src/backend/types";
 import { receiptHTMLToObject } from "./html-extract";
+import { getDialect } from "./messaging";
 
 const memoRegex = /[A-Za-z0-9]{20}/;
-
-let dialectSDK: DialectSdk<Solana> | null = null;
-
-// In future: Decaf's dialect messages will contain the transaction ID
-// Additionally the transaction doesn't contain anything we can find in the message
-// (since Decaf's point of sale system uses a diffeent Sol account)
-
-// Right now they do not - so we can just use the time to match the purchase.
-// Sol transaction: Nov 5, 2022 at 20:10:02
-// Decaf Dialect message: "2022-11-05T20:10:08.957Z"
-export const getDialect = (keyPair: Keypair) => {
-  if (dialectSDK) {
-    return dialectSDK;
-  }
-  const environment: DialectCloudEnvironment = "production";
-  dialectSDK = Dialect.sdk(
-    {
-      environment,
-    },
-    SolanaSdkFactory.create({
-      wallet: NodeDialectSolanaWalletAdapter.create(keyPair),
-    })
-  );
-  return dialectSDK;
-};
 
 export const checkIfSimpleTransactionHasReceipt = (transactionMemo: string) => {
   if (transactionMemo.match(memoRegex)) {
@@ -59,6 +21,12 @@ export const checkIfSimpleTransactionHasReceipt = (transactionMemo: string) => {
   return false;
 };
 
+// In future: Decaf's dialect messages will contain the transaction ID
+// Additionally the transaction doesn't contain anything we can find in the message
+// (since Decaf's point of sale system uses a different Sol account)
+// Right now they do not - so we can just use the time to match the purchase.
+// Sol transaction: Nov 5, 2022 at 20:10:02
+// Decaf Dialect message: "2022-11-05T20:10:08.957Z"
 export const getDecafReceiptMessage = async (
   keyPair: Keypair,
   transactionDate: number
@@ -71,13 +39,8 @@ export const getDecafReceiptMessage = async (
     otherMembers: [DECAF_APP],
   });
 
-  // Fetch for a single thread by its id. N.b. the ThreadId type specifies both the address of the thread *as well as* the specified backend; threads of a given id may exist in any kind of backend. See the ThreadId type.
-  const query: FindThreadByIdQuery = {
-    id: decafThread.id,
-  };
-  const thread = await dialectSDK.threads.find(query);
   // Call the messages() method to read messages
-  const messages = await thread.messages();
+  const messages = await decafThread.messages();
 
   const receiptMessages = messages.filter((message) => {
     const hasReceipt = message.text.includes("You can find your receipt");
