@@ -132,6 +132,10 @@ export const getCurrencyBySymbol = (name: string) => {
   );
 };
 
+export const getMintAddressBySymbol = (symbol: string) => {
+  return getCurrencyBySymbol(symbol).mintAddress;
+};
+
 export const getCurrencyByMint = (mint: string) => {
   const isKnownCurrency = Object.hasOwn(mintToCurrencyMap, mint);
   if (!isKnownCurrency) {
