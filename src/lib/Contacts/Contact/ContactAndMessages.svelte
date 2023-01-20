@@ -17,13 +17,21 @@
   import BackButton from "../../Shared/BackButton.svelte";
   import type { Thread } from "@dialectlabs/sdk";
 
+  import { getTransactionsAndMessagesByDays } from "../../../backend/messaging";
+
   // Use the page address to determine the wallet to use
   let contactWalletAddress: string = window.location.href.split("/").pop();
 
   let contact: ContactType | null = null;
 
   let transactionsAndMessages: Array<SimpleTransaction | SimpleWalletMessage>;
+  // Must start as empty array because we concatenate to it
   $: transactionsAndMessages = [];
+
+  let transactionsAndMessagesByDays: Array<{
+    isoDate: string;
+    transactionsAndMessages: Array<SimpleTransaction | SimpleWalletMessage>;
+  }>;
 
   let thread: Thread | null;
   $: thread = null;
@@ -33,18 +41,28 @@
   const updateTransactionsAndMessages = (
     items: Array<SimpleTransaction | SimpleWalletMessage>
   ) => {
-    const oldValue = transactionsAndMessages?.length || 0;
+    // Side effects of TS - for a very brief moment transactionsAndMessages is undefined.
+    if (transactionsAndMessages === undefined) {
+      log(`transactionsAndMessages was undefined`);
+      return;
+    }
+    const oldValue = transactionsAndMessages.length;
 
-    const updatedTransactionsAndMessages =
+    const allTransactionsAndMessagesWithDuplicates =
       transactionsAndMessages.concat(items);
     // Thanks https://stackoverflow.com/a/58429784/123671
     transactionsAndMessages = [
       ...new Map(
-        updatedTransactionsAndMessages.map((item) => [item.id, item])
+        allTransactionsAndMessagesWithDuplicates.map((item) => [item.id, item])
       ).values(),
     ];
+
     log(
       `Existing transactionsAndMessages was ${oldValue} long, just got ${items.length} to add, result was ${transactionsAndMessages.length} items`
+    );
+
+    transactionsAndMessagesByDays = getTransactionsAndMessagesByDays(
+      transactionsAndMessages
     );
   };
 
@@ -128,7 +146,7 @@
       <BackButton />
       <Contact {contact} />
     </div>
-    <Messages {transactionsAndMessages} />
+    <Messages {transactionsAndMessagesByDays} />
   {:else}
     Loading contact
   {/if}

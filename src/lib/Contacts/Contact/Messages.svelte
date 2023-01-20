@@ -12,35 +12,16 @@
     isoDateToFriendlyName,
   } from "../../../backend/functions";
 
-  export let transactionsAndMessages: Array<
-    SimpleTransaction | SimpleWalletMessage
-  >;
-
-  let transactionsAndMessagesByDays: Array<{
+  export let transactionsAndMessagesByDays: Array<{
     isoDate: string;
     transactionsAndMessages: Array<SimpleTransaction | SimpleWalletMessage>;
-  }> = [];
+  }>;
 
-  transactionsAndMessages.sort(byDateNewestToOldest);
-
-  transactionsAndMessages.forEach((transactionOrMessage) => {
-    const isoDate = dateToISODate(transactionOrMessage.date);
-    const lastDay = transactionsAndMessagesByDays.at(-1) || null;
-    if (lastDay?.isoDate === isoDate) {
-      // Add this transaction to the existing entry for this day
-      lastDay.transactionsAndMessages.push(transactionOrMessage);
-    } else {
-      // Create a new item for this day
-      transactionsAndMessagesByDays.push({
-        isoDate,
-        transactionsAndMessages,
-      });
-    }
-  });
+  log(`Hello from messages svelte`, stringify(transactionsAndMessagesByDays));
 </script>
 
 <div class="transaction-history">
-  {#each transactionsAndMessagesByDays.reverse() as transactionsAndMessagesByDay}
+  {#each transactionsAndMessagesByDays as transactionsAndMessagesByDay}
     <div class="day">
       {isoDateToFriendlyName(transactionsAndMessagesByDay.isoDate)}
     </div>
