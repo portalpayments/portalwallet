@@ -44,7 +44,7 @@
   button {
     background: white;
     color: var(--black);
-    padding: 0 6px 0 0;
+    padding: 1px 6px 1px 1px;
     border-radius: 21px;
     cursor: pointer;
     font-weight: 600;
