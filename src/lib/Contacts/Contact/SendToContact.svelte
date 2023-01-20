@@ -20,30 +20,25 @@
   };
 </script>
 
-<div class="bottom">
-  <FocusContext>
-    <Input
-      bind:value={messageOrAmountText}
-      isAmount={false}
-      isFocused={true}
-      label="Message..."
-      onTypingPause={() => {
-        log(`User finished typing`);
-      }}
-      hasButton={true}
-      onButtonSubmit={sendMessageOrMoney}
-    >
-      <img class="up-arrow" src="/src/assets/uparrow.svg" alt="send" />
-    </Input>
-  </FocusContext>
-</div>
+<FocusContext>
+  <Input
+    bind:value={messageOrAmountText}
+    isAmount={false}
+    isFocused={true}
+    label="Message..."
+    onTypingPause={() => {
+      log(`User finished typing`);
+    }}
+    hasButton={true}
+    onButtonSubmit={sendMessageOrMoney}
+  >
+    <img class="up-arrow" src="/src/assets/uparrow.svg" alt="send" />
+  </Input>
+</FocusContext>
 
 <style lang="scss">
   @import "../../../mixins.scss";
-  .bottom {
-    padding: 2px;
-    @include polymer;
-  }
+
   .up-arrow {
     height: 22px;
   }
