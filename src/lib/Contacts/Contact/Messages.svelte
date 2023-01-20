@@ -9,6 +9,7 @@
     stringify,
     dateToISODate,
     byDateNewestToOldest,
+    isoDateToFriendlyName,
   } from "../../../backend/functions";
 
   export let transactionsAndMessages: Array<
@@ -40,7 +41,9 @@
 
 <div class="transaction-history">
   {#each transactionsAndMessagesByDays.reverse() as transactionsAndMessagesByDay}
-    <div class="day">{transactionsAndMessagesByDay.isoDate}</div>
+    <div class="day">
+      {isoDateToFriendlyName(transactionsAndMessagesByDay.isoDate)}
+    </div>
     {#each transactionsAndMessagesByDay.transactionsAndMessages as transactionOrMessage}
       <ChatTransaction {transactionOrMessage} />
     {/each}
@@ -64,8 +67,7 @@
   }
 
   .day {
-    color: var(--black);
-    font-size: 10px;
-    @include small-caps;
+    color: var(--dark-grey);
+    font-size: 12px;
   }
 </style>
