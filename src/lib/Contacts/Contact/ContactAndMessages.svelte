@@ -17,6 +17,9 @@
   import BackButton from "../../Shared/BackButton.svelte";
   import type { Thread } from "@dialectlabs/sdk";
 
+  // Use the page address to determine the wallet to use
+  let contactWalletAddress: string = window.location.href.split("/").pop();
+
   let contact: ContactType | null = null;
 
   let transactionsAndMessages: Array<SimpleTransaction | SimpleWalletMessage> =
@@ -25,8 +28,19 @@
   let thread: Thread | null;
   $: thread = null;
 
-  // Use the page address to determine the wallet to use
-  let contactWalletAddress: string = window.location.href.split("/").pop();
+  // Join the array with existing values and ensure all values are unique
+  const updateTransactionsAndMessages = (
+    items: Array<SimpleTransaction | SimpleWalletMessage>
+  ) => {
+    const updatedTransactionsAndMessages =
+      transactionsAndMessages.concat(items);
+    // Thanks https://stackoverflow.com/a/58429784/123671
+    transactionsAndMessages = [
+      ...new Map(
+        updatedTransactionsAndMessages.map((item) => [item.id, item])
+      ).values(),
+    ];
+  };
 
   // As of 2022 01 19 Chris at Dialect mentions their SDK doesn't have thread subscriptions yet
   // TODO: replace when Dialect add thread subscriptions
@@ -53,10 +67,7 @@
           };
         }
       );
-      // Join the array with existing values and ensure all values are unique
-      transactionsAndMessages = [
-        ...new Set(transactionsAndMessages.concat(messages)),
-      ];
+      updateTransactionsAndMessages(messages);
     };
     // Do this every interval
     setInterval(async () => {
@@ -100,10 +111,7 @@
           });
         })
         .flat();
-      // Join the array with existing values and ensure all values are unique
-      transactionsAndMessages = [
-        ...new Set(transactionsAndMessages.concat(transactions)),
-      ];
+      updateTransactionsAndMessages(transactions);
     }
   });
 </script>
