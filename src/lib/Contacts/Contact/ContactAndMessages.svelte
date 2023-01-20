@@ -33,7 +33,7 @@
   const updateTransactionsAndMessages = (
     items: Array<SimpleTransaction | SimpleWalletMessage>
   ) => {
-    const oldValue = transactionsAndMessages.length;
+    const oldValue = transactionsAndMessages?.length || 0;
 
     const updatedTransactionsAndMessages =
       transactionsAndMessages.concat(items);
