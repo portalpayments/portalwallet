@@ -16,8 +16,6 @@
     isoDate: string;
     transactionsAndMessages: Array<SimpleTransaction | SimpleWalletMessage>;
   }>;
-
-  log(`Hello from messages svelte`, stringify(transactionsAndMessagesByDays));
 </script>
 
 <div class="transaction-history">
