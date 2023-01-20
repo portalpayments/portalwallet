@@ -17,7 +17,7 @@
 
 <div class="contacts">
   {#each contacts as contact}
-    <Link to={"/contacts/" + contact.walletAddress}>
+    <Link to={`/contacts/${contact.walletAddress}`}>
       <div class="contact">
         {#if contact.verifiedClaims}
           <Verified {contact} />
