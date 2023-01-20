@@ -80,7 +80,8 @@
       const messages: Array<SimpleWalletMessage> = rawMessages.map(
         (rawMessage) => {
           return {
-            id: `dialect-${rawMessage.deduplicationId}`,
+            // Make an ID that is unique to this message
+            id: `dialect-${rawMessage.timestamp}-${rawMessage.author.address}`,
             date: new Date(rawMessage.timestamp).valueOf(),
             memo: rawMessage.text,
             direction:
