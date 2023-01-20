@@ -71,8 +71,9 @@
     align-items: center;
     gap: 5px;
     display: grid;
-    justify-content: center;
+    justify-content: start;
     grid-auto-flow: row;
+    min-width: 76px;
     max-width: 200px;
   }
   .received {
