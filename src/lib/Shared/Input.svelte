@@ -24,8 +24,6 @@
 
   export let hasButton = false;
 
-  export let buttonText: string | null = null;
-
   export let onButtonSubmit: svelte.JSX.MouseEventHandler<HTMLButtonElement> | null =
     null;
 
