@@ -141,10 +141,10 @@
     background-color: transparent;
   }
   .border {
-    height: 48px;
-    border-radius: 24px;
+    height: 46px;
+    border-radius: 23px;
     background: var(--light-grey);
-    padding: 2px;
+    padding: 1px;
   }
 
   .big-white-area {
