@@ -22,16 +22,19 @@
 
   let contact: ContactType | null = null;
 
-  let transactionsAndMessages: Array<SimpleTransaction | SimpleWalletMessage> =
-    [];
+  let transactionsAndMessages: Array<SimpleTransaction | SimpleWalletMessage>;
+  $: transactionsAndMessages = [];
 
   let thread: Thread | null;
   $: thread = null;
 
   // Join the array with existing values and ensure all values are unique
+  // TODO: move to backend
   const updateTransactionsAndMessages = (
     items: Array<SimpleTransaction | SimpleWalletMessage>
   ) => {
+    const oldValue = transactionsAndMessages.length;
+
     const updatedTransactionsAndMessages =
       transactionsAndMessages.concat(items);
     // Thanks https://stackoverflow.com/a/58429784/123671
@@ -40,6 +43,9 @@
         updatedTransactionsAndMessages.map((item) => [item.id, item])
       ).values(),
     ];
+    log(
+      `Existing transactionsAndMessages was ${oldValue} long, just got ${items.length} to add, result was ${transactionsAndMessages.length} items`
+    );
   };
 
   // As of 2022 01 19 Chris at Dialect mentions their SDK doesn't have thread subscriptions yet

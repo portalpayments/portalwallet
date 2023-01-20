@@ -137,6 +137,9 @@
 </div>
 
 <style lang="scss">
+  .input-and-label {
+    background-color: transparent;
+  }
   .border {
     height: 48px;
     border-radius: 24px;

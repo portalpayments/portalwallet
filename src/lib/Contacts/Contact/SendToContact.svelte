@@ -39,8 +39,10 @@
 </div>
 
 <style lang="scss">
+  @import "../../../mixins.scss";
   .bottom {
     padding: 2px;
+    @include polymer;
   }
   .up-arrow {
     height: 22px;
