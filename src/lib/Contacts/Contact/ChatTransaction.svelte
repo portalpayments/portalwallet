@@ -124,6 +124,7 @@
     justify-content: start;
     align-items: baseline;
     padding: 0;
+    gap: 6px;
   }
 
   .icon {
@@ -147,6 +148,7 @@
   }
 
   .memo {
+    text-align: left;
     font-size: 11px;
     line-height: 13px;
   }
@@ -157,5 +159,6 @@
     font-size: 10px;
     right: 18px;
     bottom: 12px;
+    font-weight: 400;
   }
 </style>
