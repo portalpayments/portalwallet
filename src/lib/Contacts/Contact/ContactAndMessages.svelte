@@ -129,24 +129,39 @@
       <Contact {contact} />
     </div>
     <Messages {transactionsAndMessages} />
-    {#if thread}
-      <SendToContact {thread} />
-    {/if}
   {:else}
     Loading contact
   {/if}
+  <div class="bottom">
+    {#if thread}
+      <SendToContact {thread} />
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">
-  .heading {
-    justify-content: center;
-    border-bottom: 1px solid var(--very-light-grey);
-  }
+  @import "../../../mixins.scss";
+
   .contact-screen {
+    // Explicitly position so bottom can be positioned absolutely and stay on screen
+    position: relative;
     height: var(--wallet-height);
     width: var(--wallet-width);
     display: grid;
     grid-auto-flow: row;
-    grid-template-rows: 90px 1fr 52px;
+    grid-template-rows: 90px 1fr;
+  }
+
+  .heading {
+    justify-content: center;
+    border-bottom: 1px solid var(--very-light-grey);
+  }
+
+  .bottom {
+    position: absolute;
+    bottom: 0;
+
+    padding: 2px;
+    @include polymer;
   }
 </style>

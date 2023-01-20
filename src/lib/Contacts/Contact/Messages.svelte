@@ -64,6 +64,9 @@
     color: white;
     font-size: 40px;
     font-weight: 600;
+
+    // Extra padding since the bottom area sits on top of the last message
+    padding-bottom: 64px;
   }
 
   .day {
