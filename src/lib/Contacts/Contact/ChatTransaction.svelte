@@ -52,7 +52,7 @@
         alt="{currency.symbol} logo"
       />
       <div class="amount">
-        <span class="major">{major}</span>.<span class="minor">{minor}</span>
+        <span class="major">{major}</span><span class="minor">.{minor}</span>
       </div>
     </div>
   {/if}
@@ -63,19 +63,10 @@
 <style lang="scss">
   @import "../../../mixins.scss";
 
-  img.icon {
-    width: 36px;
-  }
-
-  /* Make a white version of the icon so it looks good against a blue background */
-  img .icon .white {
-    filter: brightness(0) invert(1);
-  }
-
   .transaction-or-message {
     // Needed to absolutely position .time below
     position: relative;
-    padding: 12px 24px 24px 24px;
+    padding: 12px 18px 24px 18px;
     border-radius: 27px;
     align-items: center;
     gap: 5px;
@@ -130,18 +121,25 @@
 
   .logo-and-amount {
     grid-auto-flow: column;
-    /* icon then rest is amount */
-    grid-template-columns: 32px 1fr;
+    justify-content: start;
+    align-items: baseline;
+    padding: 0;
+  }
+
+  .icon {
+    width: 36px;
+    transform: translateY(3px);
+  }
+
+  /* Make a white version of the icon so it looks good against a blue background */
+  .icon.white-logo {
+    filter: brightness(0) invert(1);
   }
 
   .amount {
     display: block;
-    /* grid-auto-flow: column;
-    grid-template-columns: repeat(auto-fit); */
-  }
-
-  .amount * {
-    display: inline;
+    font-kerning: normal;
+    letter-spacing: -0.03em;
   }
 
   .minor {

@@ -134,13 +134,13 @@
 <style lang="scss">
   .heading {
     justify-content: center;
+    border-bottom: 1px solid var(--very-light-grey);
   }
   .contact-screen {
     height: var(--wallet-height);
     width: var(--wallet-width);
     display: grid;
     grid-auto-flow: row;
-    grid-template-rows: 90px 1fr 48px;
-    padding: 2px;
+    grid-template-rows: 90px 1fr 52px;
   }
 </style>

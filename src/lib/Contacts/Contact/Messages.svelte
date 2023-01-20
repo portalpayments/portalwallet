@@ -52,9 +52,11 @@
 
   .transaction-history {
     overflow-y: scroll;
-    // cool kids
+    padding: 2px;
 
+    // cool kids
     scroll-snap-type: y proximity;
+
     gap: 8px;
     color: white;
     font-size: 40px;

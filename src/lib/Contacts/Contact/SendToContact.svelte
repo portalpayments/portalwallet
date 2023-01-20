@@ -20,23 +20,28 @@
   };
 </script>
 
-<FocusContext>
-  <Input
-    bind:value={messageOrAmountText}
-    isAmount={false}
-    isFocused={true}
-    label="Message..."
-    onTypingPause={() => {
-      log(`User finished typing`);
-    }}
-    hasButton={true}
-    onButtonSubmit={sendMessageOrMoney}
-  >
-    <img class="up-arrow" src="/src/assets/uparrow.svg" alt="send" />
-  </Input>
-</FocusContext>
+<div class="bottom">
+  <FocusContext>
+    <Input
+      bind:value={messageOrAmountText}
+      isAmount={false}
+      isFocused={true}
+      label="Message..."
+      onTypingPause={() => {
+        log(`User finished typing`);
+      }}
+      hasButton={true}
+      onButtonSubmit={sendMessageOrMoney}
+    >
+      <img class="up-arrow" src="/src/assets/uparrow.svg" alt="send" />
+    </Input>
+  </FocusContext>
+</div>
 
 <style lang="scss">
+  .bottom {
+    padding: 2px;
+  }
   .up-arrow {
     height: 22px;
   }
