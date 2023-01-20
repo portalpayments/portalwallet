@@ -19,15 +19,17 @@
 </script>
 
 <div class="transaction-history">
-  {#each transactionsAndMessagesByDays as transactionsAndMessagesByDay}
-    <div class="day">
-      {isoDateToFriendlyName(transactionsAndMessagesByDay.isoDate)}
-    </div>
-    {#each transactionsAndMessagesByDay.transactionsAndMessages as transactionOrMessage}
-      <ChatTransaction {transactionOrMessage} />
+  {#if transactionsAndMessagesByDays?.length}
+    {#each transactionsAndMessagesByDays as transactionsAndMessagesByDay}
+      <div class="day">
+        {isoDateToFriendlyName(transactionsAndMessagesByDay.isoDate)}
+      </div>
+      {#each transactionsAndMessagesByDay.transactionsAndMessages as transactionOrMessage}
+        <ChatTransaction {transactionOrMessage} />
+      {/each}
+      <div class="scroll-anchor" />
     {/each}
-    <div class="scroll-anchor" />
-  {/each}
+  {/if}
 </div>
 
 <style lang="scss">
