@@ -47,6 +47,7 @@
     {#each transactionsAndMessagesByDay.transactionsAndMessages as transactionOrMessage}
       <ChatTransaction {transactionOrMessage} />
     {/each}
+    <div class="scroll-anchor" />
   {/each}
 </div>
 
@@ -56,9 +57,6 @@
   .transaction-history {
     overflow-y: scroll;
     padding: 2px;
-
-    // cool kids
-    scroll-snap-type: y proximity;
 
     gap: 8px;
     color: white;
@@ -72,5 +70,15 @@
   .day {
     color: var(--dark-grey);
     font-size: 12px;
+  }
+
+  // See https://css-tricks.com/books/greatest-css-tricks/pin-scrolling-to-bottom/
+  .transaction-history * {
+    overflow-anchor: none;
+  }
+
+  .scroll-anchor {
+    overflow-anchor: auto;
+    height: 1px;
   }
 </style>
