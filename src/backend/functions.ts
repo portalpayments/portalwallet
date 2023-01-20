@@ -73,6 +73,16 @@ export const isoDateToFriendlyName = (isoDate: string) => {
   });
 };
 
+export const toLocalTime = (date: number | Date) => {
+  if (typeof date === "number") {
+    date = new Date(date);
+  }
+  return new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+  }).format(date);
+};
+
 export const byDateNewestToOldest = (a, b) => {
   if (a.date === b.date) {
     return 0;

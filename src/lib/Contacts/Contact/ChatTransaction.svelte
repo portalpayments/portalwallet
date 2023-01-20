@@ -4,7 +4,7 @@
     getFormattedMinorUnits,
     amountAndDecimalsToMajorAndMinor,
   } from "../../utils";
-  import { log, stringify } from "../../../backend/functions";
+  import { log, stringify, toLocalTime } from "../../../backend/functions";
   import { getCurrencyByMint } from "../../../backend/constants";
   import {
     Direction,
@@ -36,7 +36,7 @@
 </script>
 
 <div
-  class="transaction-or-message {transactionOrMessage.direction ===
+  class="transaction-or-message {transactionOrMessage.id} {transactionOrMessage.direction ===
   Direction.recieved
     ? 'received'
     : 'sent'}"
@@ -57,6 +57,7 @@
     </div>
   {/if}
   <div class="memo">{transactionOrMessage.memo}</div>
+  <div class="time">{toLocalTime(transactionOrMessage.date)}</div>
 </div>
 
 <style lang="scss">
@@ -72,7 +73,9 @@
   }
 
   .transaction-or-message {
-    padding: 12px 24px;
+    // Needed to absolutely position .time below
+    position: relative;
+    padding: 12px 24px 24px 24px;
     border-radius: 27px;
     align-items: center;
     gap: 5px;
@@ -148,5 +151,13 @@
   .memo {
     font-size: 11px;
     line-height: 13px;
+  }
+
+  .time {
+    height: 12px;
+    position: absolute;
+    font-size: 10px;
+    right: 18px;
+    bottom: 12px;
   }
 </style>
