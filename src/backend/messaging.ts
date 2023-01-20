@@ -14,9 +14,17 @@ import {
   type Solana,
 } from "@dialectlabs/blockchain-sdk-solana";
 import type { Keypair } from "@solana/web3.js";
+import type { SimpleTransaction, SimpleWalletMessage } from "./types";
+
 import { MINUTE, SECONDS } from "./constants";
 
-import { log, stringify } from "./functions";
+import {
+  log,
+  stringify,
+  dateToISODate,
+  byDateNewestToOldest,
+  byDateOldestToNewest,
+} from "./functions";
 import { text } from "svelte/internal";
 
 let dialectSDK: DialectSdk<Solana> | null = null;
@@ -66,10 +74,10 @@ export const getMessagesForUser = async (
 
 // Copied directly from
 // https://github.com/dialectlabs/sdk/blob/main/packages/blockchain-sdk-solana/examples/helpers.ts
-export async function makeThread(
+export const makeThread = async (
   keyPair: Keypair,
   recipientWalletAddress: string
-): Promise<Thread> {
+): Promise<Thread> => {
   const dialectSDK = getDialect(keyPair);
   const command: CreateThreadCommand = {
     encrypted: false,
@@ -85,7 +93,7 @@ export async function makeThread(
   };
   const thread = await dialectSDK.threads.create(command);
   return thread;
-}
+};
 
 export const getOrMakeThread = async (
   keyPair: Keypair,
@@ -102,7 +110,7 @@ export const getOrMakeThread = async (
   return thread;
 };
 
-export async function sendDialectMessage(thread: Thread, text: string) {
+export const sendDialectMessage = async (thread: Thread, text: string) => {
   if (text === "") {
     // Dialect will throw odd errors if we send blank string
     throw new Error(`Cannot send empty message`);
@@ -112,4 +120,40 @@ export async function sendDialectMessage(thread: Thread, text: string) {
   };
   log(`Command is: `, stringify(command));
   await thread.send(command);
-}
+};
+
+type TransactionOrMessage = SimpleTransaction | SimpleWalletMessage;
+
+type DailyActivity = {
+  isoDate: string;
+  transactionsAndMessages: Array<TransactionOrMessage>;
+};
+
+export const getTransactionsAndMessagesByDays = (
+  transactionsAndMessages: Array<TransactionOrMessage>
+) => {
+  let transactionsAndMessagesByDays: Array<DailyActivity> = [];
+
+  transactionsAndMessages.sort(byDateOldestToNewest);
+
+  transactionsAndMessages.forEach((transactionOrMessage) => {
+    const isoDate = dateToISODate(transactionOrMessage.date);
+    const lastDay = transactionsAndMessagesByDays.at(-1) || null;
+    if (lastDay?.isoDate === isoDate) {
+      log(
+        `Message ${transactionOrMessage.id} occured on ${isoDate}, added this message to existing day`
+      );
+      // Add this transaction to the existing entry for this day
+      lastDay.transactionsAndMessages.push(transactionOrMessage);
+    } else {
+      // Create a new item for this day
+      const newDailyActivity: DailyActivity = {
+        isoDate,
+        transactionsAndMessages: [transactionOrMessage],
+      };
+      transactionsAndMessagesByDays.push(newDailyActivity);
+    }
+  });
+
+  return transactionsAndMessagesByDays;
+};

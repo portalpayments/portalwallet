@@ -93,6 +93,16 @@ export const byDateNewestToOldest = (a, b) => {
   return -1;
 };
 
+export const byDateOldestToNewest = (a, b) => {
+  if (a.date === b.date) {
+    return 0;
+  }
+  if (a.date < b.date) {
+    return -1;
+  }
+  return 0;
+};
+
 // Adapted from https://github.com/mgenware/node-filter-async/blob/main/src/main.ts
 // (which seems to have issues loading its ESM module)
 export const asyncFilter = async <T>(
