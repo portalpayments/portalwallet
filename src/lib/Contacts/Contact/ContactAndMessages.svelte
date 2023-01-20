@@ -180,7 +180,7 @@
     position: absolute;
     bottom: 0;
 
-    padding: 2px;
+    padding: 2px 6px;
     @include polymer;
   }
 </style>
