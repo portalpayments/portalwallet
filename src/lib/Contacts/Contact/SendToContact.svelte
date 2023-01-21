@@ -1,5 +1,6 @@
 <script lang="ts">
   import { NUMBERS_OPTIONAL_DECIMAL_PLACE_TWO_NUMBERS } from "../../constants";
+  import { EMPTY } from "../../../backend/constants";
   import type { Contact } from "../../../backend/types";
   import type { Thread } from "@dialectlabs/sdk";
   import Input from "../../Shared/Input.svelte";
@@ -15,7 +16,7 @@
   const sendMessageOrMoney = () => {
     log(`Sending message`);
     sendDialectMessage(thread, messageOrAmountText);
-
+    messageOrAmountText = EMPTY;
     // TODO: send money
   };
 </script>
