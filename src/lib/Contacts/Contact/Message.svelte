@@ -64,6 +64,9 @@
   @import "../../../mixins.scss";
 
   .transaction-or-message {
+    // See https://css-tricks.com/books/greatest-css-tricks/pin-scrolling-to-bottom/
+    overflow-anchor: none;
+
     // Needed to absolutely position .time below
     position: relative;
     padding: 12px 18px 24px 18px;

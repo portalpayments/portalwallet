@@ -140,9 +140,6 @@ export const getTransactionsAndMessagesByDays = (
     const isoDate = dateToISODate(transactionOrMessage.date);
     const lastDay = transactionsAndMessagesByDays.at(-1) || null;
     if (lastDay?.isoDate === isoDate) {
-      log(
-        `Message ${transactionOrMessage.id} occured on ${isoDate}, added this message to existing day`
-      );
       // Add this transaction to the existing entry for this day
       lastDay.transactionsAndMessages.push(transactionOrMessage);
     } else {

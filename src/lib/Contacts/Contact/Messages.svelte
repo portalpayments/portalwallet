@@ -3,7 +3,7 @@
     SimpleTransaction,
     SimpleWalletMessage,
   } from "../../../backend/types";
-  import ChatTransaction from "./ChatTransaction.svelte";
+  import Message from "./Message.svelte";
   import {
     log,
     stringify,
@@ -25,10 +25,10 @@
         {isoDateToFriendlyName(transactionsAndMessagesByDay.isoDate)}
       </div>
       {#each transactionsAndMessagesByDay.transactionsAndMessages as transactionOrMessage}
-        <ChatTransaction {transactionOrMessage} />
+        <Message {transactionOrMessage} />
       {/each}
-      <div class="scroll-anchor" />
     {/each}
+    <div class="scroll-anchor" />
   {/if}
 </div>
 
@@ -54,7 +54,7 @@
   }
 
   // See https://css-tricks.com/books/greatest-css-tricks/pin-scrolling-to-bottom/
-  .transaction-history * {
+  .day {
     overflow-anchor: none;
   }
 

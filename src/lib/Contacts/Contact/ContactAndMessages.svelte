@@ -12,7 +12,7 @@
     type SimpleWalletMessage,
     Direction,
   } from "../../../backend/types";
-  import SendToContact from "./SendToContact.svelte";
+  import SendMessageInput from "./SendMessageInput.svelte";
   import Contact from "../../Shared/Contact.svelte";
   import BackButton from "../../Shared/BackButton.svelte";
   import type { Thread } from "@dialectlabs/sdk";
@@ -76,22 +76,32 @@
     const getThread = async () => {
       log(`Pulling dialect messages....`);
       thread = await getOrMakeThread(keyPair, walletAddress);
-      const rawMessages = await thread.messages();
-      const messages: Array<SimpleWalletMessage> = rawMessages.map(
-        (rawMessage) => {
-          return {
-            // Make an ID that is unique to this message
-            id: `dialect-${rawMessage.timestamp}-${rawMessage.author.address}`,
-            date: new Date(rawMessage.timestamp).valueOf(),
-            memo: rawMessage.text,
-            direction:
-              rawMessage.author.address === keyPair.publicKey.toBase58()
-                ? Direction.sent
-                : Direction.recieved,
+      // const rawMessages = await thread.messages();
+      // const messages: Array<SimpleWalletMessage> = rawMessages.map(
+      //   (rawMessage) => {
+      //     return {
+      //       // Make an ID that is unique to this message
+      //       id: `dialect-${rawMessage.timestamp}-${rawMessage.author.address}`,
+      //       date: new Date(rawMessage.timestamp).valueOf(),
+      //       memo: rawMessage.text,
+      //       direction:
+      //         rawMessage.author.address === keyPair.publicKey.toBase58()
+      //           ? Direction.sent
+      //           : Direction.recieved,
+      //       isDialectMessage: true,
+      //     };
+      //   }
+      // );
+      const dateNumber = new Date().valueOf(),
+        messages: Array<SimpleWalletMessage> = [
+          {
+            id: `dialect-${dateNumber}`,
+            date: dateNumber,
+            memo: `test message ${dateNumber}`,
+            direction: Direction.recieved,
             isDialectMessage: true,
-          };
-        }
-      );
+          },
+        ];
       updateTransactionsAndMessages(messages);
     };
     // Do this every interval
@@ -114,7 +124,7 @@
 
       const auth = getFromStore(authStore);
 
-      startPolling(auth.keyPair, contact.walletAddress, 30 * SECONDS);
+      startPolling(auth.keyPair, contact.walletAddress, 5 * SECONDS);
     }
   });
 
@@ -153,7 +163,7 @@
   {/if}
   <div class="bottom">
     {#if thread}
-      <SendToContact {thread} />
+      <SendMessageInput {thread} />
     {/if}
   </div>
 </div>
