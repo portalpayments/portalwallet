@@ -17,8 +17,7 @@ import {
   USDC_MAINNET_MINT_ACCOUNT,
   YCOMBINATOR_DEMO_WALLET_FOR_JARED,
 } from "./constants";
-import { Currency, type SimpleTransaction, Direction } from "../backend/types";
-
+import { type SimpleTransaction, Direction } from "../backend/types";
 import { hexToUtf8, log, stringify } from "./functions";
 import { sendFiveUSDC } from "./test-data/transactions/sendFiveUSDC";
 import { swapSolWithUSDCOnJupiter } from "./test-data/transactions/swapSolWithUSDC";
@@ -325,6 +324,9 @@ describe(`transaction summaries`, () => {
         id: getCurrencyBySymbol("USDC").mintAddress,
         name: "USDC local testing",
         decimals: 6,
+        mintAddress: "fakeUSDCLocalTestAddress",
+        symbol: "USDC",
+        logo: "usdc.svg",
       },
     };
     return fakeMintToCurrencyMap;
@@ -350,7 +352,7 @@ describe(`transaction summaries`, () => {
       networkFee: 5000,
       direction: Direction.sent,
       amount: 50,
-      currency: getCurrencyBySymbol("USDC").mintAddress,
+      currency: "fakeUSDCLocalTestAddress",
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
       memo: null,
@@ -381,7 +383,7 @@ describe(`transaction summaries`, () => {
       networkFee: 5000,
       direction: Direction.sent,
       amount: 50,
-      currency: getCurrencyBySymbol("USDC").mintAddress,
+      currency: "fakeUSDCLocalTestAddress",
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
       memo: null,
@@ -413,7 +415,7 @@ describe(`transaction summaries`, () => {
       networkFee: 5000,
       direction: Direction.recieved,
       amount: 50,
-      currency: getCurrencyBySymbol("USDC").mintAddress,
+      currency: "fakeUSDCLocalTestAddress",
       from: MOCK_SENDER_PUBLIC_KEY,
       to: MOCK_RECIPIENT_PUBLIC_KEY,
       memo: null,

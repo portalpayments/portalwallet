@@ -7,7 +7,7 @@
 
 import { log, sleep, stringify } from "../backend/functions";
 import localforage, { key } from "localforage";
-import type { Settings } from "./types";
+import type { Settings } from "./../backend/types";
 import {
   passwordToKey,
   encrypt,

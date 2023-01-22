@@ -5,7 +5,6 @@ import {
   SECONDS,
   ENOUGH_TO_MAKE_A_NEW_TOKEN,
   getCurrencyBySymbol,
-  mintToCurrencyMap,
 } from "./constants";
 import { log, minorUnitsToDecimal, stringify } from "./functions";
 import {

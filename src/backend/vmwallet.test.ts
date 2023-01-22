@@ -40,7 +40,8 @@ import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
 import { getTransactionSummariesForAddress } from "./vmwallet";
 import { log, stringify } from "./functions";
-import { Currency, Direction } from "../backend/types";
+import { Direction } from "../backend/types";
+
 import { getABetterErrorMessage } from "./errors";
 import { createMintAccount } from "./tokens";
 
@@ -59,10 +60,11 @@ describe(`basic wallet functionality on local validator`, () => {
   });
 
   test(`getCurrencyByName works`, () => {
-    expect(getCurrencyBySymbol("USDC")).toMatchObject({
+    expect(getCurrencyBySymbol("USDC")).toEqual({
       decimals: 6,
-      id: USDC_MAINNET_MINT_ACCOUNT,
-      name: "USDC",
+      logo: "/src/assets/Icons/usdc-coin-grey.svg",
+      mintAddress: USDC_MAINNET_MINT_ACCOUNT,
+      symbol: "USDC",
     });
   });
 
@@ -350,8 +352,7 @@ describe(`mainnet integration tests`, () => {
       // TypeError: Right-hand side of 'instanceof' is not callable'
       // So check the currency is in the Currency enum's values
       const currency = lastTransaction.currency;
-      const knownCurrencies = Object.values(Currency);
-      expect(knownCurrencies.includes(currency));
+      expect(currency).toEqual(USDC_MAINNET_MINT_ACCOUNT);
 
       const direction = lastTransaction.direction;
       const knownDirections = Object.values(Direction);
