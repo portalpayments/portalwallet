@@ -41,17 +41,18 @@
   // Join the array with existing values and ensure all values are unique
   // TODO: move to backend
   const updateTransactionsAndMessages = (
-    items: Array<SimpleTransaction | SimpleWalletMessage>
+    newItems: Array<SimpleTransaction | SimpleWalletMessage>
   ) => {
+    log(`In updateTransactionsAndMessages, ${newItems.length} items to add`);
+    // debugger;
     // Side effects of TS - for a very brief moment transactionsAndMessages is undefined.
     if (transactionsAndMessages === undefined) {
-      log(`transactionsAndMessages was undefined`);
-      return;
+      transactionsAndMessages = [];
     }
     const oldValue = transactionsAndMessages.length;
 
     const allTransactionsAndMessagesWithDuplicates =
-      transactionsAndMessages.concat(items);
+      transactionsAndMessages.concat(newItems);
     // Thanks https://stackoverflow.com/a/58429784/123671
     transactionsAndMessages = [
       ...new Map(
@@ -60,7 +61,7 @@
     ];
 
     log(
-      `Existing transactionsAndMessages was ${oldValue} long, just got ${items.length} to add, result was ${transactionsAndMessages.length} items`
+      `Existing transactionsAndMessages was ${oldValue} long, just got ${newItems.length} to add, result was ${transactionsAndMessages.length} items`
     );
 
     transactionsAndMessagesByDays = getTransactionsAndMessagesByDays(
