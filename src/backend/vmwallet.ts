@@ -24,7 +24,7 @@ import type { BasicTokenAccount, TokenMetaData, VerifiedClaims } from "./types";
 import { summarizeTransaction } from "./transactions";
 import { toUniqueStringArray } from "../lib/utils";
 import * as http from "../lib/http-client";
-import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../lib/constants";
+import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../lib/frontend-constants";
 import {
   Direction,
   type Contact,
