@@ -20,6 +20,7 @@
 
   let scrollableArea;
 
+  //
   let isAtBottom = scrollableArea;
 
   const updateGoToBottomButtonVisibility = (event) => {
@@ -84,14 +85,14 @@
     right: 24px;
     bottom: 64px;
     border-radius: 50%;
-    background-color: var(--mid-blue);
+
+    animation: fadeIn 1s forwards;
 
     @include dark-polymer;
   }
 
   .go-to-bottom:disabled {
-    visibility: 0;
-    opacity: 0;
+    animation: fadeOut 1s forwards;
   }
 
   .day {

@@ -44,12 +44,6 @@ backdrop-filter: blur(24px);
   box-shadow: 2px 3px 10px -4px rgb(0 0 0 / 33%);
 }
 
-@keyframes skeleton-background-shine {
-  to {
-    background-position: 100% 0, /* move highlight to right */ 0 0;
-  }
-}
-
 @mixin skeleton-background {
   background: linear-gradient(
       to right,
@@ -63,3 +57,24 @@ backdrop-filter: blur(24px);
   background-position: 0 0;
   animation: skeleton-background-shine 1s infinite;
 }
+
+@keyframes skeleton-background-shine {
+  to {
+    background-position: 100% 0, /* move highlight to right */ 0 0;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
