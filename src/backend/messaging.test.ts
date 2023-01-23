@@ -1,6 +1,7 @@
 import { getTransactionsAndMessagesByDays } from "./messaging";
 import type { SimpleTransaction, SimpleWalletMessage } from "./types";
 import { log, stringify } from "./functions";
+import { VAHEHS_WALLET } from "./constants";
 
 const transactionsAndMessages = [
   {
