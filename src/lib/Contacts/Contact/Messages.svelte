@@ -88,6 +88,7 @@
 
     animation: fadeIn 1s forwards;
 
+    @include grey-shadow;
     @include dark-polymer;
   }
 
