@@ -16,26 +16,42 @@
     isoDate: string;
     transactionsAndMessages: Array<SimpleTransaction | SimpleWalletMessage>;
   }>;
+
+  let scrollableArea;
+
+  const goToBottom = (event) => {
+    log(`Going to bottom`);
+    scrollableArea.scrollTop = scrollableArea.scrollHeight;
+  };
 </script>
 
 <div class="transaction-history">
-  {#if transactionsAndMessagesByDays?.length}
-    {#each transactionsAndMessagesByDays as transactionsAndMessagesByDay}
-      <div class="day">
-        {isoDateToFriendlyName(transactionsAndMessagesByDay.isoDate)}
-      </div>
-      {#each transactionsAndMessagesByDay.transactionsAndMessages as transactionOrMessage}
-        <Message {transactionOrMessage} />
+  <div class="scrollable-area" bind:this={scrollableArea}>
+    {#if transactionsAndMessagesByDays?.length}
+      {#each transactionsAndMessagesByDays as transactionsAndMessagesByDay}
+        <div class="day">
+          {isoDateToFriendlyName(transactionsAndMessagesByDay.isoDate)}
+        </div>
+        {#each transactionsAndMessagesByDay.transactionsAndMessages as transactionOrMessage}
+          <Message {transactionOrMessage} />
+        {/each}
       {/each}
-    {/each}
-    <div class="scroll-anchor" />
-  {/if}
+      <div class="scroll-anchor" />
+    {/if}
+  </div>
+  <button class="go-to-bottom" on:click={goToBottom}>⬇️</button>
 </div>
 
 <style lang="scss">
   @import "../../../mixins.scss";
 
   .transaction-history {
+    // Explicitly position so go-to-bottom can be positioned absolutely and stay on screen
+    position: relative;
+    height: 510px;
+  }
+
+  .scrollable-area {
     overflow-y: scroll;
     padding: 2px;
 
@@ -46,6 +62,16 @@
 
     // Extra padding since the bottom area sits on top of the last message
     padding-bottom: 64px;
+  }
+
+  .go-to-bottom {
+    position: absolute;
+    height: 64px;
+    width: 64px;
+    right: 24px;
+    bottom: 64px;
+    border-radius: 50%;
+    background-color: var(--mid-blue);
   }
 
   .day {

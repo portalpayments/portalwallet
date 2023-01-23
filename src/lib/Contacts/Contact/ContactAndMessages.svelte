@@ -161,6 +161,7 @@
   {:else}
     Loading contact
   {/if}
+
   <div class="bottom">
     {#if thread}
       <SendMessageInput {thread} />
