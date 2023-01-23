@@ -99,9 +99,6 @@
 
     animation: fadeIn 1s forwards;
 
-    // TODO: shouldn't need to hack horizontally, I suspect the Figma may be off center
-    transform: translateY(2px) translateX(-1px);
-
     @include grey-shadow;
   }
 
