@@ -40,7 +40,7 @@
     if (newValue.keyPair) {
       log(`🔑Got keyPair.`);
       // Connect to Solana
-      const newConnection = await connect("quickNodeMainNetBeta");
+      const newConnection = await connect("quickNodeMainNetBetaBackup");
       connectionStore.set(newConnection);
 
       const keypair = newValue.keyPair;
