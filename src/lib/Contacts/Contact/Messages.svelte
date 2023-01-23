@@ -52,7 +52,12 @@
       <div class="scroll-anchor" />
     {/if}
   </div>
-  <button class="go-to-bottom" disabled={isAtBottom} on:click={goToBottom}>
+  <button
+    type="button"
+    class="go-to-bottom"
+    disabled={isAtBottom}
+    on:click={goToBottom}
+  >
     <img src={Chevron} alt="go to bottom" />
   </button>
 </div>
