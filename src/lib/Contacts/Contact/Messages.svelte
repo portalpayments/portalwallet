@@ -86,8 +86,8 @@
     align-items: center;
     height: 40px;
     width: 40px;
-    right: 24px;
-    bottom: 64px;
+    right: 12px;
+    bottom: 68px;
     border-radius: 50%;
     border: 3px solid var(--mid-blue);
     background-color: white;

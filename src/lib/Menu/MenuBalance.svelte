@@ -26,6 +26,8 @@
   button.with-icon .text {
     grid-auto-flow: row;
     grid-template-rows: 18px 10px;
+    font-weight: 600;
+    font-size: 20px;
   }
 
   button.with-icon .text {
