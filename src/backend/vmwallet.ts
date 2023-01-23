@@ -349,7 +349,7 @@ export const getNativeAccountSummary = async (
   connection: Connection,
   keyPair: Keypair
 ): Promise<AccountSummary> => {
-  log(`Getting transactions for native account`);
+  log(`Getting transactions for native account`, new Date());
   let accountBalance = 0;
   let transactionSummaries: Array<SimpleTransaction> = [];
   try {
