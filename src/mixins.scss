@@ -30,6 +30,12 @@
   backdrop-filter: blur(24px);
 }
 
+@mixin dark-polymer {
+  background-color: hsl(0deg 0% 56% / 60%);
+backdrop-filter: blur(24px);
+}
+
+
 @mixin shadow {
   box-shadow: rgb(37 206 232 / 24%) 0px 8px 16px 0px;
 }

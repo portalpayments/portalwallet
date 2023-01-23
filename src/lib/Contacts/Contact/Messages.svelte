@@ -3,6 +3,7 @@
     SimpleTransaction,
     SimpleWalletMessage,
   } from "../../../backend/types";
+  import { checkIfScrolledAllTheWay } from "../../utils";
   import Message from "./Message.svelte";
   import {
     log,
@@ -19,6 +20,12 @@
 
   let scrollableArea;
 
+  let isAtBottom = scrollableArea;
+
+  const updateGoToBottomButtonVisibility = (event) => {
+    isAtBottom = checkIfScrolledAllTheWay(event.target);
+  };
+
   const goToBottom = (event) => {
     log(`Going to bottom`);
     scrollableArea.scrollTop = scrollableArea.scrollHeight;
@@ -26,7 +33,11 @@
 </script>
 
 <div class="transaction-history">
-  <div class="scrollable-area" bind:this={scrollableArea}>
+  <div
+    class="scrollable-area"
+    bind:this={scrollableArea}
+    on:scroll={updateGoToBottomButtonVisibility}
+  >
     {#if transactionsAndMessagesByDays?.length}
       {#each transactionsAndMessagesByDays as transactionsAndMessagesByDay}
         <div class="day">
@@ -39,7 +50,9 @@
       <div class="scroll-anchor" />
     {/if}
   </div>
-  <button class="go-to-bottom" on:click={goToBottom}>⬇️</button>
+  <button class="go-to-bottom" disabled={isAtBottom} on:click={goToBottom}
+    ><img src="" /></button
+  >
 </div>
 
 <style lang="scss">
@@ -72,6 +85,13 @@
     bottom: 64px;
     border-radius: 50%;
     background-color: var(--mid-blue);
+
+    @include dark-polymer;
+  }
+
+  .go-to-bottom:disabled {
+    visibility: 0;
+    opacity: 0;
   }
 
   .day {

@@ -2,6 +2,7 @@
   import { onChangeActiveAccount } from "../../lib/stores";
   import TransactionComponent from "./Transaction.svelte";
   import { getTransactionsByDays } from "../../backend/transactions";
+  import { checkIfScrolledAllTheWay } from "../../lib/utils";
   import LoadingImage from "../../assets/transactions-loading.svg";
   import type { TransactionsByDay, AccountSummary } from "../../backend/types";
   import {
@@ -73,12 +74,9 @@
 
   const loadMoreTransactions = (event) => {
     const element = event.currentTarget;
+    const hasScrolledAllTheWay = checkIfScrolledAllTheWay(element);
 
-    // Round because sometimes an element that's 70 pixels high scan be scrolled 69.7 pixels down (and that's 'all the way')
-    const howFarScrolled = Math.round(element.scrollTop + element.clientHeight);
-    const scrollableArea = element.scrollHeight;
-
-    if (howFarScrolled === scrollableArea) {
+    if (hasScrolledAllTheWay) {
       // The element has been scrolled all the way down
       console.log("Element scrolled all the way down");
     }
