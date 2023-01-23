@@ -1,6 +1,5 @@
 import { get as getFromStore, writable, type Writable } from "svelte/store";
 import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
-import { identityTokenIssuerPublicKeyString } from "./constants";
 import type { AccountSummary, Collectable, Contact } from "../backend/types";
 import { asyncMap, log, sleep, stringify } from "../backend/functions";
 import {
@@ -13,6 +12,7 @@ import {
   getCurrencyBySymbol,
   MILLISECONDS,
   NOT_FOUND,
+  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET,
   SECONDS,
 } from "../backend/constants";
 import base58 from "bs58";
@@ -122,7 +122,7 @@ export const onChangeActiveAccount = (
 };
 
 export const identityTokenIssuerPublicKey = new PublicKey(
-  identityTokenIssuerPublicKeyString
+  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
 );
 
 interface Auth {

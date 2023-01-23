@@ -10,10 +10,6 @@ export enum LabelColor {
 
 export const HOW_MANY_TRANSACTIONS_TO_SHOW = 50;
 
-// TODO: this is extracted from the secret key in the backend .env file
-export const identityTokenIssuerPublicKeyString =
-  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET;
-
 export const warningUnverifiedAccount =
   "Only send money to verified recipients. We will notify you once the address is verified.";
 
