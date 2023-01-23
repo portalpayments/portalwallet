@@ -195,7 +195,6 @@
   }
   input:focus {
     outline: none !important;
-    box-shadow: 0 0 2px rgba(65, 156, 253, 0.3);
   }
   .border:has(input:focus) .floating-label,
   .border:has(input:valid) .floating-label {
