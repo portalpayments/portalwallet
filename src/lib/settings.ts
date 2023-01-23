@@ -41,7 +41,7 @@ export const getOrSetSalt = async () => {
 
 export const getSettingsOrNull = async (
   suppliedPassword: string
-): Promise<unknown | null> => {
+): Promise<Settings | null> => {
   try {
     const settings = await getSettings(suppliedPassword);
     return settings;
