@@ -3,8 +3,8 @@
   import BackButton from "../Shared/BackButton.svelte";
   import helpIconURL from "../../assets/Icons/help.svg";
   import logoutIconURL from "../../assets/Icons/logout.svg";
-
-  import { log, isEmpty } from "../../backend/functions";
+  import { log } from "../../backend/functions";
+  import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "../../backend/constants";
   import Modal from "../Shared/Modal.svelte";
   import { getSettingsOrNull } from "../../lib/settings";
   import BlurredText from "./BlurredText.svelte";
@@ -110,7 +110,10 @@
     <Heading>Settings</Heading>
   </div>
 
-  <Link class="button with-icon" to="mailto:help@getportal.app">
+  <Link
+    class="button with-icon"
+    to={`/contacts/${PORTAL_IDENTITY_TOKEN_ISSUER_WALLET}`}
+  >
     <img src={helpIconURL} alt="Help" />
     Get help from the Portal team
   </Link>
