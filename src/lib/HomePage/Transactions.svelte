@@ -5,6 +5,7 @@
   import { checkIfScrolledAllTheWay } from "../../lib/dom-utils";
   import LoadingImage from "../../assets/transactions-loading.svg";
   import type { TransactionsByDay, AccountSummary } from "../../backend/types";
+  import { Link } from "svelte-navigator";
   import {
     log,
     stringify,
@@ -112,12 +113,13 @@
 
           <div class="transactions">
             {#each transactionsByDay.transactions as transaction (transaction.id)}
-              <div
-                class=""
-                in:fade|local={{ duration: 200, easing: quintInOut }}
-              >
+              {#if transaction.counterParty}
+                <Link to={`/contacts/${transaction.counterParty}`}>
+                  <TransactionComponent {transaction} {decimals} />
+                </Link>
+              {:else}
                 <TransactionComponent {transaction} {decimals} />
-              </div>
+              {/if}
             {/each}
           </div>
         </div>
