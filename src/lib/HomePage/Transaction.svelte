@@ -27,16 +27,7 @@
   let contact: Contact | null = null;
   contactsStore.subscribe(async (newValue) => {
     if (newValue) {
-      let contactWalletAddress: string | null = null;
-      if (transaction.direction === Direction.sent) {
-        contactWalletAddress = transaction.to;
-      }
-      if (transaction.direction === Direction.recieved) {
-        contactWalletAddress = transaction.from;
-      }
-      if (transaction.direction === Direction.swapped) {
-        contactWalletAddress = transaction.from;
-      }
+      let contactWalletAddress: string | null = transaction.counterParty;
       contact = newValue.find(
         (contact) => contact.walletAddress === contactWalletAddress
       );

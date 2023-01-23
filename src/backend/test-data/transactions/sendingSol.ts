@@ -7,6 +7,10 @@ import {
   MIKES_USDC_ACCOUNT,
   SPL_TOKEN_PROGRAM,
   USDC_MAINNET_MINT_ACCOUNT,
+  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET,
+  VAHEHS_WALLET,
+  JOHN_TESTUSER_DEMO_WALLET,
+  NOTE_PROGRAM,
 } from "../../constants";
 
 export const sendingSol = {
@@ -101,13 +105,13 @@ export const sendingSolWithNote = {
     message: {
       accountKeys: [
         {
-          pubkey: new PublicKey("FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9"),
+          pubkey: new PublicKey(PORTAL_IDENTITY_TOKEN_ISSUER_WALLET),
           signer: true,
           source: "transaction",
           writable: true,
         },
         {
-          pubkey: new PublicKey("8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7"),
+          pubkey: new PublicKey(JOHN_TESTUSER_DEMO_WALLET),
           signer: false,
           source: "transaction",
           writable: true,
@@ -119,7 +123,7 @@ export const sendingSolWithNote = {
           writable: false,
         },
         {
-          pubkey: new PublicKey("noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93"),
+          pubkey: new PublicKey(NOTE_PROGRAM),
           signer: false,
           source: "transaction",
           writable: false,
@@ -130,9 +134,9 @@ export const sendingSolWithNote = {
         {
           parsed: {
             info: {
-              destination: "8N7ek7FydYYt7GfhM8a3PLjj1dh9fTftdVLHnbJdThe7",
+              destination: JOHN_TESTUSER_DEMO_WALLET,
               lamports: 100000000,
-              source: "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+              source: PORTAL_IDENTITY_TOKEN_ISSUER_WALLET,
             },
             type: "transfer",
           },
@@ -140,11 +144,9 @@ export const sendingSolWithNote = {
           programId: new PublicKey(new PublicKey(SOLANA_SYSTEM_PROGRAM)),
         },
         {
-          accounts: ["FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9"],
+          accounts: [PORTAL_IDENTITY_TOKEN_ISSUER_WALLET],
           data: "6gSyHNFjBXyEDMuyiCeg8zGC2Rm353osfgQBegM11Qe8",
-          programId: new PublicKey(
-            "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93"
-          ),
+          programId: new PublicKey(NOTE_PROGRAM),
         },
       ],
       recentBlockhash: "2USXPRQx9uvLHByd18QqdyXHYPuogwgDRdoqyeadmSfU",
@@ -177,7 +179,7 @@ export const sendingSolWithMemo = {
       {
         accountIndex: 1,
         mint: USDC_MAINNET_MINT_ACCOUNT,
-        owner: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+        owner: VAHEHS_WALLET,
         programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "7430220",
@@ -204,7 +206,7 @@ export const sendingSolWithMemo = {
       {
         accountIndex: 1,
         mint: USDC_MAINNET_MINT_ACCOUNT,
-        owner: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+        owner: VAHEHS_WALLET,
         programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "7220220",

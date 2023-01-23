@@ -69,6 +69,16 @@ const getNoteOrMemo = (
   return null;
 };
 
+const getCounterParty = (direction: Direction, from: string, to: string) => {
+  if (direction === Direction.sent) {
+    return to;
+  }
+  if (direction === Direction.recieved || direction === Direction.swapped) {
+    return from;
+  }
+  return null;
+};
+
 const getWalletDifference = (
   rawTransaction: ParsedTransactionWithMeta,
   wallet: string
@@ -164,6 +174,8 @@ export const summarizeTransaction = async (
     memo = getNoteOrMemo(rawTransaction);
 
     if (isSolTransaction) {
+      // TODO:
+      // Bad naming. Rename to firstInstruction or add check this is only instruction.
       const onlyInstruction = instructions[0];
 
       if (onlyInstruction?.parsed?.type === "createAccountWithSeed") {
@@ -177,6 +189,7 @@ export const summarizeTransaction = async (
           currency: null,
           from: null,
           to: null,
+          counterParty: null,
           memo: null,
           receipt: null,
           swapAmount: null,
@@ -203,6 +216,10 @@ export const summarizeTransaction = async (
         receipt = await getReceiptForSimpleTransaction(keyPair, memo, date);
       }
 
+      const from = onlyInstruction.parsed.info.source;
+      const to = onlyInstruction.parsed.info.destination;
+      const counterParty = getCounterParty(direction, from, to);
+
       const simpleTransaction = {
         id,
         date,
@@ -211,8 +228,9 @@ export const summarizeTransaction = async (
         direction,
         amount: onlyInstruction.parsed.info.lamports,
         currency: getCurrencyBySymbol("SOL").mintAddress,
-        from: onlyInstruction.parsed.info.source,
-        to: onlyInstruction.parsed.info.destination,
+        from,
+        to,
+        counterParty,
         memo,
         receipt,
         swapAmount: null,
@@ -251,6 +269,8 @@ export const summarizeTransaction = async (
       JUPITER
     );
 
+    let counterParty: string | null = null;
+
     if (innerInstructionsForJupiter) {
       const jupiterInnerInstructionForSwappedToken =
         innerInstructionsForJupiter.find((jupiterInnerInstruction) => {
@@ -276,6 +296,7 @@ export const summarizeTransaction = async (
         swapCurrency = getCurrencyBySymbol("SOL").mintAddress;
 
         isSwap = true;
+        counterParty = JUPITER;
       }
     }
 
@@ -319,6 +340,10 @@ export const summarizeTransaction = async (
 
       receipt = await getReceiptForSimpleTransaction(keyPair, memo, date);
     }
+
+    counterParty = counterParty || getCounterParty(direction, from, to);
+
+    log(`>>>>`, stringify({ direction, from, to }));
     const simpleTransaction: SimpleTransaction = {
       id,
       date,
@@ -329,6 +354,7 @@ export const summarizeTransaction = async (
       currency: currencyId,
       from,
       to,
+      counterParty,
       memo,
       receipt,
       swapAmount,

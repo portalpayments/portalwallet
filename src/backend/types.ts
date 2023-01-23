@@ -296,6 +296,7 @@ export interface SimpleTransaction {
   amount: number;
   from: string;
   to: string;
+  counterParty: string | null;
   memo: string | null;
   receipt: ReceiptSummary | null;
   swapAmount: number | null;

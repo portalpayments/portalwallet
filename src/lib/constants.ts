@@ -12,7 +12,7 @@ export const HOW_MANY_TRANSACTIONS_TO_SHOW = 50;
 
 // TODO: this is extracted from the secret key in the backend .env file
 export const identityTokenIssuerPublicKeyString =
-  "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9";
+  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET;
 
 export const warningUnverifiedAccount =
   "Only send money to verified recipients. We will notify you once the address is verified.";

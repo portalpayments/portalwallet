@@ -2,7 +2,7 @@
   import { onChangeActiveAccount } from "../../lib/stores";
   import TransactionComponent from "./Transaction.svelte";
   import { getTransactionsByDays } from "../../backend/transactions";
-  import { checkIfScrolledAllTheWay } from "../../lib/utils";
+  import { checkIfScrolledAllTheWay } from "../../lib/dom-utils";
   import LoadingImage from "../../assets/transactions-loading.svg";
   import type { TransactionsByDay, AccountSummary } from "../../backend/types";
   import {

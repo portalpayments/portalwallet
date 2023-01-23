@@ -7,6 +7,7 @@ import {
   GREGS_WALLET,
   SOLANA_SYSTEM_PROGRAM,
   MIKES_WALLET,
+  NOTE_PROGRAM,
 } from "../../constants";
 
 // Sending 5 USDC to a newly created wallet
@@ -215,7 +216,7 @@ export const sendFiveUSDC = {
           writable: false,
         },
         {
-          pubkey: new PublicKey("noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93"),
+          pubkey: new PublicKey(NOTE_PROGRAM),
           signer: false,
           source: "transaction",
           writable: false,
@@ -262,9 +263,7 @@ export const sendFiveUSDC = {
         {
           accounts: [new PublicKey(MIKES_WALLET), new PublicKey(GREGS_WALLET)],
           data: "AnWnJTR4tkAQv6QU6qhaVST1ddQ6CKYjbGFcr",
-          programId: new PublicKey(
-            "noteD9tEFTDH1Jn9B1HbpoC7Zu8L9QXRo7FjZj3PT93"
-          ),
+          programId: new PublicKey(NOTE_PROGRAM),
         },
       ],
       recentBlockhash: "CjNQgjXsnJx77HHUk9QjPYZgz1J9jyUs8paaMAuQ2pVj",

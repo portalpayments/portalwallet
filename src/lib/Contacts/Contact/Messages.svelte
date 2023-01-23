@@ -3,7 +3,7 @@
     SimpleTransaction,
     SimpleWalletMessage,
   } from "../../../backend/types";
-  import { checkIfScrolledAllTheWay } from "../../utils";
+  import { checkIfScrolledAllTheWay } from "../../dom-utils";
   import Message from "./Message.svelte";
   import {
     log,
