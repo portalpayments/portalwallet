@@ -20,7 +20,12 @@ import base58 from "bs58";
 import { AccountLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import type { RawAccount } from "@solana/spl-token";
 import { getIdentityTokensFromWallet } from "./identity-tokens";
-import type { BasicTokenAccount, TokenMetaData, VerifiedClaims } from "./types";
+import type {
+  BasicTokenAccount,
+  TokenMetaData,
+  VerifiedClaimsForIndividual,
+  VerifiedClaimsForOrganization,
+} from "./types";
 import { summarizeTransaction } from "./transactions";
 import { toUniqueStringArray } from "../lib/utils";
 import * as http from "../lib/http-client";
@@ -33,7 +38,10 @@ import {
 import type { AccountSummary } from "../backend/types";
 import { identityTokenIssuerPublicKey } from "../lib/stores";
 
-const VERIFIED_CLAIMS_BY_ADDRESS: Record<string, VerifiedClaims> = {};
+const VERIFIED_CLAIMS_BY_ADDRESS: Record<
+  string,
+  VerifiedClaimsForIndividual | VerifiedClaimsForOrganization
+> = {};
 
 const debug = (_unused) => {};
 
@@ -150,7 +158,9 @@ export const verifyWallet = async (
   identityTokenIssuerPublicKey: PublicKey,
   wallet: PublicKey,
   useCache = true
-): Promise<VerifiedClaims | null> => {
+): Promise<
+  VerifiedClaimsForIndividual | VerifiedClaimsForOrganization | null
+> => {
   const walletString = wallet.toBase58();
 
   if (useCache) {

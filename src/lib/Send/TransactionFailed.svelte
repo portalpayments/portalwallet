@@ -2,10 +2,15 @@
   import FailedAction from "../../assets/failedAction.svg";
   import { truncateWallet } from "../utils";
   import { log } from "../../backend/functions";
-  import type { VerifiedClaims } from "../../backend/types";
+  import type {
+    VerifiedClaimsForIndividual,
+    VerifiedClaimsForOrganization,
+  } from "../../backend/types";
   import USDClogo from "../../assets/Icons/usdc.svg";
   export let errorMessage: string | null = null;
-  export let verifiedClaims: VerifiedClaims;
+  export let verifiedClaims:
+    | VerifiedClaimsForIndividual
+    | VerifiedClaimsForOrganization;
   export let destinationWalletAddress: string | null;
   export let transferAmount: number | null;
 
@@ -22,10 +27,17 @@
       src={USDClogo}
       alt="usdc symbol"
     />{transferAmount} to
-    <br />{#if verifiedClaims}{verifiedClaims.givenName}
-      {verifiedClaims.familyName}{:else}{truncateWallet(
-        destinationWalletAddress
-      )}{/if}
+    <br />
+    {#if verifiedClaims}
+      {#if verifiedClaims.type === "INDIVIDUAL"}
+        {verifiedClaims.givenName}
+        {verifiedClaims.familyName}
+      {:else if verifiedClaims.type === "ORGANIZATION"}
+        {verifiedClaims.legalName}
+      {/if}
+    {:else}
+      {truncateWallet(destinationWalletAddress)}
+    {/if}
   </div>
 </div>
 

@@ -20,8 +20,11 @@
   import { log, sleep, stringify } from "../../backend/functions";
   import { Circle } from "svelte-loading-spinners";
   import { SECOND } from "../../backend/constants";
-  import type { VerifiedClaims } from "../../backend/types";
-  import type { Contact } from "../types";
+  import type {
+    VerifiedClaimsForIndividual,
+    VerifiedClaimsForOrganization,
+  } from "../../backend/types";
+  import type { Contact } from "../../backend/types";
   import { updateAccountTransactions, getActiveAccount } from "../stores";
   import { SECONDS } from "../../backend/constants";
   const ACTUALLY_SEND_MONEY = true;
@@ -35,7 +38,10 @@
   let hasLoadedVerificationStateFromNetwork = false;
   let isCurrentlyLoadingVerificationStateFromNetwork = false;
 
-  let verifiedClaims: VerifiedClaims | null = null;
+  let verifiedClaims:
+    | VerifiedClaimsForIndividual
+    | VerifiedClaimsForOrganization
+    | null = null;
 
   let isSendButtonDisabled = true;
 

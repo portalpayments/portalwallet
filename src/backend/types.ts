@@ -60,7 +60,7 @@ export interface ExpandedNFT {
 export interface TokenMetaData {
   version: number;
   issuedAgainst: string;
-  claims: VerifiedClaims;
+  claims: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization;
 }
 
 // TODO: see above
@@ -84,10 +84,19 @@ export interface BasicTokenAccount {
   amount: bigint;
 }
 
-export interface VerifiedClaims {
-  type: "INDIVIDUAL" | "ORGANIZATION";
+export interface VerifiedClaimsForIndividual {
+  type: "INDIVIDUAL";
   givenName: string;
   familyName: string;
+  imageUrl: string;
+}
+
+export interface VerifiedClaimsForOrganization {
+  type: "ORGANIZATION";
+  legalName: string;
+  jurisdiction: "Country";
+  country: string;
+  isNotable: false;
   imageUrl: string;
 }
 
@@ -252,7 +261,7 @@ export interface Contact {
   walletAddress: string;
   isNew: boolean;
   isPending: boolean;
-  verifiedClaims: VerifiedClaims;
+  verifiedClaims: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization;
 }
 
 export interface AccountSummary {

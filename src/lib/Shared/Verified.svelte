@@ -2,7 +2,7 @@
   import Label from "../Shared/Label.svelte";
   import verifiedIcon from "../../assets/verified.svg";
   import { LabelColor } from "../frontend-constants";
-  import type { Contact } from "../types";
+  import type { Contact } from "../../backend/types";
 
   export let contact: Contact;
 

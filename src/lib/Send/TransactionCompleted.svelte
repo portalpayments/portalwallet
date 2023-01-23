@@ -3,10 +3,15 @@
   import Heading from "../Shared/Heading.svelte";
   import { truncateWallet } from "../utils";
   import { log } from "../../backend/functions";
-  import type { VerifiedClaims } from "../../backend/types";
+  import type {
+    VerifiedClaimsForIndividual,
+    VerifiedClaimsForOrganization,
+  } from "../../backend/types";
   import USDClogo from "../../assets/Icons/usdc.svg";
 
-  export let verifiedClaims: VerifiedClaims;
+  export let verifiedClaims:
+    | VerifiedClaimsForIndividual
+    | VerifiedClaimsForOrganization;
   export let destinationWalletAddress: string | null;
   export let transferAmount: number | null;
 
@@ -21,7 +26,12 @@
       alt="usdc symbol"
     />{transferAmount} recieved by<br />
     {#if verifiedClaims}
-      {verifiedClaims.givenName} {verifiedClaims.familyName}!
+      {#if verifiedClaims.type === "INDIVIDUAL"}
+        {verifiedClaims.givenName} {verifiedClaims.familyName}!
+      {/if}
+      {#if verifiedClaims.type === "ORGANIZATION"}
+        {verifiedClaims.legalName}!
+      {/if}
     {:else}
       {truncateWallet(destinationWalletAddress)}!
     {/if}
