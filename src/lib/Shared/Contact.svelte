@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Contact } from "../types";
+  import type { Contact } from "../../backend/types";
   import Unverified from "./Unverified.svelte";
   import Verified from "./Verified.svelte";
 
