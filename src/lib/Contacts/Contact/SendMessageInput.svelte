@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { NUMBERS_OPTIONAL_DECIMAL_PLACE_TWO_NUMBERS } from "../../constants";
+  import { NUMBERS_OPTIONAL_DECIMAL_PLACE_TWO_NUMBERS } from "../../frontend-constants";
   import { EMPTY } from "../../../backend/constants";
   import type { Contact } from "../../../backend/types";
   import type { Thread } from "@dialectlabs/sdk";

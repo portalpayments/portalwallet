@@ -1,7 +1,7 @@
 <script lang="ts">
   import AnonymousImage from "../../assets/anonymous.svg";
   import Label from "../Shared/Label.svelte";
-  import { LabelColor } from "../constants";
+  import { LabelColor } from "../frontend-constants";
   import type { Contact } from "../types";
   import { truncateWallet, copyToClipboard } from "../utils";
 

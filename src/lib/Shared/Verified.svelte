@@ -1,7 +1,7 @@
 <script lang="ts">
   import Label from "../Shared/Label.svelte";
   import verifiedIcon from "../../assets/verified.svg";
-  import { LabelColor } from "../constants";
+  import { LabelColor } from "../frontend-constants";
   import type { Contact } from "../types";
 
   export let contact: Contact;

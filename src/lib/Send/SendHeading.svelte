@@ -3,7 +3,7 @@
   import Unverified from "../Shared/Unverified.svelte";
   import Heading from "../Shared/Heading.svelte";
   import Verified from "../Shared/Verified.svelte";
-  import { warningUnverifiedAccount } from "../constants";
+  import { warningUnverifiedAccount } from "../frontend-constants";
   import type { Contact } from "../../backend/types";
 
   export let contact: Contact;

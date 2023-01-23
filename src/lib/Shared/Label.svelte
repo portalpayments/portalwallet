@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { LabelColor } from "../constants";
+  import type { LabelColor } from "../frontend-constants";
   export let color: LabelColor;
   export let size: "large" | "medium" | null = null;
 </script>
