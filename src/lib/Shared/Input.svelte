@@ -123,7 +123,7 @@
       {#if hasButton}
         <!-- TODO: handle disable -->
         <button type="button" class="submit-button" on:click={onButtonSubmit}>
-          <slot>▴</slot>
+          <slot />
         </button>
       {/if}
     </div>

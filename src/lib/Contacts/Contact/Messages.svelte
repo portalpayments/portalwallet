@@ -12,6 +12,7 @@
     byDateNewestToOldest,
     isoDateToFriendlyName,
   } from "../../../backend/functions";
+  import Chevron from "../../../assets/chevron.svg";
 
   export let transactionsAndMessagesByDays: Array<{
     isoDate: string;
@@ -51,9 +52,9 @@
       <div class="scroll-anchor" />
     {/if}
   </div>
-  <button class="go-to-bottom" disabled={isAtBottom} on:click={goToBottom}
-    ><img src="" /></button
-  >
+  <button class="go-to-bottom" disabled={isAtBottom} on:click={goToBottom}>
+    <img src={Chevron} alt="go to bottom" />
+  </button>
 </div>
 
 <style lang="scss">
@@ -80,16 +81,27 @@
 
   .go-to-bottom {
     position: absolute;
-    height: 64px;
-    width: 64px;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    height: 40px;
+    width: 40px;
     right: 24px;
     bottom: 64px;
     border-radius: 50%;
+    border: 3px solid var(--mid-blue);
+    background-color: white;
 
     animation: fadeIn 1s forwards;
 
+    // TODO: shouldn't need to hack horizontally, I suspect the Figma may be off center
+    transform: translateY(2px) translateX(-1px);
+
     @include grey-shadow;
-    @include dark-polymer;
+  }
+
+  .go-to-bottom img {
+    width: 24px;
   }
 
   .go-to-bottom:disabled {

@@ -7,6 +7,7 @@
   import { log, stringify } from "../../../backend/functions";
   import FocusContext from "../../Shared/FocusContext.svelte";
   import { sendDialectMessage } from "../../../backend/messaging";
+  import UpArrow from "../../../assets/up-arrow.svg";
   export let thread: Thread | null = null;
 
   let messageOrAmountText = "";
@@ -33,7 +34,7 @@
     hasButton={true}
     onButtonSubmit={sendMessageOrMoney}
   >
-    <img class="up-arrow" src="/src/assets/uparrow.svg" alt="send" />
+    <img class="up-arrow" src={UpArrow} alt="send" />
   </Input>
 </FocusContext>
 
