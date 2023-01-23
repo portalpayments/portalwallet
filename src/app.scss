@@ -31,7 +31,7 @@
   -webkit-text-size-adjust: 100%;
 
   /* Color palette */
-  --mid-blue: #419cfd;
+  --mid-blue: #06A8FE;
   --white: #f5f5f5;
   --very-very-light-grey: #f1f1f1;
   --very-light-grey: #e5e5e5;
@@ -148,10 +148,13 @@ a.button.with-icon img {
   height: 0;
 }
 
+// Don't apply a lot of settings to Inputs, as inputs are often combined with other elements in Svelte components
+// instead individual Svelte components (like Input) will style them
 input {
   border-radius: 9px;
   padding: 0px 0px 0px 6px;
-  border: 1px solid var(--light-grey);
+  border: none;
+  outline: none;
   background-color: var(--shade);
   width: 200px;
   height: 42px;
@@ -161,8 +164,7 @@ input {
 }
 input:focus {
   outline: none;
-  border: 2px solid var(--mid-blue);
-  box-shadow: 0 0 2px rgba(65, 156, 253, 0.3);
+  border: none;
 }
 
 .feature {
