@@ -1,6 +1,7 @@
 <script lang="ts">
   import Label from "../Shared/Label.svelte";
-  import verifiedIcon from "../../assets/verified.svg";
+  import verifiedIconIndividual from "../../assets/verified.svg";
+  import verifiedIconOrganization from "../../assets/verified-organization.svg";
   import { LabelColor } from "../frontend-constants";
   import type { Contact } from "../../backend/types";
 
@@ -16,13 +17,22 @@
   alt="Address is verified"
 />
 <div class="recipient-info">
-  {contact.verifiedClaims.givenName}
-  <!-- Note move verified badge inline -->
-  {contact.verifiedClaims.familyName}{" "}<img
-    class="verified-icon"
-    src={verifiedIcon}
-    alt="User is Verified"
-  />
+  {#if contact.verifiedClaims.type === "INDIVIDUAL"}
+    {contact.verifiedClaims.givenName}
+    <!-- Note move verified badge inline -->
+    {contact.verifiedClaims.familyName}{" "}<img
+      class="verified-icon"
+      src={verifiedIconIndividual}
+      alt="User is Verified"
+    />
+  {/if}
+  {#if contact.verifiedClaims.type === "ORGANIZATION"}
+    {contact.verifiedClaims.legalName}<img
+      class="verified-icon"
+      src={verifiedIconOrganization}
+      alt="User is Verified"
+    />
+  {/if}
   <div class="labels">
     {#if contact.isNew}
       <Label color={LabelColor.Yellow}>New</Label>
