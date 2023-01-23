@@ -9,7 +9,7 @@
   import type { AccountSummary } from "../../backend/types";
   import closeIconURL from "../../assets/Icons/close.svg";
   import settingsIconURL from "../../assets/Icons/settings-grey.svg";
-  import type { Contact as ContactType } from "../types";
+  import type { Contact as ContactType } from "../../backend/types";
   import { log } from "../../backend/functions";
   import Contact from "../Shared/Contact.svelte";
   import MenuBalance from "./MenuBalance.svelte";
