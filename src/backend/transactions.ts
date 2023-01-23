@@ -343,7 +343,6 @@ export const summarizeTransaction = async (
 
     counterParty = counterParty || getCounterParty(direction, from, to);
 
-    log(`>>>>`, stringify({ direction, from, to }));
     const simpleTransaction: SimpleTransaction = {
       id,
       date,
