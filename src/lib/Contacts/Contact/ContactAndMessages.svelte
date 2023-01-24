@@ -5,7 +5,10 @@
   import { get as getFromStore } from "svelte/store";
   import { log, stringify } from "../../../backend/functions";
   import { SECONDS } from "../../../backend/constants";
-  import { getOrMakeThread } from "../../../backend/messaging";
+  import {
+    getOrMakeThread,
+    addOnlyUniqueNewMessages,
+  } from "../../../backend/messaging";
   import {
     type Contact as ContactType,
     type SimpleTransaction,
@@ -26,9 +29,8 @@
 
   let contact: ContactType | null = null;
 
-  let transactionsAndMessages: Array<SimpleTransaction | SimpleWalletMessage>;
-  // Must start as empty array because we concatenate to it
-  $: transactionsAndMessages = [];
+  let transactionsAndMessages: Array<SimpleTransaction | SimpleWalletMessage> =
+    [];
 
   let transactionsAndMessagesByDays: Array<{
     isoDate: string;
@@ -44,28 +46,13 @@
     newItems: Array<SimpleTransaction | SimpleWalletMessage>
   ) => {
     log(`In updateTransactionsAndMessages, ${newItems.length} items to add`);
-    // debugger;
-    // Side effects of TS - for a very brief moment transactionsAndMessages is undefined.
-    if (transactionsAndMessages === undefined) {
-      transactionsAndMessages = [];
-    }
-    const oldValue = transactionsAndMessages.length;
-
-    const allTransactionsAndMessagesWithDuplicates =
-      transactionsAndMessages.concat(newItems);
-    // Thanks https://stackoverflow.com/a/58429784/123671
-    transactionsAndMessages = [
-      ...new Map(
-        allTransactionsAndMessagesWithDuplicates.map((item) => [item.id, item])
-      ).values(),
-    ];
-
-    log(
-      `Existing transactionsAndMessages was ${oldValue} long, just got ${newItems.length} to add, result was ${transactionsAndMessages.length} items`
+    const combinedUniqueTransactionsAndMessages = addOnlyUniqueNewMessages(
+      transactionsAndMessages,
+      newItems
     );
 
     transactionsAndMessagesByDays = getTransactionsAndMessagesByDays(
-      transactionsAndMessages
+      combinedUniqueTransactionsAndMessages
     );
   };
 
