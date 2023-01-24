@@ -20,7 +20,7 @@
   let major;
   let minor;
 
-  if (transactionOrMessage.id.startsWith("dialect")) {
+  if (transactionOrMessage.id.includes("dialect")) {
     isTransactionOrMessage = "message";
     const message = transactionOrMessage as SimpleWalletMessage;
   } else {
