@@ -82,10 +82,11 @@
       const rawMessages = await thread.messages();
       const messages: Array<SimpleWalletMessage> = rawMessages.map(
         (rawMessage) => {
+          const dateNumber = new Date(rawMessage.timestamp).valueOf();
           return {
             // Make an ID that is unique to this message
-            id: `dialect-${rawMessage.timestamp}-${rawMessage.author.address}`,
-            date: new Date(rawMessage.timestamp).valueOf(),
+            id: `dialect-${dateNumber}-${rawMessage.author.address}`,
+            date: dateNumber,
             memo: rawMessage.text,
             direction:
               rawMessage.author.address === keyPair.publicKey.toBase58()
