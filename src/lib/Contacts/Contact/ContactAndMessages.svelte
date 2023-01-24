@@ -20,7 +20,7 @@
   import BackButton from "../../Shared/BackButton.svelte";
   import type { Thread } from "@dialectlabs/sdk";
 
-  const DIALECT_POLL_INTERVAL = 5 * SECONDS;
+  const DIALECT_POLL_INTERVAL = 30 * SECONDS;
 
   import { getTransactionsAndMessagesByDays } from "../../../backend/messaging";
 
