@@ -1,5 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
-import { LIGHT_PROGRAM } from "../../constants";
+import { LIGHT_PROGRAM, MIKES_WALLET } from "../../constants";
 
 export const makingLightShieldAccount = {
   blockTime: 1673461335,
@@ -28,7 +28,7 @@ export const makingLightShieldAccount = {
     message: {
       accountKeys: [
         {
-          pubkey: new PublicKey("5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"),
+          pubkey: new PublicKey(MIKES_WALLET),
           signer: true,
           source: "transaction",
           writable: true,
@@ -63,12 +63,12 @@ export const makingLightShieldAccount = {
         {
           parsed: {
             info: {
-              base: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+              base: MIKES_WALLET,
               lamports: 1572960,
               newAccount: "7ePbj5NeQsjQQ8pRd6H62XfktbytpCicbEAzhiyNYjkL",
               owner: LIGHT_PROGRAM,
               seed: "lightLookup",
-              source: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+              source: MIKES_WALLET,
               space: 98,
             },
             type: "createAccountWithSeed",
@@ -78,7 +78,7 @@ export const makingLightShieldAccount = {
         },
         {
           accounts: [
-            "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            MIKES_WALLET,
             "7ePbj5NeQsjQQ8pRd6H62XfktbytpCicbEAzhiyNYjkL",
             "SysvarRent111111111111111111111111111111111",
           ],
