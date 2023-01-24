@@ -83,16 +83,6 @@
           };
         }
       );
-      // const dateNumber = new Date().valueOf(),
-      //   messages: Array<SimpleWalletMessage> = [
-      //     {
-      //       id: `dialect-${dateNumber}`,
-      //       date: dateNumber,
-      //       memo: `test message ${dateNumber}`,
-      //       direction: Direction.recieved,
-      //       isDialectMessage: true,
-      //     },
-      //   ];
       updateTransactionsAndMessages(messages);
     };
     // Do this every interval
