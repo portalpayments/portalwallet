@@ -14,17 +14,14 @@
 
   export let transactionOrMessage: SimpleTransaction | SimpleWalletMessage;
 
-  let isTransactionOrMessage: string;
+  let transactionOrMessageType: "message" | "transaction" =
+    transactionOrMessage.id.includes("dialect") ? "message" : "transaction";
 
   let currency;
   let major;
   let minor;
 
-  if (transactionOrMessage.id.includes("dialect")) {
-    isTransactionOrMessage = "message";
-    const message = transactionOrMessage as SimpleWalletMessage;
-  } else {
-    isTransactionOrMessage = "transaction";
+  if (transactionOrMessageType === "transaction") {
     const transaction = transactionOrMessage as SimpleTransaction;
     currency = getCurrencyByMint(transaction.currency);
 
@@ -41,8 +38,7 @@
     ? 'received'
     : 'sent'}"
 >
-  <textarea class="debug">{stringify(transactionOrMessage)}</textarea>
-  {#if isTransactionOrMessage === "transaction"}
+  {#if transactionOrMessageType === "transaction"}
     <div class="logo-and-amount">
       <img
         src={currency.logo}
@@ -164,5 +160,9 @@
     right: 18px;
     bottom: 12px;
     font-weight: 400;
+  }
+
+  textarea {
+    font-size: 12px;
   }
 </style>
