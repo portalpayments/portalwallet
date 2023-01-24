@@ -159,12 +159,8 @@ export const addOnlyUniqueNewMessages = (
   transactionsAndMessages: Array<SimpleTransaction | SimpleWalletMessage>,
   newItems: Array<SimpleTransaction | SimpleWalletMessage>
 ) => {
-  const oldValue = transactionsAndMessages.length;
-
   const allTransactionsAndMessagesWithDuplicates =
     transactionsAndMessages.concat(newItems);
-
-  log(`>>> should be 6`, allTransactionsAndMessagesWithDuplicates.length);
 
   // Thanks https://stackoverflow.com/a/58429784/123671
   const combinedUniqueTransactionsAndMessages = [
@@ -172,10 +168,6 @@ export const addOnlyUniqueNewMessages = (
       allTransactionsAndMessagesWithDuplicates.map((item) => [item.id, item])
     ).values(),
   ];
-
-  // log(
-  //   `Existing transactionsAndMessages was ${oldValue} long, just got ${newItems.length} to add, result was ${transactionsAndMessages.length} items`
-  // );
 
   return combinedUniqueTransactionsAndMessages;
 };
