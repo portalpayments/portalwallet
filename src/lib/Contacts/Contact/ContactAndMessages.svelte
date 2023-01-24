@@ -3,7 +3,7 @@
   import { tokenAccountsStore, contactsStore, authStore } from "../../stores";
   import type { Keypair } from "@solana/web3.js";
   import { get as getFromStore } from "svelte/store";
-  import { log, stringify } from "../../../backend/functions";
+  import { log, stringify, repeat } from "../../../backend/functions";
   import { SECONDS } from "../../../backend/constants";
   import {
     getOrMakeThread,
@@ -46,13 +46,16 @@
     newItems: Array<SimpleTransaction | SimpleWalletMessage>
   ) => {
     log(`In updateTransactionsAndMessages, ${newItems.length} items to add`);
+
     const combinedUniqueTransactionsAndMessages = addOnlyUniqueNewMessages(
       transactionsAndMessages,
       newItems
     );
 
+    transactionsAndMessages = combinedUniqueTransactionsAndMessages;
+
     transactionsAndMessagesByDays = getTransactionsAndMessagesByDays(
-      combinedUniqueTransactionsAndMessages
+      transactionsAndMessages
     );
   };
 
@@ -60,12 +63,12 @@
   // TODO: replace when Dialect add thread subscriptions
   const startPolling = async (
     keyPair: Keypair,
-    walletAddress: string,
+    otherPersonWalletAddress: string,
     interval: number
   ) => {
     const getThread = async () => {
       log(`Pulling dialect messages....`);
-      thread = await getOrMakeThread(keyPair, walletAddress);
+      thread = await getOrMakeThread(keyPair, otherPersonWalletAddress);
       const rawMessages = await thread.messages();
       const messages: Array<SimpleWalletMessage> = rawMessages.map(
         (rawMessage) => {
@@ -83,14 +86,13 @@
           };
         }
       );
+
       updateTransactionsAndMessages(messages);
     };
     // Do this every interval
-    setInterval(async () => {
+    repeat(async () => {
       await getThread();
     }, interval);
-    // And also on the 'leading edge', ie now
-    await getThread();
   };
 
   contactsStore.subscribe(async (newValue) => {
@@ -99,7 +101,9 @@
         return contact.walletAddress === contactWalletAddress;
       });
       if (!foundContact) {
-        throw new Error(`Could not find contact in contacts store`);
+        throw new Error(
+          `Could not find counterParty contact in contacts store`
+        );
       }
       contact = foundContact;
 

@@ -365,9 +365,10 @@ export const summarizeTransaction = async (
     const error = thrownObject as Error;
     // TODO: throw error instead of just log
     // (once we can handle more types of transactions in future)
-    log(
-      `Warning: could not summarize transaction ID: see https://explorer.solana.com/tx/${id} - for more info, ${error.message}`
-    );
+    // Quieten logging for now
+    // log(
+    //   `Warning: could not summarize transaction ID: see https://explorer.solana.com/tx/${id} - for more info, ${error.message}`
+    // );
     // log(error.stack);
     // log(stringify(rawTransaction));
     return null;

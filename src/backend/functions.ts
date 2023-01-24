@@ -167,3 +167,12 @@ export const instructionDataToNote = (string: string) => {
   const binaryArray = base58.decode(string);
   return decoder.decode(Buffer.from(binaryArray));
 };
+
+export const repeat = async (functionToRun: Function, interval: number) => {
+  // Run the fnction on the 'leading edge', ie now
+  functionToRun();
+  // Do this every interval
+  return setInterval(() => {
+    functionToRun();
+  }, interval);
+};
