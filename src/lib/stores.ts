@@ -378,7 +378,7 @@ const setupServiceWorker = async () => {
       // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer/register
       registration = await SERVICE_WORKER.register("./service-worker.js");
     } catch (error) {
-      throw new Error(`Service worker registration failed`, error.message);
+      throw error;
     }
 
     log("⚡Service worker registration succeeded:", registration);
