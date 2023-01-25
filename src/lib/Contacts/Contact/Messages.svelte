@@ -105,8 +105,6 @@
 
   .go-to-bottom img {
     width: 24px;
-    // TODO: remove this hack, think Figma export needs fixing
-    transform: translateX(-1px) translateY(2px);
   }
 
   .go-to-bottom:disabled {
