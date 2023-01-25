@@ -161,8 +161,4 @@
     bottom: 12px;
     font-weight: 400;
   }
-
-  textarea {
-    font-size: 12px;
-  }
 </style>
