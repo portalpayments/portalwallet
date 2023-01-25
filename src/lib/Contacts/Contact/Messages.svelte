@@ -73,6 +73,7 @@
 
   .scrollable-area {
     overflow-y: scroll;
+    scroll-behavior: smooth;
     padding: 2px;
 
     gap: 8px;
