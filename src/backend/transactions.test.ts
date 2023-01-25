@@ -41,8 +41,7 @@ const contacts = [
     isNew: false,
     isPending: false,
     verifiedClaims: {
-      // TODO: kinda odd but we have to satify the TS compiler
-      type: "INDIVIDUAL" as "INDIVIDUAL",
+      type: "INDIVIDUAL",
       givenName: "Jared",
       familyName: "Friedman",
       imageUrl:
