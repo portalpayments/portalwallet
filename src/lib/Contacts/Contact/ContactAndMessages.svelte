@@ -40,8 +40,6 @@
   let thread: Thread | null;
   $: thread = null;
 
-  // Join the array with existing values and ensure all values are unique
-  // TODO: move to backend
   const updateTransactionsAndMessages = (
     newItems: Array<SimpleTransaction | SimpleWalletMessage>
   ) => {
