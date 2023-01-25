@@ -6,7 +6,7 @@
 // See https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/deriveKey
 
 import { log, sleep, stringify } from "../backend/functions";
-import localforage, { key } from "localforage";
+import * as localforage from "localforage";
 import type { Settings } from "./../backend/types";
 import {
   passwordToKey,
