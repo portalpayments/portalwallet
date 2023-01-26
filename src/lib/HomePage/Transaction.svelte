@@ -88,7 +88,9 @@
   {#if transaction.direction === Direction.recieved || transaction.direction === Direction.sent}
     {#if contact}
       <img
-        class="profile-pic"
+        class="profile-pic {contact?.verifiedClaims?.type === 'ORGANIZATION'
+          ? 'organization'
+          : 'individual'}"
         src={!isEmpty(contact?.verifiedClaims)
           ? contact.verifiedClaims.imageUrl
           : AnonymousImage}
@@ -99,8 +101,13 @@
           {#if transaction?.receipt?.shop}
             {transaction.receipt.shop}
           {:else if !isEmpty(contact?.verifiedClaims)}
-            {contact.verifiedClaims?.givenName}
-            {contact.verifiedClaims?.familyName}
+            {#if contact.verifiedClaims.type === "INDIVIDUAL"}
+              {contact.verifiedClaims?.givenName}
+              {contact.verifiedClaims?.familyName}
+            {/if}
+            {#if contact.verifiedClaims.type === "ORGANIZATION"}
+              {contact.verifiedClaims?.legalName}
+            {/if}
           {:else}
             Unverified {truncateWallet(contact.walletAddress)}
           {/if}
@@ -169,8 +176,12 @@
     text-align: right;
   }
 
-  .profile-pic {
+  .profile-pic.individual {
     border-radius: 50%;
+  }
+
+  .profile-pic.organization {
+    border-radius: 4px;
   }
 
   img {

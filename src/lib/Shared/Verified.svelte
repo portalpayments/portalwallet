@@ -13,7 +13,9 @@
 
 <img
   src={contact.verifiedClaims.imageUrl}
-  class="profile-pic"
+  class="profile-pic {contact.verifiedClaims.type === 'INDIVIDUAL'
+    ? 'individual'
+    : 'organization'}"
   alt="Address is verified"
 />
 <div class="recipient-info">
@@ -42,12 +44,16 @@
 
 <style lang="scss">
   .profile-pic {
-    border-radius: 50%;
     aspect-ratio: 1 / 1;
+    width: 36px;
   }
 
-  .profile-pic {
-    width: 100%;
+  .profile-pic.individual {
+    border-radius: 50%;
+  }
+
+  .profile-pic.organization {
+    border-radius: 4px;
   }
 
   .recipient-info {

@@ -22,11 +22,10 @@
   .contact {
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 64px 1fr;
+    grid-template-columns: 36px 1fr;
     gap: 6px;
     justify-content: center;
     align-items: center;
-    height: 80px;
     width: 100%;
     box-sizing: border-box;
   }

@@ -68,7 +68,7 @@
   .transaction-history {
     // Explicitly position so go-to-bottom can be positioned absolutely and stay on screen
     position: relative;
-    height: 510px;
+    height: 536px;
   }
 
   .scrollable-area {

@@ -26,7 +26,7 @@
     font-size: 2rem;
     position: absolute;
     /* Just eyeballing it to fit beside the heading on the Transfers page */
-    top: 42px;
+    top: 20px;
     left: 6px;
     margin: 0;
     padding: 0;

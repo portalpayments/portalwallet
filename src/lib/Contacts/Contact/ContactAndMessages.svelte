@@ -162,7 +162,7 @@
     width: var(--wallet-width);
     display: grid;
     grid-auto-flow: row;
-    grid-template-rows: 90px 1fr;
+    grid-template-rows: 64px 1fr;
   }
 
   .heading {

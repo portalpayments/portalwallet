@@ -173,7 +173,6 @@
     width: var(--wallet-width);
     height: var(--wallet-height);
     grid-auto-flow: row;
-    grid-template-rows: 120px 1fr 1fr;
     gap: 16px;
     justify-content: center;
     align-items: start;
