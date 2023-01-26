@@ -11,9 +11,11 @@
 // https://stackoverflow.com/questions/62619058/appending-js-extension-on-relative-import-statements-during-typescript-compilat
 import type { AccountSummary, Contact } from "./backend/types.js";
 import { log } from "./backend/functions.js";
+import * as localforage from "localforage";
 
 const VERSION = 23;
 log(`VERSION IS ${VERSION}`);
+log(`localforage is`, localforage);
 
 let secretKey: string | null = null;
 
