@@ -1,7 +1,10 @@
 <script lang="ts">
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
   import { log, stringify } from "../../backend/functions";
-  import { getCurrencyByMint } from "../../backend/constants";
+  import {
+    getCurrencyByMint,
+    getCurrencyBySymbol,
+  } from "../../backend/constants";
   import type { AccountSummary, CurrencyDetails } from "../../backend/types";
   import SkeletonBalance from "../Shared/Skeletons/SkeletonBalance.svelte";
 
@@ -10,8 +13,6 @@
     haveAccountsLoadedStore,
     onChangeActiveAccount,
   } from "../stores";
-
-  const USDC_ICON = "/src/assets/Icons/usdc-coin-grey.svg";
 
   let majorAndMinor: Array<string | null> = [null, null];
 
@@ -56,17 +57,17 @@
     </div>
   {:else if hasUSDCAccount}
     <div class="symbol-major-minor">
-      <img
-        class="symbol"
-        alt="{currency.symbol} logo"
-        src={activeAccount ? currency.logo : USDC_ICON}
-      />
+      <img class="symbol" alt="{currency.symbol} logo" src={currency.logo} />
       <div class="major">{majorAndMinor[0]}</div>
       <div class="minor">.{majorAndMinor[1]}</div>
     </div>
   {:else}
     <div class="symbol-major-minor">
-      <img class="symbol" alt="USDC logo" src={USDC_ICON} />
+      <img
+        class="symbol"
+        alt="USDC logo"
+        src={getCurrencyBySymbol("USDC").logo}
+      />
       <div class="major">0</div>
       <div class="minor">.0</div>
     </div>

@@ -59,7 +59,7 @@ describe(`basic wallet functionality on local validator`, () => {
     connection = await connect("localhost");
   });
 
-  test(`getCurrencyByName works`, () => {
+  test(`getCurrencyBySymbol works`, () => {
     expect(getCurrencyBySymbol("USDC")).toEqual({
       decimals: 6,
       logo: "/src/assets/Icons/usdc-coin-grey.svg",
