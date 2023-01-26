@@ -8,5 +8,11 @@
     // Resulting files will be in prebundle/service-worker.js
     "outDir": "prebundle"
   },
-  "include": ["src/service-worker.ts", "src/service-worker-helpers.ts"]
+  "include": [
+    "src/service-worker.ts",
+    "src/service-worker-helpers.ts",
+    "src/backend/types.ts",
+    "src/backend/functions.ts",
+    "src/backend/mint-to-currency-map.ts"
+  ]
 }

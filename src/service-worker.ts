@@ -8,12 +8,13 @@
 // Proper TS support is a huge time suck, be warned! Best wait until bugs mentioned above are fixed.
 
 // @ts-ignore see top of file
-const VERSION = 22;
+const VERSION = 23;
 
 console.log(`VERSION IS ${VERSION}`);
 
 // Yes use .js, TypeScript will apparently figure it out, as .ts breaks.
 // https://stackoverflow.com/questions/62619058/appending-js-extension-on-relative-import-statements-during-typescript-compilat
+import type { Contact } from "./backend/types.js";
 import { log } from "./service-worker-helpers.js";
 
 let secretKey: string | null = null;
@@ -24,19 +25,6 @@ let secretKey: string | null = null;
 // service workers that won't install
 let nativeAccountSummary: Record<string, any> | null = null;
 let tokenAccountSummaries: Array<any> | null = null;
-
-// TODO: copied from contacts
-interface Contact {
-  walletAddress: string;
-  isNew: boolean;
-  isPending: boolean;
-  verifiedClaims: {
-    type: "INDIVIDUAL" | "ORGANIZATION";
-    givenName: string;
-    familyName: string;
-    imageUrl: string;
-  };
-}
 
 let contacts: Array<Contact> | null = null;
 
