@@ -141,7 +141,9 @@ export const getMintAddressBySymbol = (symbol: string) => {
 };
 
 export const getCurrencyByMint = (mint: string) => {
-  const isKnownCurrency = Object.hasOwn(mintToCurrencyMap, mint);
+  // TODO: we can use hasOwn in future
+  // just trying to keep changes to minimal for now
+  const isKnownCurrency = mintToCurrencyMap.hasOwnProperty(mint);
   if (!isKnownCurrency) {
     throw new Error(`Unknown currency for mint '${mint}'`);
   }
