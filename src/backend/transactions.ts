@@ -16,6 +16,7 @@ import {
   type ReceiptSummary,
   type TransactionsByDay,
   type SimpleTransaction,
+  type Contact,
 } from "../backend/types";
 import { mintToCurrencyMap } from "../backend/mint-to-currency-map";
 import {
@@ -394,9 +395,18 @@ export const getContactMatch = (contact: Contact, filterValue: string) => {
   if (!contact?.verifiedClaims) {
     return false;
   }
-  return (
-    isIncludedCaseInsensitive(contact.verifiedClaims.givenName, filterValue) ||
-    isIncludedCaseInsensitive(contact.verifiedClaims.familyName, filterValue)
+  if (contact.verifiedClaims.type === "INDIVIDUAL") {
+    return (
+      isIncludedCaseInsensitive(
+        contact.verifiedClaims.givenName,
+        filterValue
+      ) ||
+      isIncludedCaseInsensitive(contact.verifiedClaims.familyName, filterValue)
+    );
+  }
+  return isIncludedCaseInsensitive(
+    contact.verifiedClaims.legalName,
+    filterValue
   );
 };
 
