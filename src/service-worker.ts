@@ -10,7 +10,7 @@
 // Yes use .js, TypeScript will apparently figure it out, as .ts breaks.
 // https://stackoverflow.com/questions/62619058/appending-js-extension-on-relative-import-statements-during-typescript-compilat
 import type { AccountSummary, Contact } from "./backend/types.js";
-import { log } from "./backend/functions.js";
+import { log, isFresh } from "./backend/functions.js";
 import { cacheWebRequests } from "./service-worker-webcache";
 import * as localforage from "localforage";
 

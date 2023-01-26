@@ -1,7 +1,20 @@
 // Generic JavaScript functions for browser and node
 
+// TODO
+// Duplicate, but depending on constants brings is too many additional dependencies for service worker
+const MINUTES = 60 * 1000;
+
 export const toUnique = function <T>(array: Array<T>): Array<T> {
   return Array.from(new Set(array));
+};
+
+export const isFresh = (lastUpdated: number) => {
+  const now = Date.now();
+  const difference = now - lastUpdated;
+  if (difference < 5 * MINUTES) {
+    return true;
+  }
+  return false;
 };
 
 // Moves dates years back or forward, handling leap years (unlike '+ 1 * YEAR')
