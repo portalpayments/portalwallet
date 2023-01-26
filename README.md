@@ -9,6 +9,8 @@
 
 See [coding guidelines](CODING_GUIDELINES.md).
 
+Also note re: servic workers - we currently don't use vite, https://crxjs.dev/ seems to be th best way to build service workers with vite, but has issues https://github.com/crxjs/chrome-extension-tools/issues/617
+
 ## To package the Web Extension 
 
 ### Make zip file

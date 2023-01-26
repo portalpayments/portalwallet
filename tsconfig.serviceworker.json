@@ -7,5 +7,5 @@
     // Resulting files will be in dist/service-worker.js
     "outDir": "dist"
   },
-  "include": ["src/service-worker.ts"]
+  "include": ["src/service-worker.ts", "src/service-worker-helpers.ts"]
 }

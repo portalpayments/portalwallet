@@ -8,13 +8,13 @@
 // Proper TS support is a huge time suck, be warned! Best wait until bugs mentioned above are fixed.
 
 // @ts-ignore see top of file
-const VERSION = 21;
+const VERSION = 22;
 
-const log = console.log.bind(console);
+console.log(`VERSION IS ${VERSION}`);
 
-const stringify = function (object) {
-  return JSON.stringify(object, null, 2);
-};
+// Yes use .js, TypeScript will apparently figure it out, as .ts breaks.
+// https://stackoverflow.com/questions/62619058/appending-js-extension-on-relative-import-statements-during-typescript-compilat
+import { log } from "./service-worker-helpers.js";
 
 let secretKey: string | null = null;
 
