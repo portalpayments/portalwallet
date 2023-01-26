@@ -13,7 +13,7 @@
     "build:frontend": "vite build",
     "build:icons": "cp -rv src/assets/token-logos dist/assets",
     "clean": "npx rimraf dist/*",
-    "build:serviceworker": "rm tsconfig.serviceworker.tsbuildinfo; npx tsc --project tsconfig.serviceworker.json && npx rollup -c rollup.config.js",
+    "build:serviceworker": "npx rollup -c rollup.config.js",
     "publish": "bash make-zip-file.bash",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
@@ -25,6 +25,7 @@
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@metaplex-foundation/js": "^0.15.0",
+    "@rollup/plugin-typescript": "^11.0.0",
     "@solana/web3.js": "^1.73.0",
     "@sveltejs/adapter-static": "^1.0.0-next.39",
     "@sveltejs/vite-plugin-svelte": "^1.0.2",

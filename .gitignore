@@ -9,3 +9,4 @@ dist/*
 arweave-wallet.json
 *.tsbuildinfo
 prebundle
+.rollup.cache
