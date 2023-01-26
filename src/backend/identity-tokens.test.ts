@@ -22,7 +22,7 @@ import {
   SOLANA_SYSTEM_PROGRAM,
   SECONDS,
 } from "./constants";
-import base58 from "bs58";
+import * as base58 from "bs58";
 import { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, sendTokens } from "./tokens";
 

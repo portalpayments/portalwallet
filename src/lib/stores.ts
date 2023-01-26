@@ -15,7 +15,7 @@ import {
   PORTAL_IDENTITY_TOKEN_ISSUER_WALLET,
   SECONDS,
 } from "../backend/constants";
-import base58 from "bs58";
+import * as base58 from "bs58";
 import { getAllNftMetadatasFromAWallet } from "../backend/identity-tokens";
 import * as http from "./http-client";
 import { summarizeTransaction } from "../backend/transactions";

@@ -16,7 +16,7 @@ import {
   getCurrencyBySymbol,
 } from "./constants";
 import { asyncMap } from "./functions";
-import base58 from "bs58";
+import * as base58 from "bs58";
 import { AccountLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import type { RawAccount } from "@solana/spl-token";
 import { getIdentityTokensFromWallet } from "./identity-tokens";

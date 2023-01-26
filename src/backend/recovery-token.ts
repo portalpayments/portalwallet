@@ -5,7 +5,7 @@ import { SOLANA_SEED_SIZE_BYTES } from "./constants";
 import { log } from "./functions";
 
 import * as bip39 from "bip39";
-import base58 from "bs58";
+import * as base58 from "bs58";
 
 if (!globalThis.setImmediate) {
   // Fixes 'ReferenceError: setImmediate is not defined' when running in browser

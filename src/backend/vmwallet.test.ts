@@ -12,7 +12,7 @@ import {
   verifyWallet,
   getTokenAccountSummaries,
 } from "./vmwallet";
-import base58 from "bs58";
+import * as base58 from "bs58";
 
 import {
   AGIZA_NFT_ADDRESS,

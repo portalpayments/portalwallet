@@ -13,7 +13,7 @@
     checkIfSecretKeyIsValid,
     checkIfMnemonicPhraseIsValid,
   } from "../../backend/recovery-token";
-  import base58 from "bs58";
+  import * as base58 from "bs58";
   import { saveSettings, checkIfOnboarded } from "../settings";
 
   import Heading from "../Shared/Heading.svelte";

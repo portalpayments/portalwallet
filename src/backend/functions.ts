@@ -1,7 +1,7 @@
 // Generic JavaScript functions for browser and node
 const decoder = new TextDecoder("utf-8");
 
-import base58 from "bs58";
+import * as base58 from "bs58";
 
 export const toUnique = function <T>(array: Array<T>): Array<T> {
   return Array.from(new Set(array));
