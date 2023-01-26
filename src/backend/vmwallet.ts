@@ -336,6 +336,7 @@ export const getTokenAccountSummaries = async (
         balance: Number(tokenAccount.amount),
         decimals: currencyInfo.decimals,
         transactionSummaries,
+        lastUpdated: Date.now(),
       };
       return accountSummary;
     }
@@ -370,6 +371,7 @@ export const getNativeAccountSummary = async (
     balance: accountBalance,
     decimals: SOLANA_DECIMALS,
     transactionSummaries,
+    lastUpdated: Date.now(),
   };
   return accountSummary;
 };

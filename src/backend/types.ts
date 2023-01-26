@@ -270,6 +270,7 @@ export interface AccountSummary {
   balance: number;
   decimals: number;
   transactionSummaries: Array<SimpleTransaction>;
+  lastUpdated: number;
 }
 
 export enum Direction {
