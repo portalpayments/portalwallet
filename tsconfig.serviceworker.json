@@ -14,6 +14,7 @@
     "src/service-worker-webcache.ts",
     "src/backend/types.ts",
     "src/backend/functions.ts",
+    "src/backend/constants.ts",
     "src/backend/mint-to-currency-map.ts"
   ]
 }
