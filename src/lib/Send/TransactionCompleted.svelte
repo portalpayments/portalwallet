@@ -7,7 +7,7 @@
     VerifiedClaimsForIndividual,
     VerifiedClaimsForOrganization,
   } from "../../backend/types";
-  import USDClogo from "../../assets/Icons/usdc.svg";
+  import USDClogo from "../../assets/token-logos/usdc-coin-grey.svg";
 
   export let verifiedClaims:
     | VerifiedClaimsForIndividual

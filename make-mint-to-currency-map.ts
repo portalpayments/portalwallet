@@ -8,12 +8,12 @@ const tokenListProvider = new TokenListProvider();
 const FILE_NAME = "src/backend/mint-to-currency-map.ts";
 
 const pleasantIcons = {
-  USDC: "/src/assets/Icons/usdc-coin-grey.svg",
-  USDT: "/src/assets/Icons/usdt-coin-grey.svg",
-  USDH: "/src/assets/Icons/usdh-coin-grey.svg",
-  SOL: "/src/assets/Icons/sol-coin-grey.svg",
+  USDC: "/assets/token-logos/usdc-coin-grey.svg",
+  USDT: "/assets/token-logos/usdt-coin-grey.svg",
+  USDH: "/assets/token-logos/usdh-coin-grey.svg",
+  SOL: "/assets/token-logos/sol-coin-grey.svg",
   // TODO: make a wrap icon for wSOL
-  WSOL: "/src/assets/Icons/sol-coin-grey.svg",
+  WSOL: "/assets/token-logos/sol-coin-grey.svg",
 };
 
 const main = async () => {

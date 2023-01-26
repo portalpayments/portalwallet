@@ -2,8 +2,7 @@
   import { debounce } from "lodash";
   import { SECOND } from "../../backend/constants";
   import { log } from "../../backend/functions";
-  import USDClogo from "../../../src/assets/Icons/usdc.svg";
-  import { useFocus } from "svelte-navigator";
+  import USDClogo from "../../../src/assets/token-logos/usdc-coin-grey.svg";
   import { getFocusContext } from "./FocusContext.svelte";
 
   export let value: string | number;
