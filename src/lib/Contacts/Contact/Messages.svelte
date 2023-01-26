@@ -75,6 +75,7 @@
     overflow-y: scroll;
     scroll-behavior: smooth;
     padding: 2px;
+    align-content: start;
 
     gap: 8px;
     color: white;
@@ -86,6 +87,7 @@
   }
 
   .go-to-bottom {
+    padding: 0;
     position: absolute;
     display: grid;
     justify-items: center;

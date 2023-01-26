@@ -2,7 +2,9 @@
   import { Link } from "svelte-navigator";
   import BackButton from "../Shared/BackButton.svelte";
   import helpIconURL from "../../assets/Icons/help.svg";
+  import fullScreenIconURL from "../../assets/Icons/fullscreen.svg";
   import logoutIconURL from "../../assets/Icons/logout.svg";
+  import twitterIconURL from "../../assets/Icons/twitter.svg";
   import { log } from "../../backend/functions";
   import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "../../backend/constants";
   import Modal from "../Shared/Modal.svelte";
@@ -21,7 +23,7 @@
 
   // We load up the home page, not this Settings page
   // thisis why we don't use (window.location.href)
-  const HOME_PAGE = `${window.location.protocol}//${window.location.hostname}/index.html`;
+  const HOME_PAGE = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/index.html`;
 
   const MOCK_MNEMONIC_FOR_BLURRING =
     "some words that look like they might be a mnemonic but arent";
@@ -84,7 +86,10 @@
         Only enter your {itemToConfirm} into a wallet application that you trust.
         Regular DeFi, web3 and crypto apps don't need your {itemToConfirm} to work.
       </p>
-      <Password bind:value={enteredPassword} />
+      <div class="fancy-border">
+        <Password bind:value={enteredPassword} />
+      </div>
+
       <div class="buttons">
         <button
           class="go-back"
@@ -119,14 +124,23 @@
   </Link>
 
   <a class="button with-icon" href={HOME_PAGE} target="_blank">
-    <img src={helpIconURL} alt="New tab" />
+    <img src={fullScreenIconURL} alt="New tab" />
     Open Portal in new tab
   </a>
 
   <a class="button with-icon" href="https://twitter.com/portalpayments">
-    <img src={helpIconURL} alt="Help" />
+    <img src={twitterIconURL} alt="Help" />
     Follow @portalpayments on Twitter
   </a>
+
+  <button
+    type="button"
+    class="logout with-icon"
+    on:click|preventDefault={logout}
+  >
+    <img src={logoutIconURL} alt="Log out" />
+    Lock wallet
+  </button>
 
   <BlurredText
     text={mnemonic || MOCK_MNEMONIC_FOR_BLURRING}
@@ -149,15 +163,6 @@
   />
 
   <p>Portal version: {PORTAL_VERSION}</p>
-
-  <button
-    type="button"
-    class="logout with-icon"
-    on:click|preventDefault={logout}
-  >
-    <img src={logoutIconURL} alt="Log out" />
-    Log out
-  </button>
 </div>
 
 <style lang="scss">
@@ -173,7 +178,7 @@
     width: var(--wallet-width);
     height: var(--wallet-height);
     grid-auto-flow: row;
-    gap: 16px;
+    gap: 8px;
     justify-content: center;
     align-items: start;
     background: radial-gradient(at 50% 50%, #dde9ff 0, #fff 80%, #fff 100%);
