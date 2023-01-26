@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { debounce } from "lodash";
+  import debounce from "lodash.debounce";
   import { onMount as svelteOnMount } from "svelte";
 
   export let placeHolder: string | null = null;

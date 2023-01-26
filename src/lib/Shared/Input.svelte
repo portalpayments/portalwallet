@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { debounce } from "lodash";
+  import debounce from "lodash.debounce";
   import { SECOND } from "../../backend/constants";
   import { log } from "../../backend/functions";
   import USDClogo from "../../../src/assets/token-logos/usdc-coin-grey.svg";
