@@ -32,8 +32,6 @@ log(`localforage is`, localforage.getItem);
 
 let secretKey: string | null = null;
 
-// TODO: load everything in parallel using asyncMap() from localforage
-
 let nativeAccountSummary: AccountSummary | null = null;
 let tokenAccountSummaries: Array<AccountSummary> | null = null;
 let contacts: Array<Contact> | null = null;
@@ -76,19 +74,44 @@ const handleMessage = async (eventData) => {
 
   if (eventData.topic === "getNativeAccountSummary") {
     if (nativeAccountSummary) {
-      log(`😃 Service worker cache: we have the nativeAccountSummary`);
+      log(
+        `😃 Service worker cache: we have the nativeAccountSummary in memory already`
+      );
 
       sendMessage({
         topic: "replyNativeAccountSummary",
         nativeAccountSummary,
       });
-    } else {
-      log(`☹️ Service worker does not have the nativeAccountSummary`);
+      return;
     }
+    const nativeAccountSummaryFromLocalForage = (await localforage.getItem(
+      "NATIVE_ACCOUNT_SUMMARY"
+    )) as AccountSummary;
+    if (nativeAccountSummaryFromLocalForage) {
+      if (isFresh(nativeAccountSummaryFromLocalForage.lastUpdated)) {
+        log(
+          `😀 Service worker cache: we have the nativeAccountSummary in localforage and it's fresh!`
+        );
+        sendMessage({
+          topic: "replyNativeAccountSummary",
+          nativeAccountSummary: nativeAccountSummaryFromLocalForage,
+        });
+        return;
+      } else {
+        log(
+          `☹️ Service worker cache: we have the nativeAccountSummary in localforage but it's not fresh`
+        );
+        return;
+      }
+    }
+    log(`☹️ Service worker does not have the nativeAccountSummary`);
   }
 
   if (eventData.topic === "setNativeAccountSummary") {
     nativeAccountSummary = eventData.nativeAccountSummary;
+    nativeAccountSummary.lastUpdated = Date.now();
+    await localforage.setItem("NATIVE_ACCOUNT_SUMMARY", nativeAccountSummary);
+    log(`Saved NATIVE_ACCOUNT_SUMMARY to localForage`);
   }
 
   if (eventData.topic === "getTokenAccountSummaries") {
@@ -99,13 +122,44 @@ const handleMessage = async (eventData) => {
         topic: "replyTokenAccountSummaries",
         tokenAccountSummaries,
       });
-    } else {
-      log(`☹️ Service worker does not have the tokenAccountSummaries`);
+      return;
     }
+    const tokenAccountSummariesFromLocalForage = (await localforage.getItem(
+      "TOKEN_ACCOUNT_SUMMARIES"
+    )) as Array<AccountSummary>;
+
+    const allAreFresh =
+      tokenAccountSummariesFromLocalForage &&
+      tokenAccountSummariesFromLocalForage.every((accountSummary) =>
+        isFresh(accountSummary.lastUpdated)
+      );
+
+    if (allAreFresh) {
+      log(
+        `😀 Service worker cache: we have the tokenAccountSummaries in localforage and they're all fresh!`
+      );
+      sendMessage({
+        topic: "replyTokenAccountSummaries",
+        tokenAccountSummaries: tokenAccountSummariesFromLocalForage,
+      });
+      return;
+    } else {
+      log(
+        `☹️ Service worker cache: we have the tokenAccountSummaries in localforage but they're not all fresh`
+      );
+    }
+
+    log(`☹️ Service worker does not have the tokenAccountSummaries`);
+    return;
   }
 
   if (eventData.topic === "setTokenAccountSummaries") {
     tokenAccountSummaries = eventData.tokenAccountSummaries;
+    tokenAccountSummaries.map((tokenAccountSummary) => {
+      tokenAccountSummary.lastUpdated = Date.now();
+    });
+    await localforage.setItem("TOKEN_ACCOUNT_SUMMARIES", tokenAccountSummaries);
+    log(`Saved TOKEN_ACCOUNT_SUMMARIES to localForage`);
   }
 
   if (eventData.topic === "getContacts") {
