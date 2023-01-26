@@ -1,6 +1,5 @@
 import {
   log,
-  instructionDataToNote,
   debug,
   byDateNewestToOldest,
   dateToISODate,
@@ -37,6 +36,15 @@ import {
 import { amountAndDecimalsToMajorAndMinor } from "../lib/utils";
 
 import { recognizeDateTime } from "@microsoft/recognizers-text-date-time";
+
+import * as base58 from "bs58";
+
+const decoder = new TextDecoder("utf-8");
+
+export const instructionDataToNote = (string: string) => {
+  const binaryArray = base58.decode(string);
+  return decoder.decode(Buffer.from(binaryArray));
+};
 
 // See constants.ts for details re: notes vs memos
 const getNoteOrMemo = (

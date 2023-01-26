@@ -1,7 +1,4 @@
 // Generic JavaScript functions for browser and node
-const decoder = new TextDecoder("utf-8");
-
-import * as base58 from "bs58";
 
 export const toUnique = function <T>(array: Array<T>): Array<T> {
   return Array.from(new Set(array));
@@ -161,11 +158,6 @@ export const hexToUtf8 = function (string) {
       .replace(/\s+/g, "") // remove spaces
       .replace(/[0-9a-f]{2}/g, "%$&") // add '%' before each 2 characters
   );
-};
-
-export const instructionDataToNote = (string: string) => {
-  const binaryArray = base58.decode(string);
-  return decoder.decode(Buffer.from(binaryArray));
 };
 
 export const repeat = async (functionToRun: Function, interval: number) => {
