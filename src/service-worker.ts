@@ -7,15 +7,13 @@
 // Compiling with tsconfig specified in that blog post creates a service worker that won't install.
 // Proper TS support is a huge time suck, be warned! Best wait until bugs mentioned above are fixed.
 
-// @ts-ignore see top of file
-const VERSION = 23;
-
-console.log(`VERSION IS ${VERSION}`);
-
 // Yes use .js, TypeScript will apparently figure it out, as .ts breaks.
 // https://stackoverflow.com/questions/62619058/appending-js-extension-on-relative-import-statements-during-typescript-compilat
 import type { AccountSummary, Contact } from "./backend/types.js";
-import { log } from "./service-worker-helpers.js";
+import { log } from "./backend/functions.js";
+
+const VERSION = 23;
+log(`VERSION IS ${VERSION}`);
 
 let secretKey: string | null = null;
 
