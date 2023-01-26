@@ -62,7 +62,7 @@
     "@open-wc/building-rollup": "^2.2.1",
     "@peculiar/webcrypto": "^1.4.0",
     "@solana/spl-token": "^0.3.4",
-    "@solana/spl-token-registry": "^0.2.4574",
+    "@solana/spl-token-registry": "^0.2.7",
     "@types/qrcode": "^1.5.0",
     "@types/scryptsy": "^2.0.0",
     "deepmerge": "^4.2.2",
