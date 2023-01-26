@@ -49,7 +49,7 @@ export default defineConfig({
       include: [],
     },
     minify: isMinifiying,
-    // We use tsc to build the service worker, so don't destroy that built file.
+    // We use tsc/rollup to build the service worker, so don't destroy that built file.
     emptyOutDir: false,
   },
   optimizeDeps: {

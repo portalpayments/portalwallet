@@ -3,9 +3,10 @@
     "rootDir": "src",
     "composite": true,
     "module": "es2020",
+    "target": "es2020",
     "moduleResolution": "Node",
-    // Resulting files will be in dist/service-worker.js
-    "outDir": "dist"
+    // Resulting files will be in prebundle/service-worker.js
+    "outDir": "prebundle"
   },
   "include": ["src/service-worker.ts", "src/service-worker-helpers.ts"]
 }
