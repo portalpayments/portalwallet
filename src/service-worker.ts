@@ -14,18 +14,15 @@ console.log(`VERSION IS ${VERSION}`);
 
 // Yes use .js, TypeScript will apparently figure it out, as .ts breaks.
 // https://stackoverflow.com/questions/62619058/appending-js-extension-on-relative-import-statements-during-typescript-compilat
-import type { Contact } from "./backend/types.js";
+import type { AccountSummary, Contact } from "./backend/types.js";
 import { log } from "./service-worker-helpers.js";
 
 let secretKey: string | null = null;
 
-// TODO: load everything in parallel using asyncMap()
+// TODO: load everything in parallel using asyncMap() from localforage
 
-// TODO: this is not the correct type (AccountSummary, Array<AccountSummary>) but loading types is currently causing
-// service workers that won't install
-let nativeAccountSummary: Record<string, any> | null = null;
-let tokenAccountSummaries: Array<any> | null = null;
-
+let nativeAccountSummary: AccountSummary | null = null;
+let tokenAccountSummaries: Array<AccountSummary> | null = null;
 let contacts: Array<Contact> | null = null;
 
 const sendMessage = async (message: Record<string, any>) => {
@@ -40,7 +37,6 @@ const sendMessage = async (message: Record<string, any>) => {
 
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 // and https://github.com/GoogleChrome/chrome-extensions-samples
-
 // From https://dev.to/wtho/custom-service-worker-logic-in-typescript-on-vite-4f27
 
 log(`Parsing service worker version: ${VERSION}`);
