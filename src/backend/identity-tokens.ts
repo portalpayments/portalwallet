@@ -303,3 +303,26 @@ export const getIdentityTokensFromWallet = async (
 
   return identityTokens;
 };
+
+export const makeTokenMetaDataForOrganization = (
+  wallet: string,
+  legalName: string,
+  imageUrl: string
+): TokenMetaData => {
+  return {
+    version: LATEST_IDENTITY_TOKEN_VERSION,
+    // In future this can be removed, however right now Solana
+    // token standard doesn't support non-transferrable tokens
+    // So check that that token wasn't issued against another wallet and transferred
+    issuedAgainst: wallet,
+    claims: {
+      type: "ORGANIZATION",
+      // Eg: https://find-and-update.company-information.service.gov.uk/search?q=portal+payments
+      legalName,
+      jurisdiction: "Country",
+      country: "United Kingdom",
+      isNotable: false,
+      imageUrl,
+    },
+  };
+};
