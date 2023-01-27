@@ -146,7 +146,7 @@ export const mintAndTransferIdentityToken = async (
     const error = thrownObject as Error;
     if (error.message.includes("insufficient lamports")) {
       throw new Error(
-        `⚠️ The token mint account has run out of Sol. Please send Sol to the Token issuer account ${identityTokenIssuer.publicKey.toBase58()}`
+        `⚠️ The token mint account has run out of Sol. Please send a small amount of Sol to the Token issuer account ${identityTokenIssuer.publicKey.toBase58()}`
       );
     }
     log(`Unexpected error making NFT: ${error.message}`);
@@ -162,7 +162,7 @@ export const mintAndTransferIdentityToken = async (
 
   log(`STEP 2: Making a token account for the recipient...`);
 
-  let recipientTokenAccount: BasicTokenAccount;
+  let recipientTokenAccount: BasicTokenAccount | null = null;
   try {
     recipientTokenAccount = await makeTokenAccount(
       connection,
@@ -176,6 +176,13 @@ export const mintAndTransferIdentityToken = async (
     // error.message is blank for some reason
     log(
       `⚠️Could not make token account for this mint on ${givenName}'s wallet: ${error.name}`
+    );
+    throw error;
+  }
+
+  if (!recipientTokenAccount) {
+    throw new Error(
+      `Could not make a token account for recipient ${recipientWallet}`
     );
   }
 
