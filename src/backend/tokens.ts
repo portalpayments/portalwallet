@@ -94,7 +94,13 @@ export const makeTokenAccount = async (
       payer,
       mintAccountPublicKey,
       recipientPublicKey,
-      false
+      false,
+      // Don't specify a commitment, just use the default
+      // (which is as conservative as we can, see connect() )
+      null,
+      {
+        maxRetries: 5,
+      }
     );
   } catch (thrownObject) {
     const error = thrownObject as Error;
