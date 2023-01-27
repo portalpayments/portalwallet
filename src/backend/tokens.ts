@@ -82,13 +82,37 @@ export const makeTokenAccount = async (
   recipientPublicKey: PublicKey
 ): Promise<BasicTokenAccount> => {
   // Create recipient's token account
-  const recipientTokenAccount = await getOrCreateAssociatedTokenAccount(
-    connection,
-    payer,
-    mintAccountPublicKey,
-    recipientPublicKey,
-    false
-  );
+  log(`DEBUGGING - inside makeTokenAccount...`);
+  // Will occasionally throw TokenAccountNotFoundError for other, different errors
+  // See https://github.com/solana-labs/solana-program-library/issues/3326
+  // TODO: fix when issue above is resolved
+  let recipientTokenAccount: Account | null = null;
+
+  try {
+    recipientTokenAccount = await getOrCreateAssociatedTokenAccount(
+      connection,
+      payer,
+      mintAccountPublicKey,
+      recipientPublicKey,
+      false
+    );
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    log(`TODO: check for specific error`, error.message);
+    const accounts = await connection.getTokenAccountsByOwner(
+      recipientPublicKey,
+      { mint: mintAccountPublicKey }
+    );
+
+    recipientTokenAccount = accounts[0];
+  }
+
+  if (!recipientTokenAccount) {
+    throw new Error(
+      `Error in getOrCreateAssociatedTokenAccount see https://github.com/solana-labs/solana-program-library/issues/3326`
+    );
+  }
+
   return {
     address: recipientTokenAccount.address,
     amount: recipientTokenAccount.amount,
