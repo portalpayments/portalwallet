@@ -8,7 +8,7 @@ export enum LabelColor {
   Red = "red",
 }
 
-export const HOW_MANY_TRANSACTIONS_TO_SHOW = 100;
+export const HOW_MANY_TRANSACTIONS_TO_SHOW = 10;
 
 export const warningUnverifiedAccount =
   "Only send money to verified recipients. We will notify you once the address is verified.";

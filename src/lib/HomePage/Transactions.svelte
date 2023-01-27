@@ -22,9 +22,6 @@
   } from "../stores";
   import SkeletonTransactions from "../Shared/Skeletons/SkeletonTransactions.svelte";
 
-  import { slide, fade } from "svelte/transition";
-  import { quintInOut } from "svelte/easing";
-
   const EMPTY = "";
 
   export let filterValue: string = EMPTY;

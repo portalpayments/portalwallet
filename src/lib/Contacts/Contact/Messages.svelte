@@ -21,7 +21,6 @@
 
   let scrollableArea;
 
-  //
   let isAtBottom = scrollableArea;
 
   const updateGoToBottomButtonVisibility = (event) => {
