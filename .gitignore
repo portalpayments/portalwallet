@@ -10,3 +10,4 @@ arweave-wallet.json
 *.tsbuildinfo
 prebundle
 .rollup.cache
+vite.config.ts.timestamp*
