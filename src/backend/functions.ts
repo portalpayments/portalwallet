@@ -3,8 +3,9 @@
 // TODO
 // Duplicate, but depending on constants brings is too many additional dependencies for service worker
 const MINUTES = 60 * 1000;
+const HOUR = 60 * MINUTES;
 
-const ACCOUNT_CACHE = 10 * MINUTES;
+const ACCOUNT_CACHE = 1 * HOUR;
 
 export const toUnique = function <T>(array: Array<T>): Array<T> {
   return Array.from(new Set(array));
