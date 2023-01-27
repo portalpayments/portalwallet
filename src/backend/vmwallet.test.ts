@@ -290,30 +290,34 @@ describe(`mainnet integration tests`, () => {
     expect(accountBalance).toEqual(expect.any(Number));
   });
 
-  test(`We can verify Mike's wallet belongs to Mike`, async () => {
-    if (!mainNetConnection) {
-      throw new Error(`Couldn't get a connection, can't continue`);
-    }
-    if (!identityTokenSecretKey) {
-      throw new Error(`IDENTITY_TOKEN_SECRET_KEY isn't set in .env file`);
-    }
+  test(
+    `We can verify Mike's wallet belongs to Mike`,
+    async () => {
+      if (!mainNetConnection) {
+        throw new Error(`Couldn't get a connection, can't continue`);
+      }
+      if (!identityTokenSecretKey) {
+        throw new Error(`IDENTITY_TOKEN_SECRET_KEY isn't set in .env file`);
+      }
 
-    const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
+      const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
 
-    const claims = await verifyWallet(
-      mainNetConnection,
-      identityTokenIssuer,
-      identityTokenIssuer.publicKey,
-      new PublicKey(MIKES_WALLET)
-    );
+      const claims = await verifyWallet(
+        mainNetConnection,
+        identityTokenIssuer,
+        identityTokenIssuer.publicKey,
+        new PublicKey(MIKES_WALLET)
+      );
 
-    expect(claims).toEqual({
-      familyName: "MacCana",
-      givenName: "Micheal-Sean",
-      imageUrl: expect.stringMatching(/https:\/\/arweave.net\/.*/),
-      type: "INDIVIDUAL",
-    });
-  });
+      expect(claims).toEqual({
+        familyName: "MacCana",
+        givenName: "Micheal-Sean",
+        imageUrl: expect.stringMatching(/https:\/\/arweave.net\/.*/),
+        type: "INDIVIDUAL",
+      });
+    },
+    30 * SECONDS
+  );
 
   test(`We can not verify Kevin Rose's wallet`, async () => {
     if (!mainNetConnection) {
