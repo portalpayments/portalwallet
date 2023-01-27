@@ -4,6 +4,8 @@
 // Duplicate, but depending on constants brings is too many additional dependencies for service worker
 const MINUTES = 60 * 1000;
 
+const ACCOUNT_CACHE = 10 * MINUTES;
+
 export const toUnique = function <T>(array: Array<T>): Array<T> {
   return Array.from(new Set(array));
 };
@@ -11,7 +13,7 @@ export const toUnique = function <T>(array: Array<T>): Array<T> {
 export const isFresh = (lastUpdated: number) => {
   const now = Date.now();
   const difference = now - lastUpdated;
-  if (difference < 5 * MINUTES) {
+  if (difference < ACCOUNT_CACHE) {
     return true;
   }
   return false;
