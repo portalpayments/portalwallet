@@ -5,7 +5,7 @@ import Arweave from "arweave";
 const OK = 200;
 
 export const fileNameToContentType = (fileName: string) => {
-  let contentType: "image/png" | "image/jpeg" | null = null;
+  let contentType: "image/png" | "image/jpeg" | "image/svg+xml" | null = null;
 
   if (fileName.endsWith(".png")) {
     contentType = "image/png";
@@ -13,6 +13,10 @@ export const fileNameToContentType = (fileName: string) => {
 
   if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
     contentType = "image/jpeg";
+  }
+
+  if (fileName.endsWith(".svg")) {
+    contentType = "image/svg+xml";
   }
 
   if (!contentType) {
