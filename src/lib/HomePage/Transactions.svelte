@@ -4,7 +4,11 @@
   import { getTransactionsByDays } from "../../backend/transactions";
   import { checkIfScrolledAllTheWay } from "../../lib/dom-utils";
   import LoadingImage from "../../assets/transactions-loading.svg";
-  import type { TransactionsByDay, AccountSummary } from "../../backend/types";
+  import type {
+    TransactionsByDay,
+    AccountSummary,
+    Contact,
+  } from "../../backend/types";
   import { Link } from "svelte-navigator";
   import {
     log,
