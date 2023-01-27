@@ -3,7 +3,7 @@ import {
   getAllNftMetadatasFromAWallet,
   getIdentityTokensFromWallet,
   getMetaplex,
-  makeTokenMetaData,
+  makeTokenMetaDataForIndividual,
   mintIdentityToken,
 } from "./identity-tokens";
 import { uploadImageToArweave } from "./arweave";
@@ -67,7 +67,7 @@ describe(`identity tokens`, () => {
   test(`we can mint an identity token for Alice`, async () => {
     await putSolIntoWallet(connection, alice.publicKey, 1_000_000_000);
 
-    const metadata = makeTokenMetaData(
+    const metadata = makeTokenMetaDataForIndividual(
       alice.publicKey.toBase58(),
       "Alice",
       "Smith",

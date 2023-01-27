@@ -131,7 +131,7 @@ export const mintAndTransferIdentityToken = async (
     tokenCreateOutput = await mintIdentityToken(
       connection,
       identityTokenIssuer,
-      makeTokenMetaData(
+      makeTokenMetaDataForIndividual(
         recipientWallet,
         givenName,
         familyName,
@@ -219,7 +219,7 @@ export const getAllNftMetadatasFromAWallet = async (
 
 // TODO: comply with https://docs.metaplex.com/programs/token-metadata/token-standard
 // See types.ts
-export const makeTokenMetaData = (
+export const makeTokenMetaDataForIndividual = (
   wallet: string,
   givenName: string,
   familyName: string,
