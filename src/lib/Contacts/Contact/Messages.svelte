@@ -27,10 +27,13 @@
     isAtBottom = checkIfScrolledAllTheWay(event.target);
   };
 
-  const goToBottom = (event) => {
+  const goToBottom = () => {
     log(`Going to bottom`);
     scrollableArea.scrollTop = scrollableArea.scrollHeight;
   };
+
+  // And go to the bottom immediately once the element has loaded
+  goToBottom();
 </script>
 
 <div class="transaction-history">
