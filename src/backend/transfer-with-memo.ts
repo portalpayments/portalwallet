@@ -53,9 +53,6 @@ export async function transferWithMemo(
   const confirmOptions: ConfirmOptions = {
     // https://solanacookbook.com/guides/retrying-transactions.html#facts
     maxRetries: 6,
-    // Confirmed - 66%+ stake voted on block
-    // finalized - above, plus 31+ confirmed blocks built atop block
-    commitment: "confirmed",
   };
 
   log(`Sending tokens with memo "${memo}"`);

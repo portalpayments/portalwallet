@@ -60,7 +60,14 @@ export const connect = async (
 ): Promise<Connection> => {
   log(`⚡ Connecting to ${networkName}`);
   const connection = new Connection(URLS[networkName], {
-    commitment: "confirmed",
+    // Use 'finalized' as we often want to do things with items right after we make them
+    // (like make a token account and then immediately transfer tokens to it)
+    //
+    // NOTE: we can't use commitment: finalised in our localhost validator
+    // (it's a limitation of the localhost validator)
+    // Confirmed - 66%+ stake voted on block
+    // finalized - above, plus 31+ confirmed blocks built atop block
+    commitment: networkName === "localhost" ? "confirmed" : "finalized",
     disableRetryOnRateLimit: true,
   });
   return connection;
