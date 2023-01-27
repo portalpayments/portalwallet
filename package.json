@@ -6,8 +6,7 @@
   "author": "Mike MacCana <mike@getportal.app> and Vahah Hatami <vaheh@getportal.app>",
   "scripts": {
     "dev": "run-p --print-label dev:*",
-    "dev:vite": "vite",
-    "dev:serviceworker": "tsc --watch --project tsconfig.serviceworker.json",
+    "dev:vite": "ln -sf src/assets assets && vite",
     "dev:manifest": "bash watch-manifest.bash",
     "build": "run-p --print-label build:*",
     "build:frontend": "vite build",
