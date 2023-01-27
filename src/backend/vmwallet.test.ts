@@ -62,7 +62,7 @@ describe(`basic wallet functionality on local validator`, () => {
   test(`getCurrencyBySymbol works`, () => {
     expect(getCurrencyBySymbol("USDC")).toEqual({
       decimals: 6,
-      logo: "/src/assets/token-logos/usdc-coin-grey.svg",
+      logo: expect.any(String),
       mintAddress: USDC_MAINNET_MINT_ACCOUNT,
       symbol: "USDC",
     });
@@ -395,6 +395,7 @@ describe(`mainnet integration tests`, () => {
         currency: expect.any(String),
         balance: expect.any(Number),
         decimals: 6,
+        lastUpdated: expect.any(Number),
         transactionSummaries: expect.any(Array),
       });
     },

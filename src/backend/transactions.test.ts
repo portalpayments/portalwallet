@@ -41,7 +41,8 @@ const contacts = [
     isNew: false,
     isPending: false,
     verifiedClaims: {
-      type: "INDIVIDUAL",
+      // Silly TS, have to treat this as the type "INDIVIDUAL" not a string
+      type: "INDIVIDUAL" as "INDIVIDUAL",
       givenName: "Jared",
       familyName: "Friedman",
       imageUrl:
