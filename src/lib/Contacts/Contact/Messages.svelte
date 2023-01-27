@@ -13,6 +13,7 @@
     isoDateToFriendlyName,
   } from "../../../backend/functions";
   import Chevron from "../../../assets/chevron.svg";
+  import { onMount } from "svelte";
 
   export let transactionsAndMessagesByDays: Array<{
     isoDate: string;
@@ -27,13 +28,16 @@
     isAtBottom = checkIfScrolledAllTheWay(event.target);
   };
 
+  // And go to the bottom immediately once the element has loaded, then enable smooth scrolling for the future
   const goToBottom = () => {
     log(`Going to bottom`);
     scrollableArea.scrollTop = scrollableArea.scrollHeight;
+    scrollableArea.classList.add("smooth-scrolling");
   };
 
-  // And go to the bottom immediately once the element has loaded
-  goToBottom();
+  onMount(() => {
+    goToBottom();
+  });
 </script>
 
 <div class="transaction-history">
@@ -75,7 +79,7 @@
 
   .scrollable-area {
     overflow-y: scroll;
-    scroll-behavior: smooth;
+
     padding: 2px;
     align-content: start;
 

@@ -182,6 +182,10 @@ input:focus {
   }
 }
 
+.smooth-scrolling {
+  scroll-behavior: smooth;
+}
+
 .debug {
   display: none;
 }
