@@ -97,12 +97,15 @@ export const mintIdentityToken = async (
     // >> Solution: Ensure the provided address is correct and that an account exists at this address.
     log(`Potential metaplex bug found when creating NFT: ${error.message}`);
 
-    // @ts-ignore
-    const mintAddressInProblem = getAddressFromProblem(error.problem);
-    if (mintAddressInProblem) {
-      throw new Error(
-        `Metaplex couldn't find the mint account, but https://explorer.solana.com/address/${mintAddressInProblem}`
-      );
+    // @ts-ignore - error.problem does actually exist.
+    const errorProblem = error.problem;
+    if (errorProblem) {
+      const mintAddressInProblem = getAddressFromProblem(errorProblem);
+      if (mintAddressInProblem) {
+        throw new Error(
+          `Metaplex couldn't find the mint account, but https://explorer.solana.com/address/${mintAddressInProblem}`
+        );
+      }
     }
 
     log(`Unexpected error creating NFT:`, error.message);
