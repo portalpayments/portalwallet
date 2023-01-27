@@ -267,10 +267,8 @@ export const getTransactionSummariesForAddress = async (
   );
 
   if (!rawTransactions.length) {
-    // TODO: we may wish to change this to a warning
-    throw new Error(
-      `Could not get any rawTransactions for ${walletAddress.toBase58()}`
-    );
+    log(`Got 0 rawTransactions for ${walletAddress.toBase58()}`);
+    return [];
   }
 
   let transactionSummaries = await asyncMap(
