@@ -26,7 +26,7 @@
   } from "../../backend/types";
   import type { Contact } from "../../backend/types";
   import { updateAccountTransactions, getActiveAccount } from "../stores";
-  import { SECONDS } from "../../backend/constants";
+  import { SECONDS, getCurrencyByMint } from "../../backend/constants";
   const ACTUALLY_SEND_MONEY = true;
 
   const TRANSACTION_TIME_IS_SLOW = 5 * SECONDS;
@@ -70,13 +70,17 @@
     };
   }
 
+  const activeAccount = getActiveAccount();
+
+  const currency = getCurrencyByMint(activeAccount.currency);
+
   const doTransfer = async () => {
     const slowTransactionTimeout = setTimeout(() => {
       keepWaitingMessage = "Nearly there...";
     }, TRANSACTION_TIME_IS_SLOW);
     try {
       // Convert UI displayed major units into minor units
-      const activeAccount = getActiveAccount();
+      // TODO:
       const multiplier = 10 ** activeAccount.decimals;
       const transferAmountInMinorUnits = Number(transferAmount) * multiplier;
 
@@ -174,7 +178,6 @@
         bind:value={destinationWalletAddress}
         label="wallet address"
         isFocused={true}
-        isAmount={false}
         filterField={"walletAddress"}
         onTypingPause={handleKeyupDestinationWalletAddress}
         theme="square"
@@ -184,7 +187,7 @@
         bind:value={transferAmount}
         label="amount"
         isFocused={false}
-        isAmount={true}
+        {currency}
         filterField={"numbers"}
         onTypingPause={null}
         theme="square"
@@ -194,7 +197,6 @@
         bind:value={memo}
         label="Message (eg 'Thanks!')"
         isFocused={false}
-        isAmount={false}
         filterField={null}
         onTypingPause={null}
         theme="square"

@@ -25,7 +25,6 @@
 <FocusContext>
   <Input
     bind:value={messageOrAmountText}
-    isAmount={false}
     isFocused={true}
     label="Message..."
     onTypingPause={() => {

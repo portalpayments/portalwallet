@@ -28,7 +28,6 @@
   </div>
   <Input
     value={filterValue}
-    isAmount={false}
     isFocused={false}
     label="Search people, days and purchases."
     onTypingPause={filterTransactions}

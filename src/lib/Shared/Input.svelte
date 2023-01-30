@@ -1,12 +1,11 @@
 <script lang="ts">
   import debounce from "lodash.debounce";
   import { SECOND } from "../../backend/constants";
+  import type { CurrencyDetails } from "../../backend/types";
   import { log } from "../../backend/functions";
-  import USDClogo from "../../../src/assets/token-logos/usdc-coin-grey.svg";
   import { getFocusContext } from "./FocusContext.svelte";
 
   export let value: string | number;
-  export let isAmount: boolean;
   export let isFocused: boolean;
   export let showGasFee: boolean = false;
   export let label: string;
@@ -18,6 +17,8 @@
     null;
 
   export let theme: "square" | "round" = "round";
+
+  export let currency: CurrencyDetails | null = null;
 
   export let showClearButton = false;
 
@@ -90,12 +91,12 @@
       <input
         bind:value
         type="text"
-        class={isAmount ? "usdc-amount" : ""}
+        class={currency ? "currency" : ""}
         use:maybeFocus
         required
         spellcheck={isSpellChecked}
         on:keyup|preventDefault={debounce((event) => {
-          if (isAmount) {
+          if (currency) {
             if (value > 0) {
               showGasFee = true;
             } else {
@@ -110,9 +111,8 @@
       />
       <div class="floating-label">
         {label}
-        {#if isAmount}
-          <!-- TODO: set currency properly -->
-          <img class="inline-usdc" src={USDClogo} alt="usdc logo" />
+        {#if currency}
+          <img class="inline-logo" src={currency.logo} alt={currency.symbol} />
         {/if}
       </div>
       {#if showClearButton && value !== EMPTY}
@@ -128,7 +128,7 @@
     </div>
   </div>
 
-  {#if isAmount}
+  {#if currency}
     {#if Number(value) !== 0 && value !== null}
       <span class="gas-fee">Fee: 0.00025</span>
     {/if}
@@ -186,10 +186,7 @@
     padding: 12px 12px 0 12px;
   }
 
-  .inline-usdc {
-    display: inline-block;
-  }
-  .usdc-amount {
+  .amount {
     text-align: right;
   }
   input:focus {
@@ -204,8 +201,8 @@
     opacity: 1;
   }
 
-  .border:has(input:focus) .floating-label .inline-usdc,
-  .border:has(input:valid) .floating-label .inline-usdc {
+  .border:has(input:focus) .floating-label .inline-logo,
+  .border:has(input:valid) .floating-label .inline-logo {
     height: 10px;
     transform: translateY(1px);
   }
@@ -213,6 +210,10 @@
   .floating-label {
     position: absolute;
     display: grid;
+    // for 'amount [currency logo]'
+    grid-auto-flow: column;
+    align-items: baseline;
+    gap: 3px;
 
     left: 15px;
     padding: 0;
@@ -228,9 +229,10 @@
     font-size: 14px;
   }
 
-  .floating-label .inline-usdc {
+  .floating-label .inline-logo {
     height: 12px;
     transform: translateY(2px);
+    opacity: 0.5;
   }
 
   .input-and-label {
