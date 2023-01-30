@@ -1,6 +1,6 @@
 import { log } from "../backend/functions";
 
-const CONTENT_TYPES = {
+export const CONTENT_TYPES = {
   JSON: "application/json",
   TEXT: "text/plain",
   HTML: "text/html",
@@ -32,12 +32,16 @@ export const fetchUnfucked = async (
     body: body ? JSON.stringify(body) : null,
   });
 
-  let contentType = forceContentType || CONTENT_TYPES.JSON;
-  let contentTypeHeader = response.headers.get("Content-Type");
-  if (contentTypeHeader) {
-    contentType = contentTypeHeader.split(";").at(0);
+  let contentType = CONTENT_TYPES.JSON;
+  if (forceContentType) {
+    contentType = forceContentType;
   } else {
-    log(`No Content Type header. Weird`);
+    let contentTypeHeader = response.headers.get("Content-Type");
+    if (contentTypeHeader) {
+      contentType = contentTypeHeader.split(";").at(0);
+    } else {
+      log(`No Content Type header. Weird. Using default.`);
+    }
   }
 
   if (

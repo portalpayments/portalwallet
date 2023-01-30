@@ -194,7 +194,7 @@
     height: 128px;
     justify-items: center;
     align-items: center;
-    padding-bottom: 64px;
+    padding-bottom: var(--padding-for-nav-button);
   }
 
   .loading-more img {

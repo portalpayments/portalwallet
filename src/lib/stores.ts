@@ -53,15 +53,17 @@ const updateCollectables = async () => {
   const collectablesUnfiltered = await asyncMap(
     allNftsFromAWallet,
     async (nft) => {
-      const data = await http.get(nft.uri);
-      const firstFile = data?.properties?.files?.[0];
+      // We have to force content type as nftstorage.link returns incorrect types
+      // See https://twitter.com/mikemaccana/status/1620140384302288896?s=20&t=gP3XffhtDkUiaYQvSph8vg
+      const rawNFTData = await http.get(nft.uri, http.CONTENT_TYPES.JSON);
+      const firstFile = rawNFTData?.properties?.files?.[0];
       // Sometimes 'files' is an empty list, but 'image' still exists
       // See https://crossmint.myfilebase.com/ipfs/bafkreig5nuz3qswtnipclnhdw4kbdn5s6fpujtivyt4jf3diqm4ivpmv5u
-      const image = firstFile?.uri || data.image || null;
+      const image = firstFile?.uri || rawNFTData.image || null;
       const type = firstFile?.type || null;
       return {
-        name: data.name,
-        description: data.description,
+        name: rawNFTData.name,
+        description: rawNFTData.description,
         image,
         type,
       };
