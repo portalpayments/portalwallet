@@ -37,7 +37,6 @@
   .back-button button {
     text-decoration: none;
     background-color: transparent;
-    display: inline-block;
     color: #3a3a3a;
     font-size: 2rem;
     font-weight: 400;
