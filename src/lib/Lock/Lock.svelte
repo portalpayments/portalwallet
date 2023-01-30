@@ -38,47 +38,45 @@
   };
 </script>
 
-<div>
-  {#if !$authStore.isLoggedIn}
-    <div class="login">
-      <img class="logo" src={PortalLogoSVG} alt="Portal Logo" />
-      <span class="welcome-message">Welcome Back!</span>
+{#if !$authStore.isLoggedIn}
+  <div class="login">
+    <img class="logo" src={PortalLogoSVG} alt="Portal Logo" />
+    <span class="welcome-message">Welcome Back!</span>
 
-      <div class="password-container">
-        <div class="password-prompt">Enter your password</div>
+    <div class="password-container">
+      <div class="password-prompt">Enter your password</div>
 
-        <!-- Form only to prevent annoying 'Password field is not contained in a form' message in devtools -->
-        <form on:submit={(event) => event.preventDefault()}>
-          <div class="fancy-border">
-            <!-- Only to prevent annoying 'Use hidden fields for implicit information' message in devtools -->
-            <input
-              class="fake-username-input"
-              type="text"
-              autocomplete="username"
-            />
-            <Password
-              bind:value={password}
-              onEnter={() => login(password)}
-              bind:isBadPassword
-              isNewPassword={false}
-              onMount={(element) => {
-                element.focus();
-              }}
-            />
-          </div>
-        </form>
+      <!-- Form only to prevent annoying 'Password field is not contained in a form' message in devtools -->
+      <form on:submit={(event) => event.preventDefault()}>
+        <div class="fancy-border">
+          <!-- Only to prevent annoying 'Use hidden fields for implicit information' message in devtools -->
+          <input
+            class="fake-username-input"
+            type="text"
+            autocomplete="username"
+          />
+          <Password
+            bind:value={password}
+            onEnter={() => login(password)}
+            bind:isBadPassword
+            isNewPassword={false}
+            onMount={(element) => {
+              element.focus();
+            }}
+          />
+        </div>
+      </form>
 
-        <button
-          type="button"
-          on:click|preventDefault={() => {
-            login(password);
-          }}
-          class="login-button primary">Log in</button
-        >
-      </div>
+      <button
+        type="button"
+        on:click|preventDefault={() => {
+          login(password);
+        }}
+        class="login-button primary">Log in</button
+      >
     </div>
-  {/if}
-</div>
+  </div>
+{/if}
 
 <style lang="scss">
   @import "../../mixins.scss";
