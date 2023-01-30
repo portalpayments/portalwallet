@@ -7,11 +7,6 @@
   }
 }
 
-main {
-  // Explicitly position to allow child elements to be positioned absolutely
-  position: relative;
-}
-
 :root {
   --wallet-height: 600px;
   --wallet-width: 300px;
@@ -90,7 +85,6 @@ a:active {
 }
 
 body {
-  margin: 0;
   display: grid;
   place-items: center;
   width: var(--wallet-width);
@@ -98,6 +92,13 @@ body {
   color: var(--black);
   text-align: center;
   background-color: white;
+  // Explicitly position to allow child elements to be positioned absolutely
+  position: relative;
+}
+
+body > * {
+  width: var(--wallet-width);
+  height: var(--wallet-height);
 }
 
 button {

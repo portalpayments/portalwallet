@@ -102,13 +102,6 @@
 </Router>
 
 <style lang="scss">
-  /* The entire wallet, contains the header-and-features plus the nav bar */
-  main {
-    /* Required to absolutely position navbar at bottom 
-    relative to this element */
-    position: relative;
-  }
-
   .header-and-features {
     width: var(--wallet-width);
     height: var(--wallet-height);

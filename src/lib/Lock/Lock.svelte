@@ -83,9 +83,10 @@
 
   .login {
     display: grid;
+    align-content: center;
     grid-auto-flow: row;
-    grid-template-rows: 1fr 30px 50px 1fr;
-    gap: 20px;
+    gap: 24px;
+    padding: 48px;
     color: #3a3a3a;
 
     /* Cool subtle background borrowed from website */
