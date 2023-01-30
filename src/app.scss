@@ -7,6 +7,11 @@
   }
 }
 
+main {
+  // Explicitly position to allow child elements to be positioned absolutely
+  position: relative;
+}
+
 :root {
   --wallet-height: 600px;
   --wallet-width: 300px;

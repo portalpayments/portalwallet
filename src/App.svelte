@@ -68,39 +68,37 @@
 </script>
 
 <Router>
-  <main>
-    <!-- isOnboarded is null when we haven't loaded localForage yet. After this isOnboarded will be true or false. -->
-    {#if isOnboarded === null}
-      Loading...
-    {:else if !isOnboarded}
-      <Onboarding />
-    {:else if $authStore.isLoggedIn}
-      <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
-      <Route path="sendMoney"><SendPage /></Route>
-      <Route path="myWalletAddress/:walletaddress"><WalletAddress /></Route>
-      <Route path="transactions">
-        <TransactionsPage />
-      </Route>
-      <Route path="settings"><Settings /></Route>
-      <Route path="contacts/:address"><ContactAndMessages /></Route>
-      <Route primary={false}>
-        <div class="header-and-features">
-          {#if currentFeature === 0}
-            <HomeScreen {user} />
-          {:else if currentFeature === 1}
-            <ContactsPage />
-          {:else if currentFeature === 2}
-            <Collectables />
-          {/if}
-          <Navbar bind:currentFeature />
-        </div>
-      </Route>
-    {:else}
-      <Route>
-        <Lock />
-      </Route>
-    {/if}
-  </main>
+  <!-- isOnboarded is null when we haven't loaded localForage yet. After this isOnboarded will be true or false. -->
+  {#if isOnboarded === null}
+    Loading...
+  {:else if !isOnboarded}
+    <Onboarding />
+  {:else if $authStore.isLoggedIn}
+    <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
+    <Route path="sendMoney"><SendPage /></Route>
+    <Route path="myWalletAddress/:walletaddress"><WalletAddress /></Route>
+    <Route path="transactions">
+      <TransactionsPage />
+    </Route>
+    <Route path="settings"><Settings /></Route>
+    <Route path="contacts/:address"><ContactAndMessages /></Route>
+    <Route primary={false}>
+      <div class="header-and-features">
+        {#if currentFeature === 0}
+          <HomeScreen {user} />
+        {:else if currentFeature === 1}
+          <ContactsPage />
+        {:else if currentFeature === 2}
+          <Collectables />
+        {/if}
+        <Navbar bind:currentFeature />
+      </div>
+    </Route>
+  {:else}
+    <Route>
+      <Lock />
+    </Route>
+  {/if}
 </Router>
 
 <style lang="scss">
