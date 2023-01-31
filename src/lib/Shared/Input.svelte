@@ -186,9 +186,6 @@
     padding: 12px 12px 0 12px;
   }
 
-  .amount {
-    text-align: right;
-  }
   input:focus {
     outline: none !important;
   }
