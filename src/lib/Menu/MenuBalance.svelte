@@ -40,9 +40,4 @@
     color: rgb(195, 195, 195);
     font-size: 13px;
   }
-
-  button.with-icon:hover,
-  :global(a.button.with-icon):hover {
-    transform: translateX(12px);
-  }
 </style>
