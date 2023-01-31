@@ -1,6 +1,6 @@
 import type { Keypair } from "@solana/web3.js";
 import dotenv from "dotenv";
-import { getKeypairFromString } from "./vmwallet";
+import { getKeypairFromString } from "./wallet";
 
 dotenv.config();
 

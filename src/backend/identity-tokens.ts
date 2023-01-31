@@ -25,7 +25,7 @@ import { stringify } from "./functions";
 
 import type { TokenMetaData, ExpandedNFT, BasicTokenAccount } from "./types";
 import { makeTokenAccount, sendTokens } from "./tokens";
-import { connect } from "./vmwallet";
+import { connect } from "./wallet";
 import * as http from "../lib/http-client";
 
 export const getMetaplex = (

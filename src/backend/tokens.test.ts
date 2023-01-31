@@ -19,7 +19,7 @@ import {
   checkAccountExists,
   getTokenAccountsByOwner,
   getTransactionsForAddress,
-} from "./vmwallet";
+} from "./wallet";
 import type { BasicTokenAccount } from "./types";
 
 jest.mock("./functions");

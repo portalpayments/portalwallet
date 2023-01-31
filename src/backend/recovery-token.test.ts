@@ -8,7 +8,7 @@ import {
   checkIfMnemonicPhraseIsValid,
 } from "./recovery-token";
 import { DEPOSIT, SECONDS } from "./constants";
-import { connect, getAccountBalance, putSolIntoWallet } from "./vmwallet";
+import { connect, getAccountBalance, putSolIntoWallet } from "./wallet";
 import * as dotenv from "dotenv";
 import * as base58 from "bs58";
 import { expectedCleanedPersonalPhrase } from "./phrase-cleaning.test";

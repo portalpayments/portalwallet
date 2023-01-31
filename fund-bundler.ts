@@ -2,7 +2,7 @@
 
 import { BundlrStorageDriver } from "@metaplex-foundation/js";
 import { getMetaplex } from "./src/backend/identity-tokens";
-import { connect, getKeypairFromString } from "./src/backend/vmwallet";
+import { connect, getKeypairFromString } from "./src/backend/wallet";
 import dotenv from "dotenv";
 
 dotenv.config();

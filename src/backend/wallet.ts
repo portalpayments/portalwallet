@@ -30,12 +30,8 @@ import { summarizeTransaction } from "./transactions";
 import { toUniqueStringArray } from "../lib/utils";
 import * as http from "../lib/http-client";
 import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../lib/frontend-constants";
-import {
-  Direction,
-  type Contact,
-  type SimpleTransaction,
-} from "../backend/types";
-import type { AccountSummary } from "../backend/types";
+import { Direction, type Contact, type SimpleTransaction } from "./types";
+import type { AccountSummary } from "./types";
 import { identityTokenIssuerPublicKey } from "../lib/stores";
 
 const VERIFIED_CLAIMS_BY_ADDRESS: Record<

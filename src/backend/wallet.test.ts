@@ -11,7 +11,7 @@ import {
   putSolIntoWallet,
   verifyWallet,
   getTokenAccountSummaries,
-} from "./vmwallet";
+} from "./wallet";
 import * as base58 from "bs58";
 
 import {
@@ -38,9 +38,9 @@ import {
 } from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
-import { getTransactionSummariesForAddress } from "./vmwallet";
+import { getTransactionSummariesForAddress } from "./wallet";
 import { log, stringify } from "./functions";
-import { Direction } from "../backend/types";
+import { Direction } from "./types";
 
 import { getABetterErrorMessage } from "./errors";
 import { createMintAccount } from "./tokens";

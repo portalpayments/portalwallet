@@ -13,7 +13,7 @@ import {
   getTokenAccountsByOwner,
   putSolIntoWallet,
   verifyWallet,
-} from "./vmwallet";
+} from "./wallet";
 import { log, sleep, stringify } from "./functions";
 import {
   IDENTITY_TOKEN_NAME,

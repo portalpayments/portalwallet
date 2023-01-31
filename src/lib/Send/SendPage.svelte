@@ -14,7 +14,7 @@
   import FocusContext from "../Shared/FocusContext.svelte";
   import TransactionCompleted from "./TransactionCompleted.svelte";
   import TransactionFailed from "./TransactionFailed.svelte";
-  import { verifyWallet } from "../../backend/vmwallet";
+  import { verifyWallet } from "../../backend/wallet";
   import { makeAccountsAndDoTransfer } from "../../backend/tokens";
   import { checkIfValidWalletAddress } from "../utils";
   import { log, sleep, stringify } from "../../backend/functions";

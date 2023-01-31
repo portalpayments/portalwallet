@@ -7,7 +7,7 @@ import {
   getKeypairFromString,
   getNativeAccountSummary,
   getTokenAccountSummaries,
-} from "../backend/vmwallet";
+} from "../backend/wallet";
 import {
   getCurrencyBySymbol,
   MILLISECONDS,
