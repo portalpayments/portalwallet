@@ -25,6 +25,14 @@ export function getSigners(
     : [signerOrMultisig.publicKey, [signerOrMultisig]];
 }
 
+export const getFeeForTransaction = async (
+  connection: Connection,
+  transaction: Transaction
+) => {
+  const fee = await transaction.getEstimatedFee(connection);
+  return fee;
+};
+
 // Taken from
 // import { transfer } from "@solana/spl-token";
 // And modified to add 'memo'
@@ -83,6 +91,10 @@ export async function transferWithMemo(
       })
     );
   }
+
+  const fee = await getFeeForTransaction(connection, transaction);
+
+  log(`>>>>>>>>>>>>>>>>>>>>> fee is`, fee);
 
   return sendAndConfirmTransaction(
     connection,
