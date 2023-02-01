@@ -127,6 +127,9 @@ export const makeTokenAccount = async (
 };
 
 // See https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
+
+// TODO: DEPRECATED
+// Replace with makeTransactionObject and sendTransaction
 export const sendTokens = async (
   connection: Connection,
   sender: Keypair,
@@ -157,6 +160,8 @@ export const sendTokens = async (
   }
 };
 
+// TODO: DEPRECATED
+// Replace with makeTransactionObject and sendTransaction
 export const makeAccountsAndDoTransfer = async (
   connection: Connection,
   senderKeyPair: Keypair,
