@@ -25,14 +25,15 @@
   letter-spacing: 1px;
 }
 
-@mixin polymer {
+@mixin acryllic {
   background-color: hsla(0,0%,100%,.6);
-  backdrop-filter: blur(24px);
+  backdrop-filter: blur(12px);    
 }
 
-@mixin dark-polymer {
-  background-color: hsl(0deg 0% 56% / 60%);
-backdrop-filter: blur(24px);
+@mixin dark-acryllic {
+  // Borrowed from twitter
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
 }
 
 

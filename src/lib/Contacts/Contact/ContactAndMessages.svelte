@@ -175,6 +175,6 @@
     bottom: 0;
     width: 100%;
     padding: 2px 6px;
-    @include polymer;
+    @include acryllic;
   }
 </style>

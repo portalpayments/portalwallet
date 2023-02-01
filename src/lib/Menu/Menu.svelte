@@ -103,7 +103,7 @@
     color: var(--black);
     z-index: 2;
 
-    @include polymer;
+    @include acryllic;
   }
 
   button.close {
