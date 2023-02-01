@@ -126,11 +126,11 @@ export const NOT_FOUND = -1;
 
 export const EMPTY = "";
 
-export const getCurrencyBySymbol = (name: string) => {
+export const getCurrencyBySymbol = (symbol: string) => {
   return (
     Object.values(mintToCurrencyMap).find(
       (currencyDetails: CurrencyDetails) => {
-        return currencyDetails.symbol === name;
+        return currencyDetails.symbol === symbol;
       }
     ) || null
   );

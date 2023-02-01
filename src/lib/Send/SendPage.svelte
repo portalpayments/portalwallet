@@ -5,6 +5,7 @@
     identityTokenIssuerPublicKey,
   } from "../stores";
   import { PublicKey, Connection, Keypair } from "@solana/web3.js";
+  import Fee from "./Fee.svelte";
   import SendHeading from "./SendHeading.svelte";
   import Heading from "../Shared/Heading.svelte";
   import SendButtons from "./SendButtons.svelte";
@@ -60,6 +61,8 @@
 
   let contact: Contact | null = null;
 
+  let fee: number | null = null;
+
   $: {
     log(`Updating contact`);
     contact = {
@@ -74,19 +77,37 @@
 
   const currency = getCurrencyByMint(activeAccount.currency);
 
+  const updateFee = async () => {
+    // TODO: estimate fee based on destinationWalletAddress and memo
+    log(`Updating fee...`);
+    fee = 25;
+  };
+
+  // Convert UI displayed major units into minor units
+  export const getAmountInMinorUnits = (
+    transferAmount: number,
+    decimals: number
+  ) => {
+    const multiplier = 10 ** decimals;
+    const transferAmountInMinorUnits = Number(transferAmount) * multiplier;
+    return transferAmountInMinorUnits;
+  };
+
   const doTransfer = async () => {
     const slowTransactionTimeout = setTimeout(() => {
       keepWaitingMessage = "Nearly there...";
     }, TRANSACTION_TIME_IS_SLOW);
     try {
       // Convert UI displayed major units into minor units
-      // TODO:
-      const multiplier = 10 ** activeAccount.decimals;
-      const transferAmountInMinorUnits = Number(transferAmount) * multiplier;
+      const transferAmountInMinorUnits = getAmountInMinorUnits(
+        transferAmount,
+        activeAccount.decimals
+      );
 
       if (ACTUALLY_SEND_MONEY) {
         log(`Doing transfer, will send ${transferAmountInMinorUnits} cents`);
 
+        // Fixing in next commit
         const signature = await makeAccountsAndDoTransfer(
           connection,
           keyPair,
@@ -117,6 +138,8 @@
   };
 
   $: (isSending || isSendingAnyway) && doTransfer();
+
+  $: memo, destinationWalletAddress, updateFee();
 
   connectionStore.subscribe((newValue) => {
     connection = newValue;
@@ -201,6 +224,8 @@
         onTypingPause={null}
         theme="square"
       />
+
+      <Fee amount={fee} />
     </FocusContext>
   </div>
 

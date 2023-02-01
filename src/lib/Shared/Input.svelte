@@ -127,12 +127,6 @@
       {/if}
     </div>
   </div>
-
-  {#if currency}
-    {#if Number(value) !== 0 && value !== null}
-      <span class="gas-fee">Fee: 0.00025</span>
-    {/if}
-  {/if}
 </div>
 
 <style lang="scss">
@@ -189,6 +183,7 @@
   input:focus {
     outline: none !important;
   }
+
   .border:has(input:focus) .floating-label,
   .border:has(input:valid) .floating-label {
     top: 6px;
@@ -235,14 +230,6 @@
   .input-and-label {
     // Explicitly positioned for use by absolutely positioned children
     position: relative;
-  }
-
-  .gas-fee {
-    font-size: 0.65rem;
-    color: var(--black);
-    justify-self: end;
-    font-weight: 600;
-    padding: 3px 4px 0px 0px;
   }
 
   button.clear {
