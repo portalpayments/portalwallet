@@ -136,13 +136,6 @@ export const sendTokens = async (
   memo: null | string = null
 ) => {
   try {
-    log(`Inside sendTokens:`, {
-      senderTokenAccount: senderTokenAccountAddress.toBase58(),
-      recipientTokenAccount: recipientTokenAccountAddress.toBase58(),
-      senderPublicKey: sender.publicKey.toBase58(),
-      amount,
-      memo,
-    });
 
     const signature = await transferWithMemo(
       connection,
