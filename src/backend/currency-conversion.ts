@@ -1,21 +1,24 @@
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
-import CoinGecko from "coingecko-api";
-import { log } from "console";
+// import CoinGecko from "coingecko-api";
+import { log } from "./functions";
 
-const CoinGeckoClient = new CoinGecko();
+// TODO: re-enable coingecko (currently failing in browser due to querystring bits)
+// const CoinGeckoClient = new CoinGecko();
 
-const convertLamportsToUSDOrEurCents = async (
+export const convertLamportsToUSDOrEurCents = async (
   lamports: number,
   usdOrEur: "USD" | "EUR" = "USD"
 ) => {
+  // TODO: see above
   // const result = await CoinGeckoClient.ping();
-
-  const solanaCoinGeckoResult = await CoinGeckoClient.coins.fetch("solana", {});
-  const currentPrice = solanaCoinGeckoResult.data.market_data.current_price;
+  // const solanaCoinGeckoResult = await CoinGeckoClient.coins.fetch("solana", {});
+  // const currentPrice = solanaCoinGeckoResult.data.market_data.current_price;
+  const currentPrice = {
+    usd: 24.91,
+    eur: 22.68,
+  };
   const lamportPriceInUSDOrEurCents =
     usdOrEur === "USD" ? currentPrice.usd * 100 : currentPrice.eur * 100;
-
-  log(`lamportPriceInUSDOrEurCents is`, lamportPriceInUSDOrEurCents);
 
   // Remember the price is for a Sol, not a Lamport
   const lamportPriceInCents =
@@ -23,17 +26,6 @@ const convertLamportsToUSDOrEurCents = async (
   return lamportPriceInCents;
 };
 
-const main = async () => {
-  const aBillionLamportsInCents = await convertLamportsToUSDOrEurCents(
-    1 * LAMPORTS_PER_SOL
-  );
-  log(aBillionLamportsInCents);
-
-  const tinyAmountOfSolInCents = await convertLamportsToUSDOrEurCents(23000);
-  log(tinyAmountOfSolInCents);
-};
-
-main();
-// 1 solana is 2200 cents
-// 2200 cents = 1_000_000_000 lamports
-// 1_000_000_000 = 2200
+// // 1 solana is 2200 cents
+// // 2200 cents = 1_000_000_000 lamports
+// // 1_000_000_000 = 2200

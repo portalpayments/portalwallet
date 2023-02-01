@@ -80,6 +80,7 @@
   const updateFee = async () => {
     // TODO: estimate fee based on destinationWalletAddress and memo
     log(`Updating fee...`);
+    // In lamports
     fee = 25;
   };
 

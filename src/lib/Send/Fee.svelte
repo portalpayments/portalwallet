@@ -1,31 +1,40 @@
 <script lang="ts">
-  import { getCurrencyBySymbol } from "../../backend/constants";
+  import { convertLamportsToUSDOrEurCents } from "../../backend/currency-conversion";
+  import { stringify, log } from "../../backend/functions";
+  import { amountAndDecimalsToString } from "../utils";
+  import { onMount } from "svelte";
   export let amount: number | null = null;
 
-  const solana = getCurrencyBySymbol("SOL");
+  let amountString: string | null = null;
+
+  onMount(async () => {
+    if (amount !== null) {
+      const amountInUSCents = await convertLamportsToUSDOrEurCents(amount);
+      amountString = `$${amountAndDecimalsToString(amountInUSCents, 2)}`;
+      if ((amountString = "0.00")) {
+        amountString = "less than $0.01";
+      }
+    }
+  });
 </script>
 
-{#if amount !== null}
+{#if amountString !== null}
   <div class="fee">
     <span>Fee: </span>
-    <img src={solana.logo} class="icon" alt="{solana.symbol} logo" />
-    <span>{amount}</span>
+    <span>{amountString}</span>
   </div>
 {/if}
 
 <style lang="scss">
   .fee {
+    display: grid;
     grid-auto-flow: row;
     font-size: 0.65rem;
     color: var(--black);
     justify-self: end;
     font-weight: 600;
     gap: 3px;
-    grid-template-columns: 20px 12px 1fr;
+    grid-template-columns: 20px 1fr;
     align-items: center;
-  }
-
-  .fee .icon {
-    width: 12px;
   }
 </style>

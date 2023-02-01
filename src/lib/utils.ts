@@ -33,6 +33,11 @@ export const amountAndDecimalsToMajorAndMinor = (
   const multiplier = getMultiplier(decimals);
   const major = String(Math.floor(amount / multiplier));
   let minor = String(Number(amount) % multiplier);
+
+  // For fractions of a cent
+  if (minor.startsWith("0.")) {
+    minor = "0";
+  }
   // Normalize '6' to be '000006' etc.
   const minorPadded = minor.padStart(decimals, "0");
 
