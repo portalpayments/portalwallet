@@ -28,7 +28,7 @@ export function getSigners(
 export const getFeeForTransaction = async (
   connection: Connection,
   transaction: Transaction
-) => {
+): Promise<number> => {
   const fee = await transaction.getEstimatedFee(connection);
   return fee;
 };
@@ -91,6 +91,11 @@ export async function transferWithMemo(
       })
     );
   }
+
+  // We need to add these to get an estimated fee
+  let blockhashAndHeight = await connection.getLatestBlockhash("finalized");
+  transaction.recentBlockhash = blockhashAndHeight.blockhash;
+  transaction.feePayer = ownerAndPayer.publicKey;
 
   const fee = await getFeeForTransaction(connection, transaction);
 
