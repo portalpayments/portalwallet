@@ -1,6 +1,11 @@
 import { getMint, getAccount, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import type { Account } from "@solana/spl-token";
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
 import {
   SECONDS,
   ENOUGH_TO_MAKE_A_NEW_TOKEN,
@@ -21,6 +26,7 @@ import {
   getTransactionsForAddress,
 } from "./wallet";
 import type { BasicTokenAccount } from "./types";
+import { transferWithMemo, getFeeForTransaction } from "./transfer-with-memo";
 
 jest.mock("./functions");
 
@@ -208,14 +214,29 @@ describe("minting and USDC-like transfers", () => {
       ENOUGH_TO_MAKE_A_NEW_TOKEN
     );
 
-    const signature = await sendTokens(
+
+    const transaction = await transferWithMemo(
       connection,
-      alice,
       alicesTokenAccount.address,
       bobsTokenAccount.address,
+      alice,
       AMOUNT_OF_USDC_TO_SEND,
       mintAccountPublicKey,
       "Cinema tickets"
+    );
+
+    const fee = await getFeeForTransaction(connection, transaction);
+
+    expect(fee).toEqual(5000);
+
+    const signature = await sendAndConfirmTransaction(
+      connection,
+      transaction,
+      [alice],
+      {
+        // https://solanacookbook.com/guides/retrying-transactions.html#facts
+        maxRetries: 6,
+      }
     );
 
     expect(signature);
