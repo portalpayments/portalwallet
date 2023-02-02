@@ -2,7 +2,12 @@
 // OK docs: https://solanacookbook.com/references/token.html#how-to-create-a-new-token
 // MUCH BETTER explanation, but with older code samples: https://github.com/jacobcreech/Token-Creator
 
-import type { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import {
+  sendAndConfirmTransaction,
+  type Connection,
+  type Keypair,
+  type PublicKey,
+} from "@solana/web3.js";
 import { PublicKey as PublicKeyConstructor } from "@solana/web3.js";
 
 import {
@@ -16,7 +21,7 @@ import type { Account } from "@solana/spl-token";
 import { getCurrencyBySymbol, USDC_MAINNET_MINT_ACCOUNT } from "./constants";
 import { getABetterErrorMessage } from "./errors";
 import { log, stringify } from "./functions";
-import { transferWithMemo } from "./transfer-with-memo";
+import { getFeeForTransaction, transferWithMemo } from "./transfer-with-memo";
 import type { BasicTokenAccount } from "./types";
 import type { Currency as CurrencyType } from "../backend/types";
 
@@ -134,7 +139,7 @@ export const sendTokens = async (
   memo: null | string = null
 ) => {
   try {
-    const signature = await transferWithMemo(
+    const transaction = await transferWithMemo(
       connection,
       senderTokenAccountAddress,
       recipientTokenAccountAddress,
@@ -142,6 +147,18 @@ export const sendTokens = async (
       amount,
       mintAddress,
       memo
+    );
+
+    const fee = await getFeeForTransaction(connection, transaction);
+
+    const signature = sendAndConfirmTransaction(
+      connection,
+      transaction,
+      [sender],
+      {
+        // https://solanacookbook.com/guides/retrying-transactions.html#facts
+        maxRetries: 6,
+      }
     );
 
     return signature;

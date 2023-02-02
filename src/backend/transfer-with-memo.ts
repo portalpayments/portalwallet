@@ -12,6 +12,8 @@ import {
 import { PublicKey } from "@solana/web3.js";
 import { log } from "./functions";
 import { MEMO_PROGRAM } from "./constants";
+import { signers } from "arbundles";
+import transaction from "arweave/node/lib/transaction";
 
 // Taken from the internal function getSigners()
 // from spl-token/src/actions/internal.ts
@@ -46,23 +48,14 @@ export const transferWithMemo = async (
   amount: number | bigint,
   mintAddress: PublicKey,
   memo: string | null = null
-): Promise<TransactionSignature> => {
+): Promise<Transaction> => {
   // These were moved out of the original transfer since they're static
 
   // SPL Token program account
   const programId = TOKEN_PROGRAM_ID;
 
-  // Payer of the transaction fees
-  const payer = ownerAndPayer;
-
   // Signing accounts if `owner` is a multisig
   const multiSigners: Array<Signer> = [];
-
-  // confirmOptions Options for confirming the transaction
-  const confirmOptions: ConfirmOptions = {
-    // https://solanacookbook.com/guides/retrying-transactions.html#facts
-    maxRetries: 6,
-  };
 
   log(`TODO: make recipient account for `, mintAddress);
 
@@ -100,14 +93,5 @@ export const transferWithMemo = async (
   transaction.recentBlockhash = blockhashAndHeight.blockhash;
   transaction.feePayer = ownerAndPayer.publicKey;
 
-  const fee = await getFeeForTransaction(connection, transaction);
-
-  log(`>>>>>>>>>>>>>>>>>>>>> fee is`, fee);
-
-  return sendAndConfirmTransaction(
-    connection,
-    transaction,
-    [payer, ...signers],
-    confirmOptions
-  );
+  return transaction;
 };
