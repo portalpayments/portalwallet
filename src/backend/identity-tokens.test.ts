@@ -7,7 +7,13 @@ import {
   mintIdentityToken,
 } from "./identity-tokens";
 import { uploadImageToArweave } from "./arweave";
-import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
+import {
+  clusterApiUrl,
+  Connection,
+  Keypair,
+  PublicKey,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
 import {
   connect,
   getTokenAccountsByOwner,
@@ -25,6 +31,7 @@ import {
 import * as base58 from "bs58";
 import { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, sendTokens } from "./tokens";
+import { makeTransaction } from "./transfer-with-memo";
 
 // Arweave currently 400ing and also
 // we don't want to upload images to public arweave routinely
@@ -331,13 +338,24 @@ describe(`identity tokens`, () => {
     if (!alicesTokenAccount) {
       throw new Error(`Haven't set alicesTokenAccount yet`);
     }
-    const signature = await sendTokens(
+    const transaction = await makeTransaction(
       connection,
-      testIdentityTokenIssuer,
       senderTokenAccount,
       alicesTokenAccount,
+      testIdentityTokenIssuer,
       1,
-      mintAddress
+      mintAddress,
+      null
+    );
+
+    const signature = await sendAndConfirmTransaction(
+      connection,
+      transaction,
+      [testIdentityTokenIssuer],
+      {
+        // https://solanacookbook.com/guides/retrying-transactions.html#facts
+        maxRetries: 6,
+      }
     );
 
     expect(signature).toEqual(expect.any(String));
