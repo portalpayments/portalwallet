@@ -30,7 +30,7 @@ import {
 } from "./constants";
 import * as base58 from "bs58";
 import { BN as BigNumber } from "bn.js";
-import { makeTokenAccount, sendTokens } from "./tokens";
+import { makeTokenAccount } from "./tokens";
 import { makeTransaction } from "./transfer-with-memo";
 
 // Arweave currently 400ing and also
@@ -341,7 +341,7 @@ describe(`identity tokens`, () => {
     const transaction = await makeTransaction(
       connection,
       senderTokenAccount,
-      alicesTokenAccount,
+      alice.publicKey,
       testIdentityTokenIssuer,
       1,
       mintAddress,

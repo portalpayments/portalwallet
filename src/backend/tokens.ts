@@ -127,51 +127,6 @@ export const makeTokenAccount = async (
 
 // See https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 
-// TODO: DEPRECATED
-// Replace with makeTransactionObject and sendTransaction
-export const sendTokens = async (
-  connection: Connection,
-  sender: Keypair,
-  senderTokenAccountAddress: PublicKey,
-  recipientTokenAccountAddress: PublicKey,
-  amount: number,
-  mintAddress: PublicKey,
-  memo: null | string = null
-) => {
-  try {
-    const transaction = await makeTransaction(
-      connection,
-      senderTokenAccountAddress,
-      recipientTokenAccountAddress,
-      sender,
-      amount,
-      mintAddress,
-      memo
-    );
-
-    const signature = sendAndConfirmTransaction(
-      connection,
-      transaction,
-      [sender],
-      {
-        // https://solanacookbook.com/guides/retrying-transactions.html#facts
-        maxRetries: 6,
-      }
-    );
-
-    return signature;
-  } catch (thrownObject) {
-    const error = thrownObject as Error;
-    const fullErrorMessage = getABetterErrorMessage(error.message);
-    if (fullErrorMessage) {
-      throw new Error(fullErrorMessage);
-    }
-    throw error;
-  }
-};
-
-// TODO: DEPRECATED
-// Replace with makeTransactionObject and sendTransaction
 export const makeAccountsAndDoTransfer = async (
   connection: Connection,
   sender: Keypair,
@@ -203,22 +158,10 @@ export const makeAccountsAndDoTransfer = async (
     senderTokenAccount.address.toBase58()
   );
 
-  const recipientTokenAccount = await makeTokenAccount(
-    connection,
-    sender,
-    mintAccount,
-    recipient
-  );
-
-  log(
-    `Made / found recipient's USDC token account`,
-    recipientTokenAccount.address.toBase58()
-  );
-
   const transaction = await makeTransaction(
     connection,
     senderTokenAccount.address,
-    recipientTokenAccount.address,
+    recipient,
     sender,
     transferAmountInMinorUnits,
     new PublicKeyConstructor(currency),

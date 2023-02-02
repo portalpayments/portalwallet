@@ -167,41 +167,13 @@ export const mintAndTransferIdentityToken = async (
 
   // Get the token account of the fromWallet address, and if it does not exist, create it
 
-  log(`STEP 2: Making a token account for the recipient...`);
-
-  let recipientTokenAccount: BasicTokenAccount | null = null;
-  try {
-    recipientTokenAccount = await makeTokenAccount(
-      connection,
-      identityTokenIssuer,
-      mintAddress,
-      new PublicKey(recipientWallet)
-    );
-    log(`👛 made token account for this mint on ${givenName}'s wallet`);
-  } catch (thrownObject) {
-    const error = thrownObject as Error;
-    // error.message is blank for some reason
-    log(
-      `⚠️Could not make token account for this mint on ${givenName}'s wallet: ${error.name}`
-    );
-    throw error;
-  }
-
-  if (!recipientTokenAccount) {
-    throw new Error(
-      `Could not make a token account for recipient ${recipientWallet}`
-    );
-  }
-
-  log(`Making a token account for the recipient...`);
-
   log(`Transferring token to final destination...`);
   let signature: string;
   try {
     const transaction = await makeTransaction(
       connection,
       senderTokenAccount,
-      recipientTokenAccount.address,
+      new PublicKey(recipientWallet),
       identityTokenIssuer,
       1,
       mintAddress,

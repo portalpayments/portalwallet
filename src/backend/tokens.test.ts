@@ -212,7 +212,7 @@ describe("minting and USDC-like transfers", () => {
     const transaction = await makeTransaction(
       connection,
       alicesTokenAccount.address,
-      bobsTokenAccount.address,
+      bob.publicKey,
       alice,
       AMOUNT_OF_USDC_TO_SEND,
       mintAccountPublicKey,

@@ -1,4 +1,11 @@
-import { TOKEN_PROGRAM_ID, createTransferInstruction } from "@solana/spl-token";
+import {
+  TOKEN_PROGRAM_ID,
+  createTransferInstruction,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  createAssociatedTokenAccountInstruction,
+  getAssociatedTokenAddress,
+  getAccount,
+} from "@solana/spl-token";
 import {
   Connection,
   sendAndConfirmTransaction,
@@ -6,8 +13,9 @@ import {
   type Signer,
   type ConfirmOptions,
   type TransactionSignature,
-  TransactionInstruction,
+  Transaction as TransactionConstructor,
   Keypair,
+  TransactionInstruction,
 } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
 import { log } from "./functions";
@@ -23,6 +31,24 @@ export const getFeeForTransaction = async (
   return fee;
 };
 
+export const checkTokenAccountCreated = async (
+  connection,
+  receiverTokenAccountAddress
+) => {
+  // Check if the receiver's token account exists
+  try {
+    await getAccount(
+      connection,
+      receiverTokenAccountAddress,
+      "confirmed",
+      TOKEN_PROGRAM_ID
+    );
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 // Taken from
 // import { transfer } from "@solana/spl-token";
 // And modified to add 'memo'
@@ -31,7 +57,7 @@ export const makeTransaction = async (
   connection: Connection,
   // Original code just calls these 'source' and 'destination' but let's be clearer
   sourceTokenAccount: PublicKey,
-  destinationTokenAccount: PublicKey,
+  recipientWalletAddress: PublicKey,
   ownerAndPayer: Keypair,
   amount: number | bigint,
   mintAddress: PublicKey,
@@ -49,7 +75,36 @@ export const makeTransaction = async (
 
   log(`Sending tokens with memo "${memo}"`);
 
-  const transaction = new Transaction().add(
+  const transaction = new TransactionConstructor();
+
+  // 1. Find out if we need to make token account for the recipient and add an instruction for that if necessary
+  // https://solana.stackexchange.com/questions/5571/is-it-possible-to-make-an-ata-in-one-instruction-then-use-that-created-ata-in-t/5573#5573
+
+  // Get the reciever token account address (even if it doesn't exist yet)
+  let destinationTokenAccount = await getAssociatedTokenAddress(
+    mintAddress,
+    recipientWalletAddress
+  );
+
+  if (checkTokenAccountCreated(connection, destinationTokenAccount)) {
+    log(`Token account already exists, no need to make it`);
+  } else {
+    log(`Token account does not exist, adding instruction to make it`);
+    // If the account does not exist, add the create account instruction to the transaction
+    // Logic from node_modules/@solana/spl-token/src/actions/getOrCreateAssociatedTokenAccount.ts
+    transaction.add(
+      createAssociatedTokenAccountInstruction(
+        ownerAndPayer.publicKey,
+        destinationTokenAccount,
+        recipientWalletAddress,
+        mintAddress,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      )
+    );
+  }
+
+  transaction.add(
     createTransferInstruction(
       sourceTokenAccount,
       destinationTokenAccount,
