@@ -27,7 +27,7 @@ export const getFeeForTransaction = async (
 // import { transfer } from "@solana/spl-token";
 // And modified to add 'memo'
 // And remove redundant options.
-export const transferWithMemo = async (
+export const makeTransaction = async (
   connection: Connection,
   // Original code just calls these 'source' and 'destination' but let's be clearer
   sourceTokenAccount: PublicKey,

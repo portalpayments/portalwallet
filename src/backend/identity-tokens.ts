@@ -33,7 +33,7 @@ import type { TokenMetaData, ExpandedNFT, BasicTokenAccount } from "./types";
 import { makeTokenAccount } from "./tokens";
 import { connect } from "./wallet";
 import * as http from "../lib/http-client";
-import { transferWithMemo } from "./transfer-with-memo";
+import { makeTransaction } from "./transfer-with-memo";
 
 export const getMetaplex = (
   connection: Connection,
@@ -198,7 +198,7 @@ export const mintAndTransferIdentityToken = async (
   log(`Transferring token to final destination...`);
   let signature: string;
   try {
-    const transaction = await transferWithMemo(
+    const transaction = await makeTransaction(
       connection,
       senderTokenAccount,
       recipientTokenAccount.address,

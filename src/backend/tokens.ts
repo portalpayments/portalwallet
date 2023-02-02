@@ -21,7 +21,7 @@ import type { Account } from "@solana/spl-token";
 import { getCurrencyBySymbol, USDC_MAINNET_MINT_ACCOUNT } from "./constants";
 import { getABetterErrorMessage } from "./errors";
 import { log, stringify } from "./functions";
-import { getFeeForTransaction, transferWithMemo } from "./transfer-with-memo";
+import { getFeeForTransaction, makeTransaction } from "./transfer-with-memo";
 import type { BasicTokenAccount } from "./types";
 import type { Currency as CurrencyType } from "../backend/types";
 
@@ -139,7 +139,7 @@ export const sendTokens = async (
   memo: null | string = null
 ) => {
   try {
-    const transaction = await transferWithMemo(
+    const transaction = await makeTransaction(
       connection,
       senderTokenAccountAddress,
       recipientTokenAccountAddress,
@@ -215,7 +215,7 @@ export const makeAccountsAndDoTransfer = async (
     recipientTokenAccount.address.toBase58()
   );
 
-  const transaction = await transferWithMemo(
+  const transaction = await makeTransaction(
     connection,
     senderTokenAccount.address,
     recipientTokenAccount.address,

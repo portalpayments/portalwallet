@@ -21,7 +21,7 @@ import {
   getTransactionsForAddress,
 } from "./wallet";
 import type { BasicTokenAccount } from "./types";
-import { transferWithMemo, getFeeForTransaction } from "./transfer-with-memo";
+import { makeTransaction, getFeeForTransaction } from "./transfer-with-memo";
 
 jest.mock("./functions");
 
@@ -209,7 +209,7 @@ describe("minting and USDC-like transfers", () => {
       ENOUGH_TO_MAKE_A_NEW_TOKEN
     );
 
-    const transaction = await transferWithMemo(
+    const transaction = await makeTransaction(
       connection,
       alicesTokenAccount.address,
       bobsTokenAccount.address,
