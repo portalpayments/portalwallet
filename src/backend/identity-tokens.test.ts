@@ -26,12 +26,16 @@ import * as base58 from "bs58";
 import { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, sendTokens } from "./tokens";
 
-const testUnlessOnGitHub = process.env.ON_GITHUB ? test.skip : test;
+// Arweave currently 400ing and also
+// we don't want to upload images to public arweave routinely
+const testArweaveIfAskedSpecfically = process.env.TEST_ARWEAVE
+  ? test
+  : test.skip;
 
 jest.mock("./functions");
 
 describe(`arWeave`, () => {
-  testUnlessOnGitHub(
+  testArweaveIfAskedSpecfically(
     `We can upload an image to arWeave`,
     async () => {
       const result = await uploadImageToArweave("./public/icon16.png");
