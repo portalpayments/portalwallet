@@ -15,18 +15,6 @@ import { MEMO_PROGRAM } from "./constants";
 import { signers } from "arbundles";
 import transaction from "arweave/node/lib/transaction";
 
-// Taken from the internal function getSigners()
-// from spl-token/src/actions/internal.ts
-// (not modified)
-export function getSigners(
-  signerOrMultisig: Signer | PublicKey,
-  multiSigners: Signer[]
-): [PublicKey, Signer[]] {
-  return signerOrMultisig instanceof PublicKey
-    ? [signerOrMultisig, multiSigners]
-    : [signerOrMultisig.publicKey, [signerOrMultisig]];
-}
-
 export const getFeeForTransaction = async (
   connection: Connection,
   transaction: Transaction
@@ -60,13 +48,12 @@ export const transferWithMemo = async (
   log(`TODO: make recipient account for `, mintAddress);
 
   log(`Sending tokens with memo "${memo}"`);
-  const [ownerPublicKey, signers] = getSigners(ownerAndPayer, multiSigners);
 
   const transaction = new Transaction().add(
     createTransferInstruction(
       sourceTokenAccount,
       destinationTokenAccount,
-      ownerPublicKey,
+      ownerAndPayer.publicKey,
       amount,
       multiSigners,
       programId
