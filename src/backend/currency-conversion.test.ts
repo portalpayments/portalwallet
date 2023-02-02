@@ -8,8 +8,6 @@ describe(`Currency conversion`, () => {
       1 * LAMPORTS_PER_SOL
     );
 
-    log(`aBillionLamportsInCents is`, aBillionLamportsInCents);
-
     // 1 sol should be between 18-50 bucks
     expect(aBillionLamportsInCents).toBeGreaterThan(1800);
     expect(aBillionLamportsInCents).toBeLessThan(5000);
