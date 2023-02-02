@@ -12,8 +12,14 @@ import {
   mockStorage,
   bundlrStorage,
   type CreateNftOutput,
+  amount,
 } from "@metaplex-foundation/js";
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
 
 import { asyncFilter, asyncMap, log, sleep } from "./functions";
 import {
@@ -24,9 +30,10 @@ import {
 import { stringify } from "./functions";
 
 import type { TokenMetaData, ExpandedNFT, BasicTokenAccount } from "./types";
-import { makeTokenAccount, sendTokens } from "./tokens";
+import { makeTokenAccount } from "./tokens";
 import { connect } from "./wallet";
 import * as http from "../lib/http-client";
+import { transferWithMemo } from "./transfer-with-memo";
 
 export const getMetaplex = (
   connection: Connection,
@@ -191,14 +198,26 @@ export const mintAndTransferIdentityToken = async (
   log(`Transferring token to final destination...`);
   let signature: string;
   try {
-    signature = await sendTokens(
+    const transaction = await transferWithMemo(
       connection,
-      identityTokenIssuer,
       senderTokenAccount,
       recipientTokenAccount.address,
+      identityTokenIssuer,
       1,
-      mintAddress
+      mintAddress,
+      null
     );
+
+    signature = await sendAndConfirmTransaction(
+      connection,
+      transaction,
+      [identityTokenIssuer],
+      {
+        // https://solanacookbook.com/guides/retrying-transactions.html#facts
+        maxRetries: 6,
+      }
+    );
+
     log(`Transferred token to final destination!`, signature);
   } catch (thrownObject) {
     const error = thrownObject as Error;

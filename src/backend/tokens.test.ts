@@ -12,12 +12,7 @@ import {
   getCurrencyBySymbol,
 } from "./constants";
 import { log, minorUnitsToDecimal, stringify } from "./functions";
-import {
-  createMintAccount,
-  mintTokens,
-  makeTokenAccount,
-  sendTokens,
-} from "./tokens";
+import { createMintAccount, mintTokens, makeTokenAccount } from "./tokens";
 import {
   connect,
   putSolIntoWallet,
@@ -213,7 +208,6 @@ describe("minting and USDC-like transfers", () => {
       alice.publicKey,
       ENOUGH_TO_MAKE_A_NEW_TOKEN
     );
-
 
     const transaction = await transferWithMemo(
       connection,

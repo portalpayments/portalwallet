@@ -149,8 +149,6 @@ export const sendTokens = async (
       memo
     );
 
-    const fee = await getFeeForTransaction(connection, transaction);
-
     const signature = sendAndConfirmTransaction(
       connection,
       transaction,
@@ -176,7 +174,7 @@ export const sendTokens = async (
 // Replace with makeTransactionObject and sendTransaction
 export const makeAccountsAndDoTransfer = async (
   connection: Connection,
-  senderKeyPair: Keypair,
+  sender: Keypair,
   transferAmountInMinorUnits: number,
   recipient: PublicKey,
   memo: string,
@@ -195,9 +193,9 @@ export const makeAccountsAndDoTransfer = async (
 
   const senderTokenAccount = await makeTokenAccount(
     connection,
-    senderKeyPair,
+    sender,
     mintAccount,
-    senderKeyPair.publicKey
+    sender.publicKey
   );
 
   log(
@@ -207,7 +205,7 @@ export const makeAccountsAndDoTransfer = async (
 
   const recipientTokenAccount = await makeTokenAccount(
     connection,
-    senderKeyPair,
+    sender,
     mintAccount,
     recipient
   );
@@ -217,14 +215,24 @@ export const makeAccountsAndDoTransfer = async (
     recipientTokenAccount.address.toBase58()
   );
 
-  const signature = await sendTokens(
+  const transaction = await transferWithMemo(
     connection,
-    senderKeyPair,
     senderTokenAccount.address,
     recipientTokenAccount.address,
+    sender,
     transferAmountInMinorUnits,
     new PublicKeyConstructor(currency),
     memo
+  );
+
+  const signature = sendAndConfirmTransaction(
+    connection,
+    transaction,
+    [sender],
+    {
+      // https://solanacookbook.com/guides/retrying-transactions.html#facts
+      maxRetries: 6,
+    }
   );
 
   return signature;
