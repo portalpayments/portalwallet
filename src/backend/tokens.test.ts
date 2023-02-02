@@ -214,6 +214,7 @@ describe("minting and USDC-like transfers", () => {
       alicesTokenAccount.address,
       bobsTokenAccount.address,
       AMOUNT_OF_USDC_TO_SEND,
+      mintAccountPublicKey,
       "Cinema tickets"
     );
 

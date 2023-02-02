@@ -37,15 +37,16 @@ export const getFeeForTransaction = async (
 // import { transfer } from "@solana/spl-token";
 // And modified to add 'memo'
 // And remove redundant options.
-export async function transferWithMemo(
+export const transferWithMemo = async (
   connection: Connection,
   // Original code just calls these 'source' and 'destination' but let's be clearer
   sourceTokenAccount: PublicKey,
   destinationTokenAccount: PublicKey,
   ownerAndPayer: Keypair,
   amount: number | bigint,
+  mintAddress: PublicKey,
   memo: string | null = null
-): Promise<TransactionSignature> {
+): Promise<TransactionSignature> => {
   // These were moved out of the original transfer since they're static
 
   // SPL Token program account
@@ -62,6 +63,8 @@ export async function transferWithMemo(
     // https://solanacookbook.com/guides/retrying-transactions.html#facts
     maxRetries: 6,
   };
+
+  log(`TODO: make recipient account for `, mintAddress);
 
   log(`Sending tokens with memo "${memo}"`);
   const [ownerPublicKey, signers] = getSigners(ownerAndPayer, multiSigners);
@@ -107,4 +110,4 @@ export async function transferWithMemo(
     [payer, ...signers],
     confirmOptions
   );
-}
+};

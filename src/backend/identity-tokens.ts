@@ -196,7 +196,8 @@ export const mintAndTransferIdentityToken = async (
       identityTokenIssuer,
       senderTokenAccount,
       recipientTokenAccount.address,
-      1
+      1,
+      mintAddress
     );
     log(`Transferred token to final destination!`, signature);
   } catch (thrownObject) {

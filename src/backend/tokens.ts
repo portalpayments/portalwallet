@@ -2,13 +2,7 @@
 // OK docs: https://solanacookbook.com/references/token.html#how-to-create-a-new-token
 // MUCH BETTER explanation, but with older code samples: https://github.com/jacobcreech/Token-Creator
 
-import type {
-  ConfirmOptions,
-  Connection,
-  Keypair,
-  PublicKey,
-  Signer,
-} from "@solana/web3.js";
+import type { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { PublicKey as PublicKeyConstructor } from "@solana/web3.js";
 
 import {
@@ -136,16 +130,17 @@ export const sendTokens = async (
   senderTokenAccountAddress: PublicKey,
   recipientTokenAccountAddress: PublicKey,
   amount: number,
+  mintAddress: PublicKey,
   memo: null | string = null
 ) => {
   try {
-
     const signature = await transferWithMemo(
       connection,
       senderTokenAccountAddress,
       recipientTokenAccountAddress,
       sender,
       amount,
+      mintAddress,
       memo
     );
 
@@ -211,6 +206,7 @@ export const makeAccountsAndDoTransfer = async (
     senderTokenAccount.address,
     recipientTokenAccount.address,
     transferAmountInMinorUnits,
+    new PublicKeyConstructor(currency),
     memo
   );
 

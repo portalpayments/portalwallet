@@ -332,7 +332,8 @@ describe(`identity tokens`, () => {
       testIdentityTokenIssuer,
       senderTokenAccount,
       alicesTokenAccount,
-      1
+      1,
+      mintAddress
     );
 
     expect(signature).toEqual(expect.any(String));
