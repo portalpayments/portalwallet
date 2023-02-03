@@ -12,7 +12,13 @@ import {
   getCurrencyBySymbol,
 } from "./constants";
 import { log, minorUnitsToDecimal, stringify } from "./functions";
-import { createMintAccount, mintTokens, makeTokenAccount } from "./tokens";
+import {
+  createMintAccount,
+  mintTokens,
+  makeTokenAccount,
+  makeTransaction,
+  getFeeForTransaction,
+} from "./tokens";
 import {
   connect,
   putSolIntoWallet,
@@ -21,9 +27,8 @@ import {
   getTransactionsForAddress,
 } from "./wallet";
 import type { BasicTokenAccount } from "./types";
-import { makeTransaction, getFeeForTransaction } from "./transfer-with-memo";
 
-jest.mock("./functions");
+// jest.mock("./functions");
 
 const AMOUNT_OF_USDC_TO_SEND = 50;
 

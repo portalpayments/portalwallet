@@ -30,10 +30,9 @@ import {
 import { stringify } from "./functions";
 
 import type { TokenMetaData, ExpandedNFT, BasicTokenAccount } from "./types";
-import { makeTokenAccount } from "./tokens";
+import { makeTokenAccount, makeTransaction } from "./tokens";
 import { connect } from "./wallet";
 import * as http from "../lib/http-client";
-import { makeTransaction } from "./transfer-with-memo";
 
 export const getMetaplex = (
   connection: Connection,

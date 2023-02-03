@@ -30,8 +30,7 @@ import {
 } from "./constants";
 import * as base58 from "bs58";
 import { BN as BigNumber } from "bn.js";
-import { makeTokenAccount } from "./tokens";
-import { makeTransaction } from "./transfer-with-memo";
+import { makeTokenAccount, makeTransaction } from "./tokens";
 
 // Arweave currently 400ing and also
 // we don't want to upload images to public arweave routinely
