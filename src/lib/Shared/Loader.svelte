@@ -1,9 +1,7 @@
 <script lang="ts">
   import { log } from "../../backend/functions";
 
-  // From https://codepen.io/scottloway/pen/zqoLyQ
-
-  let isComplete = false;
+  export let isComplete = false;
 
   const showTick = () => {
     log(`Setting complete`);

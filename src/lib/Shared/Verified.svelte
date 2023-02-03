@@ -7,8 +7,7 @@
 
   export let contact: Contact;
 
-  // TODO: implement
-  let isNew = false;
+  // TODO: implement an 'isNew' badge if we haven't done any transactions with this account.
 </script>
 
 <img

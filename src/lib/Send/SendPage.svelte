@@ -8,6 +8,7 @@
   import Fee from "./Fee.svelte";
   import SendHeading from "./SendHeading.svelte";
   import Heading from "../Shared/Heading.svelte";
+  import Loader from "../Shared/Loader.svelte";
   import SendButtons from "./SendButtons.svelte";
   import Input from "../Shared/Input.svelte";
   import Modal from "../Shared/Modal.svelte";
@@ -19,7 +20,6 @@
   import { makeAccountsAndDoTransfer } from "../../backend/tokens";
   import { checkIfValidWalletAddress } from "../utils";
   import { log, sleep, stringify } from "../../backend/functions";
-  import { Circle } from "svelte-loading-spinners";
   import { SECOND } from "../../backend/constants";
   import type {
     VerifiedClaimsForIndividual,
@@ -230,7 +230,7 @@
 
   {#if isCurrentlyLoadingVerificationStateFromNetwork}
     <Modal>
-      <Circle color="var(--mid-blue)" />
+      <Loader isComplete={isTransactionComplete} />
     </Modal>
   {/if}
 
