@@ -177,6 +177,8 @@ export const makeAccountsAndDoTransfer = async (
     {
       // https://solanacookbook.com/guides/retrying-transactions.html#facts
       maxRetries: 6,
+      // We're sending tokens, we don't have anything to do afterwards (eg like do something with the moved tokens etc) so let's have less confirmation.
+      commitment: "confirmed",
     }
   );
 
