@@ -160,6 +160,7 @@ export const makeAccountsAndDoTransfer = async (
     senderTokenAccount.address.toBase58()
   );
 
+  console.time(`making transaction`);
   const transaction = await makeTransaction(
     connection,
     senderTokenAccount.address,
@@ -169,7 +170,9 @@ export const makeAccountsAndDoTransfer = async (
     new PublicKeyConstructor(currency),
     memo
   );
+  console.timeEnd(`making transaction`);
 
+  console.time(`sending and confirming transaction`);
   const signature = sendAndConfirmTransaction(
     connection,
     transaction,
@@ -181,6 +184,7 @@ export const makeAccountsAndDoTransfer = async (
       commitment: "confirmed",
     }
   );
+  console.time(`sending and confirming transaction`);
 
   return signature;
 };
