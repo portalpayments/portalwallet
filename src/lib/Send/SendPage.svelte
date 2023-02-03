@@ -94,13 +94,13 @@
   const doTransfer = async () => {
     const slowTransactionTimeout1 = setTimeout(() => {
       keepWaitingMessage = "Still going...";
-    }, 10 * SECONDS);
+    }, 1 * SECONDS);
     const slowTransactionTimeout2 = setTimeout(() => {
       keepWaitingMessage = "Nearly there...";
-    }, 20 * SECONDS);
+    }, 2 * SECONDS);
     const slowTransactionTimeout3 = setTimeout(() => {
       keepWaitingMessage = "Finishing up...";
-    }, 30 * SECONDS);
+    }, 3 * SECONDS);
     try {
       // Convert UI displayed major units into minor units
       const transferAmountInMinorUnits = getAmountInMinorUnits(
