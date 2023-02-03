@@ -28,9 +28,6 @@
   import type { Contact } from "../../backend/types";
   import { updateAccountTransactions, getActiveAccount } from "../stores";
   import { SECONDS, getCurrencyByMint } from "../../backend/constants";
-  const ACTUALLY_SEND_MONEY = true;
-
-  const TRANSACTION_TIME_IS_SLOW = 5 * SECONDS;
 
   let destinationWalletAddress: string | null = null;
   let transferAmount: number | null = null;
@@ -95,9 +92,15 @@
   };
 
   const doTransfer = async () => {
-    const slowTransactionTimeout = setTimeout(() => {
+    const slowTransactionTimeout1 = setTimeout(() => {
+      keepWaitingMessage = "Still going...";
+    }, 10 * SECONDS);
+    const slowTransactionTimeout2 = setTimeout(() => {
       keepWaitingMessage = "Nearly there...";
-    }, TRANSACTION_TIME_IS_SLOW);
+    }, 20 * SECONDS);
+    const slowTransactionTimeout3 = setTimeout(() => {
+      keepWaitingMessage = "Finishing up...";
+    }, 30 * SECONDS);
     try {
       // Convert UI displayed major units into minor units
       const transferAmountInMinorUnits = getAmountInMinorUnits(
@@ -105,28 +108,23 @@
         activeAccount.decimals
       );
 
-      if (ACTUALLY_SEND_MONEY) {
-        log(`Doing transfer, will send ${transferAmountInMinorUnits} cents`);
+      log(`Doing transfer, will send ${transferAmountInMinorUnits} cents`);
 
-        // Fixing in next commit
-        const signature = await makeAccountsAndDoTransfer(
-          connection,
-          keyPair,
-          transferAmountInMinorUnits,
-          new PublicKey(contact.walletAddress),
-          memo,
-          true
-        );
+      const signature = await makeAccountsAndDoTransfer(
+        connection,
+        keyPair,
+        transferAmountInMinorUnits,
+        new PublicKey(contact.walletAddress),
+        memo
+      );
 
-        log(`Finished transfer, signature was`, signature);
+      log(`Finished transfer, signature was`, signature);
 
-        await updateAccountTransactions(signature, activeAccount.address);
-      } else {
-        log(`ACTUALLY_SEND_MONEY is false, skipping transfer`);
-        await sleep(1 * SECOND);
-      }
+      await updateAccountTransactions(signature, activeAccount.address);
 
-      clearTimeout(slowTransactionTimeout);
+      clearTimeout(slowTransactionTimeout1);
+      clearTimeout(slowTransactionTimeout2);
+      clearTimeout(slowTransactionTimeout3);
 
       isSending = false;
       isSendingAnyway = false;

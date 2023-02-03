@@ -51,6 +51,13 @@ export const getKeypairFromString = (secretKeyString: string) => {
   return Keypair.fromSecretKey(decodedSecretKey);
 };
 
+export const checkIsLocalhost = (connection: Connection) => {
+  return (
+    connection.rpcEndpoint.includes("127.0.0.1") ||
+    connection.rpcEndpoint.includes("localhost")
+  );
+};
+
 export const connect = async (
   networkName: keyof typeof URLS
 ): Promise<Connection> => {

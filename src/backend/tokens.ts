@@ -30,6 +30,7 @@ import { log } from "./functions";
 import { getCurrencyBySymbol, MEMO_PROGRAM } from "./constants";
 import { getABetterErrorMessage } from "./errors";
 import type { BasicTokenAccount } from "./types";
+import { checkIsLocalhost } from "./wallet";
 
 // Mint accounts hold information about the token such as how many decimals the token has and who can mint new tokens, and the mint account is later used to mint tokens to a token account and create the initial supply.
 export const createMintAccount = async (
@@ -138,14 +139,9 @@ export const makeAccountsAndDoTransfer = async (
   sender: Keypair,
   transferAmountInMinorUnits: number,
   recipient: PublicKey,
-  memo: string,
-  isProduction: boolean
+  memo: string
 ) => {
   log(`Doing transfer, will send ${transferAmountInMinorUnits} cents`);
-
-  if (!isProduction) {
-    throw new Error(`TODO: implement support for other networks`);
-  }
 
   // TODO: support more than USDC (mainly changing functions that use this to provide currency)
   const currency = getCurrencyBySymbol("USDC").mintAddress;
@@ -254,10 +250,7 @@ export const makeTransaction = async (
   // https://solana.stackexchange.com/questions/5600/error-downloading-the-computebudget-program-to-use-on-local-validator
   // is resolved
 
-  const isLocalhost =
-    connection.rpcEndpoint.includes("127.0.0.1") ||
-    connection.rpcEndpoint.includes("localhost");
-  if (!isLocalhost) {
+  if (!checkIsLocalhost(connection)) {
     // "The value provided in microLamports will be multiplied by the CU budget to determine the Prioritization Fee in Lamports."
     log(`Adding priority fee`);
 
