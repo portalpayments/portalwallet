@@ -44,7 +44,7 @@
 <style lang="scss">
   .profile-pic {
     aspect-ratio: 1 / 1;
-    width: 36px;
+    width: 100%;
   }
 
   .profile-pic.individual {
