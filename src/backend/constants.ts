@@ -23,6 +23,9 @@ export const MIKES_USDT_ACCOUNT =
 
 export const SPL_TOKEN_PROGRAM = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
 
+export const COMPUTE_BUDGET_PROGRAM =
+  "ComputeBudget111111111111111111111111111111";
+
 // https://docs.lightprotocol.com/
 export const LIGHT_PROGRAM = "2c54pLrGpQdGxJWUAoME6CReBrtDbsx5Tqx4nLZZo6av";
 

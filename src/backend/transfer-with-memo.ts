@@ -16,6 +16,7 @@ import {
   Transaction as TransactionConstructor,
   Keypair,
   TransactionInstruction,
+  ComputeBudgetProgram,
 } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
 import { log } from "./functions";
@@ -76,6 +77,38 @@ export const makeTransaction = async (
   log(`Sending tokens with memo "${memo}"`);
 
   const transaction = new TransactionConstructor();
+
+  // 1M microlamports = 1 lamport
+  // computeUnitLimit of 1Million units * computeUnitPrice of one microlamport = 1 lamport
+  // Transaction now costs 5000 (normal price) + 1 lamport
+  // See https://solanacookbook.com/references/basic-transactions.html#how-to-change-compute-budget-fee-priority-for-a-transaction
+
+  // Normal transaction price is 5000 lamports per signature
+  // TODO: remove when
+  // https://solana.stackexchange.com/questions/5600/error-downloading-the-computebudget-program-to-use-on-local-validator
+  // is resolved
+
+  const isLocalhost =
+    connection.rpcEndpoint.includes("127.0.0.1") ||
+    connection.rpcEndpoint.includes("localhost");
+  if (!isLocalhost) {
+    // "The value provided in microLamports will be multiplied by the CU budget to determine the Prioritization Fee in Lamports."
+    log(`BIG MONEY BAG 💰💰💰💰 LAMBO MODE 🏎️🏎️🏎️🏎️🏎️🏎️🏎️🏎️`);
+
+    // Values used are from https://twitter.com/vidor_solrise/status/1615076893614657536?s=20&t=RB1LkzcXf28yu9SzDc6RZg
+    // 200000 x 5500 / 1000000 = 1100 lamports = still way less than a cent
+    transaction.add(
+      ComputeBudgetProgram.setComputeUnitLimit({
+        units: 200_000, // compute units
+      })
+    );
+
+    transaction.add(
+      ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: 5500, // per compute unit
+      })
+    );
+  }
 
   // 1. Find out if we need to make token account for the recipient and add an instruction for that if necessary
   // https://solana.stackexchange.com/questions/5571/is-it-possible-to-make-an-ata-in-one-instruction-then-use-that-created-ata-in-t/5573#5573

@@ -376,7 +376,7 @@ describe(`mainnet integration tests`, () => {
         currency: expect.any(String),
         direction: expect.any(Number),
         from: expect.any(String),
-        networkFee: 5000,
+        networkFee: expect.any(Number),
         status: true,
         to: expect.any(String),
 
