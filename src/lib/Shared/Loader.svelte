@@ -6,70 +6,102 @@
   let isComplete = false;
 
   const showTick = () => {
-    log(`Settin complete`);
+    log(`Setting complete`);
     isComplete = !isComplete;
   };
 </script>
 
-<div class="circle {isComplete ? 'load-complete' : ''}">
-  <div class="checkmark draw {isComplete ? 'load-complete' : ''}" />
+<div class="loader">
+  <div class="circle {isComplete ? 'complete' : ''}">
+    <div class="big-white-area" />
+  </div>
+  <div class="tick {isComplete ? 'complete' : ''}" />
 </div>
 
-<p>
-  <button id="toggle" type="button" class="btn btn-success" on:click={showTick}>
-    Toggle Completed
-  </button>
-</p>
+<button id="toggle" type="button" on:click={showTick}>
+  Toggle Completed
+</button>
 
 <style lang="scss">
   @import "../../mixins.scss";
-  body {
-    padding: 5em;
-    text-align: center;
-  }
 
-  :root {
-    --loader-size: 7em;
-    --check-height: calc(var(--loader-size) / 2);
-    --check-width: calc(var(--check-height) / 2);
-    --check-left: calc((var(--loader-size) / 6) + (var(--loader-size) / 12));
-    --check-thickness: 3px;
-    --check-color: var(--mid-blue);
+  .loader {
+    // Explicitly position for absolutely positioned children
+    position: relative;
+    width: 120px;
+    height: 120px;
   }
 
   .circle {
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-left-color: var(--check-color);
-    animation: loader-spin 1.2s infinite linear;
-    // used to position after on checkmark
-    // TODO: clean this up when I have time, make it use grid
+    animation: spin 1.2s infinite linear;
+    background-size: 100% 100%;
+    background-position: 0px 0px;
+    padding: 2px;
+    align-items: center;
+    justify-items: center;
+    background-image: conic-gradient(
+      from 0deg at 50% 50%,
+      rgba(255, 255, 255, 0) 0%,
+      #419cfd11 3%,
+      #00a9fe22 6%,
+      #00b4f744 9%,
+      #00bde966 12%,
+      #00c5d699 15%,
+      #00cac1bb 18%,
+      #38ceaccc 21%,
+      #6ed199ff 24%,
+      #ffffffff 24%,
+
+      rgba(255, 255, 255, 0) 100%
+    );
     position: relative;
     border-radius: 50%;
-    width: var(--loader-size);
-    height: var(--loader-size);
+    width: 120px;
+    height: 120px;
   }
 
-  .circle.load-complete {
+  .big-white-area {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border-radius: 50%;
+  }
+
+  .circle.complete {
     animation: none;
     // Fill entire circle solid when complete
-    border-color: var(--check-color);
-    transition: all 500ms ease-out;
+    transition: all 200ms ease-in-out;
+    background-image: conic-gradient(
+      from 270deg at 50% 50%,
+      #419cfd 0%,
+      #00a9fe 7%,
+      #00b4f7 14%,
+      #00bde9 21%,
+      #00c5d6 28%,
+      #00cac1 35%,
+      #38ceac 42%,
+      #6ed199 50%,
+      #38ceac 57%,
+      #00cac1 64%,
+      #00c5d6 71%,
+      #00bde9 78%,
+      #00b4f7 85%,
+      #00a9fe 92%,
+      #419cfd 100%
+    );
     @include shadow;
   }
 
-  .checkmark {
+  .tick {
     display: none;
-  }
-
-  .checkmark:after {
     opacity: 1;
-    height: var(--check-height);
-    width: var(--check-width);
-    transform-origin: left top;
+    height: 60px;
+    width: 30px;
+    // transform-origin: left top;
     // it's a rectangle with two sides deleted
-    border-right: var(--check-thickness) solid;
-    border-top: var(--check-thickness) solid;
-    border-bottom: none;
+    border-right: 4px solid;
+    border-top: none;
+    border-bottom: 4px solid;
     border-left: none;
     border-image: linear-gradient(
         135deg,
@@ -84,24 +116,20 @@
       )
       1;
 
-    content: "";
-    left: var(--check-left);
-    top: var(--check-height);
+    transform: scale(-1) rotate(45deg) translateX(61px) translateY(28px);
+
     position: absolute;
   }
 
-  .checkmark.draw:after {
+  .tick.complete {
     animation-duration: 800ms;
     animation-timing-function: ease;
-    animation-name: checkmark;
-    transform: scaleX(-1) rotate(135deg);
-  }
-
-  .checkmark.load-complete {
+    animation-name: fade-in;
+    transform: rotate(45deg) translateX(45px) translateY(-15px);
     display: unset;
   }
 
-  @keyframes loader-spin {
+  @keyframes spin {
     0% {
       transform: rotate(0deg);
     }
@@ -110,25 +138,11 @@
     }
   }
 
-  @keyframes checkmark {
+  @keyframes fade-in {
     0% {
-      height: 0;
-      width: 0;
-      opacity: 1;
-    }
-    20% {
-      height: 0;
-      width: var(--check-width);
-      opacity: 1;
-    }
-    40% {
-      height: var(--check-height);
-      width: var(--check-width);
-      opacity: 1;
+      opacity: 0;
     }
     100% {
-      height: var(--check-height);
-      width: var(--check-width);
       opacity: 1;
     }
   }
