@@ -230,7 +230,8 @@
 
   {#if isCurrentlyLoadingVerificationStateFromNetwork}
     <Modal>
-      <Loader isComplete={isTransactionComplete} />
+      <!-- TODO: we should probably use a different component for verifying versus sending -->
+      <Loader isComplete={false} />
     </Modal>
   {/if}
 
@@ -253,7 +254,7 @@
         {#if keepWaitingMessage}
           <p>{keepWaitingMessage}</p>
         {/if}
-        <Circle color="var(--mid-blue)" />
+        <Loader isComplete={isTransactionComplete} />
       </div>
     </Modal>
   {/if}
