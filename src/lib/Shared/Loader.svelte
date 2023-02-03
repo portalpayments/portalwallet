@@ -7,11 +7,11 @@
 
   const showTick = () => {
     log(`Settin complete`);
-    isComplete = true;
+    isComplete = !isComplete;
   };
 </script>
 
-<div class="circle-loader {isComplete ? 'load-complete' : ''}">
+<div class="circle {isComplete ? 'load-complete' : ''}">
   <div class="checkmark draw {isComplete ? 'load-complete' : ''}" />
 </div>
 
@@ -22,67 +22,79 @@
 </p>
 
 <style lang="scss">
-  // This is just styling for this demo
+  @import "../../mixins.scss";
   body {
     padding: 5em;
     text-align: center;
   }
 
-  h1 {
-    margin-bottom: 1em;
+  :root {
+    --loader-size: 7em;
+    --check-height: calc(var(--loader-size) / 2);
+    --check-width: calc(var(--check-height) / 2);
+    --check-left: calc((var(--loader-size) / 6) + (var(--loader-size) / 12));
+    --check-thickness: 3px;
+    --check-color: var(--mid-blue);
   }
 
-  // Define vars we'll be using
-  $brand-success: #5cb85c;
-  $loader-size: 7em;
-  $check-height: $loader-size/2;
-  $check-width: $check-height/2;
-  $check-left: ($loader-size/6 + $loader-size/12);
-  $check-thickness: 3px;
-  $check-color: $brand-success;
-
-  .circle-loader {
-    margin-bottom: $loader-size/2;
+  .circle {
     border: 1px solid rgba(0, 0, 0, 0.2);
-    border-left-color: $check-color;
+    border-left-color: var(--check-color);
     animation: loader-spin 1.2s infinite linear;
+    // used to position after on checkmark
+    // TODO: clean this up when I have time, make it use grid
     position: relative;
-    display: inline-block;
-    vertical-align: top;
     border-radius: 50%;
-    width: $loader-size;
-    height: $loader-size;
+    width: var(--loader-size);
+    height: var(--loader-size);
   }
 
-  .circle-loader.load-complete {
-    -webkit-animation: none;
+  .circle.load-complete {
     animation: none;
-    border-color: $check-color;
-    transition: border 500ms ease-out;
+    // Fill entire circle solid when complete
+    border-color: var(--check-color);
+    transition: all 500ms ease-out;
+    @include shadow;
   }
 
   .checkmark {
     display: none;
+  }
 
-    &.draw:after {
-      animation-duration: 800ms;
-      animation-timing-function: ease;
-      animation-name: checkmark;
-      transform: scaleX(-1) rotate(135deg);
-    }
+  .checkmark:after {
+    opacity: 1;
+    height: var(--check-height);
+    width: var(--check-width);
+    transform-origin: left top;
+    // it's a rectangle with two sides deleted
+    border-right: var(--check-thickness) solid;
+    border-top: var(--check-thickness) solid;
+    border-bottom: none;
+    border-left: none;
+    border-image: linear-gradient(
+        135deg,
+        #419cfd,
+        #00a9fe,
+        #00b4f7,
+        #00bde9,
+        #00c5d6,
+        #00cac1,
+        #38ceac,
+        #6ed199
+      )
+      1;
 
-    &:after {
-      opacity: 1;
-      height: $check-height;
-      width: $check-width;
-      transform-origin: left top;
-      border-right: $check-thickness solid $check-color;
-      border-top: $check-thickness solid $check-color;
-      content: "";
-      left: $check-left;
-      top: $check-height;
-      position: absolute;
-    }
+    content: "";
+    left: var(--check-left);
+    top: var(--check-height);
+    position: absolute;
+  }
+
+  .checkmark.draw:after {
+    animation-duration: 800ms;
+    animation-timing-function: ease;
+    animation-name: checkmark;
+    transform: scaleX(-1) rotate(135deg);
   }
 
   .checkmark.load-complete {
@@ -106,17 +118,17 @@
     }
     20% {
       height: 0;
-      width: $check-width;
+      width: var(--check-width);
       opacity: 1;
     }
     40% {
-      height: $check-height;
-      width: $check-width;
+      height: var(--check-height);
+      width: var(--check-width);
       opacity: 1;
     }
     100% {
-      height: $check-height;
-      width: $check-width;
+      height: var(--check-height);
+      width: var(--check-width);
       opacity: 1;
     }
   }
