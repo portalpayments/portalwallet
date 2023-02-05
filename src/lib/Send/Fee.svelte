@@ -12,7 +12,7 @@
       const amountInUSCents = await convertLamportsToUSDOrEurCents(amount);
       amountString = `$${amountAndDecimalsToString(amountInUSCents, 2)}`;
       if ((amountString = "0.00")) {
-        amountString = "less than $0.01";
+        amountString = "less than 1 cent";
       }
     }
   });
