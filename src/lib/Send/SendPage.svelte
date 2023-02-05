@@ -91,15 +91,6 @@
   };
 
   const doTransfer = async () => {
-    const slowTransactionTimeout1 = setTimeout(() => {
-      keepWaitingMessage = "Still going...";
-    }, 1 * SECONDS);
-    const slowTransactionTimeout2 = setTimeout(() => {
-      keepWaitingMessage = "Nearly there...";
-    }, 2 * SECONDS);
-    const slowTransactionTimeout3 = setTimeout(() => {
-      keepWaitingMessage = "Finishing up...";
-    }, 3 * SECONDS);
     try {
       // Convert UI displayed major units into minor units
       const transferAmountInMinorUnits = getAmountInMinorUnits(
@@ -120,9 +111,6 @@
       log(`Finished transfer, signature was`, signature);
       await updateAccountTransactions(signature, activeAccount.address);
 
-      clearTimeout(slowTransactionTimeout1);
-      clearTimeout(slowTransactionTimeout2);
-      clearTimeout(slowTransactionTimeout3);
 
       isSending = false;
       isSendingAnyway = false;
