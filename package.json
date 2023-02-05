@@ -1,5 +1,6 @@
 {
-  "name": "portal-wallet-browser-extension",
+  "name": "portal-wallet",
+  "license": "GPL-2.0-only",
   "private": true,
   "version": "1.0.0",
   "type": "module",
