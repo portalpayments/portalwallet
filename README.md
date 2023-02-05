@@ -82,6 +82,11 @@ solana program dump -u m ${METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS} metaplex_tok
 export MEMO_PROGRAM_ADDRESS="MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
 solana program dump -u m ${MEMO_PROGRAM_ADDRESS} memo_program.so
 
+# Compute budget program
+
+export COMPUTE_BUDGET_PROGRAM="ComputeBudget111111111111111111111111111111"
+solana program dump -u m ${COMPUTE_BUDGET_PROGRAM} memo_program.so
+
 ```
 
 ## How the Portal Identity Token works
