@@ -165,7 +165,7 @@ export const makeAccountsAndDoTransfer = async (
     recipient,
     sender,
     transferAmountInMinorUnits,
-    new PublicKeyConstructor(currency),
+    new PublicKeyConstructor(currency.mintAddress),
     memo
   );
   console.timeEnd(`making transaction`);
