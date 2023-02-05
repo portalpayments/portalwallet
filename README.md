@@ -8,6 +8,8 @@ Portal is a DeFi wallet with a built-in real-human identity layer that makes usi
 
 Portal’s payment flow uses real-human identity verification to allow senders to have complete confidence about who will receive their money before they hit the ‘Send’ button.
 
+<img src="readme-images/sending-payment.png" alt="Sending a payment" />
+
 ## Wallet-To-Wallet Messaging
 
 Portal uses Dialect to offer wallet-to-wallet messaging and p2p payments through a single chat-like interface. Right now people typically switch between crypto wallets and other apps, which means users have to make sure the people involved, and the amounts discussed, remain the same. Putting payments and messaging together means Portal’s users can communicate with their contacts before and after sending and recieving money. 
@@ -27,7 +29,6 @@ Portal has a human readable bank-like transaction history, with recipient names 
 
 Portal makes use of Solana's recent update, transaction priority fees, to enable ultrafast transactions. Currently, the average transaction on Portal takes about 2 seconds to go through. 
 
-<img src="readme-images/sending-payment.png" alt="Sending a payment" />
 <img src="readme-images/payment-sent.png" alt="Sent a payment" />
 
 ## Portal is For Everyone
