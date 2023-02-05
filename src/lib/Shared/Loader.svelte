@@ -52,8 +52,13 @@
   .big-white-area {
     width: 100%;
     height: 100%;
-    background-color: white;
+    // Slight off-white color to match background of send page
+    background-color: #f5f5f5;
     border-radius: 50%;
+  }
+
+  .circle.complete .big-white-area {
+    background-color: white;
   }
 
   .circle.complete {
