@@ -1,15 +1,44 @@
 # Portal Wallet
 
-
-## A crypto wallet for regular people
+Portal is a DeFi wallet with a built-in real-human identity layer that makes using Solana similar to traditional payment apps. 
 
 [![Build status](https://github.com/portalwallet/portalwallet/actions/workflows/tests.yaml/badge.svg)](https://github.com/portalwallet/portalwallet/actions)
 
-## Development
+## Verified recipients through Portal’s Identity Token
+
+Portal’s payment flow uses real-human identity verification to allow senders to have complete confidence about who will receive their money before they hit the ‘Send’ button.
+
+## Wallet-To-Wallet Messaging
+
+Portal uses Dialect to offer wallet-to-wallet messaging and p2p payments through a single chat-like interface. Right now people typically switch between crypto wallets and other apps, which means users have to make sure the people involved, and the amounts discussed, remain the same. Putting payments and messaging together means Portal’s users can communicate with their contacts before and after sending and recieving money. 
+
+<img src="readme-images/contact-chat.png" alt="Chatting with a contact" />
+
+Additionally, Portal uses the integrated chat feature to offer customer support to its users right from within the Portal app. Users can contact the Portal support team from the settings page.
+
+<img src="readme-images/support-chat.png" alt="A support cat with the Portal Company" />
+
+## Human Readable and Searchable Transaction History
+Portal has a human readable bank-like transaction history, with recipient names and transaction notes. It also allows the users to search through the history, find a specific transaction, an array of transactions or a receipt.
+
+<img src="readme-images/transactions-list.png" alt="A list of transactions" />
+
+## Ultrafast Transactions
+
+Portal makes use of Solana's recent update, transaction priority fees, to enable ultrafast transactions. Currently, the average transaction on Portal takes about 2 seconds to go through. 
+
+<img src="readme-images/sending-payment.png" alt="Sending a payment" />
+<img src="readme-images/payment-sent.png" alt="Sent a payment" />
+
+## Portal is For Everyone
+Portal is a wallet with a strong focus on transfers and payments, and is built to be used by everyone.
+
+
+# Development
 
 See [coding guidelines](CODING_GUIDELINES.md).
 
-Also note re: servic workers - we currently don't use vite, https://crxjs.dev/ seems to be th best way to build service workers with vite, but has issues https://github.com/crxjs/chrome-extension-tools/issues/617
+Also note re: service workers - we currently don't use vite, https://crxjs.dev/ seems to be the best way to build service workers with vite, but has issues https://github.com/crxjs/chrome-extension-tools/issues/617
 
 ## To package the Web Extension 
 
