@@ -5,14 +5,15 @@
   import type {
     VerifiedClaimsForIndividual,
     VerifiedClaimsForOrganization,
+    CurrencyDetails,
   } from "../../backend/types";
-  import USDClogo from "../../assets/token-logos/usdc-coin-grey.svg";
   export let errorMessage: string | null = null;
   export let verifiedClaims:
     | VerifiedClaimsForIndividual
     | VerifiedClaimsForOrganization;
   export let destinationWalletAddress: string | null;
   export let transferAmount: number | null;
+  export let currency: CurrencyDetails;
 
   log(`transferAmount is`, transferAmount);
 </script>
@@ -24,9 +25,9 @@
     <p>{errorMessage}</p>
     <p>
       Failed to send<img
-        class="usdc-symbol"
-        src={USDClogo}
-        alt="usdc symbol"
+        class="symbol"
+        src={currency.logo}
+        alt={currency.symbol}
       />{transferAmount} to
       <br />
       {#if verifiedClaims}
@@ -50,11 +51,12 @@
     align-self: center;
   }
 
-  .usdc-symbol {
+  .symbol {
     display: inline;
     height: 16px;
     /* Hack to get baseline of $ to line up with baseline of text */
     transform: translateY(2px);
+    margin: 0 3px;
   }
 
   .transaction-details {

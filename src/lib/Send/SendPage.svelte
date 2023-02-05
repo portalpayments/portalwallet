@@ -291,6 +291,7 @@
         {errorMessage}
         {destinationWalletAddress}
         {transferAmount}
+        {currency}
         {verifiedClaims}
       />
     </Modal>
