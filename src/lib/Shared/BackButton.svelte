@@ -25,8 +25,9 @@
   .back-button {
     font-size: 2rem;
     position: absolute;
-    /* Just eyeballing it to fit beside the heading on the Transfers page */
-    top: 20px;
+    // Headers are 64px high, this positions the back button them in the vertical center
+    // TODO: get rid of absolute positioning.
+    top: 18px;
     left: 6px;
     margin: 0;
     padding: 0;

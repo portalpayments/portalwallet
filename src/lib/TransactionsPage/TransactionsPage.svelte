@@ -49,7 +49,7 @@
     grid-auto-flow: row;
     justify-content: center;
     align-items: center;
-    grid-template-rows: 96px 48px calc(var(--wallet-height) - 96px - 48px);
+    grid-template-rows: 64px 48px calc(var(--wallet-height) - 96px - 48px);
     grid-template-columns: 100%;
 
     overflow: hidden;

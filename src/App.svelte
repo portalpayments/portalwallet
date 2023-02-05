@@ -107,6 +107,6 @@
     height: var(--wallet-height);
     overflow: hidden;
     grid-auto-flow: row;
-    grid-template-rows: 80px 1fr;
+    grid-template-rows: 64px 1fr;
   }
 </style>
