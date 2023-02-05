@@ -136,6 +136,8 @@
       isTransactionComplete = true;
     } catch (thrownObject) {
       const error = thrownObject as Error;
+      log(`Transaction failed:`, error.message);
+      log(error.stack);
       transactionFailed = true;
       errorMessage = error.message;
     }
