@@ -22,22 +22,24 @@
   <img class="fail-icon" src={FailedAction} alt="money could not be sent" />
   <div class="recipient-and-amount">
     <p>{errorMessage}</p>
-    Failed to send<img
-      class="usdc-symbol"
-      src={USDClogo}
-      alt="usdc symbol"
-    />{transferAmount} to
-    <br />
-    {#if verifiedClaims}
-      {#if verifiedClaims.type === "INDIVIDUAL"}
-        {verifiedClaims.givenName}
-        {verifiedClaims.familyName}
-      {:else if verifiedClaims.type === "ORGANIZATION"}
-        {verifiedClaims.legalName}
+    <p>
+      Failed to send<img
+        class="usdc-symbol"
+        src={USDClogo}
+        alt="usdc symbol"
+      />{transferAmount} to
+      <br />
+      {#if verifiedClaims}
+        {#if verifiedClaims.type === "INDIVIDUAL"}
+          {verifiedClaims.givenName}
+          {verifiedClaims.familyName}
+        {:else if verifiedClaims.type === "ORGANIZATION"}
+          {verifiedClaims.legalName}
+        {/if}
+      {:else}
+        {truncateWallet(destinationWalletAddress)}
       {/if}
-    {:else}
-      {truncateWallet(destinationWalletAddress)}
-    {/if}
+    </p>
   </div>
 </div>
 
