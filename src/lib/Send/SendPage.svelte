@@ -14,11 +14,10 @@
   import Modal from "../Shared/Modal.svelte";
   import RequestVerification from "./RequestVerification.svelte";
   import FocusContext from "../Shared/FocusContext.svelte";
-  import TransactionCompleted from "./TransactionCompleted.svelte";
   import TransactionFailed from "./TransactionFailed.svelte";
   import { verifyWallet } from "../../backend/wallet";
   import { makeAccountsAndDoTransfer } from "../../backend/tokens";
-  import { checkIfValidWalletAddress } from "../utils";
+  import { checkIfValidWalletAddress, truncateWallet } from "../utils";
   import { log, sleep, stringify } from "../../backend/functions";
   import { SECOND } from "../../backend/constants";
   import type {
@@ -247,25 +246,34 @@
     />
   {/if}
 
-  {#if isSending || isSendingAnyway}
-    <Modal>
-      <div class="transferring-wait">
-        <Heading>Sending money...</Heading>
-        {#if keepWaitingMessage}
-          <p>{keepWaitingMessage}</p>
+  {#if isSending || isSendingAnyway || isTransactionComplete}
+    <Modal showCloseButton={isTransactionComplete}>
+      <Heading>
+        {#if !isTransactionComplete}
+          Sending money...
+        {:else}
+          <img
+            class="currency-symbol {currency.symbol}"
+            src={currency.logo}
+            alt={currency.symbol}
+          />{transferAmount} recieved by<br />
+          {#if verifiedClaims}
+            {#if verifiedClaims.type === "INDIVIDUAL"}
+              {verifiedClaims.givenName} {verifiedClaims.familyName}!
+            {/if}
+            {#if verifiedClaims.type === "ORGANIZATION"}
+              {verifiedClaims.legalName}!
+            {/if}
+          {:else}
+            {truncateWallet(destinationWalletAddress)}!
+          {/if}
         {/if}
-        <Loader isComplete={isTransactionComplete} />
-      </div>
-    </Modal>
-  {/if}
+      </Heading>
 
-  {#if isTransactionComplete}
-    <Modal showCloseButton={true}>
-      <TransactionCompleted
-        {destinationWalletAddress}
-        {transferAmount}
-        {verifiedClaims}
-      />
+      <Loader isComplete={isTransactionComplete} />
+      {#if !isTransactionComplete && keepWaitingMessage}
+        <p>{keepWaitingMessage}</p>
+      {/if}
     </Modal>
   {/if}
 
@@ -316,9 +324,15 @@
     padding: 12px;
   }
 
-  .transferring-wait {
-    justify-items: center;
-    align-content: center;
-    gap: 24px;
+  .currency-symbol {
+    display: inline;
+    height: 22px;
+    margin-right: 3px;
+    /* Hack to get baseline of $ to line up with baseline of text */
+    transform: translateY(2px);
+    // Change color.
+    // Made with https://codepen.io/sosuke/pen/Pjoqqp
+    filter: invert(50%) sepia(98%) saturate(2025%) hue-rotate(172deg)
+      brightness(100%) contrast(102%);
   }
 </style>

@@ -2,11 +2,6 @@
   import { log } from "../../backend/functions";
 
   export let isComplete = false;
-
-  const showTick = () => {
-    log(`Setting complete`);
-    isComplete = !isComplete;
-  };
 </script>
 
 <div class="loader">
@@ -15,10 +10,6 @@
   </div>
   <div class="tick {isComplete ? 'complete' : ''}" />
 </div>
-
-<button id="toggle" type="button" on:click={showTick}>
-  Toggle Completed
-</button>
 
 <style lang="scss">
   @import "../../mixins.scss";

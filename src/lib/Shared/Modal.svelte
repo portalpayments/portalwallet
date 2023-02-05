@@ -27,6 +27,7 @@
 
     grid-auto-flow: row;
     align-content: center;
+    justify-items: center;
     justify-content: center;
 
     display: grid;
