@@ -29,7 +29,7 @@ import {
 import { log } from "./functions";
 import { getCurrencyBySymbol, MEMO_PROGRAM } from "./constants";
 import { getABetterErrorMessage } from "./errors";
-import type { BasicTokenAccount } from "./types";
+import type { BasicTokenAccount, CurrencyDetails } from "./types";
 import { checkIsLocalhost } from "./wallet";
 
 // Mint accounts hold information about the token such as how many decimals the token has and who can mint new tokens, and the mint account is later used to mint tokens to a token account and create the initial supply.
@@ -138,15 +138,13 @@ export const makeAccountsAndDoTransfer = async (
   connection: Connection,
   sender: Keypair,
   transferAmountInMinorUnits: number,
+  currency: CurrencyDetails,
   recipient: PublicKey,
   memo: string
 ) => {
   log(`Doing transfer, will send ${transferAmountInMinorUnits} cents`);
 
-  // TODO: support more than USDC (mainly changing functions that use this to provide currency)
-  const currency = getCurrencyBySymbol("USDC").mintAddress;
-
-  const mintAccount = new PublicKeyConstructor(currency);
+  const mintAccount = new PublicKeyConstructor(currency.mintAddress);
 
   const senderTokenAccount = await makeTokenAccount(
     connection,

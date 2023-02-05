@@ -109,17 +109,23 @@
 
       log(`Doing transfer, will send ${transferAmountInMinorUnits} cents`);
 
-      const signature = await makeAccountsAndDoTransfer(
-        connection,
-        keyPair,
-        transferAmountInMinorUnits,
-        new PublicKey(contact.walletAddress),
-        memo
-      );
+      const TEST_FAKE_TRANSACTIONS = false;
 
-      log(`Finished transfer, signature was`, signature);
-
-      await updateAccountTransactions(signature, activeAccount.address);
+      if (!TEST_FAKE_TRANSACTIONS) {
+        const signature = await makeAccountsAndDoTransfer(
+          connection,
+          keyPair,
+          transferAmountInMinorUnits,
+          currency,
+          new PublicKey(contact.walletAddress),
+          memo
+        );
+        log(`Finished transfer, signature was`, signature);
+        await updateAccountTransactions(signature, activeAccount.address);
+      } else {
+        log(`TESTING skipping transfer`);
+        await sleep(1 * SECOND);
+      }
 
       clearTimeout(slowTransactionTimeout1);
       clearTimeout(slowTransactionTimeout2);
