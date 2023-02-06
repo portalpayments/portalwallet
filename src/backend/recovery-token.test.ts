@@ -40,7 +40,7 @@ describe(`restoration`, () => {
   });
 
   test(
-    `wallets can be created`,
+    `wallets can be created using randomness and nmemonics`,
     async () => {
       const entropy = await personalPhraseToEntropy(
         expectedCleanedPersonalPhrase,

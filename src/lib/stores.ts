@@ -328,10 +328,10 @@ const updateAccounts = async () => {
     contactsStore.set(contacts);
   }
 
-  // TODO: add to the store wheher the service worker has been checked yet
+  // TODO: add to the store whether the service worker has been checked yet
   // then have App.js check that value
 
-  // We could add hasUSDCAccount to Service Worker but it's [robbaly easier to just checl
+  // We could add hasUSDCAccount to Service Worker but it's probably easier to just check
   log(`Finding USDC account...`);
   const usdcAccountIndex = tokenAccountSummaries.findIndex(
     (accountSummary) =>
