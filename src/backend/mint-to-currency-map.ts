@@ -78327,6 +78327,24 @@ export const mintToCurrencyMap: Record<string, CurrencyDetails> = {
     symbol: "JFRM",
     logo: "https://raw.githubusercontent.com/jeffreydrew/pandacoin/main/pandafinal.png",
   },
+  // TODO
+  // These two are kinda trashy coins
+  // We should prioritise well known tokens 
+  // or even just whitelist what we show. 
+  // Keep them around for testing.
+  //
+  // "6PhULzd1BqyQ1GAH5vhbSyJQC114Ei8g1MqKt3Qa5reK": {
+  //   mintAddress: "6PhULzd1BqyQ1GAH5vhbSyJQC114Ei8g1MqKt3Qa5reK",
+  //   decimals: 0,
+  //   symbol: "Marinade Bug Bounty",
+  //   logo: "https://marinade-stake.top/assets/image.png",
+  // },
+  // PhiLR4JDZB9z92rYT5xBXKCxmq4pGB1LYjtybii7aiS: {
+  //   mintAddress: "PhiLR4JDZB9z92rYT5xBXKCxmq4pGB1LYjtybii7aiS",
+  //   decimals: 5,
+  //   symbol: "Phil Overdrive | Youtube",
+  //   logo: "https://raw.githubusercontent.com/PhilOverdrive/Token/main/Logo.png",
+  // },
   native: {
     mintAddress: "native",
     symbol: "SOL",
