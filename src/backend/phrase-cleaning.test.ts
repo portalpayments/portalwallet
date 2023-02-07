@@ -24,7 +24,7 @@ export const expectedCleanedPersonalPhrase = `say your prayers little one dont f
 
 describe(`restoration`, () => {
   test(`seed phrases are normalised for punctuation`, () => {
-    const cleaned = cleanPhrase(dirtyPersonalPhrase);
-    expect(cleaned).toEqual(expectedCleanedPersonalPhrase);
+    const cleanedPersonalPhrase = cleanPhrase(dirtyPersonalPhrase);
+    expect(cleanedPersonalPhrase).toEqual(expectedCleanedPersonalPhrase);
   });
 });
