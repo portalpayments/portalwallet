@@ -13,12 +13,14 @@ import {
   mnemonicToKeypairs,
   checkIfSecretKeyIsValid,
   checkIfMnemonicPhraseIsValid,
+  personalPhraseToEntropy,
 } from "./recovery-token";
 import { DEPOSIT, SECONDS } from "./constants";
 import { connect, getAccountBalance, putSolIntoWallet } from "./wallet";
 import * as dotenv from "dotenv";
 import * as base58 from "bs58";
 import * as bip39 from "bip39";
+import { expectedCleanedPersonalPhrase } from "./phrase-cleaning.test";
 
 jest.mock("./functions");
 
@@ -52,7 +54,7 @@ describe(`traditional keypair creation and restoration`, () => {
     expect(accountBalance).toEqual(DEPOSIT);
   });
 
-  test(`wallets can be restored using their seed phrases`, async () => {
+  test(`wallets can be restored using their mnemonic`, async () => {
     // Lets re-make the keypairs from the seed
     const restoredWalletKeyPairs = await mnemonicToKeypairs(mnemonic, password);
 
@@ -62,9 +64,7 @@ describe(`traditional keypair creation and restoration`, () => {
       originalWallet.publicKey.toBase58()
     );
   });
-});
 
-describe(`recovery`, () => {
   test(`we show a valid secret key is valid`, () => {
     const mikesSecretKey = process.env.MIKES_SECRET_KEY;
     expect(mikesSecretKey).toBeDefined();
