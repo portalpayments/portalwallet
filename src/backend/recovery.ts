@@ -8,7 +8,7 @@
 
 import { Keypair } from "@solana/web3.js";
 import { derivePath } from "ed25519-hd-key";
-import { log } from "./functions";
+import { debug, log } from "./functions";
 
 import * as bip39 from "bip39";
 import * as base58 from "bs58";
@@ -34,10 +34,7 @@ export const mnemonicToKeypairs = async (
 ) => {
   // The seed is the parent to many wallets
   // See https://github.com/solana-labs/solana/blob/master/web3.js/examples/get_account_info.js
-  log(`🤯 Mnemonic is:`, mnemonic);
   const seed = await bip39.mnemonicToSeed(mnemonic, password);
-
-  log(`making keypairs from seed`);
 
   const keyPairs: Array<Keypair> = [];
 
@@ -47,7 +44,6 @@ export const mnemonicToKeypairs = async (
       derivePath(path, seed.toString("hex")).key
     );
     keyPairs.push(keypair);
-    log(`${path} => ${keypair.publicKey.toBase58()}`);
   }
   return keyPairs;
 };

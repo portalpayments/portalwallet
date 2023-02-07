@@ -7,28 +7,12 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import { cleanPhrase } from "./phrase-cleaning";
+import {
+  dirtyPersonalPhrase,
+  slightlyDifferentDirtyPersonalPhrase,
+} from "./test-data/transactions/test-phrases";
 
 jest.mock("./functions");
-
-// Put these at the top to avoid indentation issues
-export const dirtyPersonalPhrase = `Say your prayers, little one, don't forget, my son
-To include everyone
-I tuck you in, warm within, keep you free from sin
-'Til the Sandman, he comes
-`;
-
-// Interestingly these lyrics had 'Till' rather than 'Til'
-// Lesson? Archaic words like till may have alternate spellings
-// This is why we need to test users to make sure they can recover
-// outside of emergency scenarios
-export const slightlyDifferentDirtyPersonalPhrase = `Say your prayers, little one
-Don't forget, my son
-To include everyone
-
-I tuck you in, warm within
-Keep you free from sin
-Til the Sandman he comes
-`;
 
 export const expectedCleanedPersonalPhrase = `say your prayers little one dont forget my son to include everyone i tuck you in warm within keep you free from sin till the sandman he comes`;
 

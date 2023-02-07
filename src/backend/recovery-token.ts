@@ -6,18 +6,20 @@
 //
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
-// Causes browser to complain about 'process is not defined'
-import { Keypair } from "@solana/web3.js";
-import { derivePath } from "ed25519-hd-key";
-import { SOLANA_SEED_SIZE_BYTES } from "./constants";
-import { log } from "./functions";
 
-import * as bip39 from "bip39";
-import * as base58 from "bs58";
+import { SOLANA_SEED_SIZE_BYTES } from "./constants";
+import { log, toArrayBuffer } from "./functions";
 
 // Looks like a small bug in scryptsy types
 // @ts-ignore
 import { async as scryptAsync } from "scryptsy";
+import { buffer } from "stream/consumers";
+import {
+  getRandomValues,
+  encryptWithAESGCM,
+  decryptWithAESGCM,
+} from "./encryption";
+import { cleanPhrase } from "./phrase-cleaning";
 
 if (!globalThis.setImmediate) {
   // Fixes 'ReferenceError: setImmediate is not defined' when running in browser
@@ -25,20 +27,11 @@ if (!globalThis.setImmediate) {
   globalThis.setImmediate = (func: Function) => setTimeout(func, 0);
 }
 
-// "Scheme described in BIP44 should use 44' as purpose."
-// See https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki and
-// See https://github.com/bitcoin/bips/blob/master/bip-0043.mediawiki
-const PURPOSE = 44;
-
-// See https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki and
-// See https://github.com/satoshilabs/slips/blob/master/slip-0044.md
-const SOLANA_COIN_TYPE = 501;
-
 // Also called the 'seed'.
 export const personalPhraseToEntropy = async (
   phrase: string,
   password: string
-): Promise<Buffer> => {
+): Promise<ArrayBuffer> => {
   log(`🌱 Converting personal phrase to seed...`);
 
   // scryptsy is an ascrypt implementation that works in both the browser and node
@@ -58,45 +51,76 @@ export const personalPhraseToEntropy = async (
     SOLANA_SEED_SIZE_BYTES
   )) as Buffer;
 
-  return entropy;
+  // Webcrypto prefers ArrayBuffer
+  // but our scrypt implementation uses Buffer
+  // TODO: we could use a browser version of node crypto?
+  const arrayBuffer = toArrayBuffer(entropy);
+  return arrayBuffer;
 };
 
-export const mnemonicToKeypairs = async (
-  mnemonic: string,
-  password: string
+// WebCrypto ingests secrets as CryptoKeys to stop malicious apps from say extracting keys
+export const importKey = async (entropy: ArrayBuffer): Promise<CryptoKey> => {
+  return crypto.subtle.importKey("raw", entropy, "AES-GCM", true, [
+    "encrypt",
+    "decrypt",
+  ]);
+};
+
+export const makeRecoveryTokenPayload = async (
+  secretKey: Uint8Array,
+  personalPhrase: string,
+  walletUnlockPassword: string
 ) => {
-  // The seed is the parent to many wallets
-  // See https://github.com/solana-labs/solana/blob/master/web3.js/examples/get_account_info.js
-  log(`🤯 Mnemonic is:`, mnemonic);
-  const seed = await bip39.mnemonicToSeed(mnemonic, password);
+  // Step 0 - normalize personal phrase
+  const cleanedPersonalPhrase = cleanPhrase(personalPhrase);
 
-  log(`making keypairs from seed`);
+  // Step 1 - use personal phrase and wallet unlock to build entropy
+  const entropy = await personalPhraseToEntropy(
+    cleanedPersonalPhrase,
+    walletUnlockPassword
+  );
 
-  const keyPairs: Array<Keypair> = [];
+  const encryptionKey = await importKey(entropy);
 
-  for (let accountIndex = 0; accountIndex < 10; accountIndex++) {
-    const path = `m/${PURPOSE}'/${SOLANA_COIN_TYPE}'/${accountIndex}'/0'`;
-    const keypair = Keypair.fromSeed(
-      derivePath(path, seed.toString("hex")).key
-    );
-    keyPairs.push(keypair);
-    log(`${path} => ${keypair.publicKey.toBase58()}`);
-  }
-  return keyPairs;
+  // Step 2 - make an IV and store it in the resulting NFT
+  const initialisationVector: Uint8Array = await getRandomValues();
+
+  // Step 3 - encrypt the secret key, using the entropy and IV we just made
+  const cipherText = await encryptWithAESGCM(
+    secretKey.toString(),
+    initialisationVector,
+    encryptionKey
+  );
+
+  return {
+    cipherText,
+    initialisationVector,
+  };
 };
 
-export const checkIfSecretKeyIsValid = (suggestedSecretKey: string) => {
-  try {
-    const secretKey = base58.decode(suggestedSecretKey);
-    Keypair.fromSecretKey(secretKey);
-    return true;
-  } catch (thrownObject) {
-    return false;
-  }
-};
+export const recoverFromToken = async (
+  personalPhrase: string,
+  walletUnlockPassword: string,
+  cipherText: ArrayBuffer,
+  initialisationVector: Uint8Array
+): Promise<unknown> => {
+  // Step 0 - normalize personal phrase
+  const cleanedPersonalPhrase = cleanPhrase(personalPhrase);
 
-export const checkIfMnemonicPhraseIsValid = (
-  suggestedMnemonicPhrase: string
-) => {
-  return bip39.validateMnemonic(suggestedMnemonicPhrase);
+  // Step 1 - use personal phrase and wallet unlock to rebuild entropy
+  const entropy = await personalPhraseToEntropy(
+    cleanedPersonalPhrase,
+    walletUnlockPassword
+  );
+
+  const decryptionKey = await importKey(entropy);
+
+  // Step 3 - decrypt the AES
+
+  const decryptedData = await decryptWithAESGCM(
+    cipherText,
+    initialisationVector,
+    decryptionKey
+  );
+  return decryptedData;
 };
