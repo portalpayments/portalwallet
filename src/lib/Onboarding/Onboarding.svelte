@@ -8,7 +8,6 @@
   import { log } from "../../backend/functions";
   import {
     personalPhraseToEntropy,
-    entropyToMnemonic,
     mnemonicToKeypairs,
     checkIfSecretKeyIsValid,
     checkIfMnemonicPhraseIsValid,
@@ -131,17 +130,7 @@
       if (!isPersonalPhraseSecure) {
         return;
       }
-      const entropy = await personalPhraseToEntropy(
-        personalPhraseToUse,
-        passwordToUse
-      );
-      const mnemonic = entropyToMnemonic(entropy);
-      const keypairs = await mnemonicToKeypairs(mnemonic, passwordToUse);
-
-      const firstWallet = keypairs[0];
-
-      secretKey = firstWallet.secretKey;
-      personalPhrase = personalPhraseToUse;
+      throw new Error(`Not implemented`);
     }
 
     await saveSettings(
