@@ -13,7 +13,6 @@ import {
   mnemonicToKeypairs,
   checkIfSecretKeyIsValid,
   checkIfMnemonicPhraseIsValid,
-  seedToKeypair,
 } from "./recovery-token";
 import { DEPOSIT, SECONDS } from "./constants";
 import { connect, getAccountBalance, putSolIntoWallet } from "./wallet";

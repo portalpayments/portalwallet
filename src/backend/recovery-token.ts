@@ -15,21 +15,24 @@ import { log } from "./functions";
 import * as bip39 from "bip39";
 import * as base58 from "bs58";
 
+// Looks like a small bug in scryptsy types
+// @ts-ignore
+import { async as scryptAsync } from "scryptsy";
+
 if (!globalThis.setImmediate) {
   // Fixes 'ReferenceError: setImmediate is not defined' when running in browser
   // @ts-ignore
   globalThis.setImmediate = (func: Function) => setTimeout(func, 0);
 }
 
-// Looks like a small bug in scryptsy types
-// @ts-ignore
-import { async as scryptAsync } from "scryptsy";
+// "Scheme described in BIP44 should use 44' as purpose."
+// See https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki and
+// See https://github.com/bitcoin/bips/blob/master/bip-0043.mediawiki
+const PURPOSE = 44;
 
-export const seedToKeypair = (seed: Buffer) => {
-  // Ugly code to avoid a warning when doing '.fromSeed(seed.slice(0, 32));'
-  // Per https://solanacookbook.com/references/keypairs-and-wallets.html#how-to-restore-a-keypair-from-a-mnemonic-phrase
-  return Keypair.fromSeed(Uint8Array.prototype.slice.call(seed, 0, 32));
-};
+// See https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki and
+// See https://github.com/satoshilabs/slips/blob/master/slip-0044.md
+const SOLANA_COIN_TYPE = 501;
 
 // Also called the 'seed'.
 export const personalPhraseToEntropy = async (
@@ -58,12 +61,6 @@ export const personalPhraseToEntropy = async (
   return entropy;
 };
 
-export const entropyToMnemonic = (entropy: Buffer) => {
-  log(`👛 Making wallet with entropy...`);
-  const mnemonic = bip39.entropyToMnemonic(entropy.toString("hex"));
-  return mnemonic;
-};
-
 export const mnemonicToKeypairs = async (
   mnemonic: string,
   password: string
@@ -77,8 +74,8 @@ export const mnemonicToKeypairs = async (
 
   const keyPairs: Array<Keypair> = [];
 
-  for (let walletIndex = 0; walletIndex < 10; walletIndex++) {
-    const path = `m/44'/501'/${walletIndex}'/0'`;
+  for (let accountIndex = 0; accountIndex < 10; accountIndex++) {
+    const path = `m/${PURPOSE}'/${SOLANA_COIN_TYPE}'/${accountIndex}'/0'`;
     const keypair = Keypair.fromSeed(
       derivePath(path, seed.toString("hex")).key
     );
