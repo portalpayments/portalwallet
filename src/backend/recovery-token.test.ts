@@ -10,42 +10,38 @@ import type { Connection, Keypair } from "@solana/web3.js";
 import { Keypair as KeypairConstructor } from "@solana/web3.js";
 import { log } from "./functions";
 import {
-  personalPhraseToEntropy,
   mnemonicToKeypairs,
-  entropyToMnemonic,
   checkIfSecretKeyIsValid,
   checkIfMnemonicPhraseIsValid,
+  seedToKeypair,
 } from "./recovery-token";
 import { DEPOSIT, SECONDS } from "./constants";
 import { connect, getAccountBalance, putSolIntoWallet } from "./wallet";
 import * as dotenv from "dotenv";
 import * as base58 from "bs58";
-import { expectedCleanedPersonalPhrase } from "./phrase-cleaning.test";
 import * as bip39 from "bip39";
 
 jest.mock("./functions");
-
-const firstName = `Joe`;
-const lastName = `Cottoneye`;
-
-const fullName = `${firstName} ${lastName}`;
-const password = `${new Date().toString()}`;
 
 dotenv.config();
 
 describe(`traditional keypair creation and restoration`, () => {
   let connection: Connection;
-  const mnemonic = bip39.generateMnemonic();
+  let mnemonic: string;
   let originalWallet: Keypair;
   let restoredWallet: Keypair;
+  let password: string;
 
   beforeAll(async () => {
     connection = await connect("localhost");
   });
 
   test(`wallets can be created from a mnemonic`, async () => {
-    const seed = bip39.mnemonicToSeedSync(mnemonic, password);
-    originalWallet = KeypairConstructor.fromSeed(seed.slice(0, 32));
+    mnemonic = bip39.generateMnemonic();
+    password = `bad password for unit testing`;
+    const originalWalletKeyPairs = await mnemonicToKeypairs(mnemonic, password);
+
+    originalWallet = originalWalletKeyPairs[0];
 
     // IMPORTANT: if we don't deposit any Sol the wallet won't exist
     await putSolIntoWallet(connection, originalWallet.publicKey, DEPOSIT);
@@ -59,10 +55,9 @@ describe(`traditional keypair creation and restoration`, () => {
 
   test(`wallets can be restored using their seed phrases`, async () => {
     // Lets re-make the keypairs from the seed
+    const restoredWalletKeyPairs = await mnemonicToKeypairs(mnemonic, password);
 
-    const restoredKeypairs = await mnemonicToKeypairs(mnemonic, password);
-
-    restoredWallet = restoredKeypairs[0];
+    restoredWallet = restoredWalletKeyPairs[0];
     expect(restoredWallet.secretKey).toEqual(originalWallet.secretKey);
     expect(restoredWallet.publicKey.toBase58()).toEqual(
       originalWallet.publicKey.toBase58()

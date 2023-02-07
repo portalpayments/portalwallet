@@ -25,6 +25,12 @@ if (!globalThis.setImmediate) {
 // @ts-ignore
 import { async as scryptAsync } from "scryptsy";
 
+export const seedToKeypair = (seed: Buffer) => {
+  // Ugly code to avoid a warning when doing '.fromSeed(seed.slice(0, 32));'
+  // Per https://solanacookbook.com/references/keypairs-and-wallets.html#how-to-restore-a-keypair-from-a-mnemonic-phrase
+  return Keypair.fromSeed(Uint8Array.prototype.slice.call(seed, 0, 32));
+};
+
 // Also called the 'seed'.
 export const personalPhraseToEntropy = async (
   phrase: string,
