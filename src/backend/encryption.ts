@@ -53,14 +53,11 @@ export const passwordToKey = async (password: string, salt: Uint8Array) => {
   ]);
 };
 
-export const encrypt = async (
+export const encryptWithAESGCM = async (
   payload: unknown,
   initialisationVector: Uint8Array,
-  password: string,
-  salt: Uint8Array
-) => {
-  const key: CryptoKey = await passwordToKey(password, salt);
-
+  key: CryptoKey
+): Promise<ArrayBuffer> => {
   // 1. To JSON
   const jsonPlainText = stringify(payload);
   // 2. Encode as Uint8Array
@@ -77,11 +74,11 @@ export const encrypt = async (
   return encrypted;
 };
 
-export const decrypt = async (
+export const decryptWithAESGCM = async (
   encryptedData: ArrayBuffer,
   initialisationVector: Uint8Array,
   decryptionKey: CryptoKey
-) => {
+): Promise<unknown> => {
   // 3. Decrypt
   let decrypted: ArrayBuffer | null;
   try {

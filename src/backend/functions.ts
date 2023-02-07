@@ -192,3 +192,13 @@ export const repeat = async (functionToRun: Function, interval: number) => {
     functionToRun();
   }, interval);
 };
+
+// https://stackoverflow.com/questions/8609289/convert-a-binary-nodejs-buffer-to-javascript-arraybuffer/31394257#31394257
+export const toArrayBuffer = (buffer: Buffer) => {
+  const arrayBuffer = new ArrayBuffer(buffer.length);
+  const view = new Uint8Array(arrayBuffer);
+  for (let i = 0; i < buffer.length; ++i) {
+    view[i] = buffer[i];
+  }
+  return arrayBuffer;
+};

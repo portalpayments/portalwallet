@@ -18,8 +18,8 @@ import * as localforage from "localforage";
 import type { Settings } from "./../backend/types";
 import {
   passwordToKey,
-  encrypt,
-  decrypt,
+  encryptWithAESGCM,
+  decryptWithAESGCM,
   getRandomValues,
 } from "../backend/encryption";
 
@@ -68,7 +68,10 @@ export const saveSettings = async (
 ): Promise<unknown> => {
   const initialisationVector = await getOrSetInitialisationVector();
   const salt = await getOrSetSalt();
-  const encrypted = encrypt(settings, initialisationVector, password, salt);
+
+  const key: CryptoKey = await passwordToKey(password, salt);
+
+  const encrypted = encryptWithAESGCM(settings, initialisationVector, key);
   await localforage.setItem("PORTAL_SETTINGS", encrypted);
   log(`Saved PORTAL_SETTINGS.`);
   return;
@@ -91,7 +94,7 @@ export const getSettings = async (password: string): Promise<Settings> => {
     return null;
   }
 
-  let settings = (await decrypt(
+  let settings = (await decryptWithAESGCM(
     encryptedData,
     initialisationVector,
     decryptionKey
