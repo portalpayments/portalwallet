@@ -79,9 +79,9 @@ We use prettier with the default rules.
 
 There's a difference between `score` of `0` (the score is zero) and `score` of `null` (we don't know the score). `null` is a way to state explicitly that a value is missing.
 
-Using `null` is better than `undefined` as any unset variable, or missing key has the variable `undefined` - let's keep `undefined` for bugs!
+Using `null` is better than `undefined` as any unset variable, and any missing key, has the value `undefined` - let's keep `undefined` for bugs! Oddly a lot of TypeScript code uses `undefined` explicitly - that doesn't mean it's a good idea.
 
-## No `.then()` or callbacks.
+## Use `async`/`await`, not `.then()` or callbacks.
 
 We use `async`/`await`. This means we can catch errors using `try {} catch() {}`
 
@@ -95,6 +95,8 @@ export const scrypt = promisify(scryptCallback);
 This way we can jump `import { script } from './functions'` and have a working `scrypt` we can use with `async/await`
 
 There's a `sleep()` function you can use instead of timeouts. Just `await sleep(5 * SECONDS)` or similar.
+
+BTW, not every function provided as an argument to another function is a `callback`, since a `callback` is used to control the flow of the program. Again others disagree, but they're not using the term callback correctly. For example, `array.map(mapFunction)` or `array.sort(sortFunction)` don't take callbacks, they take a map function and sort a function. The flow of the program isn't being affected. 
 
 ## Use the SECONDS / MINUTES etc constants for times
 
