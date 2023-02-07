@@ -37,6 +37,18 @@ Portal is a wallet with a strong focus on transfers and payments, and is built t
 
 # Development
 
+Portal uses current generation web tech. 
+
+ - The frontend is built using **Svelte** and **TypeScript**. See `src`.
+
+ - The backend is the Solana blockchain.
+
+ - Frontend components (`.svelte`) files are for display purposes only - most of the data is processed on the 'backend for the frontend' stored in the `/src/backend` directory. The files in the `src/backend` directory do not involve the browser UI (DOM) at all, but are rather pure TypeScript, that can be iterated and tested on without using a browser.
+
+ - Data is stored in **Svelte stores**, see `stores.ts`, where it can be accessed directly from any component that needs them without having to pass properties around. The Svelte store is the source of truth.
+ 
+ - A serviceworker is used for caching when running as a browser extension. This allows Portal to now have to fetch transaction information, account information etc from Solana each time the extension is clicked. Functions in the **store** will often check the serviceworker for cached data - if there's nothing in the cache, we'l ask Solana. Service workers in modern Chrome extensions don't actually run persistently - they're shut down after a little while. So the service worker often saves things to local storage, using the popular `LocalForage` library. Since service workers aren't persistent, it may be better to move saving data into the `stores.ts` and thus remove sending messages between the service worker and store at the expense of multithreading - we'll have to see! 
+
 See [coding guidelines](CODING_GUIDELINES.md).
 
 Also note re: service workers - we currently don't use vite, https://crxjs.dev/ seems to be the best way to build service workers with vite, but has issues https://github.com/crxjs/chrome-extension-tools/issues/617
@@ -69,14 +81,7 @@ Then in Chrome / Edge etc, click **manage Extensions**, turn on **Developer Mode
 
 ## For tests
 
-You'll need an `.env` file with:
-
-```
-TWITTER_API_KEY_BEARER_TOKEN=somebearertoken
-SECRET_KEY=somesecretkeyextractedfromphantom
-```
-
-Ask your colleagues for a copy of this file (not checked into GitHub for security reasons).
+You'll need an `.env` file. Ask your colleagues for a copy of this file (not checked into GitHub for security reasons).
 
 Install [a local validator](https://solanacookbook.com/references/local-development.html#starting-a-local-validator):
 

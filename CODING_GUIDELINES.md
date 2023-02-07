@@ -20,7 +20,7 @@ If it feels like a grind:
 
 - You're writing code to be be read, understood, and changed by your colleagues.
 
-- Use real names for things. No abbreviations.
+- Use real names for constants and variables. No abbreviations.
   - Abrvntns sk to rd (if that doesn't make any sense, it says 'abbreviations suck to read')
   - If we're searching for 'wallet', then 'wlt' won't show up. Abbeviations are invariably used inconsistently. It's entirely possible we'll have 'wallet', 'w', 'wlt' and 'wllt' at the same time - maybe referring to slightly different things! Avoid confusion but consistently naming things so we have one implementation of everything.
   - Let the compiler worry about saving characters. Humans are the expensive part - readable names saves them time.
