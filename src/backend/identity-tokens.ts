@@ -129,20 +129,20 @@ export const mintIdentityToken = async (
 // Make the token and sent it to the recipient's wallet
 // https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 
-interface tokenDataForIndividual {
+interface tokenContentsForIndividual {
   type: "INDIVIDUAL";
   givenName: string;
   familyName: string;
 }
 
-interface tokenDataForOrganinization {
+interface tokenContentsForOrganinization {
   type: "ORGANIZATION";
   legalName: string;
 }
 
 export const mintAndTransferIdentityToken = async (
   recipientWallet: string,
-  tokenContents: tokenDataForIndividual | tokenDataForOrganinization,
+  tokenContents: tokenContentsForIndividual | tokenContentsForOrganinization,
   uploadedImageUrl: string,
   identityTokenIssuer: Keypair
 ) => {
