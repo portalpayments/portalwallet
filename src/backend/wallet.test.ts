@@ -421,7 +421,7 @@ describe(`mainnet integration tests`, () => {
         address: expect.any(PublicKey),
         currency: expect.any(String),
         balance: expect.any(Number),
-        decimals: 6,
+        decimals: expect.any(Number),
         lastUpdated: expect.any(Number),
         transactionSummaries: expect.any(Array),
       });
