@@ -38,7 +38,7 @@ import { log } from "./functions";
 import { getCurrencyBySymbol, MEMO_PROGRAM } from "./constants";
 import { getABetterErrorMessage } from "./errors";
 import type { BasicTokenAccount, CurrencyDetails } from "./types";
-import { checkIsLocalhost } from "./wallet";
+import { checkIsLocalhost } from "./check-localhost";
 
 // Mint accounts hold information about the token such as how many decimals the token has and who can mint new tokens, and the mint account is later used to mint tokens to a token account and create the initial supply.
 export const createMintAccount = async (
@@ -260,7 +260,7 @@ export const makeTransaction = async (
   // https://solana.stackexchange.com/questions/5600/error-downloading-the-computebudget-program-to-use-on-local-validator
   // is resolved
 
-  if (!checkIsLocalhost(connection)) {
+  if (!checkIsLocalhost(connection.rpcEndpoint)) {
     // "The value provided in microLamports will be multiplied by the CU budget to determine the Prioritization Fee in Lamports."
     log(`Adding priority fee`);
 
