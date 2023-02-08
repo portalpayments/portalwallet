@@ -14,7 +14,7 @@ import {
 
 jest.mock("./functions");
 
-export const expectedCleanedPersonalPhrase = `say your prayers little one dont forget my son to include everyone i tuck you in warm within keep you free from sin till the sandman he comes`;
+export const expectedCleanedPersonalPhrase = `say your prayers little one dont forget my son to include everyone i tuck you in warm within keep you free from sin til the sandman he comes`;
 
 describe(`restoration`, () => {
   test(`seed phrases are normalised for punctuation`, () => {
