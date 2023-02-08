@@ -31,7 +31,9 @@ describe(`settings`, () => {
 
   beforeAll(() => {
     // Enable webcrypto in node, so we can test things that use browser crypto
-    global.crypto = new Crypto();
+    if (!global.crypto) {
+      global.crypto = new Crypto();
+    }
   });
 
   test(`Returns null when settings don't exist`, async () => {
