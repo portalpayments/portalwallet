@@ -20,6 +20,9 @@ import {
   decryptWithAESGCM,
 } from "./encryption";
 import { cleanPhrase } from "./phrase-cleaning";
+import type { Keypair } from "@solana/web3.js";
+import { checkIfSecretKeyIsValid } from "./recovery";
+import { secretKeyStringToKeypair } from "./wallet";
 
 if (!globalThis.setImmediate) {
   // Fixes 'ReferenceError: setImmediate is not defined' when running in browser
@@ -32,8 +35,6 @@ export const personalPhraseToEntropy = async (
   phrase: string,
   password: string
 ): Promise<ArrayBuffer> => {
-  log(`🌱 Converting personal phrase to seed...`);
-
   // scryptsy is an ascrypt implementation that works in both the browser and node
 
   // CPU/memory cost parameter – must be a power of 2, also called 'N'
@@ -103,7 +104,7 @@ export const recoverFromToken = async (
   walletUnlockPassword: string,
   cipherText: ArrayBuffer,
   initialisationVector: Uint8Array
-): Promise<unknown> => {
+): Promise<Keypair> => {
   // Step 0 - normalize personal phrase
   const cleanedPersonalPhrase = cleanPhrase(personalPhrase);
 
@@ -116,11 +117,13 @@ export const recoverFromToken = async (
   const decryptionKey = await importKey(entropy);
 
   // Step 3 - decrypt the AES
-
-  const decryptedData = await decryptWithAESGCM(
+  const decryptedData = (await decryptWithAESGCM(
     cipherText,
     initialisationVector,
     decryptionKey
-  );
-  return decryptedData;
+  )) as string;
+
+  // We're done decrypting, now let's turn it back into a KeyPair
+  const restoredWallet = secretKeyStringToKeypair(decryptedData as string);
+  return restoredWallet;
 };
