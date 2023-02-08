@@ -84,6 +84,14 @@ export const connect = async (
   return connection;
 };
 
+// https://solana.stackexchange.com/questions/5692/whats-the-best-way-to-restore-a-keypair-from-a-string-extracted-with-secretkey
+export const secretKeyStringToKeypair = (secretKeyString: string) => {
+  const secretKeyArray = secretKeyString.split(",").map(Number);
+  const secretKey = Uint8Array.from(secretKeyArray);
+  const keyPair = Keypair.fromSecretKey(secretKey);
+  return keyPair;
+};
+
 // See https://github.com/Bonfida/bonfida-utils/blob/main/js
 export const checkAccountExists = async (
   connection: Connection,

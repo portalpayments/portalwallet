@@ -19,6 +19,7 @@ import {
   putSolIntoWallet,
   verifyWallet,
   getTokenAccountSummaries,
+  secretKeyStringToKeypair,
 } from "./wallet";
 import * as base58 from "bs58";
 
@@ -75,6 +76,20 @@ describe(`basic wallet functionality on local validator`, () => {
       symbol: "USDC",
     });
   });
+
+  test(
+    `secretKeyStringToKeypair() works`,
+    async () => {
+      const originalKeypair = new Keypair();
+      const secretKeyString = originalKeypair.secretKey.toString();
+      const restoredKeypair = secretKeyStringToKeypair(secretKeyString);
+
+      expect(restoredKeypair.secretKey.toString()).toEqual(
+        originalKeypair.secretKey.toString()
+      );
+    },
+    30 * SECONDS
+  );
 
   test(`wallets can be deposited into`, async () => {
     const firstWallet = new Keypair();
