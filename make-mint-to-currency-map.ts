@@ -16,11 +16,15 @@ const pleasantIcons = {
   WSOL: "/assets/token-logos/sol-coin-grey.svg",
 };
 
+const currenciesWeCareAbout = Object.keys(pleasantIcons);
+
 const main = async () => {
   const tokenListContainer = await tokenListProvider.resolve();
-  const tokens = tokenListContainer
-    .filterByClusterSlug("mainnet-beta")
-    .getList();
+  let tokens = tokenListContainer.filterByClusterSlug("mainnet-beta").getList();
+
+  tokens = tokens.filter((token) => {
+    return currenciesWeCareAbout.includes(token.symbol);
+  });
 
   const currenciesDetails: Array<CurrencyDetails> = tokens.map((token) => {
     // Portal currencies includes all tokens as well as native Sol
