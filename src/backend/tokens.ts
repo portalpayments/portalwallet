@@ -96,7 +96,6 @@ export const makeTokenAccount = async (
   recipientPublicKey: PublicKey
 ): Promise<BasicTokenAccount> => {
   // Create recipient's token account
-  log(`DEBUGGING - inside makeTokenAccount...`);
   // Will occasionally throw TokenAccountNotFoundError for other, different errors
   // See https://github.com/solana-labs/solana-program-library/issues/3326
   // TODO: fix when issue above is resolved

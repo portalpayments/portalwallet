@@ -121,7 +121,6 @@ export const putSolIntoWallet = async (
   publicKey: PublicKey,
   lamports: number
 ) => {
-  log(`💸 Putting Sol into wallet`);
   // Generate a new wallet keypair and airdrop SOL
   var airdropSignature = await connection.requestAirdrop(publicKey, lamports);
 
