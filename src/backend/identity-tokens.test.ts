@@ -82,143 +82,144 @@ describe(`identity tokens`, () => {
     expect(typeof stringKeypair === "string");
   });
 
-  test(`we can mint an identity token for Alice`, async () => {
-    await putSolIntoWallet(connection, alice.publicKey, 1_000_000_000);
+  test(
+    `we can mint an identity token for Alice`,
+    async () => {
+      await putSolIntoWallet(connection, alice.publicKey, 1_000_000_000);
 
-    const metadata = makeTokenMetaDataForIndividual(
-      alice.publicKey.toBase58(),
-      "Alice",
-      "Smith",
-      "https://arweave.net/jHaEN1AuV87osodSw63QgTsYgH0JcmA6CG0T4Zcg56c"
-    );
+      const metadata = makeTokenMetaDataForIndividual(
+        alice.publicKey.toBase58(),
+        "Alice",
+        "Smith",
+        "https://arweave.net/jHaEN1AuV87osodSw63QgTsYgH0JcmA6CG0T4Zcg56c"
+      );
 
-    const name = IDENTITY_TOKEN_NAME;
+      const name = IDENTITY_TOKEN_NAME;
 
-    // QUESTION / TODO
-    // I do not understand how mintIdentityToken() for metadata
-    // can produce such large output
-    // I guess it has some defaults?
-    const createOutput = await mintIdentityToken(
-      connection,
-      testIdentityTokenIssuer,
-      metadata,
-      false
-    );
+      const createOutput = await mintIdentityToken(
+        connection,
+        testIdentityTokenIssuer,
+        metadata,
+        false
+      );
 
-    mintAddress = createOutput.mintAddress;
+      mintAddress = createOutput.mintAddress;
 
-    // Created fresh, but will be referenced a few times in our output
-    //
-    // From https://github.com/metaplex-foundation/js#create
-    // metaplexNFTs.create will take care of creating the mint account, the associated token account, the metadata PDA and the original edition PDA (a.k.a. the master edition) for you.
-    const masterEditionAddress = createOutput.masterEditionAddress;
-    const metadataAddress = createOutput.metadataAddress;
-    const tokenAddress = createOutput.tokenAddress;
-    const updateAuthorityAddress = createOutput.nft.updateAuthorityAddress;
+      // Created fresh, but will be referenced a few times in our output
+      //
+      // From https://github.com/metaplex-foundation/js#create
+      // metaplexNFTs.create will take care of creating the mint account, the associated token account, the metadata PDA and the original edition PDA (a.k.a. the master edition) for you.
+      const masterEditionAddress = createOutput.masterEditionAddress;
+      const metadataAddress = createOutput.metadataAddress;
+      const tokenAddress = createOutput.tokenAddress;
+      const updateAuthorityAddress = createOutput.nft.updateAuthorityAddress;
 
-    expect(createOutput).toEqual({
-      response: {
-        signature: expect.any(String),
-        confirmResponse: {
-          context: {
-            slot: expect.any(Number),
-          },
-          value: {
-            err: null,
+      expect(createOutput).toEqual({
+        response: {
+          signature: expect.any(String),
+          confirmResponse: {
+            context: {
+              slot: expect.any(Number),
+            },
+            value: {
+              err: null,
+            },
           },
         },
-      },
-      mintAddress: expect.any(PublicKey),
-      metadataAddress,
-      masterEditionAddress,
-      tokenAddress,
-      nft: {
-        model: "nft",
-        updateAuthorityAddress,
-        json: metadata,
-        jsonLoaded: true,
-        name,
-        symbol: "",
-        // https://mockstorage.example.com/...
-        uri: expect.any(String),
-        isMutable: true,
-        primarySaleHappened: false,
-        sellerFeeBasisPoints: 0,
-        editionNonce: expect.any(Number),
-        creators: [
-          {
-            address: testIdentityTokenIssuer.publicKey,
-            verified: true,
-            share: 100,
-          },
-        ],
-        tokenStandard: 0,
-        collection: null,
-        collectionDetails: null,
-        uses: null,
-        address: mintAddress,
-        metadataAddress: metadataAddress,
-        mint: {
-          model: "mint",
+        mintAddress: expect.any(PublicKey),
+        metadataAddress,
+        masterEditionAddress,
+        tokenAddress,
+        nft: {
+          model: "nft",
+          updateAuthorityAddress,
+          json: metadata,
+          jsonLoaded: true,
+          name,
+          symbol: "",
+          // https://mockstorage.example.com/...
+          uri: expect.any(String),
+          isMutable: true,
+          primarySaleHappened: false,
+          sellerFeeBasisPoints: 0,
+          editionNonce: expect.any(Number),
+          creators: [
+            {
+              address: testIdentityTokenIssuer.publicKey,
+              verified: true,
+              share: 100,
+            },
+          ],
+          tokenStandard: 0,
+          collection: null,
+          collectionDetails: null,
+          uses: null,
           address: mintAddress,
-          mintAuthorityAddress: expect.any(PublicKey), // masterEditionAddressPDA,
-          freezeAuthorityAddress: expect.any(PublicKey), //masterEditionAddressPDA,
-          decimals: 0,
-          supply: {
-            basisPoints: ONE,
-            currency: {
-              symbol: "Token",
-              decimals: 0,
-              namespace: "spl-token",
-            },
-          },
-          isWrappedSol: false,
-          currency: {
-            symbol: "Token",
+          metadataAddress: metadataAddress,
+          mint: {
+            model: "mint",
+            address: mintAddress,
+            mintAuthorityAddress: expect.any(PublicKey), // masterEditionAddressPDA,
+            freezeAuthorityAddress: expect.any(PublicKey), //masterEditionAddressPDA,
             decimals: 0,
-            namespace: "spl-token",
-          },
-        },
-        token: {
-          model: "token",
-          address: tokenAddress,
-          isAssociatedToken: true,
-          mintAddress: mintAddress,
-          ownerAddress: testIdentityTokenIssuer.publicKey,
-          amount: {
-            basisPoints: ONE,
+            supply: {
+              basisPoints: ONE,
+              currency: {
+                symbol: "Token",
+                decimals: 0,
+                namespace: "spl-token",
+              },
+            },
+            isWrappedSol: false,
             currency: {
               symbol: "Token",
               decimals: 0,
               namespace: "spl-token",
             },
           },
-          closeAuthorityAddress: null,
-          delegateAddress: null,
-          delegateAmount: {
-            basisPoints: ZERO,
-            currency: {
-              symbol: "Token",
-              decimals: 0,
-              namespace: "spl-token",
+          token: {
+            model: "token",
+            address: tokenAddress,
+            isAssociatedToken: true,
+            mintAddress: mintAddress,
+            ownerAddress: testIdentityTokenIssuer.publicKey,
+            amount: {
+              basisPoints: ONE,
+              currency: {
+                symbol: "Token",
+                decimals: 0,
+                namespace: "spl-token",
+              },
             },
+            closeAuthorityAddress: null,
+            delegateAddress: null,
+            delegateAmount: {
+              basisPoints: ZERO,
+              currency: {
+                symbol: "Token",
+                decimals: 0,
+                namespace: "spl-token",
+              },
+            },
+            state: 1,
           },
-          state: 1,
+          edition: {
+            model: "nftEdition",
+            isOriginal: true,
+            address: masterEditionAddress,
+            // TODO: this is zero, but in a slightly different form
+            // from new BigNum(0). Actually check value.
+            supply: expect.any(BigNumber),
+            // TODO: this is zero, but in a slightly different form
+            // from new BigNum(0). Actually check value.
+            maxSupply: expect.any(BigNumber),
+          },
         },
-        edition: {
-          model: "nftEdition",
-          isOriginal: true,
-          address: masterEditionAddress,
-          // TODO: this is zero, but in a slightly different form
-          // from new BigNum(0). Actually check value.
-          supply: expect.any(BigNumber),
-          // TODO: this is zero, but in a slightly different form
-          // from new BigNum(0). Actually check value.
-          maxSupply: expect.any(BigNumber),
-        },
-      },
-    });
-  });
+      });
+    },
+    // Slow test as we're talking to the local validator
+    30 * SECONDS
+  );
 
   test(`We can retrieve the NFT we just minted`, async () => {
     const metaplex = getMetaplex(connection, testIdentityTokenIssuer);
