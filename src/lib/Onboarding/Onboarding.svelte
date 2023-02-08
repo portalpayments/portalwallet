@@ -7,11 +7,10 @@
   import { Circle } from "svelte-loading-spinners";
   import { log } from "../../backend/functions";
   import {
-    personalPhraseToEntropy,
     mnemonicToKeypairs,
     checkIfSecretKeyIsValid,
     checkIfMnemonicPhraseIsValid,
-  } from "../../backend/recovery-token";
+  } from "../../backend/recovery";
   import * as base58 from "bs58";
   import { saveSettings, checkIfOnboarded } from "../settings";
 
