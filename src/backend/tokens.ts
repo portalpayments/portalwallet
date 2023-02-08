@@ -224,9 +224,8 @@ export const checkTokenAccountCreated = async (
 // import { transfer } from "@solana/spl-token";
 // And modified to add 'memo'
 // And remove redundant options.
-
-// Fast transaction made with Solflare:
-// https://explorer.solana.com/tx/3aVcr5xMPSfKzQNAYFP6SjbuZHb8ZCmCcGonjKrbcarfxZP3zjazEZt62wEsEXpaAaBtjY3fcwUGaenABDUD1kBN
+//
+// Note this creates the transaction object, and doesn't actually execute the transaction.
 export const makeTransaction = async (
   connection: Connection,
   // Original code just calls these 'source' and 'destination' but let's be clearer
