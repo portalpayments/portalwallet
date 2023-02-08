@@ -20,7 +20,6 @@ import {
   mockStorage,
   bundlrStorage,
   type CreateNftOutput,
-  amount,
 } from "@metaplex-foundation/js";
 import {
   Connection,
@@ -29,16 +28,14 @@ import {
   sendAndConfirmTransaction,
 } from "@solana/web3.js";
 
-import { asyncFilter, asyncMap, log, sleep } from "./functions";
+import { asyncMap, log } from "./functions";
 import {
   IDENTITY_TOKEN_NAME,
   LATEST_IDENTITY_TOKEN_VERSION,
-  SECONDS,
 } from "./constants";
-import { stringify } from "./functions";
 
-import type { TokenMetaData, ExpandedNFT, BasicTokenAccount } from "./types";
-import { makeTokenAccount, makeTransaction } from "./tokens";
+import type { TokenMetaData } from "./types";
+import { makeTransaction } from "./tokens";
 import { connect } from "./wallet";
 import * as http from "../lib/http-client";
 
@@ -132,28 +129,57 @@ export const mintIdentityToken = async (
 // Make the token and sent it to the recipient's wallet
 // https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 
+interface tokenDataForIndividual {
+  type: "INDIVIDUAL";
+  givenName: string;
+  familyName: string;
+}
+
+interface tokenDataForOrganinization {
+  type: "ORGANIZATION";
+  legalName: string;
+}
+
 export const mintAndTransferIdentityToken = async (
   recipientWallet: string,
-  givenName: string,
-  familyName: string,
+  tokenContents: tokenDataForIndividual | tokenDataForOrganinization,
   uploadedImageUrl: string,
   identityTokenIssuer: Keypair
 ) => {
   const connection = await connect("quickNodeMainNetBeta");
 
   log(`🏦 Minting identity token...`);
+
+  let tokenMetaData: TokenMetaData;
+  if (tokenContents.type === "INDIVIDUAL") {
+    tokenMetaData = makeTokenMetaDataForIndividual(
+      recipientWallet,
+      tokenContents.givenName,
+      tokenContents.familyName,
+      uploadedImageUrl
+    );
+  } else {
+    if (tokenContents.type === "ORGANIZATION") {
+      tokenMetaData = makeTokenMetaDataForOrganization(
+        recipientWallet,
+        tokenContents.legalName,
+        uploadedImageUrl
+      );
+    }
+    if (!tokenMetaData) {
+      throw new Error(
+        `COuld not work out why type of token metadata to create.`
+      );
+    }
+  }
+
   let tokenCreateOutput: CreateNftOutput;
 
   try {
     tokenCreateOutput = await mintIdentityToken(
       connection,
       identityTokenIssuer,
-      makeTokenMetaDataForIndividual(
-        recipientWallet,
-        givenName,
-        familyName,
-        uploadedImageUrl
-      ),
+      tokenMetaData,
       true
     );
   } catch (thrownObject) {
@@ -170,7 +196,13 @@ export const mintAndTransferIdentityToken = async (
   const mintAddress = tokenCreateOutput.mintAddress;
   const senderTokenAccount = tokenCreateOutput.tokenAddress;
 
-  log(`🎟️ The token for ${givenName} has been created.`);
+  log(
+    `🎟️ The token for ${
+      tokenContents.type === "INDIVIDUAL"
+        ? tokenContents.givenName
+        : tokenContents.legalName
+    } has been created.`
+  );
 
   // Get the token account of the fromWallet address, and if it does not exist, create it
 
