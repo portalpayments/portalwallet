@@ -8,16 +8,6 @@
 //
 import { log, sleep, stringify } from "../backend/functions";
 
-// Silly hack for jest to understand node webcrypto
-// TODO: this might need tweaking for the browser
-import crypto from "crypto";
-Object.defineProperty(global, "crypto", {
-  value: {
-    subtle: crypto.subtle,
-    getRandomValues: crypto.getRandomValues,
-  },
-});
-
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
 
