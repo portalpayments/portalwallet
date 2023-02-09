@@ -17,6 +17,7 @@ import {
   encodeToBase64,
   decodeFromBase64,
   adjustYear,
+  addItemsWithNewIDs,
 } from "./functions";
 import { SECOND, SECONDS } from "./constants";
 
@@ -106,5 +107,65 @@ describe(`adjustYear`, () => {
     const dateAfterALeapDay = new Date("2024-04-20T16:20:00.000Z");
     const aYearAgo = adjustYear(dateAfterALeapDay, -1);
     expect(aYearAgo).toEqual(new Date("2023-04-20T16:20:00.000Z"));
+  });
+});
+
+describe(`addItemsAndStayUnique`, () => {
+  it(`Adds items and doesn't add duplicates`, () => {
+    const originalItems = [
+      {
+        id: "a",
+        name: "apple",
+      },
+      {
+        id: "c",
+        name: "apple",
+      },
+      {
+        id: "b",
+        name: "banana",
+      },
+    ];
+    const newItems = [
+      {
+        id: "b",
+        name: "banana",
+      },
+      {
+        id: "e",
+        name: "elderberry",
+      },
+      {
+        id: "c",
+        name: "apple",
+      },
+      {
+        id: "d",
+        name: "dragonfruit",
+      },
+    ];
+    const result = addItemsWithNewIDs(originalItems, newItems);
+    expect(result).toEqual([
+      {
+        id: "a",
+        name: "apple",
+      },
+      {
+        id: "c",
+        name: "apple",
+      },
+      {
+        id: "b",
+        name: "banana",
+      },
+      {
+        id: "e",
+        name: "elderberry",
+      },
+      {
+        id: "d",
+        name: "dragonfruit",
+      },
+    ]);
   });
 });
