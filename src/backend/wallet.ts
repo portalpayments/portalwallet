@@ -11,6 +11,7 @@ import {
   Keypair,
   LAMPORTS_PER_SOL,
   PublicKey,
+  type SignaturesForAddressOptions,
 } from "@solana/web3.js";
 import type { ParsedTransactionWithMeta } from "@solana/web3.js";
 
@@ -224,15 +225,32 @@ export const verifyWallet = async (
   return latestTokenMetadata.claims;
 };
 
+export const getOlderTransactionSummaries = async (
+  connection: Connection,
+  accountSummary: AccountSummary
+) => {
+  const oldestTransactionSummary = accountSummary.transactionSummaries.at(-1);
+  const oldestTransactionSignature = oldestTransactionSummary.id;
+};
+
 // https://www.quicknode.com/guides/web3-sdks/how-to-get-transaction-logs-on-solana
 export const getTransactionsForAddress = async (
   connection: Connection,
   address: PublicKey,
-  limit: number
+  limit: number,
+  before: string | null = null,
+  until: string | null = null
 ): Promise<Array<ParsedTransactionWithMeta>> => {
+  const options: SignaturesForAddressOptions = { limit };
+  if (before) {
+    options.before = before;
+  }
+  if (until) {
+    options.until = until;
+  }
   const confirmedSignatureInfos = await connection.getSignaturesForAddress(
     address,
-    { limit }
+    options
   );
 
   log(
@@ -264,7 +282,9 @@ export const getTransactionSummariesForAddress = async (
   walletAddress: PublicKey,
   tokenAccount: PublicKey | null,
   limit: number,
-  secretKey: Uint8Array | null = null
+  secretKey: Uint8Array | null = null,
+  before: string | null = null,
+  until: string | null = null
 ) => {
   // For token accounts, we must get transactions for the token account specifically
   // - getting transactions for the parent wallet won't show deposits by other people
@@ -273,7 +293,9 @@ export const getTransactionSummariesForAddress = async (
   const rawTransactions = await getTransactionsForAddress(
     connection,
     addressToGetTransactionsFor,
-    limit
+    limit,
+    before,
+    until
   );
 
   if (!rawTransactions.length) {
