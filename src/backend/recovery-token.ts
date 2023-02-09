@@ -19,10 +19,9 @@ import {
   encryptWithAESGCM,
   decryptWithAESGCM,
 } from "./encryption";
-import { cleanPhrase } from "./phrase-cleaning";
+import { cleanPhrase, secretKeyToHex } from "./solana-functions";
 import type { Keypair } from "@solana/web3.js";
-import { checkIfSecretKeyIsValid } from "./recovery";
-import { secretKeyStringToKeypair } from "./wallet";
+import { getKeypairFromString } from "./wallet";
 
 if (!globalThis.setImmediate) {
   // Fixes 'ReferenceError: setImmediate is not defined' when running in browser
@@ -81,16 +80,16 @@ export const makeRecoveryTokenPayload = async (
     walletUnlockPassword
   );
 
-  const encryptionKey = await importKey(entropy);
+  const tokenEncryptionKey = await importKey(entropy);
 
   // Step 2 - make an IV and store it in the resulting NFT
   const initialisationVector: Uint8Array = await getRandomValues();
 
   // Step 3 - encrypt the secret key, using the entropy and IV we just made
   const cipherText = await encryptWithAESGCM(
-    secretKey.toString(),
+    secretKeyToHex(secretKey),
     initialisationVector,
-    encryptionKey
+    tokenEncryptionKey
   );
 
   return {
@@ -114,16 +113,16 @@ export const recoverFromToken = async (
     walletUnlockPassword
   );
 
-  const decryptionKey = await importKey(entropy);
+  const tokenDecryptionKey = await importKey(entropy);
 
   // Step 3 - decrypt the AES
   const decryptedData = (await decryptWithAESGCM(
     cipherText,
     initialisationVector,
-    decryptionKey
+    tokenDecryptionKey
   )) as string;
 
   // We're done decrypting, now let's turn it back into a KeyPair
-  const restoredWallet = secretKeyStringToKeypair(decryptedData as string);
+  const restoredWallet = getKeypairFromString(decryptedData as string);
   return restoredWallet;
 };

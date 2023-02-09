@@ -33,19 +33,6 @@ const tokenContents = {
 
 const ALREADY_UPLOADED_ARWEAVE_IMAGE = null;
 //   "https://arweave.net/kNWn4-S_ioBEfVHjhHlKH3Uen4B3kyguoG1Kn3ctIUc";
-const ALREADY_UPLOADED_NFT_METADATA = null;
-//   "https://arweave.net/8qyTtcAfluFaPXnGdMurseZL0zvnMjv-gI6DSVJEJU8";
-
-// TODO: move into seperate file and share with wallet
-export const getKeypairFromString = (secretKeyString: string) => {
-  let decodedSecretKey: Uint8Array;
-  try {
-    decodedSecretKey = base58.decode(secretKeyString);
-  } catch (throwObject) {
-    throw new Error("Invalid secret key! See README.md");
-  }
-  return Keypair.fromSecretKey(decodedSecretKey);
-};
 
 const main = async () => {
   log(`🎟️ Running Portal Identity token minter ...`);

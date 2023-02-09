@@ -12,6 +12,9 @@ const SINGLE_SPACE = " ";
 const NON_ALPHA_NUMERIC = /[\n,']+/g;
 const NOTHING = "";
 
+import { Keypair } from "@solana/web3.js";
+import * as base58 from "bs58";
+
 // We could also use 'bs58' but have to convert string to bytes first
 export const cleanPhrase = (phrase: string) => {
   return phrase
@@ -19,4 +22,18 @@ export const cleanPhrase = (phrase: string) => {
     .trim()
     .replace(WHITESPACE, SINGLE_SPACE)
     .replace(NON_ALPHA_NUMERIC, NOTHING);
+};
+
+export const secretKeyToHex = (secretKey: Uint8Array) => {
+  return base58.encode(secretKey);
+};
+
+export const getKeypairFromString = (secretKeyString: string) => {
+  let decodedSecretKey: Uint8Array;
+  try {
+    decodedSecretKey = base58.decode(secretKeyString);
+  } catch (throwObject) {
+    throw new Error("Invalid secret key! See README.md");
+  }
+  return Keypair.fromSecretKey(decodedSecretKey);
 };

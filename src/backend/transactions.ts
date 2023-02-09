@@ -35,8 +35,8 @@ import {
   NOT_FOUND,
   ORCA_WHIRLPOOL_MAINNET_ACCOUNT,
 } from "./constants";
-// See comments below
-// import { getReceiptForSimpleTransaction } from "./receipts";
+// See comments re: esrun below
+import { getReceiptForSimpleTransaction } from "./receipts";
 import {
   type ParsedInstruction,
   type ParsedTransactionWithMeta,
@@ -52,7 +52,7 @@ import * as base58 from "bs58";
 const decoder = new TextDecoder("utf-8");
 
 // Causing problems with identity token when running under esrun
-const getReceiptForSimpleTransaction = () => null;
+// const getReceiptForSimpleTransaction = () => null;
 
 export const instructionDataToNote = (string: string) => {
   const binaryArray = base58.decode(string);

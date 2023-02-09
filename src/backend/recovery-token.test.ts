@@ -20,7 +20,7 @@ import * as bip39 from "bip39";
 import { checkIfSecretKeyIsValid, mnemonicToKeypairs } from "./recovery";
 import { dirtyPersonalPhrase } from "./test-data/transactions/test-phrases";
 import { SECONDS } from "./constants";
-import { connect, secretKeyStringToKeypair } from "./wallet";
+import { connect } from "./wallet";
 import { Crypto } from "@peculiar/webcrypto";
 
 jest.mock("./functions");

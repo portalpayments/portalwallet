@@ -6,7 +6,8 @@
 //
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
-import { cleanPhrase } from "./phrase-cleaning";
+import { Keypair } from "@solana/web3.js";
+import { cleanPhrase, secretKeyToHex } from "./solana-functions";
 import {
   dirtyPersonalPhrase,
   slightlyDifferentDirtyPersonalPhrase,
@@ -28,5 +29,13 @@ describe(`restoration`, () => {
       slightlyDifferentDirtyPersonalPhrase
     );
     expect(cleanedPersonalPhrase1).toEqual(cleanedPersonalPhrase2);
+  });
+});
+
+describe(`secretKeyToHex`, () => {
+  test(`secretKeyToHex is accurate`, () => {
+    const keyPair = new Keypair();
+    const result = secretKeyToHex(keyPair.secretKey);
+    expect(result.length).toEqual(88);
   });
 });

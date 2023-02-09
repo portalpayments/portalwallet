@@ -64,10 +64,12 @@
     if (newItemToConfirm === "mnemonic") {
       mnemonic = settings.mnemonic;
       isMnemonicShown = true;
+      isSecretKeyShown = false;
     }
     if (newItemToConfirm === "secret key") {
-      mnemonic = settings.personalPhrase;
+      secretKey = secretKeyToHex(settings.secretKey);
       isSecretKeyShown = true;
+      isMnemonicShown = false;
     }
     isModalOpen = false;
   };
