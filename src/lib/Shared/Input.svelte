@@ -246,7 +246,7 @@
   button.submit-button {
     width: 40px;
     height: 40px;
-    background-color: var(--mid-blue);
+    background: var(--blue-green-gradient);
     border-radius: 22px;
 
     display: grid;

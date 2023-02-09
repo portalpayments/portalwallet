@@ -103,11 +103,9 @@
     right: 12px;
     bottom: 68px;
     border-radius: 50%;
-    border: 3px solid var(--mid-blue);
-    background-color: white;
 
     animation: fadeIn 1s forwards;
-
+    @include dark-acryllic;
     @include grey-shadow;
   }
 
