@@ -25,7 +25,7 @@
     VerifiedClaimsForOrganization,
   } from "../../backend/types";
   import type { Contact } from "../../backend/types";
-  import { updateAccountTransactions, getActiveAccount } from "../stores";
+  import { updateAccountsForNewTransaction, getActiveAccount } from "../stores";
   import { SECONDS } from "../../backend/constants";
   import { getCurrencyByMint } from "../../backend/solana-functions";
 
@@ -110,7 +110,7 @@
         memo
       );
       log(`Finished transfer, signature was`, signature);
-      await updateAccountTransactions(signature, activeAccount.address);
+      await updateAccountsForNewTransaction(signature, activeAccount.address);
 
       isSending = false;
       isSendingAnyway = false;

@@ -206,11 +206,10 @@ export const authStore: Writable<Auth> = writable({
   keyPair: null,
 });
 
-export const updateAccountTransactions = async (
+export const updateAccountsForNewTransaction = async (
   signature: string,
   nativeOrTokenAccountAddress: PublicKey
 ) => {
-  log(`Running delayed function to add to transactions`);
   const rawTransaction = await connection.getParsedTransaction(
     signature,
     // Only wait for confirmed show we can show transaction in list immediately
