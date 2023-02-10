@@ -210,52 +210,51 @@ export const updateAccountTransactions = async (
   signature: string,
   nativeOrTokenAccountAddress: PublicKey
 ) => {
-  // We wait a little while for the transaction to go through
-  // as getParsedTransaction() can return null if we do it immediately
-  // TODO: maybe check getParsedTransaction() options?
-  setTimeout(async () => {
-    log(`Running delayed function to add to transactions`);
-    const rawTransaction = await connection.getParsedTransaction(signature, {});
+  log(`Running delayed function to add to transactions`);
+  const rawTransaction = await connection.getParsedTransaction(
+    signature,
+    // Only wait for confirmed show we can show transaction in list immediately
+    "confirmed"
+  );
 
-    if (rawTransaction === null) {
-      throw new Error(
-        `rawTransaction for transaction signature ${signature} was null`
-      );
-    }
-    const simpleTransaction = await summarizeTransaction(
-      rawTransaction,
-      keyPair.publicKey,
-      null,
-      true,
-      keyPair.secretKey
+  if (rawTransaction === null) {
+    throw new Error(
+      `rawTransaction for transaction signature ${signature} was null`
     );
+  }
+  const simpleTransaction = await summarizeTransaction(
+    rawTransaction,
+    keyPair.publicKey,
+    null,
+    true,
+    keyPair.secretKey
+  );
 
-    const isUsingSolAccount = nativeOrTokenAccountAddress === keyPair.publicKey;
+  const isUsingSolAccount = nativeOrTokenAccountAddress === keyPair.publicKey;
 
-    if (isUsingSolAccount) {
-      log(`Adding transaction ${simpleTransaction.id} to our Sol account`);
-      const updatedNativeAccount = getFromStore(nativeAccountStore);
-      updatedNativeAccount.transactionSummaries.push(simpleTransaction);
-      nativeAccountStore.set(updatedNativeAccount);
-      return;
-    }
+  if (isUsingSolAccount) {
+    log(`Adding transaction ${simpleTransaction.id} to our Sol account`);
+    const updatedNativeAccount = getFromStore(nativeAccountStore);
+    updatedNativeAccount.transactionSummaries.push(simpleTransaction);
+    nativeAccountStore.set(updatedNativeAccount);
+    return;
+  }
 
-    log(`Adding transaction ${simpleTransaction.id} to our Token account`);
-    const updatedTokenAccounts = getFromStore(tokenAccountsStore);
-    const tokenAccountIndex = updatedTokenAccounts.findIndex((tokenAccount) => {
-      return tokenAccount.address === nativeOrTokenAccountAddress;
-    });
+  log(`Adding transaction ${simpleTransaction.id} to our Token account`);
+  const updatedTokenAccounts = getFromStore(tokenAccountsStore);
+  const tokenAccountIndex = updatedTokenAccounts.findIndex((tokenAccount) => {
+    return tokenAccount.address === nativeOrTokenAccountAddress;
+  });
 
-    if (tokenAccountIndex === NOT_FOUND) {
-      throw new Error(
-        `Couldn't find token account for transaction ${simpleTransaction.id} for account address ${nativeOrTokenAccountAddress}`
-      );
-    }
-    updatedTokenAccounts[tokenAccountIndex].transactionSummaries.push(
-      simpleTransaction
+  if (tokenAccountIndex === NOT_FOUND) {
+    throw new Error(
+      `Couldn't find token account for transaction ${simpleTransaction.id} for account address ${nativeOrTokenAccountAddress}`
     );
-    tokenAccountsStore.set(updatedTokenAccounts);
-  }, TRANSACTION_CONFIRM_DELAY);
+  }
+  updatedTokenAccounts[tokenAccountIndex].transactionSummaries.push(
+    simpleTransaction
+  );
+  tokenAccountsStore.set(updatedTokenAccounts);
 
   return;
 };
