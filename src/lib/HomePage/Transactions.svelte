@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { onChangeActiveAccount } from "../../lib/stores";
+  import { onChangeActiveAccount, updateActiveAccount } from "../../lib/stores";
+
+  import debounce from "lodash.debounce";
   import TransactionComponent from "./Transaction.svelte";
   import { getTransactionsByDays } from "../../backend/transactions";
   import { checkIfScrolledAllTheWay } from "../../lib/dom-utils";
@@ -74,13 +76,16 @@
     updateTransactionsByDays(activeAccount);
   });
 
-  const loadMoreTransactions = (event) => {
+  const loadMoreTransactions = async (event) => {
     const element = event.currentTarget;
     const hasScrolledAllTheWay = checkIfScrolledAllTheWay(element);
 
     if (hasScrolledAllTheWay) {
       // The element has been scrolled all the way down
-      console.log("Element scrolled all the way down");
+      log("Element scrolled all the way down, updating account!");
+      await updateActiveAccount();
+      log("Finished updating account");
+      // TODO: do we need to re-do transactions by days?
     }
   };
 
@@ -99,7 +104,7 @@
 
 {#if !isLoadingTransactionSummaries}
   {#if transactionsByDays.length}
-    <div class="days" on:scroll={loadMoreTransactions}>
+    <div class="days" on:scroll={debounce(loadMoreTransactions)}>
       {#each transactionsByDays as transactionsByDay}
         <div class="day">
           <div class="day-summary">

@@ -9,20 +9,27 @@
 import { get as getFromStore, writable, type Writable } from "svelte/store";
 import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
 import type { AccountSummary, Collectable, Contact } from "../backend/types";
-import { asyncMap, log, sleep, stringify } from "../backend/functions";
+import {
+  addItemsWithNewIDs,
+  asyncMap,
+  log,
+  sleep,
+  stringify,
+} from "../backend/functions";
 import {
   getContactsFromTransactions,
   getKeypairFromString,
   getNativeAccountSummary,
   getTokenAccountSummaries,
+  getTransactionSummariesForAddress,
 } from "../backend/wallet";
 import {
-  getCurrencyBySymbol,
   MILLISECONDS,
   NOT_FOUND,
   PORTAL_IDENTITY_TOKEN_ISSUER_WALLET,
   SECONDS,
 } from "../backend/constants";
+import { getCurrencyBySymbol } from "../backend/solana-functions";
 import * as base58 from "bs58";
 import { getAllNftMetadatasFromAWallet } from "../backend/identity-tokens";
 import * as http from "./http-client";
@@ -44,6 +51,59 @@ const IS_CHROME_EXTENSION =
 // Right now let's only load our Chrome extension in the service worker
 // We may change our mind on this
 const HAS_SERVICE_WORKER = IS_CHROME_EXTENSION && Boolean(SERVICE_WORKER);
+
+export const updateActiveAccount = async () => {
+  if (!connection) {
+    return;
+  }
+  if (!keyPair) {
+    return;
+  }
+  let activeAccount: AccountSummary;
+  const activeAccountIndex = getFromStore(activeAccountIndexStore);
+  let tokenAccounts: Array<AccountSummary> | null = null;
+  let nativeAccount: AccountSummary | null = null;
+
+  if (typeof activeAccountIndex === "number") {
+    tokenAccounts = getFromStore(tokenAccountsStore);
+    activeAccount = tokenAccounts.at(activeAccountIndex);
+  }
+  if (activeAccountIndex === "native") {
+    nativeAccount = getFromStore(nativeAccountStore);
+    activeAccount = nativeAccount;
+  }
+
+  const newestTransactionID = activeAccount.transactionSummaries.at(0).id;
+  const newTransactionSummaries = await getTransactionSummariesForAddress(
+    connection,
+    keyPair.publicKey,
+    activeAccount.address,
+    null,
+    keyPair.secretKey,
+    newestTransactionID
+  );
+
+  log(
+    `Before updating account ${activeAccountIndex}: ${activeAccount.transactionSummaries.length} transactions`
+  );
+
+  activeAccount.transactionSummaries = addItemsWithNewIDs(
+    activeAccount.transactionSummaries,
+    newTransactionSummaries
+  );
+
+  log(
+    `After updating account ${activeAccountIndex}: ${activeAccount.transactionSummaries.length} transactions`
+  );
+
+  if (typeof activeAccountIndex === "number") {
+    tokenAccounts[activeAccountIndex] = activeAccount;
+    tokenAccountsStore.set(tokenAccounts);
+  }
+  if (activeAccountIndex === "native") {
+    nativeAccountStore.set(activeAccount);
+  }
+};
 
 const updateCollectables = async () => {
   if (!connection) {

@@ -38,7 +38,7 @@ import type {
 import { summarizeTransaction } from "./transactions";
 import { toUniqueStringArray } from "../lib/utils";
 import * as http from "../lib/http-client";
-import { HOW_MANY_TRANSACTIONS_TO_SHOW } from "../lib/frontend-constants";
+import { HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE } from "../lib/frontend-constants";
 import { Direction, type Contact, type SimpleTransaction } from "./types";
 import type { AccountSummary } from "./types";
 import { identityTokenIssuerPublicKey } from "../lib/stores";
@@ -237,11 +237,14 @@ export const getOlderTransactionSummaries = async (
 export const getTransactionsForAddress = async (
   connection: Connection,
   address: PublicKey,
-  limit: number,
+  limit: number | null = null,
   before: string | null = null,
   until: string | null = null
 ): Promise<Array<ParsedTransactionWithMeta>> => {
-  const options: SignaturesForAddressOptions = { limit };
+  const options: SignaturesForAddressOptions = {};
+  if (before) {
+    options.limit = limit;
+  }
   if (before) {
     options.before = before;
   }
@@ -281,7 +284,7 @@ export const getTransactionSummariesForAddress = async (
   connection: Connection,
   walletAddress: PublicKey,
   tokenAccount: PublicKey | null,
-  limit: number,
+  limit: number | null = null,
   secretKey: Uint8Array | null = null,
   before: string | null = null,
   until: string | null = null
@@ -356,7 +359,7 @@ export const getTokenAccountSummaries = async (
         connection,
         keyPair.publicKey,
         tokenAccount.address,
-        HOW_MANY_TRANSACTIONS_TO_SHOW,
+        HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE,
         keyPair.secretKey
       );
       const accountSummary: AccountSummary = {
@@ -389,7 +392,7 @@ export const getNativeAccountSummary = async (
       connection,
       keyPair.publicKey,
       keyPair.publicKey,
-      HOW_MANY_TRANSACTIONS_TO_SHOW,
+      HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE,
       keyPair.secretKey
     );
   } catch (error) {
