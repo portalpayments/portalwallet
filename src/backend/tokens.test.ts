@@ -14,11 +14,7 @@ import {
   PublicKey,
   sendAndConfirmTransaction,
 } from "@solana/web3.js";
-import {
-  SECONDS,
-  ENOUGH_TO_MAKE_A_NEW_TOKEN,
-  getCurrencyBySymbol,
-} from "./constants";
+import { SECONDS, ENOUGH_TO_MAKE_A_NEW_TOKEN } from "./constants";
 import { log, minorUnitsToDecimal, stringify } from "./functions";
 import {
   createMintAccount,
@@ -35,6 +31,7 @@ import {
   getTransactionsForAddress,
 } from "./wallet";
 import type { BasicTokenAccount } from "./types";
+import { getCurrencyBySymbol } from "./solana-functions";
 
 jest.mock("./functions");
 

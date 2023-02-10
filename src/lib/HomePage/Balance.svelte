@@ -1,12 +1,13 @@
 <script lang="ts">
   import { amountAndDecimalsToMajorAndMinor } from "../utils";
   import { log, stringify } from "../../backend/functions";
-  import {
-    getCurrencyByMint,
-    getCurrencyBySymbol,
-  } from "../../backend/constants";
+
   import type { AccountSummary, CurrencyDetails } from "../../backend/types";
   import SkeletonBalance from "../Shared/Skeletons/SkeletonBalance.svelte";
+  import {
+    getCurrencyBySymbol,
+    getCurrencyByMint,
+  } from "../../backend/solana-functions";
 
   import {
     hasUSDCAccountStore,

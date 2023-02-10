@@ -17,6 +17,7 @@ import {
   solanaBlocktimeToJSTime,
   stringify,
 } from "./functions";
+import { getCurrencyBySymbol } from "./solana-functions";
 import {
   type Currency,
   Direction,
@@ -27,14 +28,7 @@ import {
   type Contact,
 } from "../backend/types";
 import { mintToCurrencyMap } from "../backend/mint-to-currency-map";
-import {
-  getCurrencyBySymbol,
-  JUPITER,
-  MEMO_PROGRAM,
-  NOTE_PROGRAM,
-  NOT_FOUND,
-  ORCA_WHIRLPOOL_MAINNET_ACCOUNT,
-} from "./constants";
+import { JUPITER, MEMO_PROGRAM, NOTE_PROGRAM, NOT_FOUND } from "./constants";
 // See comments re: esrun below
 import { getReceiptForSimpleTransaction } from "./receipts";
 import {

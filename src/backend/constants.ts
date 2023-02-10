@@ -137,35 +137,6 @@ export const NOT_FOUND = -1;
 
 export const EMPTY = "";
 
-export const getCurrencyBySymbol = (symbol: string) => {
-  return (
-    Object.values(mintToCurrencyMap).find(
-      (currencyDetails: CurrencyDetails) => {
-        return currencyDetails.symbol === symbol;
-      }
-    ) || null
-  );
-};
-
-export const getMintAddressBySymbol = (symbol: string) => {
-  return getCurrencyBySymbol(symbol).mintAddress;
-};
-
-export const getCurrencyByMint = (mint: string) => {
-  // TODO: we can use hasOwn in future
-  // just trying to keep changes to minimal for now
-  const isKnownCurrency = mintToCurrencyMap.hasOwnProperty(mint);
-  if (!isKnownCurrency) {
-    throw new Error(`Unknown currency for mint '${mint}'`);
-  }
-  return mintToCurrencyMap[mint];
-};
-
-export const getCurrencySymbolByMint = (mint: string) => {
-  const currency = getCurrencyByMint(mint);
-  return currency.symbol;
-};
-
 // Older were minted with test storage URLs, timed out, etc.
 export const LATEST_IDENTITY_TOKEN_VERSION = 7;
 

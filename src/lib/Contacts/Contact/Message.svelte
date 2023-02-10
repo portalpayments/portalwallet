@@ -5,7 +5,7 @@
     amountAndDecimalsToMajorAndMinor,
   } from "../../utils";
   import { log, stringify, toLocalTime } from "../../../backend/functions";
-  import { getCurrencyByMint } from "../../../backend/constants";
+  import { getCurrencyByMint } from "../../../backend/solana-functions";
   import {
     Direction,
     type SimpleTransaction,

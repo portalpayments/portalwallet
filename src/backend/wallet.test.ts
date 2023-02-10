@@ -37,9 +37,9 @@ import {
   VAHEHS_WALLET,
   MIKES_USDC_ACCOUNT,
   MINUTE,
-  getCurrencyBySymbol,
   USDC_MAINNET_MINT_ACCOUNT,
 } from "./constants";
+import { getCurrencyBySymbol } from "./solana-functions";
 import {
   getAllNftMetadatasFromAWallet,
   getIdentityTokensFromWallet,

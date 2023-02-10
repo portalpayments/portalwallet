@@ -10,7 +10,7 @@
     CurrencyDetails,
   } from "../../backend/types";
   import { log, isEmpty, stringify } from "../../backend/functions";
-  import { getCurrencyByMint } from "../../backend/constants";
+  import { getCurrencyByMint } from "../../backend/solana-functions";
   import { Direction } from "../../backend/types";
 
   import { contactsStore } from "../stores";

@@ -14,6 +14,8 @@ const NOTHING = "";
 
 import { Keypair } from "@solana/web3.js";
 import * as base58 from "bs58";
+import { mintToCurrencyMap } from "./mint-to-currency-map";
+import type { CurrencyDetails } from "./types";
 
 // We could also use 'bs58' but have to convert string to bytes first
 export const cleanPhrase = (phrase: string) => {
@@ -36,4 +38,33 @@ export const getKeypairFromString = (secretKeyString: string) => {
     throw new Error("Invalid secret key! See README.md");
   }
   return Keypair.fromSecretKey(decodedSecretKey);
+};
+
+export const getCurrencyBySymbol = (symbol: string) => {
+  return (
+    Object.values(mintToCurrencyMap).find(
+      (currencyDetails: CurrencyDetails) => {
+        return currencyDetails.symbol === symbol;
+      }
+    ) || null
+  );
+};
+
+export const getMintAddressBySymbol = (symbol: string) => {
+  return getCurrencyBySymbol(symbol).mintAddress;
+};
+
+export const getCurrencyByMint = (mint: string) => {
+  // TODO: we can use hasOwn in future
+  // just trying to keep changes to minimal for now
+  const isKnownCurrency = mintToCurrencyMap.hasOwnProperty(mint);
+  if (!isKnownCurrency) {
+    throw new Error(`Unknown currency for mint '${mint}'`);
+  }
+  return mintToCurrencyMap[mint];
+};
+
+export const getCurrencySymbolByMint = (mint: string) => {
+  const currency = getCurrencyByMint(mint);
+  return currency.symbol;
 };

@@ -22,8 +22,8 @@ import {
   URLS,
   SECOND,
   SOLANA_DECIMALS,
-  getCurrencyBySymbol,
 } from "./constants";
+import { getCurrencyBySymbol } from "./solana-functions";
 import { asyncMap } from "./functions";
 import * as base58 from "bs58";
 import { AccountLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";

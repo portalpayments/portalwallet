@@ -35,7 +35,8 @@ import {
   type Account,
 } from "@solana/spl-token";
 import { log } from "./functions";
-import { getCurrencyBySymbol, MEMO_PROGRAM } from "./constants";
+import { MEMO_PROGRAM } from "./constants";
+import { getCurrencyBySymbol } from "./solana-functions";
 import { getABetterErrorMessage } from "./errors";
 import type { BasicTokenAccount, CurrencyDetails } from "./types";
 import { checkIsLocalhost } from "./check-localhost";

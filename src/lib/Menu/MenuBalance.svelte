@@ -1,7 +1,7 @@
 <script lang="ts">
   import { amountAndDecimalsToString } from "../utils";
   import { stringify } from "../../backend/functions";
-  import { getCurrencyByMint } from "../../backend/constants";
+  import { getCurrencyByMint } from "../../backend/solana-functions";
   import type { AccountSummary } from "../../backend/types";
 
   export let account: AccountSummary;

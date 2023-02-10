@@ -26,7 +26,8 @@
   } from "../../backend/types";
   import type { Contact } from "../../backend/types";
   import { updateAccountTransactions, getActiveAccount } from "../stores";
-  import { SECONDS, getCurrencyByMint } from "../../backend/constants";
+  import { SECONDS } from "../../backend/constants";
+  import { getCurrencyByMint } from "../../backend/solana-functions";
 
   let destinationWalletAddress: string | null = null;
   let transferAmount: number | null = null;
@@ -110,7 +111,6 @@
       );
       log(`Finished transfer, signature was`, signature);
       await updateAccountTransactions(signature, activeAccount.address);
-
 
       isSending = false;
       isSendingAnyway = false;
