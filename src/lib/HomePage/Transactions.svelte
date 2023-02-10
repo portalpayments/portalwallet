@@ -2,6 +2,7 @@
   import { onChangeActiveAccount, updateActiveAccount } from "../../lib/stores";
 
   import debounce from "lodash.debounce";
+  import throttle from "lodash.throttle";
   import TransactionComponent from "./Transaction.svelte";
   import { getTransactionsByDays } from "../../backend/transactions";
   import { checkIfScrolledAllTheWay } from "../../lib/dom-utils";
@@ -12,6 +13,7 @@
     Contact,
   } from "../../backend/types";
   import { Link } from "svelte-navigator";
+  import { MILLISECONDS } from "../../backend/constants";
   import {
     log,
     stringify,
@@ -76,9 +78,20 @@
     updateTransactionsByDays(activeAccount);
   });
 
-  const loadMoreTransactions = async (event) => {
-    const element = event.currentTarget;
+  const maybeLoadMoreTransactions = async (event) => {
+    if (!event) {
+      debugger;
+    }
+    const element = event.target;
+    if (!element) {
+      log(`Ignoring scroll event with no event.target`);
+      return;
+    }
     const hasScrolledAllTheWay = checkIfScrolledAllTheWay(element);
+
+    if (hasScrolledAllTheWay) {
+      log(`we have scrolled all the way down`);
+    }
 
     if (hasScrolledAllTheWay) {
       // The element has been scrolled all the way down
@@ -88,6 +101,13 @@
       // TODO: do we need to re-do transactions by days?
     }
   };
+
+  // Throttle returns a function with an identical function signature
+  // But typings don't seem to be aware of that, hence 'as'
+  const maybeLoadMoreTransactionsThrottled = throttle(
+    maybeLoadMoreTransactions,
+    500 * MILLISECONDS
+  ) as svelte.JSX.UIEventHandler<HTMLDivElement>;
 
   const onFilterValueChanged = () => {
     log(`Filter value has changed! New value is: "${filterValue}"`);
@@ -104,7 +124,7 @@
 
 {#if !isLoadingTransactionSummaries}
   {#if transactionsByDays.length}
-    <div class="days" on:scroll={debounce(loadMoreTransactions)}>
+    <div class="days" on:scroll={maybeLoadMoreTransactionsThrottled}>
       {#each transactionsByDays as transactionsByDay}
         <div class="day">
           <div class="day-summary">

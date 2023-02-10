@@ -242,7 +242,7 @@ export const getTransactionsForAddress = async (
   until: string | null = null
 ): Promise<Array<ParsedTransactionWithMeta>> => {
   const options: SignaturesForAddressOptions = {};
-  if (before) {
+  if (limit) {
     options.limit = limit;
   }
   if (before) {
