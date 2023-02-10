@@ -353,6 +353,25 @@ const getTokenAccountSummariesOrCached = async () => {
   }
 };
 
+const updateContactsStoreForNewTransactions = async (
+  nativeAccountSummary,
+  tokenAccountSummaries
+) => {
+  log(`Getting contacts used in transactions`);
+  let contacts = getFromStore(contactsStore);
+  if (contacts?.length) {
+    log(`No need to update Contact as it's previously been set`);
+  } else {
+    contacts = await getContactsFromTransactions(
+      connection,
+      keyPair,
+      nativeAccountSummary,
+      tokenAccountSummaries
+    );
+    contactsStore.set(contacts);
+  }
+};
+
 const updateAccounts = async () => {
   if (!connection) {
     return;
@@ -372,20 +391,10 @@ const updateAccounts = async () => {
   tokenAccountsStore.set(tokenAccountSummaries);
   haveAccountsLoadedStore.set(true);
 
-  // Get contacts now we have the accounts (and their transactions)
-  log(`Getting contacts used in transactions`);
-  let contacts = getFromStore(contactsStore);
-  if (contacts?.length) {
-    log(`No need to update Contact as it's previously been set`);
-  } else {
-    contacts = await getContactsFromTransactions(
-      connection,
-      keyPair,
-      nativeAccountSummary,
-      tokenAccountSummaries
-    );
-    contactsStore.set(contacts);
-  }
+  await updateContactsStoreForNewTransactions(
+    nativeAccountSummary,
+    tokenAccountSummaries
+  );
 
   // TODO: add to the store whether the service worker has been checked yet
   // then have App.js check that value
