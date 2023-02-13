@@ -85,7 +85,7 @@
     justify-self: center;
     grid-auto-flow: row;
     gap: 20px;
-    grid-template-rows: 78px 110px 310px;
+    grid-template-rows: 46px 110px 310px;
     align-items: center;
   }
 </style>
