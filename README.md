@@ -41,9 +41,9 @@ Portal uses current generation web tech.
 
  - The frontend is built using **Svelte** and **TypeScript**. See `src`.
 
- - The backend is the Solana blockchain.
+ - Frontend components (`.svelte`) files are for display purposes only - most of the data is sorted, processed, filtered etc. on the 'backend for the frontend' stored in the `/src/backend` directory. The files in the `src/backend` directory do not involve the browser UI (DOM) at all, but are rather pure TypeScript, that can be iterated and tested on without using a browser.
 
- - Frontend components (`.svelte`) files are for display purposes only - most of the data is processed on the 'backend for the frontend' stored in the `/src/backend` directory. The files in the `src/backend` directory do not involve the browser UI (DOM) at all, but are rather pure TypeScript, that can be iterated and tested on without using a browser.
+ - The backend is, or course, the Solana blockchain.
 
  - Data is stored in **Svelte stores**, see `stores.ts`, where it can be accessed directly from any component that needs them without having to pass properties around. The Svelte store is the source of truth.
 
