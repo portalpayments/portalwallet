@@ -202,22 +202,3 @@ export const toArrayBuffer = (buffer: Buffer) => {
   }
   return arrayBuffer;
 };
-
-interface itemWithId {
-  id: string;
-}
-
-export const addItemsWithNewIDs = <Type extends itemWithId>(
-  firstArray: Array<Type>,
-  secondArray: Array<Type>
-): Array<Type> => {
-  secondArray.forEach((newItem) => {
-    const alreadyThere = firstArray.find((item) => {
-      return item.id === newItem.id;
-    });
-    if (!alreadyThere) {
-      firstArray.push(newItem);
-    }
-  });
-  return firstArray;
-};

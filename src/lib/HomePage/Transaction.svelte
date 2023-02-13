@@ -19,11 +19,10 @@
   export let decimals: number;
 
   // Find the contact for this transaction
-
+  //
   // TODO - we could just make a prop for the contact on the transaction
   // and the parent could provide the contact
   // rather than having every single Transaction subscribe to contact store
-
   let contact: Contact | null = null;
   contactsStore.subscribe(async (newValue) => {
     if (newValue) {
@@ -116,6 +115,8 @@
           <div class="memo">{transaction.memo}</div>
         {/if}
       </div>
+    {:else}
+      Error: could not load contact for transaction.
     {/if}
   {/if}
   <div class="amount {isRecievedOrSwapped ? 'positive' : ''}">

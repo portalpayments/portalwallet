@@ -95,10 +95,11 @@
 
     if (hasScrolledAllTheWay) {
       // The element has been scrolled all the way down
+      log(`_________________________________________________________________`);
       log("Element scrolled all the way down, updating account!");
       await updateActiveAccount();
       log("Finished updating account");
-      // TODO: do we need to re-do transactions by days?
+      log(`_________________________________________________________________`);
     }
   };
 

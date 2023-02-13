@@ -412,13 +412,10 @@ export const getNativeAccountSummary = async (
 export const getContactsFromTransactions = async (
   connection: Connection,
   keyPair: Keypair,
-  nativeAccount: AccountSummary,
-  tokenAccounts: Array<AccountSummary>
+  // Can be all accounts, or just a single one.
+  accounts: Array<AccountSummary>
 ): Promise<Array<Contact>> => {
-  const allAccounts = [...tokenAccounts];
-  allAccounts.push(nativeAccount);
-
-  const transactionWalletAddresses = allAccounts.map((account) => {
+  const transactionWalletAddresses = accounts.map((account) => {
     return account.transactionSummaries.map((transaction) => {
       let transactionWalletAddress: string;
       if (transaction.direction === Direction.sent) {

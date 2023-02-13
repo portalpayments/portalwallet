@@ -9,13 +9,8 @@
 import { get as getFromStore, writable, type Writable } from "svelte/store";
 import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
 import type { AccountSummary, Collectable, Contact } from "../backend/types";
-import {
-  addItemsWithNewIDs,
-  asyncMap,
-  log,
-  sleep,
-  stringify,
-} from "../backend/functions";
+import { asyncMap, log, sleep, stringify } from "../backend/functions";
+import uniqBy from "lodash.uniqby";
 import {
   getContactsFromTransactions,
   getKeypairFromString,
@@ -35,6 +30,7 @@ import { getAllNftMetadatasFromAWallet } from "../backend/identity-tokens";
 import * as http from "./http-client";
 import { summarizeTransaction } from "../backend/transactions";
 import { runRepeatedlyWithTimeout } from "../backend/run-with-timeout";
+import { HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE } from "./frontend-constants";
 
 let connection: Connection | null;
 let keyPair: Keypair | null;
@@ -73,24 +69,29 @@ export const updateActiveAccount = async () => {
     activeAccount = nativeAccount;
   }
 
-  const newestTransactionID = activeAccount.transactionSummaries.at(0).id;
+  const oldestTransactionID = activeAccount.transactionSummaries.at(-1).id;
   const newTransactionSummaries = await getTransactionSummariesForAddress(
     connection,
     keyPair.publicKey,
     activeAccount.address,
-    null,
+    HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE,
     keyPair.secretKey,
-    newestTransactionID
+    oldestTransactionID
   );
 
   log(
     `Before updating account ${activeAccountIndex}: ${activeAccount.transactionSummaries.length} transactions`
   );
 
-  activeAccount.transactionSummaries = addItemsWithNewIDs(
-    activeAccount.transactionSummaries,
+  const joinedTransactions = activeAccount.transactionSummaries.concat(
     newTransactionSummaries
   );
+
+  const uniqueTransactionSummaries = uniqBy(joinedTransactions, "id");
+
+  activeAccount.transactionSummaries = uniqueTransactionSummaries;
+
+  await updateContactsStoreForNewTransactions([activeAccount]);
 
   log(
     `After updating account ${activeAccountIndex}: ${activeAccount.transactionSummaries.length} transactions`
@@ -353,22 +354,36 @@ const getTokenAccountSummariesOrCached = async () => {
 };
 
 const updateContactsStoreForNewTransactions = async (
-  nativeAccountSummary,
-  tokenAccountSummaries
+  accounts: Array<AccountSummary>
 ) => {
   log(`Getting contacts used in transactions`);
-  let contacts = getFromStore(contactsStore);
-  if (contacts?.length) {
-    log(`No need to update Contact as it's previously been set`);
-  } else {
-    contacts = await getContactsFromTransactions(
-      connection,
-      keyPair,
-      nativeAccountSummary,
-      tokenAccountSummaries
-    );
-    contactsStore.set(contacts);
+  let contacts = getFromStore(contactsStore) || [];
+
+  const beforeCount = contacts.length;
+  const newContacts = await getContactsFromTransactions(
+    connection,
+    keyPair,
+    accounts
+  );
+
+  if (!newContacts.length) {
+    log(`No new contacts for recently loaded transactions.`);
+    return;
   }
+
+  const joinedContacts = contacts.concat(newContacts);
+
+  const uniqueContacts = uniqBy(joinedContacts, "walletAddress");
+
+  const afterCount = uniqueContacts.length;
+
+  log(
+    `Got contacts used in transactions, added ${
+      afterCount - beforeCount
+    } new contacts`
+  );
+
+  contactsStore.set(uniqueContacts);
 };
 
 const updateAccounts = async () => {
@@ -390,10 +405,9 @@ const updateAccounts = async () => {
   tokenAccountsStore.set(tokenAccountSummaries);
   haveAccountsLoadedStore.set(true);
 
-  await updateContactsStoreForNewTransactions(
-    nativeAccountSummary,
-    tokenAccountSummaries
-  );
+  const allAccounts = [...tokenAccountSummaries];
+  allAccounts.push(nativeAccountSummary);
+  await updateContactsStoreForNewTransactions(allAccounts);
 
   // TODO: add to the store whether the service worker has been checked yet
   // then have App.js check that value
