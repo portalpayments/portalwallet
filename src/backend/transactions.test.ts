@@ -18,7 +18,6 @@ import {
 } from "./test-data/transactions/sendToExistingTokenAccount";
 import {
   EMPTY,
-  getCurrencyBySymbol,
   GREGS_WALLET,
   JOHN_TESTUSER_DEMO_WALLET,
   JUPITER,
@@ -40,6 +39,7 @@ import {
 } from "./test-data/transactions/sendingSol";
 import { sendingUSDH } from "./test-data/transactions/sendingUSDH";
 import { makingLightShieldAccount } from "./test-data/transactions/makingLightShieldAccount";
+import { getCurrencyBySymbol } from "./solana-functions";
 
 jest.mock("./functions");
 

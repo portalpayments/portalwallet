@@ -16,12 +16,8 @@ import { stringify, log } from "./functions";
 import { mikesKeypair } from "./get-mikes-keypair";
 import { ThreadMemberScope } from "@dialectlabs/sdk";
 import { rawReceipt } from "./test-data/transactions/receipt";
-import {
-  DECAF_APP,
-  getMintAddressBySymbol,
-  MIKES_WALLET,
-  SECONDS,
-} from "./constants";
+import { DECAF_APP, MIKES_WALLET, SECONDS } from "./constants";
+import { getMintAddressBySymbol } from "./solana-functions";
 
 jest.mock("./functions");
 jest.mock("./html-extract");
