@@ -112,21 +112,6 @@ npm run start-validator
 From https://solanacookbook.com/references/local-development.html#how-to-load-accounts-from-mainnet
 and https://solana.stackexchange.com/questions/1879/metaplex-create-fails-on-localhost-with-attempt-to-load-a-program-that-does-n/1887#1887
 
-```bash
-
-# Token Metadata program
-
-export METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS="metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
-solana program dump -u m ${METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS} metaplex_token_metadata_program.so
-
-# Memo program
-
-export MEMO_PROGRAM_ADDRESS="MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
-solana program dump -u m ${MEMO_PROGRAM_ADDRESS} memo_program.so
-
-# Compute budget program
-
-export COMPUTE_BUDGET_PROGRAM="ComputeBudget111111111111111111111111111111"
-solana program dump -u m ${COMPUTE_BUDGET_PROGRAM} memo_program.so
-
+```
+npm run update-on-chain-programs
 ```

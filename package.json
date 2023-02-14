@@ -18,6 +18,7 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "test": "jest",
+    "update-on-chain-programs": "bash update-on-chain-programs.bash",
     "start-validator": "bash start-validator.bash",
     "make-zip-file": "bash make-zip-file.bash",
     "mint-identity-token": "npx esrun mint-identity-token.ts",
