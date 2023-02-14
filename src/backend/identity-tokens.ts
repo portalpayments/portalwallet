@@ -201,18 +201,19 @@ export const mintAndTransferIdentityToken = async (
       tokenContents.type === "INDIVIDUAL"
         ? tokenContents.givenName
         : tokenContents.legalName
-    } has been created.`
+    } has been created, senderTokenAccount is ${senderTokenAccount}.`
   );
 
   // Get the token account of the fromWallet address, and if it does not exist, create it
 
   log(`Transferring token to final destination...`);
+  const recipientWalletAddress = new PublicKey(recipientWallet);
   let signature: string;
   try {
     const transaction = await makeTransaction(
       connection,
       senderTokenAccount,
-      new PublicKey(recipientWallet),
+      recipientWalletAddress,
       identityTokenIssuer,
       1,
       mintAddress,

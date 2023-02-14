@@ -4,19 +4,13 @@
 
 import { log, sleep, stringify } from "./src/backend/functions";
 import { mintAndTransferIdentityToken } from "./src/backend/identity-tokens";
-
-// TODO: move into seperate file and share with wallet
 import { uploadImageToArweave } from "./src/backend/arweave";
 import dotenv from "dotenv";
 import { Keypair } from "@solana/web3.js";
 import base58 from "bs58";
+import { getKeypairFromString } from "./src/backend/solana-functions";
 
 dotenv.config();
-
-// const WALLET_ADDRESS = "6UQnexjqat9m552wrjcSkvEYuZPiC8C1r6dJzRTpN2GT";
-// const GIVEN_NAME = "Mark";
-// const FAMILY_NAME = "Ransford";
-// const IMAGE_FILE = "mark.jpg";
 
 const WALLET_ADDRESS = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
 const GIVEN_NAME = "Mike";
@@ -31,8 +25,8 @@ const tokenContents = {
   familyName: FAMILY_NAME,
 };
 
-const ALREADY_UPLOADED_ARWEAVE_IMAGE = null;
-//   "https://arweave.net/kNWn4-S_ioBEfVHjhHlKH3Uen4B3kyguoG1Kn3ctIUc";
+const ALREADY_UPLOADED_ARWEAVE_IMAGE =
+  "https://arweave.net/kNWn4-S_ioBEfVHjhHlKH3Uen4B3kyguoG1Kn3ctIUc"; // null
 
 const main = async () => {
   log(`🎟️ Running Portal Identity token minter ...`);
@@ -52,13 +46,17 @@ const main = async () => {
 
   const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
 
+  // Step 1. Upload image if necessary
   let uploadedImageUrl: string | null = ALREADY_UPLOADED_ARWEAVE_IMAGE;
-  if (!uploadedImageUrl) {
+
+  if (uploadedImageUrl) {
+    log(`🖼️ Using already-uploaded image`, uploadedImageUrl);
+  } else {
     uploadedImageUrl = await uploadImageToArweave(IMAGE_FILE);
+    log(`🖼️ Uploaded image`, uploadedImageUrl);
   }
 
-  log(`🖼️ Uploaded image`, uploadedImageUrl);
-
+  // Step 2. Mint token (using the identity token issuer wallet) and then move the minted token to the final receipient.
   const transactionId = await mintAndTransferIdentityToken(
     WALLET_ADDRESS,
     tokenContents,
