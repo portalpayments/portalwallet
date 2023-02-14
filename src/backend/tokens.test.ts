@@ -62,6 +62,8 @@ describe("minting and USDC-like transfers", () => {
         ENOUGH_TO_MAKE_A_NEW_TOKEN
       );
 
+      // TODO: this fails when metaplex is upgraded, even though it doesn't call metaplex!
+      // See https://solana.stackexchange.com/questions/4933/upgrading-metaplex-breaks-spl-createmint-with-custom-program-error-0xc-inva
       mintAccountPublicKey = await createMintAccount(
         connection,
         testUSDCAuthority,
