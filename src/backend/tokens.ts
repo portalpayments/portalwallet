@@ -255,28 +255,21 @@ export const makeTransaction = async (
   // computeUnitLimit of 1Million units * computeUnitPrice of one microlamport = 1 lamport
   // Transaction now costs 5000 (normal price) + 1 lamport
   // See https://solanacookbook.com/references/basic-transactions.html#how-to-change-compute-budget-fee-priority-for-a-transaction
-
   // Normal transaction price is 5000 lamports per signature
-  // TODO: remove when
-  // https://solana.stackexchange.com/questions/5600/error-downloading-the-computebudget-program-to-use-on-local-validator
-  // is resolved
+  // "The value provided in microLamports will be multiplied by the CU budget to determine the Prioritization Fee in Lamports."
+  log(`Adding priority fee`);
 
-  if (!checkIsLocalhost(connection.rpcEndpoint)) {
-    // "The value provided in microLamports will be multiplied by the CU budget to determine the Prioritization Fee in Lamports."
-    log(`Adding priority fee`);
+  transaction.add(
+    ComputeBudgetProgram.setComputeUnitLimit({
+      units: 200_000, // compute units
+    })
+  );
 
-    transaction.add(
-      ComputeBudgetProgram.setComputeUnitLimit({
-        units: 200_000, // compute units
-      })
-    );
-
-    transaction.add(
-      ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: 5500, // lamports per compute unit
-      })
-    );
-  }
+  transaction.add(
+    ComputeBudgetProgram.setComputeUnitPrice({
+      microLamports: 5500, // lamports per compute unit
+    })
+  );
 
   // Find out if we need to make token account for the recipient and add an instruction for that if necessary
 

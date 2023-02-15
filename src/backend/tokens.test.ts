@@ -233,7 +233,8 @@ describe("minting and USDC-like transfers", () => {
 
     const fee = await getFeeForTransaction(connection, transaction);
 
-    expect(fee).toEqual(5000);
+    // 5000 plus priority fee
+    expect(fee).toEqual(6100);
 
     const signature = await sendAndConfirmTransaction(
       connection,
