@@ -245,8 +245,6 @@ export const makeTransaction = async (
   // Signing accounts if `owner` is a multisig
   const multiSigners: Array<Signer> = [];
 
-  log(`TODO: make recipient account for `, mintAddress);
-
   log(`Sending tokens with memo "${memo}"`);
 
   const transaction = new TransactionConstructor();
