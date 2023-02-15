@@ -77,7 +77,7 @@ export const mintIdentityToken = async (
 ) => {
   const metaplex = getMetaplex(connection, identityTokenIssuer, isProduction);
   const metaplexNFTs = metaplex.nfts();
-  const uploadResponse = await metaplexNFTs.uploadMetadata(metadata).run();
+  const uploadResponse = await metaplexNFTs.uploadMetadata(metadata);
 
   // From https://github.com/metaplex-foundation/js#create
   // "This will take care of creating the mint account, the associated token account, the metadata PDA and the original edition PDA (a.k.a. the master edition) for you.""
@@ -88,13 +88,11 @@ export const mintIdentityToken = async (
   // Sometimes fails with
   let createOutput: CreateNftOutput;
   try {
-    createOutput = await metaplexNFTs
-      .create({
-        uri: uploadResponse.uri, // "https://arweave.net/123",
-        name: IDENTITY_TOKEN_NAME,
-        sellerFeeBasisPoints: 0, // 500 would represent 5.00%.
-      })
-      .run();
+    createOutput = await metaplexNFTs.create({
+      uri: uploadResponse.uri, // "https://arweave.net/123",
+      name: IDENTITY_TOKEN_NAME,
+      sellerFeeBasisPoints: 0, // 500 would represent 5.00%.
+    });
   } catch (thrownError) {
     const error = thrownError as Error;
 
@@ -254,12 +252,10 @@ export const getAllNftMetadatasFromAWallet = async (
   metaplex.use(keypairIdentity(metaplexKeypair));
 
   const owner = new PublicKey(wallet);
-  const findNftsByOwnerOutput = await metaplex
-    .nfts()
-    .findAllByOwner({
-      owner,
-    })
-    .run();
+  const findNftsByOwnerOutput = await metaplex.nfts().findAllByOwner({
+    owner,
+  });
+
   return findNftsByOwnerOutput;
 };
 
@@ -295,12 +291,10 @@ export const getFullNFTsFromWallet = async (
   metaplex.use(keypairIdentity(keypair));
 
   const owner = new PublicKey(address);
-  const nftMetadatas = await metaplex
-    .nfts()
-    .findAllByOwner({
-      owner,
-    })
-    .run();
+  const nftMetadatas = await metaplex.nfts().findAllByOwner({
+    owner,
+  });
+
   const nfts = await asyncMap(nftMetadatas, async (metadata) => {
     return (
       metaplex
@@ -308,7 +302,6 @@ export const getFullNFTsFromWallet = async (
         // TODO: hacking, this is probably a bad idea but apparently .findAllByOwner() may return a bunch of different types of objects
         // @ts-ignore
         .load({ metadata })
-        .run()
     );
   });
 
@@ -334,12 +327,10 @@ export const getIdentityTokensFromWallet = async (
   wallet: PublicKey
 ) => {
   const metaplex = getMetaplex(connection, metaplexConnectionKeypair);
-  const nfts = await metaplex
-    .nfts()
-    .findAllByOwner({
-      owner: wallet,
-    })
-    .run();
+  const nfts = await metaplex.nfts().findAllByOwner({
+    owner: wallet,
+  });
+
   const identityTokens = nfts.filter((nft) => {
     // Quick note we need to toBase58() both addresses for the comparison to work.
     const tokenCreator = nft?.creators?.[0]?.address.toBase58();

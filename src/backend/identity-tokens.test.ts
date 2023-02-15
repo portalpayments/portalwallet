@@ -116,7 +116,10 @@ describe(`identity tokens`, () => {
 
       expect(createOutput).toEqual({
         response: {
+          // lowercase just to keep you on your toes
+          blockhash: expect.any(String),
           signature: expect.any(String),
+          lastValidBlockHeight: expect.any(Number),
           confirmResponse: {
             context: {
               slot: expect.any(Number),
@@ -141,6 +144,7 @@ describe(`identity tokens`, () => {
           uri: expect.any(String),
           isMutable: true,
           primarySaleHappened: false,
+          programmableConfig: null,
           sellerFeeBasisPoints: 0,
           editionNonce: expect.any(Number),
           creators: [
@@ -226,7 +230,7 @@ describe(`identity tokens`, () => {
     if (!mintAddress) {
       throw new Error(`Couldn't get a mint address`);
     }
-    const nft = await metaplex.nfts().findByMint({ mintAddress }).run();
+    const nft = await metaplex.nfts().findByMint({ mintAddress });
 
     const artistAddress = nft.mint.mintAuthorityAddress;
     const nftAddress = nft.address;
@@ -242,6 +246,7 @@ describe(`identity tokens`, () => {
       uri: expect.any(String),
       isMutable: true,
       primarySaleHappened: false,
+      programmableConfig: null,
       sellerFeeBasisPoints: 0,
       editionNonce: expect.any(Number),
       creators: [
@@ -411,6 +416,7 @@ describe(`identity tokens`, () => {
         model: "metadata",
         name: "Portal Identity Token",
         primarySaleHappened: false,
+        programmableConfig: null,
         sellerFeeBasisPoints: 0,
         symbol: "",
         tokenStandard: 0,
