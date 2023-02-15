@@ -36,6 +36,8 @@ describe(`secretKeyToHex`, () => {
   test(`secretKeyToHex is accurate`, () => {
     const keyPair = new Keypair();
     const result = secretKeyToHex(keyPair.secretKey);
-    expect(result.length).toEqual(88);
+    // Hex representation can be either 87 or 88 characters
+    expect(result.length).toBeGreaterThanOrEqual(87);
+    expect(result.length).toBeLessThan(89);
   });
 });
