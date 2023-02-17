@@ -71,26 +71,12 @@ const main = async () => {
   };
 
   // Step 2. Mint token (using the identity token issuer wallet) and then move the minted token to the final receipient.
-  let tokenCreateOutput: CreateNftOutput;
-
-  try {
-    tokenCreateOutput = await mintIdentityToken(
-      WALLET_ADDRESS,
-      tokenContents,
-      identityTokenIssuer,
-      true
-    );
-  } catch (thrownObject) {
-    const error = thrownObject as Error;
-    if (error.message.includes("insufficient lamports")) {
-      throw new Error(
-        `⚠️ The token mint account has run out of Sol. Please send a small amount of Sol to the Token issuer account ${identityTokenIssuer.publicKey.toBase58()}`
-      );
-    }
-    log(`Unexpected error making NFT: ${error.message}`);
-    throw error;
-  }
-
+  let tokenCreateOutput = await mintIdentityToken(
+    WALLET_ADDRESS,
+    tokenContents,
+    identityTokenIssuer,
+    true
+  );
   // Step 3. Move the minted token to the final recipient.
 
   const transactionId = await mintAndTransferIdentityToken(

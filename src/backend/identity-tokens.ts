@@ -136,6 +136,12 @@ export const mintIdentityToken = async (
       );
     }
 
+    if (error.message.includes("insufficient lamports")) {
+      throw new Error(
+        `⚠️ The token mint account has run out of Sol. Please send a small amount of Sol to the Token issuer account ${identityTokenIssuer.publicKey.toBase58()}`
+      );
+    }
+
     // Another possible error - this may be a metaplex bug
     // Unexpected error Account Not Found
     // >> Source: SDK
