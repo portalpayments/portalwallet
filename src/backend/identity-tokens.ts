@@ -34,7 +34,11 @@ import {
   LATEST_IDENTITY_TOKEN_VERSION,
 } from "./constants";
 
-import type { TokenMetaData } from "./types";
+import type {
+  VerifiedClaimsForIndividual,
+  VerifiedClaimsForOrganization,
+  TokenMetaData,
+} from "./types";
 import { makeTransaction } from "./tokens";
 import { connect } from "./wallet";
 import * as http from "../lib/http-client";
@@ -131,24 +135,14 @@ export const mintIdentityToken = async (
 // Make the token and sent it to the recipient's wallet
 // https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 
-interface tokenContentsForIndividual {
-  type: "INDIVIDUAL";
-  givenName: string;
-  familyName: string;
-}
-
-interface tokenContentsForOrganinization {
-  type: "ORGANIZATION";
-  legalName: string;
-}
-
 export const mintAndTransferIdentityToken = async (
   recipientWallet: string,
-  tokenContents: tokenContentsForIndividual | tokenContentsForOrganinization,
-  uploadedImageUrl: string,
+  tokenContents: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization,
   identityTokenIssuer: Keypair
 ) => {
   const connection = await connect("quickNodeMainNetBeta");
+
+  const uploadedImageUrl = tokenContents.imageUrl;
 
   log(`🏦 Minting identity token...`);
 

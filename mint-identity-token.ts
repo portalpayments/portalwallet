@@ -9,6 +9,10 @@ import dotenv from "dotenv";
 import { Keypair } from "@solana/web3.js";
 import base58 from "bs58";
 import { getKeypairFromString } from "./src/backend/solana-functions";
+import type {
+  VerifiedClaimsForIndividual,
+  VerifiedClaimsForOrganization,
+} from "./src/backend/types";
 
 dotenv.config();
 
@@ -19,8 +23,9 @@ const IMAGE_FILE = "mike.jpg";
 
 // ------------------------------------------------------------------------------
 
-const tokenContents = {
-  type: "INDIVIDUAL" as "INDIVIDUAL",
+// Partial because we haven't filled in image URL yet
+const tokenContentsNoImageUrl: Omit<VerifiedClaimsForIndividual, "imageUrl"> = {
+  type: "INDIVIDUAL",
   givenName: GIVEN_NAME,
   familyName: FAMILY_NAME,
 };
@@ -40,7 +45,7 @@ const main = async () => {
   log(
     stringify({
       WALLET_ADDRESS,
-      tokenContents,
+      tokenContents: tokenContentsNoImageUrl,
     })
   );
 
@@ -56,11 +61,15 @@ const main = async () => {
     log(`🖼️ Uploaded image`, uploadedImageUrl);
   }
 
+  const tokenContents: VerifiedClaimsForIndividual = {
+    ...tokenContentsNoImageUrl,
+    imageUrl: uploadedImageUrl,
+  };
+
   // Step 2. Mint token (using the identity token issuer wallet) and then move the minted token to the final receipient.
   const transactionId = await mintAndTransferIdentityToken(
     WALLET_ADDRESS,
     tokenContents,
-    uploadedImageUrl,
     identityTokenIssuer
   );
   log(transactionId);
