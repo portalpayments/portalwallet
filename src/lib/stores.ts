@@ -25,7 +25,7 @@ import {
   SECONDS,
 } from "../backend/constants";
 import { getCurrencyBySymbol } from "../backend/solana-functions";
-import * as base58 from "bs58";
+import base58 from "bs58";
 import { getAllNftMetadatasFromAWallet } from "../backend/identity-tokens";
 import * as http from "./http-client";
 import { summarizeTransaction } from "../backend/transactions";

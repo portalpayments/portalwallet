@@ -15,7 +15,7 @@ import {
   recoverFromToken,
 } from "./recovery-token";
 import * as dotenv from "dotenv";
-import * as base58 from "bs58";
+import base58 from "bs58";
 import * as bip39 from "bip39";
 import { checkIfSecretKeyIsValid, mnemonicToKeypairs } from "./recovery";
 import { dirtyPersonalPhrase } from "./test-data/transactions/test-phrases";

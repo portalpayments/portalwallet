@@ -41,7 +41,7 @@ import { amountAndDecimalsToMajorAndMinor } from "../lib/utils";
 
 import { recognizeDateTime } from "@microsoft/recognizers-text-date-time";
 
-import * as base58 from "bs58";
+import base58 from "bs58";
 
 const decoder = new TextDecoder("utf-8");
 

@@ -7,20 +7,18 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 // From https://docs.dialect.to/documentation/messaging/typescript/configuration
-import {
-  Dialect,
+import type {
   DialectSdk,
-  ThreadMemberScope,
-  type CreateThreadCommand,
-  type DialectCloudEnvironment,
-  type SendMessageCommand,
-  type Thread,
+  CreateThreadCommand,
+  DialectCloudEnvironment,
+  SendMessageCommand,
+  Thread,
 } from "@dialectlabs/sdk";
-import {
-  SolanaSdkFactory,
-  NodeDialectSolanaWalletAdapter,
-  type Solana,
-} from "@dialectlabs/blockchain-sdk-solana";
+import Dialect from "@dialectlabs/sdk";
+import ThreadMemberScope from "@dialectlabs/sdk";
+import type { Solana } from "@dialectlabs/blockchain-sdk-solana";
+import NodeDialectSolanaWalletAdapter from "@dialectlabs/blockchain-sdk-solana";
+import SolanaSdkFactory from "@dialectlabs/blockchain-sdk-solana";
 import type { Keypair } from "@solana/web3.js";
 import type { SimpleTransaction, SimpleWalletMessage } from "./types";
 

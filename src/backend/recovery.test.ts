@@ -15,7 +15,7 @@ import {
 import { DEPOSIT, SECONDS } from "./constants";
 import { connect, getAccountBalance, putSolIntoWallet } from "./wallet";
 import * as dotenv from "dotenv";
-import * as base58 from "bs58";
+import base58 from "bs58";
 import * as bip39 from "bip39";
 
 jest.mock("./functions");

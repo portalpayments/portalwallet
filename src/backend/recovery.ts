@@ -11,7 +11,7 @@ import { derivePath } from "ed25519-hd-key";
 import { debug, log } from "./functions";
 
 import * as bip39 from "bip39";
-import * as base58 from "bs58";
+import base58 from "bs58";
 
 if (!globalThis.setImmediate) {
   // Fixes 'ReferenceError: setImmediate is not defined' when running in browser
