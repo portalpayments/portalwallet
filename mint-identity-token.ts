@@ -3,7 +3,10 @@
 // https://github.com/TypeStrong/ts-node/issues/1062#issuecomment-1192847985
 
 import { log, sleep, stringify } from "./src/backend/functions";
-import { mintAndTransferIdentityToken } from "./src/backend/identity-tokens";
+import {
+  mintAndTransferIdentityToken,
+  mintIdentityToken,
+} from "./src/backend/identity-tokens";
 import { uploadImageToArweave } from "./src/backend/arweave";
 import dotenv from "dotenv";
 import { Keypair } from "@solana/web3.js";
@@ -13,6 +16,7 @@ import type {
   VerifiedClaimsForIndividual,
   VerifiedClaimsForOrganization,
 } from "./src/backend/types";
+import type { CreateNftOutput } from "@metaplex-foundation/js";
 
 dotenv.config();
 
@@ -67,7 +71,30 @@ const main = async () => {
   };
 
   // Step 2. Mint token (using the identity token issuer wallet) and then move the minted token to the final receipient.
+  let tokenCreateOutput: CreateNftOutput;
+
+  try {
+    tokenCreateOutput = await mintIdentityToken(
+      WALLET_ADDRESS,
+      tokenContents,
+      identityTokenIssuer,
+      true
+    );
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    if (error.message.includes("insufficient lamports")) {
+      throw new Error(
+        `⚠️ The token mint account has run out of Sol. Please send a small amount of Sol to the Token issuer account ${identityTokenIssuer.publicKey.toBase58()}`
+      );
+    }
+    log(`Unexpected error making NFT: ${error.message}`);
+    throw error;
+  }
+
+  // Step 3. Move the minted token to the final recipient.
+
   const transactionId = await mintAndTransferIdentityToken(
+    tokenCreateOutput,
     WALLET_ADDRESS,
     tokenContents,
     identityTokenIssuer

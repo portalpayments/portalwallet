@@ -73,15 +73,44 @@ const getAddressFromProblem = (problem: string): string | null => {
 
 // Create an identityToken, it will be owned by identityTokenIssuer
 export const mintIdentityToken = async (
-  connection: Connection,
+  recipientWallet: string,
+  tokenContents: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization,
   identityTokenIssuer: Keypair,
-  // TODO: use NonFungibleTokenMetadataStandard
-  metadata: Record<string, any>,
   isProduction: boolean
 ) => {
+  const connection: Connection = await connect("quickNodeMainNetBeta");
+
+  log(`🏦 Minting identity token...`);
+
+  // TODO: use NonFungibleTokenMetadataStandard, maybe (it's kinda aimed at digital art)
+  let tokenMetaData: TokenMetaData;
+  if (tokenContents.type === "INDIVIDUAL") {
+    tokenMetaData = makeTokenMetaDataForIndividual(
+      recipientWallet,
+      tokenContents.givenName,
+      tokenContents.familyName,
+      tokenContents.imageUrl
+    );
+  } else {
+    if (tokenContents.type === "ORGANIZATION") {
+      tokenMetaData = makeTokenMetaDataForOrganization(
+        recipientWallet,
+        tokenContents.legalName,
+        tokenContents.imageUrl
+      );
+    }
+    if (!tokenMetaData) {
+      throw new Error(
+        `COuld not work out why type of token metadata to create.`
+      );
+    }
+  }
+
   const metaplex = getMetaplex(connection, identityTokenIssuer, isProduction);
   const metaplexNFTs = metaplex.nfts();
-  const uploadResponse = await metaplexNFTs.uploadMetadata(metadata);
+  // TODO: see norte re: NonFungibleTokenMetadataStandard above
+  // @ts-ignore
+  const uploadResponse = await metaplexNFTs.uploadMetadata(tokenMetaData);
 
   // From https://github.com/metaplex-foundation/js#create
   // "This will take care of creating the mint account, the associated token account, the metadata PDA and the original edition PDA (a.k.a. the master edition) for you.""
@@ -136,58 +165,12 @@ export const mintIdentityToken = async (
 // https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 
 export const mintAndTransferIdentityToken = async (
+  tokenCreateOutput: CreateNftOutput,
   recipientWallet: string,
   tokenContents: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization,
   identityTokenIssuer: Keypair
 ) => {
   const connection = await connect("quickNodeMainNetBeta");
-
-  const uploadedImageUrl = tokenContents.imageUrl;
-
-  log(`🏦 Minting identity token...`);
-
-  let tokenMetaData: TokenMetaData;
-  if (tokenContents.type === "INDIVIDUAL") {
-    tokenMetaData = makeTokenMetaDataForIndividual(
-      recipientWallet,
-      tokenContents.givenName,
-      tokenContents.familyName,
-      uploadedImageUrl
-    );
-  } else {
-    if (tokenContents.type === "ORGANIZATION") {
-      tokenMetaData = makeTokenMetaDataForOrganization(
-        recipientWallet,
-        tokenContents.legalName,
-        uploadedImageUrl
-      );
-    }
-    if (!tokenMetaData) {
-      throw new Error(
-        `COuld not work out why type of token metadata to create.`
-      );
-    }
-  }
-
-  let tokenCreateOutput: CreateNftOutput;
-
-  try {
-    tokenCreateOutput = await mintIdentityToken(
-      connection,
-      identityTokenIssuer,
-      tokenMetaData,
-      true
-    );
-  } catch (thrownObject) {
-    const error = thrownObject as Error;
-    if (error.message.includes("insufficient lamports")) {
-      throw new Error(
-        `⚠️ The token mint account has run out of Sol. Please send a small amount of Sol to the Token issuer account ${identityTokenIssuer.publicKey.toBase58()}`
-      );
-    }
-    log(`Unexpected error making NFT: ${error.message}`);
-    throw error;
-  }
 
   const mintAddress = tokenCreateOutput.mintAddress;
   const senderTokenAccount = tokenCreateOutput.tokenAddress;
