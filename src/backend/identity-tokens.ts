@@ -119,9 +119,9 @@ export const mintIdentityToken = async (
   // See https://github.com/metaplex-foundation/js-examples/blob/main/getting-started-expressjs/createNFT.cjs too
 
   // Sometimes fails with
-  let createOutput: CreateNftOutput;
+  let tokenCreateOutput: CreateNftOutput;
   try {
-    createOutput = await metaplexNFTs.create({
+    tokenCreateOutput = await metaplexNFTs.create({
       uri: uploadResponse.uri, // "https://arweave.net/123",
       name: IDENTITY_TOKEN_NAME,
       sellerFeeBasisPoints: 0, // 500 would represent 5.00%.
@@ -164,30 +164,31 @@ export const mintIdentityToken = async (
     throw error;
   }
 
-  return createOutput;
+  log(
+    `🎟️ The token for ${
+      tokenContents.type === "INDIVIDUAL"
+        ? tokenContents.givenName
+        : tokenContents.legalName
+    } has been created, senderTokenAccount is ${
+      tokenCreateOutput.tokenAddress
+    }.`
+  );
+
+  return tokenCreateOutput;
 };
 
 // Make the token and sent it to the recipient's wallet
 // https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 
-export const mintAndTransferIdentityToken = async (
+export const transferIdentityToken = async (
   tokenCreateOutput: CreateNftOutput,
   recipientWallet: string,
-  tokenContents: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization,
   identityTokenIssuer: Keypair
 ) => {
   const connection = await connect("quickNodeMainNetBeta");
 
   const mintAddress = tokenCreateOutput.mintAddress;
   const senderTokenAccount = tokenCreateOutput.tokenAddress;
-
-  log(
-    `🎟️ The token for ${
-      tokenContents.type === "INDIVIDUAL"
-        ? tokenContents.givenName
-        : tokenContents.legalName
-    } has been created, senderTokenAccount is ${senderTokenAccount}.`
-  );
 
   // Get the token account of the fromWallet address, and if it does not exist, create it
 

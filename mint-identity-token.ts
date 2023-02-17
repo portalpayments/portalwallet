@@ -4,7 +4,7 @@
 
 import { log, sleep, stringify } from "./src/backend/functions";
 import {
-  mintAndTransferIdentityToken,
+  transferIdentityToken,
   mintIdentityToken,
 } from "./src/backend/identity-tokens";
 import { uploadImageToArweave } from "./src/backend/arweave";
@@ -79,10 +79,9 @@ const main = async () => {
   );
   // Step 3. Move the minted token to the final recipient.
 
-  const transactionId = await mintAndTransferIdentityToken(
+  const transactionId = await transferIdentityToken(
     tokenCreateOutput,
     WALLET_ADDRESS,
-    tokenContents,
     identityTokenIssuer
   );
   log(transactionId);
