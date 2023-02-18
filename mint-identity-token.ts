@@ -77,10 +77,14 @@ const main = async () => {
     identityTokenIssuer,
     true
   );
+
   // Step 3. Move the minted token to the final recipient.
+  const mintAddress = tokenCreateOutput.mintAddress;
+  const senderTokenAccount = tokenCreateOutput.tokenAddress;
 
   const transactionId = await transferIdentityToken(
-    tokenCreateOutput,
+    mintAddress,
+    senderTokenAccount,
     WALLET_ADDRESS,
     identityTokenIssuer
   );

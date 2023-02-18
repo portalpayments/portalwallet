@@ -181,14 +181,12 @@ export const mintIdentityToken = async (
 // https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 
 export const transferIdentityToken = async (
-  tokenCreateOutput: CreateNftOutput,
+  mintAddress: PublicKey,
+  senderTokenAccount: PublicKey,
   recipientWallet: string,
   identityTokenIssuer: Keypair
 ) => {
   const connection = await connect("quickNodeMainNetBeta");
-
-  const mintAddress = tokenCreateOutput.mintAddress;
-  const senderTokenAccount = tokenCreateOutput.tokenAddress;
 
   // Get the token account of the fromWallet address, and if it does not exist, create it
 
