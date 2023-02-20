@@ -21,7 +21,7 @@ import type { CreateNftOutput } from "@metaplex-foundation/js";
 dotenv.config();
 
 const WALLET_ADDRESS = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
-const GIVEN_NAME = "Mike";
+const GIVEN_NAME = "Micheal-Sean";
 const FAMILY_NAME = "MacCana";
 const IMAGE_FILE = "mike.jpg";
 
