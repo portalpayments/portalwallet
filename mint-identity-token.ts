@@ -1,6 +1,6 @@
-// Run with 'npx esrun mint-identity-token.ts'
-// because 'ts-node' and 'tsx has issues:
-// https://github.com/TypeStrong/ts-node/issues/1062#issuecomment-1192847985
+// Run with 'npm run mint-identity-token'
+// Otherwise trying to load Dialect npm module will fail
+// (the npm script sets an environent variable to disable Dialect)
 
 import { log, sleep, stringify } from "./src/backend/functions";
 import {
@@ -9,7 +9,7 @@ import {
 } from "./src/backend/identity-tokens";
 import { uploadImageToArweave } from "./src/backend/arweave";
 import dotenv from "dotenv";
-import { Keypair, PublicKey } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import base58 from "bs58";
 import { getKeypairFromString } from "./src/backend/solana-functions";
 import type {
@@ -17,6 +17,7 @@ import type {
   VerifiedClaimsForOrganization,
 } from "./src/backend/types";
 import type { CreateNftOutput } from "@metaplex-foundation/js";
+import { connect } from "./src/backend/wallet";
 
 dotenv.config();
 
@@ -40,6 +41,10 @@ const main = async () => {
   log(`🎟️ Running Portal Identity token minter ...`);
 
   const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;
+
+  const connection: Connection = await connect("quickNodeMainNetBeta");
+
+  const walletAddress = new PublicKey(WALLET_ADDRESS);
 
   if (!identityTokenSecretKey) {
     throw new Error(`Please set IDENTITY_TOKEN_SECRET_KEY in .env file`);
@@ -71,7 +76,8 @@ const main = async () => {
 
   // Step 2. Mint token (using the identity token issuer wallet) and then move the minted token to the final receipient.
   let tokenCreateOutput = await mintIdentityToken(
-    WALLET_ADDRESS,
+    connection,
+    walletAddress,
     tokenContents,
     identityTokenIssuer,
     true
@@ -84,6 +90,7 @@ const main = async () => {
   const recipientWallet = new PublicKey(WALLET_ADDRESS);
 
   const transactionId = await transferIdentityToken(
+    connection,
     mintAddress,
     senderTokenAccount,
     recipientWallet,

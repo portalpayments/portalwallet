@@ -29,8 +29,27 @@ import {
 } from "../backend/types";
 import { mintToCurrencyMap } from "../backend/mint-to-currency-map";
 import { JUPITER, MEMO_PROGRAM, NOTE_PROGRAM, NOT_FOUND } from "./constants";
-// See comments re: esrun below
-import { getReceiptForSimpleTransaction } from "./receipts";
+
+// Dialect (used by the receipts module)
+// Causes problems with identity token minter when running under esrun
+// So set a fake 'getReceiptForSimpleTransaction' by default
+let getReceiptForSimpleTransaction: (
+  keyPair: Keypair,
+  transactionMemo: string,
+  transactionDate: number
+) => Promise<ReceiptSummary | null> = () => null;
+
+const isRunningIdentityTokenMinter = Object.hasOwn(
+  process.env,
+  "IDENTITY_TOKEN_MINTER"
+);
+
+
+if (!isRunningIdentityTokenMinter) {
+  const receipts = await import("./receipts");
+  getReceiptForSimpleTransaction = receipts.getReceiptForSimpleTransaction;
+}
+
 import {
   type ParsedInstruction,
   type ParsedTransactionWithMeta,
@@ -44,9 +63,6 @@ import { recognizeDateTime } from "@microsoft/recognizers-text-date-time";
 import base58 from "bs58";
 
 const decoder = new TextDecoder("utf-8");
-
-// Causing problems with identity token when running under esrun
-// const getReceiptForSimpleTransaction = () => null;
 
 export const instructionDataToNote = (string: string) => {
   const binaryArray = base58.decode(string);
