@@ -87,19 +87,20 @@ describe(`identity tokens`, () => {
     async () => {
       await putSolIntoWallet(connection, alice.publicKey, 1_000_000_000);
 
-      const metadata = makeTokenMetaDataForIndividual(
-        alice.publicKey.toBase58(),
-        "Alice",
-        "Smith",
-        "https://arweave.net/jHaEN1AuV87osodSw63QgTsYgH0JcmA6CG0T4Zcg56c"
-      );
+      const tokenContents: VerifiedClaimsForIndividual = {
+        type: "INDIVIDUAL",
+        givenName: "Alice",
+        familyName: "Smith",
+        imageUrl:
+          "https://arweave.net/jHaEN1AuV87osodSw63QgTsYgH0JcmA6CG0T4Zcg56c",
+      };
 
       const name = IDENTITY_TOKEN_NAME;
 
       const createOutput = await mintIdentityToken(
-        connection,
+        alice.publicKey,
+        tokenContents,
         testIdentityTokenIssuer,
-        metadata,
         false
       );
 

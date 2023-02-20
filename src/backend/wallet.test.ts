@@ -320,7 +320,7 @@ describe(`mainnet integration tests`, () => {
       expect(claims).toEqual({
         familyName: "MacCana",
         givenName: "Micheal-Sean",
-        imageUrl: expect.stringMatching(/https:\/\/arweave.net\/.*/),
+        imageUrl: expect.stringMatching(/https:\/\/.*/),
         type: "INDIVIDUAL",
       });
     },

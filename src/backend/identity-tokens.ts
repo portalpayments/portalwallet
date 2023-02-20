@@ -81,7 +81,7 @@ const getAddressFromProblem = (problem: string): string | null => {
 
 // Create an identityToken, it will be owned by identityTokenIssuer
 export const mintIdentityToken = async (
-  recipientWallet: string,
+  recipientWallet: PublicKey,
   tokenContents: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization,
   identityTokenIssuer: Keypair,
   isProduction: boolean
@@ -249,7 +249,7 @@ export const getAllNftMetadatasFromAWallet = async (
 // TODO: comply with https://docs.metaplex.com/programs/token-metadata/token-standard
 // See types.ts
 export const makeTokenMetaDataForIndividual = (
-  wallet: string,
+  wallet: PublicKey,
   givenName: string,
   familyName: string,
   imageUrl: string
@@ -259,7 +259,7 @@ export const makeTokenMetaDataForIndividual = (
     // In future this can be removed, however right now Solana
     // token standard doesn't support non-transferrable tokens
     // So check that that token wasn't issued against another wallet and transferred
-    issuedAgainst: wallet,
+    issuedAgainst: wallet.toBase58(),
     claims: {
       type: "INDIVIDUAL",
       givenName,
@@ -329,7 +329,7 @@ export const getIdentityTokensFromWallet = async (
 };
 
 export const makeTokenMetaDataForOrganization = (
-  wallet: string,
+  wallet: PublicKey,
   legalName: string,
   imageUrl: string
 ): TokenMetaData => {
@@ -338,7 +338,7 @@ export const makeTokenMetaDataForOrganization = (
     // In future this can be removed, however right now Solana
     // token standard doesn't support non-transferrable tokens
     // So check that that token wasn't issued against another wallet and transferred
-    issuedAgainst: wallet,
+    issuedAgainst: wallet.toBase58(),
     claims: {
       type: "ORGANIZATION",
       // Eg: https://find-and-update.company-information.service.gov.uk/search?q=portal+payments
