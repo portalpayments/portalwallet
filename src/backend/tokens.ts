@@ -34,7 +34,7 @@ import {
   mintToChecked,
   type Account,
 } from "@solana/spl-token";
-import { log } from "./functions";
+import { log, stringify } from "./functions";
 import { MEMO_PROGRAM } from "./constants";
 import { getCurrencyBySymbol } from "./solana-functions";
 import { getABetterErrorMessage } from "./errors";
@@ -203,21 +203,29 @@ export const getFeeForTransaction = async (
   return fee;
 };
 
-export const checkTokenAccountCreated = async (
+export const checkIfTokenAccountExists = async (
   connection,
   receiverTokenAccountAddress
 ) => {
   // Check if the receiver's token account exists
   try {
-    await getAccount(
+    const account = await getAccount(
       connection,
       receiverTokenAccountAddress,
       "confirmed",
       TOKEN_PROGRAM_ID
     );
+
     return true;
-  } catch {
-    return false;
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    // error.message is am empty string
+    // TODO: fix upstream
+    if (error.name === "TokenAccountNotFoundError") {
+      return false;
+    }
+
+    throw error;
   }
 };
 
@@ -242,7 +250,7 @@ export const makeTransaction = async (
   // SPL Token program account
   const programId = TOKEN_PROGRAM_ID;
 
-  // Signing accounts if `owner` is a multisig
+  // Signing accounts if `owner` is a multisig (it's not so this is empty)
   const multiSigners: Array<Signer> = [];
 
   log(`Sending tokens with memo "${memo}"`);
@@ -277,10 +285,19 @@ export const makeTransaction = async (
     recipientWalletAddress
   );
 
-  if (checkTokenAccountCreated(connection, destinationTokenAccount)) {
-    log(`Token account already exists, no need to make it`);
+  const isTokenAccountAlreadyMade = await checkIfTokenAccountExists(
+    connection,
+    destinationTokenAccount
+  );
+
+  if (isTokenAccountAlreadyMade) {
+    log(
+      `Token account already exists at ${destinationTokenAccount}, no need to make it`
+    );
   } else {
-    log(`Token account does not exist, adding instruction to make it`);
+    log(
+      `Token account does not exist at ${destinationTokenAccount}, adding instruction to make it`
+    );
     // If the account does not exist, add the create account instruction to the transaction
     // Logic from node_modules/@solana/spl-token/src/actions/getOrCreateAssociatedTokenAccount.ts
     transaction.add(

@@ -9,7 +9,7 @@ import {
 } from "./src/backend/identity-tokens";
 import { uploadImageToArweave } from "./src/backend/arweave";
 import dotenv from "dotenv";
-import { Keypair } from "@solana/web3.js";
+import { Keypair, PublicKey } from "@solana/web3.js";
 import base58 from "bs58";
 import { getKeypairFromString } from "./src/backend/solana-functions";
 import type {
@@ -82,10 +82,12 @@ const main = async () => {
   const mintAddress = tokenCreateOutput.mintAddress;
   const senderTokenAccount = tokenCreateOutput.tokenAddress;
 
+  const recipientWallet = new PublicKey(WALLET_ADDRESS);
+
   const transactionId = await transferIdentityToken(
     mintAddress,
     senderTokenAccount,
-    WALLET_ADDRESS,
+    recipientWallet,
     identityTokenIssuer
   );
   log(transactionId);

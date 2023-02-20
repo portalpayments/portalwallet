@@ -15,11 +15,19 @@
 // https://github.com/solana-labs/solana-program-library/pull/3178/files
 
 import {
+  createMint,
+  getOrCreateAssociatedTokenAccount,
+  mintTo,
+  transfer,
+} from "@solana/spl-token";
+
+import {
   Metaplex,
   keypairIdentity,
   mockStorage,
   bundlrStorage,
   type CreateNftOutput,
+  toTokenAccount,
 } from "@metaplex-foundation/js";
 import {
   Connection,
@@ -28,7 +36,7 @@ import {
   sendAndConfirmTransaction,
 } from "@solana/web3.js";
 
-import { asyncMap, log } from "./functions";
+import { asyncMap, log, stringify } from "./functions";
 import {
   IDENTITY_TOKEN_NAME,
   LATEST_IDENTITY_TOKEN_VERSION,
@@ -177,27 +185,24 @@ export const mintIdentityToken = async (
   return tokenCreateOutput;
 };
 
-// Make the token and sent it to the recipient's wallet
+// Transfer the token to the recipient's wallet
 // https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 
 export const transferIdentityToken = async (
   mintAddress: PublicKey,
   senderTokenAccount: PublicKey,
-  recipientWallet: string,
+  recipientWallet: PublicKey,
   identityTokenIssuer: Keypair
 ) => {
   const connection = await connect("quickNodeMainNetBeta");
 
-  // Get the token account of the fromWallet address, and if it does not exist, create it
-
   log(`Transferring token to final destination...`);
-  const recipientWalletAddress = new PublicKey(recipientWallet);
   let signature: string;
   try {
     const transaction = await makeTransaction(
       connection,
       senderTokenAccount,
-      recipientWalletAddress,
+      recipientWallet,
       identityTokenIssuer,
       1,
       mintAddress,
