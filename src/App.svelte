@@ -14,13 +14,11 @@
   import type { Contact as ContactType } from "./backend/types";
   import Lock from "./lib/Lock/Lock.svelte";
   import ContactAndMessages from "./lib/Contacts/Contact/ContactAndMessages.svelte";
-  import {
-    connectionStore,
-    authStore,
-    identityTokenIssuerPublicKey,
-  } from "./lib/stores";
+  import { connectionStore, authStore } from "./lib/stores";
   import { checkIfOnboarded } from "./lib/settings";
+  import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "./backend/constants";
   import WalletAddress from "./lib/MyWalletAddress/MyWalletAddress.svelte";
+  import { PublicKey } from "@solana/web3.js";
 
   $authStore;
 
@@ -29,6 +27,10 @@
   let isOnboarded: null | Boolean = null;
 
   let currentFeature: number = 0;
+
+  const identityTokenIssuerPublicKey = new PublicKey(
+    PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
+  );
 
   connectionStore.subscribe((newValue) => {
     if (newValue) {

@@ -1,9 +1,5 @@
 <script lang="ts">
-  import {
-    connectionStore,
-    authStore,
-    identityTokenIssuerPublicKey,
-  } from "../stores";
+  import { connectionStore, authStore } from "../stores";
   import { PublicKey, Connection, Keypair } from "@solana/web3.js";
   import Fee from "./Fee.svelte";
   import SendHeading from "./SendHeading.svelte";
@@ -28,6 +24,11 @@
   import { updateAccountsForNewTransaction, getActiveAccount } from "../stores";
   import { SECONDS } from "../../backend/constants";
   import { getCurrencyByMint } from "../../backend/solana-functions";
+  import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "../../backend/constants";
+
+  const identityTokenIssuerPublicKey = new PublicKey(
+    PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
+  );
 
   let destinationWalletAddress: string | null = null;
   let transferAmount: number | null = null;

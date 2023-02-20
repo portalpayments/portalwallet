@@ -192,10 +192,6 @@ export const onChangeActiveAccount = (
   });
 };
 
-export const identityTokenIssuerPublicKey = new PublicKey(
-  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
-);
-
 interface Auth {
   isLoggedIn: boolean;
   keyPair: null | Keypair;

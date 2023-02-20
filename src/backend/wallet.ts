@@ -41,7 +41,11 @@ import * as http from "../lib/http-client";
 import { HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE } from "../lib/frontend-constants";
 import { Direction, type Contact, type SimpleTransaction } from "./types";
 import type { AccountSummary } from "./types";
-import { identityTokenIssuerPublicKey } from "../lib/stores";
+import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "../backend/constants";
+
+const identityTokenIssuerPublicKey = new PublicKey(
+  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
+);
 
 const VERIFIED_CLAIMS_BY_ADDRESS: Record<
   string,
