@@ -81,13 +81,12 @@ const getAddressFromProblem = (problem: string): string | null => {
 
 // Create an identityToken, it will be owned by identityTokenIssuer
 export const mintIdentityToken = async (
+  connection: Connection,
   recipientWallet: PublicKey,
   tokenContents: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization,
   identityTokenIssuer: Keypair,
   isProduction: boolean
 ) => {
-  const connection: Connection = await connect("quickNodeMainNetBeta");
-
   log(`🏦 Minting identity token...`);
 
   // TODO: use NonFungibleTokenMetadataStandard, maybe (it's kinda aimed at digital art)
@@ -189,13 +188,12 @@ export const mintIdentityToken = async (
 // https://github.com/solana-labs/solana-program-library/blob/master/token/js/examples/createMintAndTransferTokens.ts
 
 export const transferIdentityToken = async (
+  connection: Connection,
   mintAddress: PublicKey,
   senderTokenAccount: PublicKey,
   recipientWallet: PublicKey,
   identityTokenIssuer: Keypair
 ) => {
-  const connection = await connect("quickNodeMainNetBeta");
-
   log(`Transferring token to final destination...`);
   let signature: string;
   try {

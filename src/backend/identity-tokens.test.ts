@@ -39,6 +39,7 @@ import {
 import base58 from "bs58";
 import { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, makeTransaction } from "./tokens";
+import type { VerifiedClaimsForIndividual } from "./types";
 
 // Arweave currently 400ing and also
 // we don't want to upload images to public arweave routinely
@@ -98,6 +99,7 @@ describe(`identity tokens`, () => {
       const name = IDENTITY_TOKEN_NAME;
 
       const createOutput = await mintIdentityToken(
+        connection,
         alice.publicKey,
         tokenContents,
         testIdentityTokenIssuer,
@@ -137,7 +139,16 @@ describe(`identity tokens`, () => {
         nft: {
           model: "nft",
           updateAuthorityAddress,
-          json: metadata,
+          json: {
+            claims: {
+              familyName: "Smith",
+              givenName: "Alice",
+              imageUrl: expect.any(String),
+              type: "INDIVIDUAL",
+            },
+            issuedAgainst: expect.any(String),
+            version: 7,
+          },
           jsonLoaded: true,
           name,
           symbol: "",
