@@ -34,8 +34,7 @@ const tokenContentsNoImageUrl: Omit<VerifiedClaimsForIndividual, "imageUrl"> = {
   familyName: FAMILY_NAME,
 };
 
-const ALREADY_UPLOADED_ARWEAVE_IMAGE =
-  "https://arweave.net/kNWn4-S_ioBEfVHjhHlKH3Uen4B3kyguoG1Kn3ctIUc"; // null
+const ALREADY_UPLOADED_ARWEAVE_IMAGE = "https://i.imgur.com/8UJBQqd.jpg"; // null
 
 const main = async () => {
   log(`🎟️ Running Portal Identity token minter ...`);
