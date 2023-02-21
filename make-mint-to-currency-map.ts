@@ -38,7 +38,7 @@ const main = async () => {
 
     let fixedSymbol: string = token.symbol;
     if (token.symbol === "SOL") {
-      // Note there is no token with
+      // Note there is no token with this symbol already
       fixedSymbol = "WSOL";
     }
 
