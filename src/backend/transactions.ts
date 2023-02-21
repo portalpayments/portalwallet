@@ -31,24 +31,17 @@ import { mintToCurrencyMap } from "../backend/mint-to-currency-map";
 import { JUPITER, MEMO_PROGRAM, NOTE_PROGRAM, NOT_FOUND } from "./constants";
 
 // Dialect (used by the receipts module)
-// Causes problems with identity token minter when running under esrun
+// Causes problems with identity token minter when running under 'tsx' (without vite doing all the transforms)
 // So set a fake 'getReceiptForSimpleTransaction' by default
-let getReceiptForSimpleTransaction: (
-  keyPair: Keypair,
-  transactionMemo: string,
-  transactionDate: number
-) => Promise<ReceiptSummary | null> = () => null;
+// TODO: chasing with Chris at Dialect
+// We did try using import() to make getReceiptForSimpleTransaction variable
+// but that breaks jest.
+// https://stackoverflow.com/questions/70725063/jest-wont-accept-top-level-awaits-with-nodejs16-typescript
+// Proper solution is to get Dialect to fix.
 
-const isRunningIdentityTokenMinter = Object.hasOwn(
-  process.env,
-  "IDENTITY_TOKEN_MINTER"
-);
-
-
-if (!isRunningIdentityTokenMinter) {
-  const receipts = await import("./receipts");
-  getReceiptForSimpleTransaction = receipts.getReceiptForSimpleTransaction;
-}
+// ENABLE BELOW FOR TOKEN MINTER
+// let getReceiptForSimpleTransaction = () => null;
+import { getReceiptForSimpleTransaction } from "./receipts";
 
 import {
   type ParsedInstruction,
