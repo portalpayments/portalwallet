@@ -90,7 +90,7 @@ export const mintIdentityToken = async (
   log(`🏦 Minting identity token...`);
 
   // TODO: use NonFungibleTokenMetadataStandard, maybe (it's kinda aimed at digital art)
-  let tokenMetaData: TokenMetaData;
+  let tokenMetaData: TokenMetaData | null = null;
   if (tokenContents.type === "INDIVIDUAL") {
     tokenMetaData = makeTokenMetaDataForIndividual(
       recipientWallet,
@@ -106,7 +106,7 @@ export const mintIdentityToken = async (
         tokenContents.imageUrl
       );
     }
-    if (!tokenMetaData) {
+    if (tokenMetaData === null) {
       throw new Error(
         `COuld not work out why type of token metadata to create.`
       );
