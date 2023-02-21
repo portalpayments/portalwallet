@@ -41,6 +41,7 @@ import { JUPITER, MEMO_PROGRAM, NOTE_PROGRAM, NOT_FOUND } from "./constants";
 
 // ENABLE BELOW FOR TOKEN MINTER
 // let getReceiptForSimpleTransaction = () => null;
+// DISABLE BELOW FOR TOKEN MINTER
 import { getReceiptForSimpleTransaction } from "./receipts";
 
 import {
