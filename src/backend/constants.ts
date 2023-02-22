@@ -139,7 +139,7 @@ export const EMPTY = "";
 export const LATEST_IDENTITY_TOKEN_VERSION = 7;
 
 // Oldest that's acceptable to use in UI
-export const MINIMUM_IDENTITY_TOKEN_VERSION = LATEST_IDENTITY_TOKEN_VERSION;
+export const MINIMUM_IDENTITY_TOKEN_VERSION = 6;
 
 // TODO: reducing this to 1_000 makes wallets not visible
 // which seems to be the rent requirement -

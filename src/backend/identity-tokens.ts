@@ -40,12 +40,14 @@ import { asyncMap, log, stringify } from "./functions";
 import {
   IDENTITY_TOKEN_NAME,
   LATEST_IDENTITY_TOKEN_VERSION,
+  MINIMUM_IDENTITY_TOKEN_VERSION,
 } from "./constants";
 
 import type {
   VerifiedClaimsForIndividual,
   VerifiedClaimsForOrganization,
   NonFungibleTokenMetadataStandard,
+  TokenMetaData,
 } from "./types";
 import { makeTransaction } from "./tokens";
 import * as http from "../lib/http-client";
@@ -412,7 +414,6 @@ export const getIdentityTokensFromWallet = async (
   identityTokenIssuerPublicKey: PublicKey,
   wallet: PublicKey
 ) => {
-  log(`in getIdentityTokensFromWallet`);
   const metaplex = getMetaplex(connection, metaplexConnectionKeypair);
   const nfts = await metaplex.nfts().findAllByOwner({
     owner: wallet,
@@ -428,13 +429,39 @@ export const getIdentityTokensFromWallet = async (
   return identityTokens;
 };
 
+const isOldIdentityToken = (object: object): object is TokenMetaData => {
+  // This isn't a standard NFT metadata key, was used by an old version of portal identity token
+  return Object.hasOwn(object, "version");
+};
+
 export const getIndividualClaimsFromNFTMetadata = (
-  nftMetadata,
-  wallet: PublicKey
-) => {
-  // This isn't a standard NFT metadata key, was used by an old version of portal identity tokem
-  if (nftMetadata.version) {
-    return null;
+  nftMetadata: NonFungibleTokenMetadataStandard | TokenMetaData,
+  wallet: PublicKey,
+  allowOldIdentityToken: boolean
+): VerifiedClaimsForIndividual | null => {
+  if (isOldIdentityToken(nftMetadata)) {
+    if (!allowOldIdentityToken) {
+      log(
+        `Old identity token detected, but we have disabled support for the old identity token`
+      );
+      return null;
+    }
+    if (nftMetadata.claims.type === "ORGANIZATION") {
+      log(
+        `Old identity token detected, but we do not support using the old identity token for organisations`
+      );
+      return null;
+    }
+    if (Number(nftMetadata.version) < MINIMUM_IDENTITY_TOKEN_VERSION) {
+      log(`Old version version for this identity token`);
+      return null;
+    }
+    return {
+      givenName: nftMetadata.claims.givenName,
+      familyName: nftMetadata.claims.familyName,
+      imageUrl: nftMetadata.claims.imageUrl,
+      type: nftMetadata.claims.type as "INDIVIDUAL",
+    };
   }
 
   if (!nftMetadata.attributes) {
@@ -451,7 +478,7 @@ export const getIndividualClaimsFromNFTMetadata = (
     return null;
   }
 
-  if (Number(attributes.version) < LATEST_IDENTITY_TOKEN_VERSION) {
+  if (Number(attributes.version) < MINIMUM_IDENTITY_TOKEN_VERSION) {
     log(`Old version version for this identity token`);
     return null;
   }
@@ -467,10 +494,13 @@ export const getIndividualClaimsFromNFTMetadata = (
   // Second image is the individual picture
   const individualImageUrl = nftMetadata.properties.files[1].uri;
 
+  let tokenType: "INDIVIDUAL" | "ORGANIZATION" = "INDIVIDUAL" as "INDIVIDUAL";
+  // TODO: add organization support
+
   return {
     givenName: attributes.givenName,
     familyName: attributes.familyName,
     imageUrl: individualImageUrl,
-    type: attributes.type,
+    type: tokenType,
   };
 };

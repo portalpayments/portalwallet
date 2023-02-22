@@ -40,7 +40,7 @@ import {
 import base58 from "bs58";
 import { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, makeTransaction } from "./tokens";
-import type { VerifiedClaimsForIndividual } from "./types";
+import type { ContentType, VerifiedClaimsForIndividual } from "./types";
 import type { type } from "os";
 
 // Arweave currently 400ing and also
@@ -322,11 +322,11 @@ describe(`identity tokens`, () => {
         files: [
           {
             uri: "https://i.imgur.com/GSCtECV.png",
-            type: "image/png",
+            type: "image/png" as ContentType,
           },
           {
             uri: "https://i.imgur.com/W05AoFb.jpg",
-            type: "image/jpeg",
+            type: "image/jpeg" as ContentType,
           },
         ],
       },
@@ -334,7 +334,8 @@ describe(`identity tokens`, () => {
 
     const result = getIndividualClaimsFromNFTMetadata(
       nftMetadata,
-      new PublicKey("5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM")
+      new PublicKey("5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"),
+      true
     );
 
     expect(result).toEqual({

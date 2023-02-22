@@ -34,6 +34,7 @@ import {
 } from "./identity-tokens";
 import type {
   BasicTokenAccount,
+  NonFungibleTokenMetadataStandard,
   TokenMetaData,
   VerifiedClaimsForIndividual,
   VerifiedClaimsForOrganization,
@@ -175,12 +176,11 @@ export const verifyWallet = async (
   metaplexConnectionKeypair: Keypair,
   identityTokenIssuerPublicKey: PublicKey,
   wallet: PublicKey,
-  useCache = true
+  useCache = true,
+  allowOldIdentityToken = true
 ): Promise<
   VerifiedClaimsForIndividual | VerifiedClaimsForOrganization | null
 > => {
-  log(`in verifywallet`);
-
   if (useCache) {
     const cachedVerifiedClaims = VERIFIED_CLAIMS_BY_ADDRESS[wallet.toBase58()];
     if (cachedVerifiedClaims) {
@@ -204,11 +204,12 @@ export const verifyWallet = async (
   const metadataForIdentityTokens = await asyncMap(
     identityTokens,
     async (identityTokens) => {
-      const metadata = (await http.get(identityTokens.uri)) as TokenMetaData;
+      const metadata = (await http.get(identityTokens.uri)) as
+        | NonFungibleTokenMetadataStandard
+        | TokenMetaData;
       return metadata;
     }
   );
-
 
   if (!metadataForIdentityTokens.length) {
     // TODO: this seems to fire even with verified wallets
@@ -219,7 +220,11 @@ export const verifyWallet = async (
   const latestTokenMetadata = metadataForIdentityTokens?.[0];
 
   const verifiedClaims: VerifiedClaimsForIndividual =
-    getIndividualClaimsFromNFTMetadata(latestTokenMetadata, wallet);
+    getIndividualClaimsFromNFTMetadata(
+      latestTokenMetadata,
+      wallet,
+      allowOldIdentityToken
+    );
 
   return verifiedClaims;
 };

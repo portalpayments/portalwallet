@@ -53,7 +53,7 @@ import { Direction } from "./types";
 import { getABetterErrorMessage } from "./errors";
 import { createMintAccount } from "./tokens";
 
-jest.mock("./functions");
+// jest.mock("./functions");
 
 dotenv.config();
 
@@ -160,11 +160,12 @@ describe(`mainnet integration tests`, () => {
     `We can verify Vaheh`,
     async () => {
       const claims = await verifyWallet(
+        // We are connected to Metaplex as Mike
         mainNetConnection,
-        // Connect to Metaplex as Mike
         mikeKeypair,
         new PublicKey(PORTAL_IDENTITY_TOKEN_ISSUER_WALLET),
-        new PublicKey(VAHEHS_WALLET)
+        new PublicKey(VAHEHS_WALLET),
+        true
       );
       expect(claims).toEqual({
         familyName: "Hatami",
