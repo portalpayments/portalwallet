@@ -35,7 +35,7 @@ import {
 import type {
   BasicTokenAccount,
   NonFungibleTokenMetadataStandard,
-  TokenMetaData,
+  OldNonStandardTokenMetaData,
   VerifiedClaimsForIndividual,
   VerifiedClaimsForOrganization,
 } from "./types";
@@ -206,7 +206,7 @@ export const verifyWallet = async (
     async (identityTokens) => {
       const metadata = (await http.get(identityTokens.uri)) as
         | NonFungibleTokenMetadataStandard
-        | TokenMetaData;
+        | OldNonStandardTokenMetaData;
       return metadata;
     }
   );

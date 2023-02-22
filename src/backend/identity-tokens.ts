@@ -47,7 +47,7 @@ import type {
   VerifiedClaimsForIndividual,
   VerifiedClaimsForOrganization,
   NonFungibleTokenMetadataStandard,
-  TokenMetaData,
+  OldNonStandardTokenMetaData,
 } from "./types";
 import { makeTransaction } from "./tokens";
 import * as http from "../lib/http-client";
@@ -429,13 +429,15 @@ export const getIdentityTokensFromWallet = async (
   return identityTokens;
 };
 
-const isOldIdentityToken = (object: object): object is TokenMetaData => {
+const isOldIdentityToken = (
+  object: object
+): object is OldNonStandardTokenMetaData => {
   // This isn't a standard NFT metadata key, was used by an old version of portal identity token
   return Object.hasOwn(object, "version");
 };
 
 export const getIndividualClaimsFromNFTMetadata = (
-  nftMetadata: NonFungibleTokenMetadataStandard | TokenMetaData,
+  nftMetadata: NonFungibleTokenMetadataStandard | OldNonStandardTokenMetaData,
   wallet: PublicKey,
   allowOldIdentityToken: boolean
 ): VerifiedClaimsForIndividual | null => {

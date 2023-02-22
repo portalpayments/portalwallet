@@ -66,8 +66,8 @@ export interface ExpandedNFT {
 }
 
 // TODO: retire in favour of NonFungibleTokenMetadataStandard below
-// and update verification to handle the new standard
-export interface TokenMetaData {
+// Once we no longer use this for demos.
+export interface OldNonStandardTokenMetaData {
   version: number;
   issuedAgainst: string;
   claims: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization;

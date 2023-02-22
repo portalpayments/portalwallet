@@ -38,6 +38,7 @@ import {
   MIKES_USDC_ACCOUNT,
   MINUTE,
   USDC_MAINNET_MINT_ACCOUNT,
+  GREGS_WALLET,
 } from "./constants";
 import { getCurrencyBySymbol } from "./solana-functions";
 import {
@@ -170,7 +171,29 @@ describe(`mainnet integration tests`, () => {
       expect(claims).toEqual({
         familyName: "Hatami",
         givenName: "Vaheh",
-        imageUrl: expect.stringMatching(/https:\/\/arweave.net\/.*/),
+        imageUrl: expect.stringMatching(/https:\/\/.*/),
+        type: "INDIVIDUAL",
+      });
+    },
+    // Arweave can be slow
+    10 * SECONDS
+  );
+
+  test(
+    `We can verify Greg (Greg uses the old token format)`,
+    async () => {
+      const claims = await verifyWallet(
+        // We are connected to Metaplex as Mike
+        mainNetConnection,
+        mikeKeypair,
+        new PublicKey(PORTAL_IDENTITY_TOKEN_ISSUER_WALLET),
+        new PublicKey(GREGS_WALLET),
+        true
+      );
+      expect(claims).toEqual({
+        familyName: "Gotsis",
+        givenName: "Gregory",
+        imageUrl: expect.stringMatching(/https:\/\/.*/),
         type: "INDIVIDUAL",
       });
     },
