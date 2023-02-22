@@ -9,30 +9,10 @@
 import { promises as fs } from "fs";
 import { SECONDS } from "./constants";
 import Arweave from "arweave";
+import type { ContentType } from "./types";
+import { fileNameToContentType } from "./solana-functions";
 
 const OK = 200;
-
-export const fileNameToContentType = (fileName: string) => {
-  let contentType: "image/png" | "image/jpeg" | "image/svg+xml" | null = null;
-
-  if (fileName.endsWith(".png")) {
-    contentType = "image/png";
-  }
-
-  if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
-    contentType = "image/jpeg";
-  }
-
-  if (fileName.endsWith(".svg")) {
-    contentType = "image/svg+xml";
-  }
-
-  if (!contentType) {
-    throw new Error(`Could not determine Content Type for ${fileName}`);
-  }
-
-  return contentType;
-};
 
 // See https://solanacookbook.com/references/nfts.html#upload-to-arweave
 export const uploadImageToArweave = async (fileName: string) => {

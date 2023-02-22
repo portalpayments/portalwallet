@@ -16,7 +16,7 @@ import { Keypair } from "@solana/web3.js";
 import base58 from "bs58";
 import { log } from "console";
 import { mintToCurrencyMap } from "./mint-to-currency-map";
-import type { CurrencyDetails } from "./types";
+import type { ContentType, CurrencyDetails } from "./types";
 
 // We could also use 'bs58' but have to convert string to bytes first
 export const cleanPhrase = (phrase: string) => {
@@ -67,4 +67,22 @@ export const getCurrencyByMint = (mint: string) => {
 export const getCurrencySymbolByMint = (mint: string) => {
   const currency = getCurrencyByMint(mint);
   return currency.symbol;
+};
+
+export const fileNameToContentType = (fileName: string): ContentType => {
+  const extension = fileName.split(".").at(-1);
+
+  if (extension === "png") {
+    return "image/png";
+  }
+
+  if (extension === "jpg" || extension === "jpeg") {
+    return "image/jpeg";
+  }
+
+  if (extension === "svg") {
+    return "image/svg+xml";
+  }
+
+  throw new Error(`Could not determine Content Type for ${fileName}`);
 };

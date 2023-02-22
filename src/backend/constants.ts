@@ -8,8 +8,6 @@
 //
 import { clusterApiUrl, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { BN as BigNumber } from "bn.js";
-import type { Currency, CurrencyDetails } from "../backend/types";
-import { mintToCurrencyMap } from "./mint-to-currency-map";
 
 export const IDENTITY_TOKEN_NAME = "Portal Identity Token";
 

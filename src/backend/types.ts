@@ -9,6 +9,8 @@
 import type { PublicKey } from "@solana/web3.js";
 import type { mintToCurrencyMap } from "../backend/mint-to-currency-map";
 
+export type ContentType = "image/png" | "image/jpeg" | "image/svg+xml";
+
 // Shouldn't be necessary but the metaplex will return an array of 3 possible data types
 export interface ExpandedNFT {
   model: string;
@@ -71,9 +73,9 @@ export interface TokenMetaData {
   claims: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization;
 }
 
-// TODO: see above
 // From https://docs.metaplex.com/programs/token-metadata/token-standard#the-non-fungible-standard
-// We could also use JsonMetadata<MetaplexFile | string>;
+// Note we don't currently know which fields are required / optional
+// See https://github.com/metaplex-foundation/metaplex/issues/2284
 export interface NonFungibleTokenMetadataStandard {
   name: string;
   description: string;
@@ -83,6 +85,12 @@ export interface NonFungibleTokenMetadataStandard {
     trait_type: string;
     value: string;
   }>;
+  properties: {
+    files: Array<{
+      uri: string;
+      type: ContentType;
+    }>;
+  };
 }
 
 // A token account, with just the properties we care about

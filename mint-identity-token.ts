@@ -24,18 +24,21 @@ dotenv.config();
 const WALLET_ADDRESS = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
 const GIVEN_NAME = "Micheal-Sean";
 const FAMILY_NAME = "MacCana";
-const IMAGE_FILE = "mike.jpg";
+const INDIVIDUAL_IMAGE_FILE = "mike.jpg";
+const IDENTITY_TOKEN_COVER_IMAGE_FILE =
+  "individual-identity-token-for-mike.png";
 
 // ------------------------------------------------------------------------------
 
 // Partial because we haven't filled in image URL yet
-const tokenContentsNoImageUrl: Omit<VerifiedClaimsForIndividual, "imageUrl"> = {
+const tokenClaimsNoImageUrl: Omit<VerifiedClaimsForIndividual, "imageUrl"> = {
   type: "INDIVIDUAL",
   givenName: GIVEN_NAME,
   familyName: FAMILY_NAME,
 };
 
-const ALREADY_UPLOADED_ARWEAVE_IMAGE = "https://i.imgur.com/8UJBQqd.jpg"; // null
+const ALREADY_UPLOADED_INDIVIDUAL_IMAGE = "https://i.imgur.com/W05AoFb.jpg"; // null;
+const ALREADY_UPLOADED_COVER_IMAGE = "https://i.imgur.com/GSCtECV.png"; // null;
 
 const main = async () => {
   log(`🎟️ Running Portal Identity token minter ...`);
@@ -53,32 +56,50 @@ const main = async () => {
   log(
     stringify({
       WALLET_ADDRESS,
-      tokenContents: tokenContentsNoImageUrl,
+      tokenClaims: tokenClaimsNoImageUrl,
+      coverImage: IDENTITY_TOKEN_COVER_IMAGE_FILE,
     })
   );
 
   const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
 
-  // Step 1. Upload image if necessary
-  let uploadedImageUrl: string | null = ALREADY_UPLOADED_ARWEAVE_IMAGE;
+  // Step 1a. Upload individual image if necessary
+  let uploadedIndividualImageUrl: string | null =
+    ALREADY_UPLOADED_INDIVIDUAL_IMAGE;
 
-  if (uploadedImageUrl) {
-    log(`🖼️ Using already-uploaded image`, uploadedImageUrl);
+  if (uploadedIndividualImageUrl) {
+    log(
+      `🖼️ Using already-uploaded individual image`,
+      uploadedIndividualImageUrl
+    );
   } else {
-    uploadedImageUrl = await uploadImageToArweave(IMAGE_FILE);
-    log(`🖼️ Uploaded image`, uploadedImageUrl);
+    uploadedIndividualImageUrl = await uploadImageToArweave(
+      INDIVIDUAL_IMAGE_FILE
+    );
+    log(`🖼️ Uploaded individual image`, uploadedIndividualImageUrl);
   }
 
-  const tokenContents: VerifiedClaimsForIndividual = {
-    ...tokenContentsNoImageUrl,
-    imageUrl: uploadedImageUrl,
+  // Step 1b. Upload cover image if necessary
+  let uploadedCoverImageUrl: string | null = ALREADY_UPLOADED_COVER_IMAGE;
+
+  if (uploadedCoverImageUrl) {
+    log(`🖼️ Using already-uploaded cover image`, uploadedCoverImageUrl);
+  } else {
+    uploadedCoverImageUrl = await uploadImageToArweave(INDIVIDUAL_IMAGE_FILE);
+    log(`🖼️ Uploaded cover image`, uploadedCoverImageUrl);
+  }
+
+  const tokenClaims: VerifiedClaimsForIndividual = {
+    ...tokenClaimsNoImageUrl,
+    imageUrl: uploadedIndividualImageUrl,
   };
 
   // Step 2. Mint token (using the identity token issuer wallet) and then move the minted token to the final receipient.
   let tokenCreateOutput = await mintIdentityToken(
     connection,
     walletAddress,
-    tokenContents,
+    tokenClaims,
+    uploadedCoverImageUrl,
     identityTokenIssuer,
     true
   );

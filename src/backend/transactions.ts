@@ -40,7 +40,7 @@ import { JUPITER, MEMO_PROGRAM, NOTE_PROGRAM, NOT_FOUND } from "./constants";
 // Proper solution is to get Dialect to fix.
 
 // ENABLE BELOW FOR TOKEN MINTER
-// let getReceiptForSimpleTransaction = () => null;
+// let getReceiptForSimpleTransaction = (_unused1, _unused2, _unused3) => null;
 // DISABLE BELOW FOR TOKEN MINTER
 import { getReceiptForSimpleTransaction } from "./receipts";
 

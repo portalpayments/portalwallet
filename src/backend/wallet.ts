@@ -28,7 +28,10 @@ import { asyncMap } from "./functions";
 import base58 from "bs58";
 import { AccountLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import type { RawAccount } from "@solana/spl-token";
-import { getIdentityTokensFromWallet } from "./identity-tokens";
+import {
+  getIdentityTokensFromWallet,
+  getIndividualClaimsFromNFTMetadata,
+} from "./identity-tokens";
 import type {
   BasicTokenAccount,
   TokenMetaData,
@@ -176,12 +179,12 @@ export const verifyWallet = async (
 ): Promise<
   VerifiedClaimsForIndividual | VerifiedClaimsForOrganization | null
 > => {
-  const walletString = wallet.toBase58();
+  log(`in verifywallet`);
 
   if (useCache) {
-    const cachedVerifiedClaims = VERIFIED_CLAIMS_BY_ADDRESS[walletString];
+    const cachedVerifiedClaims = VERIFIED_CLAIMS_BY_ADDRESS[wallet.toBase58()];
     if (cachedVerifiedClaims) {
-      log(`Found verified claims for ${walletString} in cache`);
+      log(`Found verified claims for ${wallet.toBase58()} in cache`);
       sleep(1 * SECOND);
       return cachedVerifiedClaims;
     }
@@ -198,7 +201,7 @@ export const verifyWallet = async (
     return null;
   }
 
-  const tokensMetadata = await asyncMap(
+  const metadataForIdentityTokens = await asyncMap(
     identityTokens,
     async (identityTokens) => {
       const metadata = (await http.get(identityTokens.uri)) as TokenMetaData;
@@ -206,27 +209,19 @@ export const verifyWallet = async (
     }
   );
 
-  const currentTokenMetadata = await tokensMetadata.filter((tokenMetadata) => {
-    // Don't support older, beta tokens.
-    if (tokenMetadata.version < LATEST_IDENTITY_TOKEN_VERSION) {
-      return false;
-    }
-    // Ensure the token is actually issued for this wallet
-    if (tokenMetadata.issuedAgainst !== walletString) {
-      return false;
-    }
-    return true;
-  });
 
-  if (!currentTokenMetadata.length) {
+  if (!metadataForIdentityTokens.length) {
     // TODO: this seems to fire even with verified wallets
     log(`No current identity token was issued to this wallet`);
     return null;
   }
 
-  const latestTokenMetadata = currentTokenMetadata?.[0];
+  const latestTokenMetadata = metadataForIdentityTokens?.[0];
 
-  return latestTokenMetadata.claims;
+  const verifiedClaims: VerifiedClaimsForIndividual =
+    getIndividualClaimsFromNFTMetadata(latestTokenMetadata, wallet);
+
+  return verifiedClaims;
 };
 
 export const getOlderTransactionSummaries = async (

@@ -7,7 +7,11 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import { Keypair } from "@solana/web3.js";
-import { cleanPhrase, secretKeyToHex } from "./solana-functions";
+import {
+  cleanPhrase,
+  fileNameToContentType,
+  secretKeyToHex,
+} from "./solana-functions";
 import {
   dirtyPersonalPhrase,
   slightlyDifferentDirtyPersonalPhrase,
@@ -39,5 +43,14 @@ describe(`secretKeyToHex`, () => {
     // Hex representation can be either 87 or 88 characters
     expect(result.length).toBeGreaterThanOrEqual(87);
     expect(result.length).toBeLessThan(89);
+  });
+});
+
+describe(`fileNameToContentType`, () => {
+  test(`gets content types correct`, () => {
+    const contentType = fileNameToContentType(
+      "individual-identity-token-for-mike.svg"
+    );
+    expect(contentType).toEqual("image/svg+xml");
   });
 });

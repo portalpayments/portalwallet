@@ -45,11 +45,11 @@ import {
 import type {
   VerifiedClaimsForIndividual,
   VerifiedClaimsForOrganization,
-  TokenMetaData,
+  NonFungibleTokenMetadataStandard,
 } from "./types";
 import { makeTransaction } from "./tokens";
-import { connect } from "./wallet";
 import * as http from "../lib/http-client";
+import { fileNameToContentType } from "./solana-functions";
 
 export const getMetaplex = (
   connection: Connection,
@@ -83,27 +83,29 @@ const getAddressFromProblem = (problem: string): string | null => {
 export const mintIdentityToken = async (
   connection: Connection,
   recipientWallet: PublicKey,
-  tokenContents: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization,
+  tokenClaims: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization,
+  tokenCoverImage: string,
   identityTokenIssuer: Keypair,
   isProduction: boolean
 ) => {
   log(`🏦 Minting identity token...`);
 
-  // TODO: use NonFungibleTokenMetadataStandard, maybe (it's kinda aimed at digital art)
-  let tokenMetaData: TokenMetaData | null = null;
-  if (tokenContents.type === "INDIVIDUAL") {
+  let tokenMetaData: NonFungibleTokenMetadataStandard | null = null;
+  if (tokenClaims.type === "INDIVIDUAL") {
     tokenMetaData = makeTokenMetaDataForIndividual(
       recipientWallet,
-      tokenContents.givenName,
-      tokenContents.familyName,
-      tokenContents.imageUrl
+      tokenClaims.givenName,
+      tokenClaims.familyName,
+      tokenClaims.imageUrl,
+      tokenCoverImage
     );
   } else {
-    if (tokenContents.type === "ORGANIZATION") {
+    if (tokenClaims.type === "ORGANIZATION") {
       tokenMetaData = makeTokenMetaDataForOrganization(
         recipientWallet,
-        tokenContents.legalName,
-        tokenContents.imageUrl
+        tokenClaims.legalName,
+        tokenClaims.imageUrl,
+        tokenCoverImage
       );
     }
     if (tokenMetaData === null) {
@@ -173,9 +175,9 @@ export const mintIdentityToken = async (
 
   log(
     `🎟️ The token for ${
-      tokenContents.type === "INDIVIDUAL"
-        ? tokenContents.givenName
-        : tokenContents.legalName
+      tokenClaims.type === "INDIVIDUAL"
+        ? tokenClaims.givenName
+        : tokenClaims.legalName
     } has been created, senderTokenAccount is ${
       tokenCreateOutput.tokenAddress
     }.`
@@ -244,25 +246,124 @@ export const getAllNftMetadatasFromAWallet = async (
   return findNftsByOwnerOutput;
 };
 
-// TODO: comply with https://docs.metaplex.com/programs/token-metadata/token-standard
-// See types.ts
 export const makeTokenMetaDataForIndividual = (
   wallet: PublicKey,
   givenName: string,
   familyName: string,
-  imageUrl: string
-): TokenMetaData => {
+  userImageUrl: string,
+  tokenCoverImageUrl: string
+): NonFungibleTokenMetadataStandard => {
+  const userImageContentType = fileNameToContentType(userImageUrl);
+  const coverImageContentType = fileNameToContentType(tokenCoverImageUrl);
   return {
-    version: LATEST_IDENTITY_TOKEN_VERSION,
-    // In future this can be removed, however right now Solana
-    // token standard doesn't support non-transferrable tokens
-    // So check that that token wasn't issued against another wallet and transferred
-    issuedAgainst: wallet.toBase58(),
-    claims: {
-      type: "INDIVIDUAL",
-      givenName,
-      familyName,
-      imageUrl,
+    name: IDENTITY_TOKEN_NAME,
+    description:
+      "Verification of real-world identity for Solana payments and apps",
+    image: tokenCoverImageUrl,
+    external_url: "https://getportal.app",
+    attributes: [
+      {
+        trait_type: "type",
+        value: "INDIVIDUAL",
+      },
+      // Eg: https://find-and-update.company-information.service.gov.uk/search?q=portal+payments
+      {
+        trait_type: "givenName",
+        value: givenName,
+      },
+      {
+        trait_type: "familyName",
+        value: familyName,
+      },
+      {
+        trait_type: "isNotable",
+        value: String(false),
+      },
+      {
+        trait_type: "version",
+        value: String(LATEST_IDENTITY_TOKEN_VERSION),
+      },
+      // In future this can be removed, however right now Solana
+      // token standard doesn't support non-transferrable tokens
+      // So check that that token wasn't issued against another wallet and transferred
+      {
+        trait_type: "issuedAgainst",
+        value: wallet.toBase58(),
+      },
+    ],
+    properties: {
+      files: [
+        {
+          uri: tokenCoverImageUrl,
+          type: coverImageContentType,
+        },
+        {
+          uri: userImageUrl,
+          type: userImageContentType,
+        },
+      ],
+    },
+  };
+};
+
+export const makeTokenMetaDataForOrganization = (
+  wallet: PublicKey,
+  legalName: string,
+  companyImageUrl: string,
+  tokenCoverImageUrl: string
+): NonFungibleTokenMetadataStandard => {
+  const companyImageContentType = fileNameToContentType(tokenCoverImageUrl);
+  return {
+    name: IDENTITY_TOKEN_NAME,
+    description:
+      "Verification of real-world identity for Solana payments and apps",
+    image: tokenCoverImageUrl,
+    external_url: "https://getportal.app",
+    attributes: [
+      {
+        trait_type: "type",
+        value: "ORGANIZATION",
+      },
+      // Eg: https://find-and-update.company-information.service.gov.uk/search?q=portal+payments
+      {
+        trait_type: "legalName",
+        value: legalName,
+      },
+      {
+        trait_type: "jurisdiction",
+        value: "Country",
+      },
+      {
+        trait_type: "country",
+        value: "United Kingdom",
+      },
+      {
+        trait_type: "isNotable",
+        value: String(false),
+      },
+      {
+        trait_type: "version",
+        value: String(LATEST_IDENTITY_TOKEN_VERSION),
+      },
+      // In future this can be removed, however right now Solana
+      // token standard doesn't support non-transferrable tokens
+      // So check that that token wasn't issued against another wallet and transferred
+      {
+        trait_type: "issuedAgainst",
+        value: wallet.toBase58(),
+      },
+    ],
+    properties: {
+      files: [
+        {
+          uri: tokenCoverImageUrl,
+          type: "image/svg+xml",
+        },
+        {
+          uri: companyImageUrl,
+          type: companyImageContentType,
+        },
+      ],
     },
   };
 };
@@ -311,6 +412,7 @@ export const getIdentityTokensFromWallet = async (
   identityTokenIssuerPublicKey: PublicKey,
   wallet: PublicKey
 ) => {
+  log(`in getIdentityTokensFromWallet`);
   const metaplex = getMetaplex(connection, metaplexConnectionKeypair);
   const nfts = await metaplex.nfts().findAllByOwner({
     owner: wallet,
@@ -326,25 +428,49 @@ export const getIdentityTokensFromWallet = async (
   return identityTokens;
 };
 
-export const makeTokenMetaDataForOrganization = (
-  wallet: PublicKey,
-  legalName: string,
-  imageUrl: string
-): TokenMetaData => {
+export const getIndividualClaimsFromNFTMetadata = (
+  nftMetadata,
+  wallet: PublicKey
+) => {
+  // This isn't a standard NFT metadata key, was used by an old version of portal identity tokem
+  if (nftMetadata.version) {
+    return null;
+  }
+
+  if (!nftMetadata.attributes) {
+    throw new Error(`No attributes in this NFT`);
+  }
+  const attributes = Object.fromEntries(
+    nftMetadata.attributes.map((attribute) => {
+      return [attribute.trait_type, attribute.value];
+    })
+  );
+
+  if (!attributes.version) {
+    log(`No version for this identity token`);
+    return null;
+  }
+
+  if (Number(attributes.version) < LATEST_IDENTITY_TOKEN_VERSION) {
+    log(`Old version version for this identity token`);
+    return null;
+  }
+
+  // Ensure the token is actually issued for this wallet
+  // TODO: we can eventually remove this once token 2022 becomes standard
+  if (attributes.issuedAgainst !== wallet.toBase58()) {
+    log(`Identity token not issued to this wallet`);
+    return null;
+  }
+
+  // First image is always the NFT cover (shown in calleries etc)
+  // Second image is the individual picture
+  const individualImageUrl = nftMetadata.properties.files[1].uri;
+
   return {
-    version: LATEST_IDENTITY_TOKEN_VERSION,
-    // In future this can be removed, however right now Solana
-    // token standard doesn't support non-transferrable tokens
-    // So check that that token wasn't issued against another wallet and transferred
-    issuedAgainst: wallet.toBase58(),
-    claims: {
-      type: "ORGANIZATION",
-      // Eg: https://find-and-update.company-information.service.gov.uk/search?q=portal+payments
-      legalName,
-      jurisdiction: "Country",
-      country: "United Kingdom",
-      isNotable: false,
-      imageUrl,
-    },
+    givenName: attributes.givenName,
+    familyName: attributes.familyName,
+    imageUrl: individualImageUrl,
+    type: attributes.type,
   };
 };

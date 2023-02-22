@@ -10,6 +10,7 @@ import { Metaplex, Pda } from "@metaplex-foundation/js";
 import {
   getAllNftMetadatasFromAWallet,
   getIdentityTokensFromWallet,
+  getIndividualClaimsFromNFTMetadata,
   getMetaplex,
   makeTokenMetaDataForIndividual,
   mintIdentityToken,
@@ -40,6 +41,7 @@ import base58 from "bs58";
 import { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, makeTransaction } from "./tokens";
 import type { VerifiedClaimsForIndividual } from "./types";
+import type { type } from "os";
 
 // Arweave currently 400ing and also
 // we don't want to upload images to public arweave routinely
@@ -88,12 +90,13 @@ describe(`identity tokens`, () => {
     async () => {
       await putSolIntoWallet(connection, alice.publicKey, 1_000_000_000);
 
+      const fakeUrl = "https://arweave.net/fakeImageForUnitTests.png";
+
       const tokenContents: VerifiedClaimsForIndividual = {
         type: "INDIVIDUAL",
         givenName: "Alice",
         familyName: "Smith",
-        imageUrl:
-          "https://arweave.net/jHaEN1AuV87osodSw63QgTsYgH0JcmA6CG0T4Zcg56c",
+        imageUrl: fakeUrl,
       };
 
       const name = IDENTITY_TOKEN_NAME;
@@ -102,6 +105,7 @@ describe(`identity tokens`, () => {
         connection,
         alice.publicKey,
         tokenContents,
+        fakeUrl,
         testIdentityTokenIssuer,
         false
       );
@@ -140,15 +144,59 @@ describe(`identity tokens`, () => {
           model: "nft",
           updateAuthorityAddress,
           json: {
-            claims: {
-              familyName: "Smith",
-              givenName: "Alice",
-              imageUrl: expect.any(String),
-              type: "INDIVIDUAL",
+            name,
+            description:
+              "Verification of real-world identity for Solana payments and apps",
+            image: "https://arweave.net/fakeImageForUnitTests.png",
+            external_url: "https://getportal.app",
+            attributes: [
+              {
+                trait_type: "type",
+                value: "INDIVIDUAL",
+              },
+              {
+                trait_type: "givenName",
+                value: "Alice",
+              },
+              {
+                trait_type: "familyName",
+                value: "Smith",
+              },
+              {
+                trait_type: "isNotable",
+                value: "false",
+              },
+              {
+                trait_type: "version",
+                value: "7",
+              },
+              {
+                trait_type: "issuedAgainst",
+                value: alice.publicKey.toBase58(),
+              },
+            ],
+            properties: {
+              files: [
+                {
+                  uri: "https://arweave.net/fakeImageForUnitTests.png",
+                  type: "image/png",
+                },
+                {
+                  uri: "https://arweave.net/fakeImageForUnitTests.png",
+                  type: "image/png",
+                },
+              ],
             },
-            issuedAgainst: expect.any(String),
-            version: 7,
           },
+
+          // claims: {
+          //   familyName: "Smith",
+          //   givenName: "Alice",
+          //   imageUrl: expect.any(String),
+          //   type: "INDIVIDUAL",
+          // },
+          // issuedAgainst: expect.any(String),
+          // version: 7,
           jsonLoaded: true,
           name,
           symbol: "",
@@ -236,6 +284,66 @@ describe(`identity tokens`, () => {
     // Slow test as we're talking to the local validator
     30 * SECONDS
   );
+
+  test(`we can extract claims from token metadata`, () => {
+    const nftMetadata = {
+      name: "Portal Identity Token",
+      description:
+        "Verification of real-world identity for Solana payments and apps",
+      image: "https://i.imgur.com/GSCtECV.png",
+      external_url: "https://getportal.app",
+      attributes: [
+        {
+          trait_type: "type",
+          value: "INDIVIDUAL",
+        },
+        {
+          trait_type: "givenName",
+          value: "Micheal-Sean",
+        },
+        {
+          trait_type: "familyName",
+          value: "MacCana",
+        },
+        {
+          trait_type: "isNotable",
+          value: "false",
+        },
+        {
+          trait_type: "version",
+          value: "7",
+        },
+        {
+          trait_type: "issuedAgainst",
+          value: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        },
+      ],
+      properties: {
+        files: [
+          {
+            uri: "https://i.imgur.com/GSCtECV.png",
+            type: "image/png",
+          },
+          {
+            uri: "https://i.imgur.com/W05AoFb.jpg",
+            type: "image/jpeg",
+          },
+        ],
+      },
+    };
+
+    const result = getIndividualClaimsFromNFTMetadata(
+      nftMetadata,
+      new PublicKey("5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM")
+    );
+
+    expect(result).toEqual({
+      familyName: "MacCana",
+      givenName: "Micheal-Sean",
+      imageUrl: expect.stringMatching(/https:\/\/.*/),
+      type: "INDIVIDUAL",
+    });
+  });
 
   test(`We can retrieve the NFT we just minted`, async () => {
     const metaplex = getMetaplex(connection, testIdentityTokenIssuer);
