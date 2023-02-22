@@ -7,8 +7,13 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import { get as getFromStore, writable, type Writable } from "svelte/store";
-import { PublicKey, type Connection, type Keypair } from "@solana/web3.js";
-import type { AccountSummary, Collectable, Contact } from "../backend/types";
+import type { PublicKey, Connection, Keypair } from "@solana/web3.js";
+import type {
+  AccountSummary,
+  Collectable,
+  Contact,
+  NonFungibleTokenMetadataStandard,
+} from "../backend/types";
 import { asyncMap, log, sleep, stringify } from "../backend/functions";
 import uniqBy from "lodash.uniqby";
 import {
@@ -18,12 +23,7 @@ import {
   getTokenAccountSummaries,
   getTransactionSummariesForAddress,
 } from "../backend/wallet";
-import {
-  MILLISECONDS,
-  NOT_FOUND,
-  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET,
-  SECONDS,
-} from "../backend/constants";
+import { MILLISECONDS, NOT_FOUND, SECONDS } from "../backend/constants";
 import { getCurrencyBySymbol } from "../backend/solana-functions";
 import base58 from "bs58";
 import { getAllNftMetadatasFromAWallet } from "../backend/identity-tokens";
@@ -36,10 +36,6 @@ let connection: Connection | null;
 let keyPair: Keypair | null;
 
 const SERVICE_WORKER = globalThis?.navigator?.serviceWorker || null;
-
-// We do optimistic confirmsations on transactions. but we need to wait a few minutes for a
-// proper confirmed transaction ID - in testing, 3 seconds was too little so let's use 5 seconds.
-const TRANSACTION_CONFIRM_DELAY = 5 * SECONDS;
 
 const IS_CHROME_EXTENSION =
   globalThis?.location?.protocol === "chrome-extension:";
@@ -119,20 +115,24 @@ const updateCollectables = async () => {
     keyPair.publicKey
   );
 
-  const collectablesUnfiltered = await asyncMap(
+  const collectablesUnfiltered: Array<Collectable> = await asyncMap(
     allNftsFromAWallet,
-    async (nft) => {
+    async (nft, nftIndex) => {
       // We have to force content type as nftstorage.link returns incorrect types
       // See https://twitter.com/mikemaccana/status/1620140384302288896?s=20&t=gP3XffhtDkUiaYQvSph8vg
-      const rawNFTData = await http.get(nft.uri, http.CONTENT_TYPES.JSON);
-      const firstFile = rawNFTData?.properties?.files?.[0];
+      const rawNFTMetaData: NonFungibleTokenMetadataStandard = await http.get(
+        nft.uri,
+        http.CONTENT_TYPES.JSON
+      );
+      const firstFile = rawNFTMetaData?.properties?.files?.[0];
       // Sometimes 'files' is an empty list, but 'image' still exists
       // See https://crossmint.myfilebase.com/ipfs/bafkreig5nuz3qswtnipclnhdw4kbdn5s6fpujtivyt4jf3diqm4ivpmv5u
-      const image = firstFile?.uri || rawNFTData.image || null;
+      const image = firstFile?.uri || rawNFTMetaData.image || null;
       const type = firstFile?.type || null;
       return {
-        name: rawNFTData.name,
-        description: rawNFTData.description,
+        id: nftIndex,
+        name: rawNFTMetaData.name,
+        description: rawNFTMetaData.description,
         image,
         type,
       };
