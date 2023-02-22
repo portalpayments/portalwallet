@@ -1,9 +1,10 @@
 <script lang="ts">
   import { log, isEmpty } from "../../backend/functions";
-  import verifiedIcon from "../../assets/verified.svg";
+  import verifiedIndividualIcon from "../../assets/verified.svg";
+  import verifiedOrganizationIcon from "../../assets/verified-organization.svg";
   import AnonymousImage from "../../assets/anonymous.svg";
 
-  import type { Contact } from "../types";
+  import type { Contact } from "../../backend/types";
 
   export let onClick;
 
@@ -17,14 +18,27 @@
         <img class="avatar" src={AnonymousImage} alt="Anonymous" />
         Anonymous
       {:else}
-        <img
-          class="avatar"
-          src={user.verifiedClaims.imageUrl}
-          alt="{user.verifiedClaims.givenName} {user.verifiedClaims.familyName}"
-        />
-
-        {user.verifiedClaims.givenName}
-        <img class="verified" src={verifiedIcon} alt="Verified" />
+        {#if user.verifiedClaims.type === "INDIVIDUAL"}
+          <img
+            class="avatar"
+            src={user.verifiedClaims.imageUrl}
+            alt="{user.verifiedClaims.givenName} {user.verifiedClaims
+              .familyName}"
+          />
+          {user.verifiedClaims.givenName}
+          <img class="verified" src={verifiedIndividualIcon} alt="Verified" />
+        {/if}
+        {#if user.verifiedClaims.type === "ORGANIZATION"}
+          <img
+            class="avatar"
+            src={user.verifiedClaims.imageUrl}
+            alt="{user.verifiedClaims.legalName} ({user.verifiedClaims
+              .country})"
+          />
+          {user.verifiedClaims.legalName}
+          ({user.verifiedClaims.country})
+          <img class="verified" src={verifiedOrganizationIcon} alt="Verified" />
+        {/if}
       {/if}
     </button>
   </div>
