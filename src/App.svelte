@@ -2,6 +2,7 @@
   import HomeScreen from "./lib/HomePage/HomePage.svelte";
   import Navbar from "./lib/Navbar/Navbar.svelte";
   import Collectables from "./lib/Collectables/Collectables.svelte";
+  import Collectable from "./lib/Collectables/Collectable.svelte";
   import ContactsPage from "./lib/Contacts/ContactsPage.svelte";
   import Onboarding from "./lib/Onboarding/Onboarding.svelte";
   import SendPage from "./lib/Send/SendPage.svelte";
@@ -84,6 +85,7 @@
     </Route>
     <Route path="settings"><Settings /></Route>
     <Route path="contacts/:address"><ContactAndMessages /></Route>
+    <Route path="collectables/:index"><Collectable /></Route>
     <Route primary={false}>
       <div class="header-and-features">
         {#if currentFeature === 0}

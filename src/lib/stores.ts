@@ -26,7 +26,11 @@ import {
 import { MILLISECONDS, NOT_FOUND, SECONDS } from "../backend/constants";
 import { getCurrencyBySymbol } from "../backend/solana-functions";
 import base58 from "bs58";
-import { getAllNftMetadatasFromAWallet } from "../backend/identity-tokens";
+import {
+  getAllNftMetadatasFromAWallet,
+  getAttributesFromNFT,
+  getCollectables,
+} from "../backend/identity-tokens";
 import * as http from "./http-client";
 import { summarizeTransaction } from "../backend/transactions";
 import { runRepeatedlyWithTimeout } from "../backend/run-with-timeout";
@@ -109,40 +113,14 @@ const updateCollectables = async () => {
   if (!keyPair) {
     return;
   }
+
   const allNftsFromAWallet = await getAllNftMetadatasFromAWallet(
     connection,
     keyPair,
     keyPair.publicKey
   );
 
-  const collectablesUnfiltered: Array<Collectable> = await asyncMap(
-    allNftsFromAWallet,
-    async (nft, nftIndex) => {
-      // We have to force content type as nftstorage.link returns incorrect types
-      // See https://twitter.com/mikemaccana/status/1620140384302288896?s=20&t=gP3XffhtDkUiaYQvSph8vg
-      const rawNFTMetaData: NonFungibleTokenMetadataStandard = await http.get(
-        nft.uri,
-        http.CONTENT_TYPES.JSON
-      );
-      const firstFile = rawNFTMetaData?.properties?.files?.[0];
-      // Sometimes 'files' is an empty list, but 'image' still exists
-      // See https://crossmint.myfilebase.com/ipfs/bafkreig5nuz3qswtnipclnhdw4kbdn5s6fpujtivyt4jf3diqm4ivpmv5u
-      const image = firstFile?.uri || rawNFTMetaData.image || null;
-      const type = firstFile?.type || null;
-      return {
-        id: nftIndex,
-        name: rawNFTMetaData.name,
-        description: rawNFTMetaData.description,
-        image,
-        type,
-      };
-    }
-  );
-
-  // Filter out non-collectible NFTs
-  const collectables = collectablesUnfiltered.filter((collectable) => {
-    return Boolean(collectable.image);
-  });
+  const collectables = await getCollectables(allNftsFromAWallet);
 
   collectablesStore.set(collectables);
 };

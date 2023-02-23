@@ -255,6 +255,7 @@ export const getTransactionsForAddress = async (
   if (until) {
     options.until = until;
   }
+
   const confirmedSignatureInfos = await connection.getSignaturesForAddress(
     address,
     options

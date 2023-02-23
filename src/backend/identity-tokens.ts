@@ -28,6 +28,7 @@ import {
   bundlrStorage,
   type CreateNftOutput,
   toTokenAccount,
+  type FindNftsByOwnerOutput,
 } from "@metaplex-foundation/js";
 import {
   Connection,
@@ -48,6 +49,7 @@ import type {
   VerifiedClaimsForOrganization,
   NonFungibleTokenMetadataStandard,
   OldNonStandardTokenMetaData,
+  Collectable,
 } from "./types";
 import { makeTransaction } from "./tokens";
 import * as http from "../lib/http-client";
@@ -370,42 +372,45 @@ export const makeTokenMetaDataForOrganization = (
   };
 };
 
-export const getFullNFTsFromWallet = async (
-  keypair: Keypair,
-  connection: Connection,
-  address: PublicKey
-) => {
-  const metaplex = new Metaplex(connection);
-  metaplex.use(keypairIdentity(keypair));
+export const getCollectables = async (
+  allNftsFromAWallet: FindNftsByOwnerOutput
+): Promise<Array<Collectable>> => {
+  const collectablesUnfiltered: Array<Collectable> = await asyncMap(
+    allNftsFromAWallet,
+    async (nft, nftIndex) => {
+      // We have to force content type as nftstorage.link returns incorrect types
+      // See https://twitter.com/mikemaccana/status/1620140384302288896?s=20&t=gP3XffhtDkUiaYQvSph8vg
+      const rawNFTMetaData: NonFungibleTokenMetadataStandard = await http.get(
+        nft.uri,
+        http.CONTENT_TYPES.JSON
+      );
 
-  const owner = new PublicKey(address);
-  const nftMetadatas = await metaplex.nfts().findAllByOwner({
-    owner,
-  });
+      const firstFile = rawNFTMetaData?.properties?.files?.[0];
+      // Sometimes 'files' is an empty list, but 'image' still exists
+      // See https://crossmint.myfilebase.com/ipfs/bafkreig5nuz3qswtnipclnhdw4kbdn5s6fpujtivyt4jf3diqm4ivpmv5u
+      const image = firstFile?.uri || rawNFTMetaData.image || null;
+      const type = firstFile?.type || null;
 
-  const nfts = await asyncMap(nftMetadatas, async (metadata) => {
-    return (
-      metaplex
-        .nfts()
-        // TODO: hacking, this is probably a bad idea but apparently .findAllByOwner() may return a bunch of different types of objects
-        // @ts-ignore
-        .load({ metadata })
-    );
-  });
+      const attributes = getAttributesFromNFT(rawNFTMetaData);
 
-  const nftData = await asyncMap(nfts, async (nft) => {
-    try {
-      const responseBody = await http.get(nft.uri);
-      const datum = responseBody;
-      return datum;
-    } catch (thrownObject) {
-      const error = thrownObject as Error;
-      log(error.message);
-      return null;
+      return {
+        // TODO: we used inde as it seems unique. We could use something else.
+        id: nftIndex,
+        name: rawNFTMetaData.name,
+        description: rawNFTMetaData.description,
+        image,
+        type,
+        attributes,
+      };
     }
+  );
+
+  // Filter out non-collectable NFTs
+  const collectables = collectablesUnfiltered.filter((collectable) => {
+    return Boolean(collectable.image);
   });
 
-  return nftData;
+  return collectables;
 };
 
 export const getIdentityTokensFromWallet = async (
@@ -434,6 +439,32 @@ const isOldIdentityToken = (
 ): object is OldNonStandardTokenMetaData => {
   // This isn't a standard NFT metadata key, was used by an old version of portal identity token
   return Object.hasOwn(object, "version");
+};
+
+// NFT metadata has arrays of trait_type/value objects instead of a single object with keys and values
+export const getAttributesFromNFT = (
+  metadata: NonFungibleTokenMetadataStandard
+): Record<string, string | boolean | number> => {
+  if (!metadata.attributes) {
+    return {};
+  }
+  const attributes = Object.fromEntries(
+    metadata.attributes
+      // Sort by trait type first
+      // Even though we're making an object, key ordering will likely to be stable
+      .sort((a, b) => a.trait_type.localeCompare(b.trait_type))
+      .map((attribute) => {
+        let value: string | boolean | number = attribute.value;
+        if (value === "true") {
+          value = true;
+        }
+        if (value === "false") {
+          value = false;
+        }
+        return [attribute.trait_type, attribute.value];
+      })
+  );
+  return attributes;
 };
 
 export const getIndividualClaimsFromNFTMetadata = (
@@ -469,11 +500,7 @@ export const getIndividualClaimsFromNFTMetadata = (
   if (!nftMetadata.attributes) {
     throw new Error(`No attributes in this NFT`);
   }
-  const attributes = Object.fromEntries(
-    nftMetadata.attributes.map((attribute) => {
-      return [attribute.trait_type, attribute.value];
-    })
-  );
+  const attributes = getAttributesFromNFT(nftMetadata);
 
   if (!attributes.version) {
     log(`No version for this identity token`);
@@ -500,8 +527,8 @@ export const getIndividualClaimsFromNFTMetadata = (
   // TODO: add organization support
 
   return {
-    givenName: attributes.givenName,
-    familyName: attributes.familyName,
+    givenName: String(attributes.givenName),
+    familyName: String(attributes.familyName),
     imageUrl: individualImageUrl,
     type: tokenType,
   };

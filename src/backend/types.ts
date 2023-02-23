@@ -272,6 +272,8 @@ export interface Collectable {
   name: string;
   description: string;
   image: string;
+  type: ContentType;
+  attributes: Record<string, string | number | boolean>;
 }
 
 export interface Contact {

@@ -3,7 +3,7 @@
   import Heading from "../Shared/Heading.svelte";
   import type { Collectable } from "../../backend/types";
   import SkeletonGallery from "../Shared/Skeletons/SkeletonGallery.svelte";
-
+  import { Link } from "svelte-navigator";
   import { collectablesStore } from "../stores";
 
   let isLoading = false;
@@ -25,20 +25,22 @@
 {:else if collectables.length}
   <div class="nfts">
     {#each collectables as collectable}
-      <div class="collectable">
-        <img
-          src={collectable.image}
-          alt={collectable.description}
-          class="shadow"
-        />
-        <div class="description">
-          <div class="name">{collectable.name}</div>
+      <Link to={`/collectables/${collectable.id}`}>
+        <div class="collectable">
+          <img
+            src={collectable.image}
+            alt={collectable.description}
+            class="shadow"
+          />
+          <div class="description">
+            <div class="name">{collectable.name}</div>
+          </div>
         </div>
-      </div>
+      </Link>
     {/each}
   </div>
 {:else}
-  <div>No collectibles.</div>
+  <div>No collectables.</div>
 {/if}
 
 <style lang="scss">
