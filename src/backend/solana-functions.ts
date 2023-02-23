@@ -14,7 +14,6 @@ const NOTHING = "";
 
 import { Keypair } from "@solana/web3.js";
 import base58 from "bs58";
-import { log } from "console";
 import { mintToCurrencyMap } from "./mint-to-currency-map";
 import type { ContentType, CurrencyDetails } from "./types";
 
