@@ -79,9 +79,6 @@
   });
 
   const maybeLoadMoreTransactions = async (event) => {
-    if (!event) {
-      debugger;
-    }
     const element = event.target;
     if (!element) {
       log(`Ignoring scroll event with no event.target`);
