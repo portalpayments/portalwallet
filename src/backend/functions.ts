@@ -114,6 +114,39 @@ export const byDateNewestToOldest = (a, b) => {
   return -1;
 };
 
+export const isCamelCase = (string: string) => {
+  return /[a-z]+[A-Z][a-z]/.test(string);
+};
+
+export const camelToSentenceCase = (string: string) => {
+  const spaced = string
+    // Remove underscores
+    .replace("_", " ")
+    // Add space before uppercase camelHumps
+    .replace(/([A-Z])/g, " $1");
+
+  // Convert first character to uppercase and join it to the final string
+  const result = spaced.charAt(0).toUpperCase() + spaced.slice(1);
+  return result;
+};
+
+export const formatObjectKeys = (object: Record<string, unknown>) => {
+  const THRESHHOLD = 0.6;
+  const keys = Object.keys(object);
+  const keyCount = keys.length;
+  const camelCaseKeyCount = keys.map((key) => isCamelCase(key)).length;
+  // Check if it's camelcase
+  if (camelCaseKeyCount / keyCount > THRESHHOLD) {
+    const formattedObject = Object.fromEntries(
+      keys.map((key) => {
+        return [camelToSentenceCase(key), object[key]];
+      })
+    );
+    return formattedObject;
+  }
+  return object;
+};
+
 export const byDateOldestToNewest = (a, b) => {
   if (a.date === b.date) {
     return 0;

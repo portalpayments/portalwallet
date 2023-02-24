@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { log, stringify } from "../../backend/functions";
+  import { log, stringify, formatObjectKeys } from "../../backend/functions";
   import Heading from "../Shared/Heading.svelte";
   import type { Collectable } from "../../backend/types";
   import SkeletonGallery from "../Shared/Skeletons/SkeletonGallery.svelte";
@@ -17,7 +17,11 @@
 
   collectablesStore.subscribe((newValue) => {
     if (newValue !== null) {
-      collectable = newValue[collectableIndex];
+      const newValueAtIndex = newValue[collectableIndex];
+      if (!newValueAtIndex) {
+        throw new Error(`No collectable found at index ${collectableIndex}`);
+      }
+      collectable = newValueAtIndex;
       isLoading = false;
     }
   });
@@ -46,7 +50,7 @@
       </div>
 
       <div class="attributes">
-        {#each Object.entries(collectable.attributes) as [attributeName, attributeValue]}
+        {#each Object.entries(formatObjectKeys(collectable.attributes)) as [attributeName, attributeValue]}
           <div class="attribute-name">{attributeName}</div>
           <div class="attribute-value">{attributeValue}</div>
         {/each}
