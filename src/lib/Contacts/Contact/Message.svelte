@@ -52,7 +52,9 @@
       </div>
     </div>
   {/if}
-  <div class="memo">{transactionOrMessage.memo}</div>
+  {#if transactionOrMessage.memo}
+    <div class="memo">{transactionOrMessage.memo}</div>
+  {/if}
   <div class="time">{toLocalTime(transactionOrMessage.date)}</div>
 </div>
 
