@@ -22,9 +22,16 @@
 
   let tokenAccounts: Array<AccountSummary> = [];
 
+  const showUSDCTokenAccountFirst = (a: AccountSummary, b: AccountSummary) => {
+    if (a.currency === "USDC") {
+      return a;
+    }
+    return a.currency.localeCompare(b.currency);
+  };
+
   tokenAccountsStore.subscribe((newValue: Array<AccountSummary>) => {
     if (newValue?.length) {
-      tokenAccounts = newValue;
+      tokenAccounts = newValue.sort(showUSDCTokenAccountFirst);
     }
   });
 
