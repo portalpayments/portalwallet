@@ -14,6 +14,7 @@ const NOTHING = "";
 
 import { Keypair } from "@solana/web3.js";
 import base58 from "bs58";
+import { log } from "./functions";
 import { mintToCurrencyMap } from "./mint-to-currency-map";
 import type { ContentType, CurrencyDetails } from "./types";
 
@@ -68,7 +69,7 @@ export const getCurrencySymbolByMint = (mint: string) => {
   return currency.symbol;
 };
 
-export const fileNameToContentType = (fileName: string): ContentType => {
+export const fileNameToContentType = (fileName: string): ContentType | null => {
   const extension = fileName.split(".").at(-1);
 
   if (extension === "png") {
@@ -83,5 +84,8 @@ export const fileNameToContentType = (fileName: string): ContentType => {
     return "image/svg+xml";
   }
 
-  throw new Error(`Could not determine Content Type for ${fileName}`);
+  // If there's no extensions
+  log(`Could not determine Content Type for ${fileName}`);
+
+  return null;
 };

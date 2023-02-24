@@ -131,12 +131,12 @@ export const camelToSentenceCase = (string: string) => {
 };
 
 export const formatObjectKeys = (object: Record<string, unknown>) => {
-  const THRESHHOLD = 0.6;
+  const IS_CAMELCASE_THRESHHOLD = 0.6;
   const keys = Object.keys(object);
   const keyCount = keys.length;
   const camelCaseKeyCount = keys.map((key) => isCamelCase(key)).length;
   // Check if it's camelcase
-  if (camelCaseKeyCount / keyCount > THRESHHOLD) {
+  if (camelCaseKeyCount / keyCount > IS_CAMELCASE_THRESHHOLD) {
     const formattedObject = Object.fromEntries(
       keys.map((key) => {
         return [camelToSentenceCase(key), object[key]];

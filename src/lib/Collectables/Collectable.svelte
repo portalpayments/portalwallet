@@ -37,12 +37,19 @@
     </div>
 
     <div class="scrollable">
-      <a href={collectable.image} target="_blank">
-        <img
-          src={collectable.image}
-          alt={collectable.description}
-          class="shadow"
-        />
+      <a href={collectable.media} target="_blank">
+        {#if collectable.type === "video/mp4"}
+          <!-- svelte-ignore a11y-media-has-caption -->
+          <video controls autoPlay={true} class="media">
+            <source src={collectable.media} type="video/mp4" />
+          </video>
+        {:else if collectable.type === "image/png" || collectable.type === "image/jpeg" || collectable.type === "image/svg+xml" || collectable.type === null}
+          <img
+            src={collectable.media}
+            alt={collectable.description}
+            class="media"
+          />
+        {/if}
       </a>
 
       <div class="description">
@@ -65,20 +72,17 @@
   @import "../../mixins.scss";
 
   .collectable-screen {
+    align-content: start;
     display: grid;
     padding: 12px;
     gap: 12px;
     grid-template-columns: 1fr;
-    grid-template-rows: 44px 1fr;
     background: radial-gradient(at 50% 50%, #ffe7dd 0, #fff 80%, #fff 100%);
     overflow-y: scroll;
   }
 
-  .collectable-screen > * {
-    width: 276px;
-  }
-
   .heading {
+    height: 42px;
     text-align: left;
     padding: 0 12px;
     display: grid;
@@ -89,18 +93,17 @@
     color: var(--black);
   }
 
-  .scrollable {
-    overflow-y: scroll;
-    align-content: start;
-  }
-
-  img {
+  .media {
     width: 100%;
-    border-radius: 10px;
+    border-radius: 8px;
     object-fit: cover;
     background-color: var(--light-grey);
   }
 
+  .scrollable {
+    overflow-y: scroll;
+    align-content: start;
+  }
   .description {
     text-align: left;
     font-size: 12px;

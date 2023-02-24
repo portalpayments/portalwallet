@@ -122,6 +122,7 @@ const updateCollectables = async () => {
 
   const collectables = await getCollectables(allNftsFromAWallet);
 
+
   collectablesStore.set(collectables);
 };
 

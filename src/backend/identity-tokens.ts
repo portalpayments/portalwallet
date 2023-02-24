@@ -15,20 +15,16 @@
 // https://github.com/solana-labs/solana-program-library/pull/3178/files
 
 import {
-  createMint,
-  getOrCreateAssociatedTokenAccount,
-  mintTo,
-  transfer,
-} from "@solana/spl-token";
-
-import {
   Metaplex,
   keypairIdentity,
   mockStorage,
   bundlrStorage,
   type CreateNftOutput,
-  toTokenAccount,
   type FindNftsByOwnerOutput,
+  type Metadata,
+  type JsonMetadata,
+  type Nft,
+  type Sft,
 } from "@metaplex-foundation/js";
 import {
   Connection,
@@ -50,6 +46,7 @@ import type {
   NonFungibleTokenMetadataStandard,
   OldNonStandardTokenMetaData,
   Collectable,
+  ContentType,
 } from "./types";
 import { makeTransaction } from "./tokens";
 import * as http from "../lib/http-client";
@@ -372,42 +369,52 @@ export const makeTokenMetaDataForOrganization = (
   };
 };
 
+export const nftToCollectable = async (
+  nftOnChainData: Metadata<JsonMetadata<string>> | Nft | Sft,
+  // TODO: we used id as it seems unique. We could use something else.
+  id: number
+) => {
+  // We have to force content type as nftstorage.link returns incorrect types
+  // See https://twitter.com/mikemaccana/status/1620140384302288896?s=20&t=gP3XffhtDkUiaYQvSph8vg
+  const rawNFTMetaData: NonFungibleTokenMetadataStandard = await http.get(
+    nftOnChainData.uri,
+    http.CONTENT_TYPES.JSON
+  );
+
+  const coverImage = getCoverImage(rawNFTMetaData);
+
+  const bestMediaAndType = getBestMediaAndType(rawNFTMetaData);
+
+  const media = bestMediaAndType?.file || null;
+  const type = bestMediaAndType?.type || null;
+
+  const attributes = getAttributesFromNFT(rawNFTMetaData);
+
+  return {
+    id,
+    name: rawNFTMetaData.name,
+    description: rawNFTMetaData.description,
+    coverImage,
+    media,
+    type,
+    attributes,
+  };
+};
+
 export const getCollectables = async (
   allNftsFromAWallet: FindNftsByOwnerOutput
 ): Promise<Array<Collectable>> => {
   const collectablesUnfiltered: Array<Collectable> = await asyncMap(
     allNftsFromAWallet,
     async (nft, nftIndex) => {
-      // We have to force content type as nftstorage.link returns incorrect types
-      // See https://twitter.com/mikemaccana/status/1620140384302288896?s=20&t=gP3XffhtDkUiaYQvSph8vg
-      const rawNFTMetaData: NonFungibleTokenMetadataStandard = await http.get(
-        nft.uri,
-        http.CONTENT_TYPES.JSON
-      );
-
-      const firstFile = rawNFTMetaData?.properties?.files?.[0];
-      // Sometimes 'files' is an empty list, but 'image' still exists
-      // See https://crossmint.myfilebase.com/ipfs/bafkreig5nuz3qswtnipclnhdw4kbdn5s6fpujtivyt4jf3diqm4ivpmv5u
-      const image = firstFile?.uri || rawNFTMetaData.image || null;
-      const type = firstFile?.type || null;
-
-      const attributes = getAttributesFromNFT(rawNFTMetaData);
-
-      return {
-        // TODO: we used inde as it seems unique. We could use something else.
-        id: nftIndex,
-        name: rawNFTMetaData.name,
-        description: rawNFTMetaData.description,
-        image,
-        type,
-        attributes,
-      };
+      const collectable = await nftToCollectable(nft, nftIndex);
+      return collectable;
     }
   );
 
-  // Filter out non-collectable NFTs
+  // Filter out non-media NFTs
   const collectables = collectablesUnfiltered.filter((collectable) => {
-    return Boolean(collectable.image);
+    return Boolean(collectable.media);
   });
 
   return collectables;
@@ -439,6 +446,71 @@ const isOldIdentityToken = (
 ): object is OldNonStandardTokenMetaData => {
   // This isn't a standard NFT metadata key, was used by an old version of portal identity token
   return Object.hasOwn(object, "version");
+};
+
+export const getCoverImage = (metadata: NonFungibleTokenMetadataStandard) => {
+  // Sometimes 'files' is an empty list, but 'image' still exists
+  // See https://crossmint.myfilebase.com/ipfs/bafkreig5nuz3qswtnipclnhdw4kbdn5s6fpujtivyt4jf3diqm4ivpmv5u
+  let coverImage: null | string = metadata.image || null;
+  const files = metadata?.properties?.files || null;
+  if (files?.length) {
+    const firstImage = files.find(
+      (file) =>
+        file.type === "image/jpeg" ||
+        file.type === "image/png" ||
+        file.type === "image/svg+xml"
+    );
+    if (firstImage) {
+      coverImage = firstImage.uri;
+    }
+  }
+  return coverImage;
+};
+
+// The best is video, then images.
+export const getBestMediaAndType = (
+  metadata: NonFungibleTokenMetadataStandard
+): { file: string; type: ContentType } | null => {
+  // Sometimes 'files' is an empty list, but 'image' still exists
+  // See https://crossmint.myfilebase.com/ipfs/bafkreig5nuz3qswtnipclnhdw4kbdn5s6fpujtivyt4jf3diqm4ivpmv5u
+
+  const files = metadata?.properties?.files || null;
+  if (files?.length) {
+    const video = files.find((file) => file.type === "video/mp4");
+    if (video) {
+      return {
+        file: video.uri,
+        type: video.type,
+      };
+    }
+    // IDK why wave files are still a thing but I saw this on a real NFT so thought I'd add it
+    const wave = files.find((file) => file.type === "audio/wav");
+    if (wave) {
+      return {
+        file: wave.uri,
+        type: wave.type,
+      };
+    }
+    const image = files.find(
+      (file) =>
+        file.type === "image/jpeg" ||
+        file.type === "image/png" ||
+        file.type === "image/svg+xml"
+    );
+    if (image) {
+      return {
+        file: image.uri,
+        type: image.type,
+      };
+    }
+  }
+  if (metadata.image) {
+    return {
+      file: metadata.image,
+      type: fileNameToContentType(metadata.image),
+    };
+  }
+  return null;
 };
 
 // NFT metadata has arrays of trait_type/value objects instead of a single object with keys and values

@@ -53,4 +53,13 @@ describe(`fileNameToContentType`, () => {
     );
     expect(contentType).toEqual("image/svg+xml");
   });
+
+  test(`returns no content type for no extension`, () => {
+    // We could actually download the file but network IO may slow us down
+    // Let's set set type null and assume an image in the front end
+    const contentType = fileNameToContentType(
+      "https://bafybeibguawpykqjhe42ym7qcp5766u2cukvdhq55nuqww6vh77ub6c4mm.ipfs.nftstorage.link/"
+    );
+    expect(contentType).toEqual(null);
+  });
 });

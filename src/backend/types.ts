@@ -9,7 +9,12 @@
 import type { PublicKey } from "@solana/web3.js";
 import type { mintToCurrencyMap } from "../backend/mint-to-currency-map";
 
-export type ContentType = "image/png" | "image/jpeg" | "image/svg+xml";
+export type ContentType =
+  | "image/png"
+  | "image/jpeg"
+  | "image/svg+xml"
+  | "video/mp4"
+  | "audio/wav";
 
 // Shouldn't be necessary but the metaplex will return an array of 3 possible data types
 export interface ExpandedNFT {
@@ -271,7 +276,8 @@ export interface Collectable {
   id: number;
   name: string;
   description: string;
-  image: string;
+  coverImage: string;
+  media: string;
   type: ContentType;
   attributes: Record<string, string | number | boolean>;
 }

@@ -22,13 +22,13 @@
 </div>
 {#if isLoading}
   <SkeletonGallery />
-{:else if collectables.length}
+{:else if collectables?.length}
   <div class="nfts">
     {#each collectables as collectable}
       <Link to={`/collectables/${collectable.id}`}>
         <div class="collectable">
           <img
-            src={collectable.image}
+            src={collectable.coverImage}
             alt={collectable.description}
             class="shadow"
           />
