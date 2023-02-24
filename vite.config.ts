@@ -34,6 +34,7 @@ export default defineConfig({
       assert: "assert",
       crypto: "crypto-browserify",
       util: "util",
+      "node-fetch": "just-use-native-fetch",
     },
   },
   define: {
@@ -41,6 +42,7 @@ export default defineConfig({
   },
   build: {
     target: "es2020",
+
     rollupOptions: {
       plugins: [nodePolyfills({ crypto: true })],
     },
