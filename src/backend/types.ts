@@ -273,7 +273,7 @@ export interface Creator {
 }
 
 export interface Collectable {
-  id: number;
+  id: string;
   name: string;
   description: string;
   coverImage: string;

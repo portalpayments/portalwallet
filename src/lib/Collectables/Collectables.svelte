@@ -9,9 +9,11 @@
   let isLoading = false;
   let collectables: Array<Collectable> | null = null;
 
+  const sortByName = (a, b) => a.name.localeCompare(b.name);
+
   collectablesStore.subscribe((newValue) => {
     if (newValue !== null) {
-      collectables = newValue;
+      collectables = newValue.sort(sortByName);
       isLoading = false;
     }
   });

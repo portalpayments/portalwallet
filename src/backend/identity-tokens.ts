@@ -373,7 +373,7 @@ export const nftToCollectable = async (
   nftOnChainData: Metadata<JsonMetadata<string>> | Nft | Sft,
   // TODO: we used id as it seems unique. We could use something else.
   id: number
-) => {
+): Promise<Collectable> => {
   // We have to force content type as nftstorage.link returns incorrect types
   // See https://twitter.com/mikemaccana/status/1620140384302288896?s=20&t=gP3XffhtDkUiaYQvSph8vg
   const rawNFTMetaData: NonFungibleTokenMetadataStandard = await http.get(
@@ -391,7 +391,7 @@ export const nftToCollectable = async (
   const attributes = getAttributesFromNFT(rawNFTMetaData);
 
   return {
-    id,
+    id: nftOnChainData.address.toBase58(),
     name: rawNFTMetaData.name,
     description: rawNFTMetaData.description,
     coverImage,

@@ -9,19 +9,16 @@
 
   let isLoading = false;
 
-  let collectableIndex: number = Number(
-    window.location.pathname.split("/").at(-1)
-  );
-
+  let collectableID: string = window.location.pathname.split("/").at(-1);
   let collectable: Collectable | null = null;
 
   collectablesStore.subscribe((newValue) => {
     if (newValue !== null) {
-      const newValueAtIndex = newValue[collectableIndex];
-      if (!newValueAtIndex) {
-        throw new Error(`No collectable found at index ${collectableIndex}`);
+      const newValueWithID = newValue.find((item) => item.id === collectableID);
+      if (!newValueWithID) {
+        throw new Error(`No collectable found at index ${collectableID}`);
       }
-      collectable = newValueAtIndex;
+      collectable = newValueWithID;
       isLoading = false;
     }
   });
