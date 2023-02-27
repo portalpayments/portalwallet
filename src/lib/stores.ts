@@ -122,7 +122,6 @@ const updateCollectables = async () => {
 
   const collectables = await getCollectables(allNftsFromAWallet);
 
-
   collectablesStore.set(collectables);
 };
 
@@ -188,7 +187,7 @@ export const updateAccountsForNewTransaction = async (
 ) => {
   const rawTransaction = await connection.getParsedTransaction(
     signature,
-    // Only wait for confirmed show we can show transaction in list immediately
+    // Only wait for confirmed so we can show transaction in list immediately
     "confirmed"
   );
 
