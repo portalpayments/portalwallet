@@ -10,7 +10,15 @@
   let isNew = false;
 </script>
 
-<img src={AnonymousImage} class="profile-pic" alt="Address is not verified" />
+{#if contact.profilePictureURL}
+  <img
+    class="profile-pic"
+    src={contact.profilePictureURL}
+    alt="Address is not verified"
+  />
+{:else}
+  <img src={AnonymousImage} class="profile-pic" alt="Address is not verified" />
+{/if}
 <div class="recipient-info">
   <button
     class="truncated-wallet"

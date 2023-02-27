@@ -98,6 +98,16 @@ export interface NonFungibleTokenMetadataStandard {
   };
 }
 
+// See https://docs.solflare.com/solflare/technical/profile-picture-protocol/get-a-wallets-profile-picture
+export interface ProfilePictureResponse {
+  isAvailable: boolean;
+  url: string;
+  name: string;
+  metadata: NonFungibleTokenMetadataStandard;
+  tokenAccount: PublicKey;
+  mintAccount: PublicKey;
+}
+
 // A token account, with just the properties we care about
 export interface BasicTokenAccount {
   address: PublicKey;
@@ -287,6 +297,7 @@ export interface Contact {
   isNew: boolean;
   isPending: boolean;
   verifiedClaims: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization;
+  profilePictureURL: string;
 }
 
 export interface AccountSummary {

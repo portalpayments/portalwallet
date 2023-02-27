@@ -86,15 +86,29 @@
   {/if}
   {#if transaction.direction === Direction.recieved || transaction.direction === Direction.sent}
     {#if contact}
-      <img
-        class="profile-pic {contact?.verifiedClaims?.type === 'ORGANIZATION'
-          ? 'organization'
-          : 'individual'}"
-        src={!isEmpty(contact?.verifiedClaims)
-          ? contact.verifiedClaims.imageUrl
-          : AnonymousImage}
-        alt="wallet avatar"
-      />
+      {#if isEmpty(contact.verifiedClaims)}
+        {#if contact.profilePictureURL}
+          <img
+            class="profile-pic individual"
+            src={contact.profilePictureURL}
+            alt="wallet avatar"
+          />
+        {:else}
+          <img
+            class="profile-pic individual"
+            src={AnonymousImage}
+            alt="wallet avatar"
+          />
+        {/if}
+      {:else}
+        <img
+          class="profile-pic {contact?.verifiedClaims?.type === 'ORGANIZATION'
+            ? 'organization'
+            : 'individual'}"
+          src={contact.verifiedClaims.imageUrl}
+          alt="wallet avatar"
+        />
+      {/if}
       <div class="name-and-memo">
         <div class="name">
           {#if transaction?.receipt?.shop}

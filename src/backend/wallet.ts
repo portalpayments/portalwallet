@@ -27,7 +27,7 @@ import { getCurrencyBySymbol } from "./solana-functions";
 import { asyncMap } from "./functions";
 import base58 from "bs58";
 import { AccountLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import type { RawAccount } from "@solana/spl-token";
+import { getProfilePicture as getProfilePictureUsingSolanaPFPStandard } from "@solflare-wallet/pfp";
 import {
   getIdentityTokensFromWallet,
   getIndividualClaimsFromNFTMetadata,
@@ -36,6 +36,7 @@ import type {
   BasicTokenAccount,
   NonFungibleTokenMetadataStandard,
   OldNonStandardTokenMetaData,
+  ProfilePictureResponse,
   VerifiedClaimsForIndividual,
   VerifiedClaimsForOrganization,
 } from "./types";
@@ -414,6 +415,18 @@ export const getNativeAccountSummary = async (
   return accountSummary;
 };
 
+export const getProfilePicture = async (
+  connection: Connection,
+  walletPubkey: PublicKey
+) => {
+  const response = (await getProfilePictureUsingSolanaPFPStandard(
+    connection,
+    walletPubkey
+  )) as ProfilePictureResponse;
+
+  return response.url;
+};
+
 export const getContactsFromTransactions = async (
   connection: Connection,
   keyPair: Keypair,
@@ -442,17 +455,22 @@ export const getContactsFromTransactions = async (
   const contacts = await asyncMap(
     uniqueTransactionWalletAddresses,
     async (walletAddress): Promise<Contact> => {
-      const verifiedClaims = await verifyWallet(
-        connection,
-        keyPair,
-        identityTokenIssuerPublicKey,
-        new PublicKey(walletAddress)
-      );
+      const [verifiedClaims, profilePictureURL] = await Promise.all([
+        verifyWallet(
+          connection,
+          keyPair,
+          identityTokenIssuerPublicKey,
+          new PublicKey(walletAddress)
+        ),
+        getProfilePicture(connection, new PublicKey(walletAddress)),
+      ]);
+
       const contact: Contact = {
         walletAddress,
         isNew: false,
         isPending: false,
         verifiedClaims,
+        profilePictureURL,
       };
       return contact;
     }
