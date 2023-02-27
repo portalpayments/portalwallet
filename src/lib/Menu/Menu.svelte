@@ -24,7 +24,7 @@
 
   const showUSDCTokenAccountFirst = (a: AccountSummary, b: AccountSummary) => {
     if (a.currency === "USDC") {
-      return a;
+      return 1;
     }
     return a.currency.localeCompare(b.currency);
   };
