@@ -21,12 +21,12 @@ import { connect } from "./src/backend/wallet";
 
 dotenv.config();
 
-const WALLET_ADDRESS = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
-const GIVEN_NAME = "Micheal-Sean";
-const FAMILY_NAME = "MacCana";
-const INDIVIDUAL_IMAGE_FILE = "mike.jpg";
+const WALLET_ADDRESS = "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG";
+const GIVEN_NAME = "Vaheh";
+const FAMILY_NAME = "Hatami";
+const INDIVIDUAL_IMAGE_FILE = "vaheh.jpg";
 const IDENTITY_TOKEN_COVER_IMAGE_FILE =
-  "individual-identity-token-for-mike.png";
+  "identity-token-cover-image-for-vaheh.png";
 
 // ------------------------------------------------------------------------------
 
@@ -37,8 +37,8 @@ const tokenClaimsNoImageUrl: Omit<VerifiedClaimsForIndividual, "imageUrl"> = {
   familyName: FAMILY_NAME,
 };
 
-const ALREADY_UPLOADED_INDIVIDUAL_IMAGE = "https://i.imgur.com/W05AoFb.jpg"; // null;
-const ALREADY_UPLOADED_COVER_IMAGE = "https://i.imgur.com/GSCtECV.png"; // null;
+const ALREADY_UPLOADED_INDIVIDUAL_IMAGE = null;
+const ALREADY_UPLOADED_COVER_IMAGE = null;
 
 const main = async () => {
   log(`🎟️ Running Portal Identity token minter ...`);
