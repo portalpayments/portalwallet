@@ -22,7 +22,7 @@
   <h1>Transfer unsuccessful</h1>
   <img class="fail-icon" src={FailedAction} alt="money could not be sent" />
   <div class="recipient-and-amount">
-    <p>{errorMessage}</p>
+    <p class="error">{errorMessage}</p>
     <p>
       Failed to send<img
         class="symbol"
@@ -68,6 +68,11 @@
     gap: 12px;
     color: var(--black);
     font-size: 1.1rem;
+  }
+
+  .error {
+    // Very long transaction signatures can make this quite wide
+    max-width: var(--wallet-width);
   }
   h1 {
     font-size: 24px;
