@@ -3,7 +3,7 @@
 import pinataSDK from "@pinata/sdk";
 import mime from "mime";
 import * as dotenv from "dotenv";
-import { log, stringify } from "./src/backend/functions";
+import { log, stringify } from "./functions";
 
 dotenv.config();
 
@@ -22,7 +22,7 @@ const contentIDtoUploadedImageURL = (contentID: string) => {
   return `https://gateway.pinata.cloud/ipfs/${contentID}`;
 };
 
-const uploadImageToPinata = async (fileName: string) => {
+export const uploadImageToPinata = async (fileName: string) => {
   const contentType = mime.getType(fileName);
 
   if (!contentType) {
@@ -37,5 +37,3 @@ const uploadImageToPinata = async (fileName: string) => {
 
   return uploadedImageURL;
 };
-
-uploadImageToPinata("vaheh.jpg");

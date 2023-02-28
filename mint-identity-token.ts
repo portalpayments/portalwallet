@@ -7,7 +7,7 @@ import {
   transferIdentityToken,
   mintIdentityToken,
 } from "./src/backend/identity-tokens";
-import { uploadImageToArweave } from "./src/backend/arweave";
+import { uploadImageToPinata } from "./src/backend/pinata";
 import dotenv from "dotenv";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import base58 from "bs58";
@@ -81,7 +81,7 @@ const main = async () => {
       uploadedIndividualImageUrl
     );
   } else {
-    uploadedIndividualImageUrl = await uploadImageToArweave(
+    uploadedIndividualImageUrl = await uploadImageToPinata(
       INDIVIDUAL_IMAGE_FILE
     );
     log(`🖼️ Uploaded individual image`, uploadedIndividualImageUrl);
@@ -93,7 +93,7 @@ const main = async () => {
   if (uploadedCoverImageUrl) {
     log(`🖼️ Using already-uploaded cover image`, uploadedCoverImageUrl);
   } else {
-    uploadedCoverImageUrl = await uploadImageToArweave(INDIVIDUAL_IMAGE_FILE);
+    uploadedCoverImageUrl = await uploadImageToPinata(INDIVIDUAL_IMAGE_FILE);
     log(`🖼️ Uploaded cover image`, uploadedCoverImageUrl);
   }
 
