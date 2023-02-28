@@ -7,15 +7,12 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import { Keypair } from "@solana/web3.js";
-import {
-  cleanPhrase,
-  fileNameToContentType,
-  secretKeyToHex,
-} from "./solana-functions";
+import { cleanPhrase, secretKeyToHex } from "./solana-functions";
 import {
   dirtyPersonalPhrase,
   slightlyDifferentDirtyPersonalPhrase,
 } from "./test-data/transactions/test-phrases";
+import mime from "mime";
 
 jest.mock("./functions");
 
@@ -46,18 +43,16 @@ describe(`secretKeyToHex`, () => {
   });
 });
 
-describe(`fileNameToContentType`, () => {
+describe(`mime.getType`, () => {
   test(`gets content types correct`, () => {
-    const contentType = fileNameToContentType(
-      "individual-identity-token-for-mike.svg"
-    );
+    const contentType = mime.getType("individual-identity-token-for-mike.svg");
     expect(contentType).toEqual("image/svg+xml");
   });
 
   test(`returns no content type for no extension`, () => {
     // We could actually download the file but network IO may slow us down
     // Let's set set type null and assume an image in the front end
-    const contentType = fileNameToContentType(
+    const contentType = mime.getType(
       "https://bafybeibguawpykqjhe42ym7qcp5766u2cukvdhq55nuqww6vh77ub6c4mm.ipfs.nftstorage.link/"
     );
     expect(contentType).toEqual(null);

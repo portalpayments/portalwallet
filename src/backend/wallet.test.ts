@@ -54,7 +54,7 @@ import { Direction } from "./types";
 import { getABetterErrorMessage } from "./errors";
 import { createMintAccount } from "./tokens";
 
-// jest.mock("./functions");
+jest.mock("./functions");
 
 dotenv.config();
 

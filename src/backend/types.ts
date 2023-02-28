@@ -9,13 +9,6 @@
 import type { PublicKey } from "@solana/web3.js";
 import type { mintToCurrencyMap } from "../backend/mint-to-currency-map";
 
-export type ContentType =
-  | "image/png"
-  | "image/jpeg"
-  | "image/svg+xml"
-  | "video/mp4"
-  | "audio/wav";
-
 // Shouldn't be necessary but the metaplex will return an array of 3 possible data types
 export interface ExpandedNFT {
   model: string;
@@ -93,7 +86,7 @@ export interface NonFungibleTokenMetadataStandard {
   properties: {
     files: Array<{
       uri: string;
-      type: ContentType;
+      type: string;
     }>;
   };
 }
@@ -288,7 +281,7 @@ export interface Collectable {
   description: string;
   coverImage: string;
   media: string;
-  type: ContentType;
+  type: string;
   attributes: Record<string, string | number | boolean>;
 }
 

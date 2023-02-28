@@ -7,10 +7,11 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import { promises as fs } from "fs";
+import mime from "mime";
 import { SECONDS } from "./constants";
 import Arweave from "arweave";
-import type { ContentType } from "./types";
-import { fileNameToContentType } from "./solana-functions";
+
+import { log, stringify } from "./functions";
 
 const OK = 200;
 
@@ -23,10 +24,10 @@ export const uploadImageToArweave = async (fileName: string) => {
     port: 443,
     protocol: "https",
     timeout: 20 * SECONDS,
-    logging: false,
+    logging: true,
   });
 
-  const contentType = fileNameToContentType(fileName);
+  const contentType = mime.getType(fileName);
 
   const arWeaveWallet = JSON.parse(
     // File supplied by https://faucet.arweave.net/

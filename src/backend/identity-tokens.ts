@@ -26,6 +26,7 @@ import {
   type Nft,
   type Sft,
 } from "@metaplex-foundation/js";
+import mime from "mime";
 import {
   Connection,
   Keypair,
@@ -46,11 +47,9 @@ import type {
   NonFungibleTokenMetadataStandard,
   OldNonStandardTokenMetaData,
   Collectable,
-  ContentType,
 } from "./types";
 import { makeTransaction } from "./tokens";
 import * as http from "../lib/http-client";
-import { fileNameToContentType } from "./solana-functions";
 
 export const getMetaplex = (
   connection: Connection,
@@ -254,8 +253,8 @@ export const makeTokenMetaDataForIndividual = (
   userImageUrl: string,
   tokenCoverImageUrl: string
 ): NonFungibleTokenMetadataStandard => {
-  const userImageContentType = fileNameToContentType(userImageUrl);
-  const coverImageContentType = fileNameToContentType(tokenCoverImageUrl);
+  const userImageContentType = mime.getType(userImageUrl);
+  const coverImageContentType = mime.getType(tokenCoverImageUrl);
   return {
     name: IDENTITY_TOKEN_NAME,
     description:
@@ -313,7 +312,7 @@ export const makeTokenMetaDataForOrganization = (
   companyImageUrl: string,
   tokenCoverImageUrl: string
 ): NonFungibleTokenMetadataStandard => {
-  const companyImageContentType = fileNameToContentType(tokenCoverImageUrl);
+  const companyImageContentType = mime.getType(tokenCoverImageUrl);
   return {
     name: IDENTITY_TOKEN_NAME,
     description:
@@ -470,7 +469,7 @@ export const getCoverImage = (metadata: NonFungibleTokenMetadataStandard) => {
 // The best is video, then images.
 export const getBestMediaAndType = (
   metadata: NonFungibleTokenMetadataStandard
-): { file: string; type: ContentType } | null => {
+): { file: string; type: string } | null => {
   // Sometimes 'files' is an empty list, but 'image' still exists
   // See https://crossmint.myfilebase.com/ipfs/bafkreig5nuz3qswtnipclnhdw4kbdn5s6fpujtivyt4jf3diqm4ivpmv5u
 
@@ -507,7 +506,7 @@ export const getBestMediaAndType = (
   if (metadata.image) {
     return {
       file: metadata.image,
-      type: fileNameToContentType(metadata.image),
+      type: mime.getType(metadata.image),
     };
   }
   return null;

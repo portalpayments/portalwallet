@@ -43,12 +43,7 @@ import {
 import base58 from "bs58";
 import { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, makeTransaction } from "./tokens";
-import type {
-  ContentType,
-  NonFungibleTokenMetadataStandard,
-  VerifiedClaimsForIndividual,
-} from "./types";
-import type { type } from "os";
+import type { VerifiedClaimsForIndividual } from "./types";
 import { rawNFTOffChainData } from "./test-data/nft-off-chain-data";
 import { mcBurgerNFTOnChainData } from "./test-data/nft-on-chain-data";
 
@@ -331,11 +326,11 @@ describe(`identity tokens`, () => {
         files: [
           {
             uri: "https://i.imgur.com/GSCtECV.png",
-            type: "image/png" as ContentType,
+            type: "image/png",
           },
           {
             uri: "https://i.imgur.com/W05AoFb.jpg",
-            type: "image/jpeg" as ContentType,
+            type: "image/jpeg",
           },
         ],
       },

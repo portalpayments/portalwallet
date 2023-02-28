@@ -27,7 +27,11 @@ import {
   VAHEHS_WALLET,
   YCOMBINATOR_DEMO_WALLET_FOR_JARED,
 } from "./constants";
-import { type SimpleTransaction, Direction } from "../backend/types";
+import {
+  type SimpleTransaction,
+  Direction,
+  type Contact,
+} from "../backend/types";
 import { hexToUtf8, log, stringify } from "./functions";
 import { sendFiveUSDC } from "./test-data/transactions/sendFiveUSDC";
 import { swapSolWithUSDCOnJupiter } from "./test-data/transactions/swapSolWithUSDC";
@@ -43,7 +47,7 @@ import { getCurrencyBySymbol } from "./solana-functions";
 
 jest.mock("./functions");
 
-const contacts = [
+const contacts: Array<Contact> = [
   {
     walletAddress: YCOMBINATOR_DEMO_WALLET_FOR_JARED,
     isNew: false,
@@ -56,6 +60,7 @@ const contacts = [
       imageUrl:
         "https://arweave.net/wthKTNtIJezFDl3uevmGfGLiYdZ-5IN5LlfvLJNWc9U",
     },
+    profilePictureURL: null,
   },
 ];
 
