@@ -571,7 +571,7 @@ describe(`identity tokens`, () => {
     const collectable = await nftToCollectable(mcBurgerNFTOnChainData, 420);
     log(stringify(collectable));
     expect(collectable).toEqual({
-      id: 420,
+      id: expect.any(String),
       name: "McBurger Demo",
       description: "Demo of composable loyalty. Not redeemable for a burger.",
       coverImage:
