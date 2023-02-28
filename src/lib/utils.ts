@@ -7,9 +7,10 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import { PublicKey } from "@solana/web3.js";
-import { element } from "svelte/internal";
-import { log } from "../backend/functions";
+
 const WALLET_CHARACTERS_TO_SHOW = 5;
+
+const LARGE_NUMBER_MAJOR_DIGITS = 3;
 
 // Adds commas to numbers
 // https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-strings
@@ -37,7 +38,7 @@ export const toUniqueStringArray = (array: Array<string>): Array<string> => {
 export const amountAndDecimalsToMajorAndMinor = (
   amount: number,
   decimals: number
-) => {
+): Array<string | null> => {
   const multiplier = getMultiplier(decimals);
   const major = String(Math.floor(amount / multiplier));
   let minor = String(Number(amount) % multiplier);
@@ -46,6 +47,7 @@ export const amountAndDecimalsToMajorAndMinor = (
   if (minor.startsWith("0.")) {
     minor = "0";
   }
+
   // Normalize '6' to be '000006' etc.
   const minorPadded = minor.padStart(decimals, "0");
 
@@ -56,6 +58,33 @@ export const amountAndDecimalsToMajorAndMinor = (
 export const amountAndDecimalsToString = (amount: number, decimals: number) => {
   const [major, minor] = amountAndDecimalsToMajorAndMinor(amount, decimals);
   return `${major}.${minor}`;
+};
+
+export const formatNumber = (
+  isRecievedOrSwapped: boolean,
+  amount: number,
+  decimals: number,
+  hideMinorIfLarge = false
+) => {
+  const [major, minor] = amountAndDecimalsToMajorAndMinor(amount, decimals);
+
+  let formattedAmount = "";
+
+  if (isRecievedOrSwapped) {
+    formattedAmount += "+";
+  }
+
+  formattedAmount += major;
+
+  if (hideMinorIfLarge) {
+    if (major.length >= LARGE_NUMBER_MAJOR_DIGITS) {
+      return formattedAmount;
+    }
+  }
+
+  formattedAmount += `.${minor}`;
+
+  return formattedAmount;
 };
 
 export const getFormattedMajorUnits = (minorUnits: number, digits = 2) => {

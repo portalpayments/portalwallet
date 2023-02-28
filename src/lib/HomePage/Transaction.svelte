@@ -10,6 +10,7 @@
     CurrencyDetails,
   } from "../../backend/types";
   import { log, isEmpty, stringify } from "../../backend/functions";
+  import { formatNumber } from "../utils";
   import { getCurrencyByMint } from "../../backend/solana-functions";
   import { Direction } from "../../backend/types";
 
@@ -46,6 +47,13 @@
   const isRecievedOrSwapped =
     transaction.direction === Direction.recieved ||
     transaction.direction === Direction.swapped;
+
+  const formattedAmount = formatNumber(
+    isRecievedOrSwapped,
+    transaction.amount,
+    decimals,
+    true
+  );
 
   let swapCurrencyMajorAndMinor = null;
   let swapCurrencyDetails: CurrencyDetails | null = null;
@@ -134,8 +142,7 @@
     {/if}
   {/if}
   <div class="amount {isRecievedOrSwapped ? 'positive' : ''}">
-    {isRecievedOrSwapped ? "+" : ""}
-    {majorAndMinor[0]}.{majorAndMinor[1]}
+    {formattedAmount}
   </div>
   {#if transaction.receipt}
     <div class="receipt">
