@@ -25,8 +25,13 @@ const WALLET_ADDRESS = "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG";
 const GIVEN_NAME = "Vaheh";
 const FAMILY_NAME = "Hatami";
 const INDIVIDUAL_IMAGE_FILE = "vaheh.jpg";
-const IDENTITY_TOKEN_COVER_IMAGE_FILE =
-  "identity-token-cover-image-for-vaheh.png";
+const COVER_IMAGE_FILE = "identity-token-cover-image-for-vaheh.png";
+
+const ALREADY_UPLOADED_INDIVIDUAL_IMAGE =
+  "https://gateway.pinata.cloud/ipfs/QmeSwV7adusNDe4BFnet46Xbcwg3PX8hqV8DnckfDw1nei";
+
+const ALREADY_UPLOADED_COVER_IMAGE =
+  "https://gateway.pinata.cloud/ipfs/QmQo43qNLTjrAALrrvAck7kykdFXzVGoyrwP7B6vXojipf";
 
 // ------------------------------------------------------------------------------
 
@@ -36,9 +41,6 @@ const tokenClaimsNoImageUrl: Omit<VerifiedClaimsForIndividual, "imageUrl"> = {
   givenName: GIVEN_NAME,
   familyName: FAMILY_NAME,
 };
-
-const ALREADY_UPLOADED_INDIVIDUAL_IMAGE = null;
-const ALREADY_UPLOADED_COVER_IMAGE = null;
 
 const main = async () => {
   log(`🎟️ Running Portal Identity token minter ...`);
@@ -57,11 +59,17 @@ const main = async () => {
     stringify({
       WALLET_ADDRESS,
       tokenClaims: tokenClaimsNoImageUrl,
-      coverImage: IDENTITY_TOKEN_COVER_IMAGE_FILE,
+      individualImage: INDIVIDUAL_IMAGE_FILE,
+      coverImage: COVER_IMAGE_FILE,
     })
   );
 
   const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
+
+  // Step 0:
+  log(
+    `'\n\nMake sure to fix the ENABLE BELOW FOR TOKEN MINTER code otherwise this will fail\n\n`
+  );
 
   // Step 1a. Upload individual image if necessary
   let uploadedIndividualImageUrl: string | null =
@@ -107,6 +115,9 @@ const main = async () => {
   // Step 3. Move the minted token to the final recipient.
   const mintAddress = tokenCreateOutput.mintAddress;
   const senderTokenAccount = tokenCreateOutput.tokenAddress;
+
+  log(`>>> DEBUG mintAddress`, mintAddress);
+  log(`>>> DEBUG senderTokenAccount`, senderTokenAccount);
 
   const recipientWallet = new PublicKey(WALLET_ADDRESS);
 
