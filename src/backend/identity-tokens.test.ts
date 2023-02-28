@@ -53,7 +53,7 @@ const testArweaveIfAskedSpecfically = process.env.TEST_ARWEAVE
   ? test
   : test.skip;
 
-// jest.mock("./functions");
+jest.mock("./functions");
 
 describe(`arWeave`, () => {
   testArweaveIfAskedSpecfically(
@@ -552,17 +552,6 @@ describe(`identity tokens`, () => {
     ]);
   });
 
-  // test(`We can verify Alice`, async () => {
-  //   const claims = await verifyWallet(
-  //     connection,
-  //     testIdentityTokenIssuer,
-  //     testIdentityTokenIssuer.publicKey,
-  //     alice.publicKey
-  //   );
-
-  //   expect(claims).toEqual({});
-  // });
-
   test(`getCoverImage`, () => {
     const coverImage = getCoverImage(rawNFTOffChainData);
     expect(coverImage).toEqual(
@@ -593,4 +582,6 @@ describe(`identity tokens`, () => {
       attributes: {},
     });
   });
+
+  // TODO test verifyWallet() for Alice
 });
