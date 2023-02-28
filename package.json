@@ -21,7 +21,7 @@
     "update-on-chain-programs": "bash update-on-chain-programs.bash",
     "start-validator": "bash start-validator.bash",
     "make-zip-file": "bash make-zip-file.bash",
-    "mint-identity-token": "echo 'Make sure to fix the ENABLE BELOW FOR TOKEN MINTER code otherwise this will fail' && npx tsx mint-identity-token.ts",
+    "mint-identity-token": "npx tsx mint-identity-token.ts",
     "start-decaf-proxy-server": "lcp --proxyUrl https://www.decaf.so"
   },
   "devDependencies": {
@@ -64,6 +64,7 @@
     "@microsoft/recognizers-text-date-time": "^1.3.0",
     "@open-wc/building-rollup": "^2.2.1",
     "@peculiar/webcrypto": "^1.4.0",
+    "@pinata/sdk": "^2.1.0",
     "@solana/spl-token": "^0.3.7",
     "@solana/spl-token-registry": "^0.2.7",
     "@solflare-wallet/pfp": "^0.1.0",
