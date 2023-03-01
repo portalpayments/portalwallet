@@ -18,7 +18,6 @@ import {
   mintIdentityToken,
   nftToCollectable,
 } from "./identity-tokens";
-import { uploadImageToArweave } from "./arweave";
 import {
   clusterApiUrl,
   Connection,
@@ -46,20 +45,19 @@ import { makeTokenAccount, makeTransaction } from "./tokens";
 import type { VerifiedClaimsForIndividual } from "./types";
 import { rawNFTOffChainData } from "./test-data/nft-off-chain-data";
 import { mcBurgerNFTOnChainData } from "./test-data/nft-on-chain-data";
+import { uploadImageToPinata } from "./pinata";
 
 // Arweave currently 400ing and also
 // we don't want to upload images to public arweave routinely
-const testArweaveIfAskedSpecfically = process.env.TEST_ARWEAVE
-  ? test
-  : test.skip;
+const testPinataIfAskedSpecfically = process.env.TEST_PINATA ? test : test.skip;
 
 jest.mock("./functions");
 
 describe(`arWeave`, () => {
-  testArweaveIfAskedSpecfically(
-    `We can upload an image to arWeave`,
+  testPinataIfAskedSpecfically(
+    `We can upload an image to Pinata`,
     async () => {
-      const result = await uploadImageToArweave("./public/icon16.png");
+      const result = await uploadImageToPinata("./public/icon16.png");
       expect(result).toMatch(/https:\/\/arweave.net\/.*/);
     },
     10 * SECONDS
