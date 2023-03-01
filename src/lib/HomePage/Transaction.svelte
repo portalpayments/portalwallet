@@ -39,11 +39,6 @@
     }
   });
 
-  const majorAndMinor = amountAndDecimalsToMajorAndMinor(
-    transaction.amount,
-    decimals
-  );
-
   const isRecievedOrSwapped =
     transaction.direction === Direction.recieved ||
     transaction.direction === Direction.swapped;
