@@ -118,9 +118,10 @@ export interface VerifiedClaimsForIndividual {
 export interface VerifiedClaimsForOrganization {
   type: "ORGANIZATION";
   legalName: string;
-  jurisdiction: "Country";
+  jurisdiction: "Country" | "State";
+  state: null | string;
   country: string;
-  isNotable: false;
+  isNotable: boolean;
   imageUrl: string;
 }
 

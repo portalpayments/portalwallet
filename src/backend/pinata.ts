@@ -1,4 +1,6 @@
 // From example code on https://www.npmjs.com/package/@pinata/sdk
+// TODO: we could just use metaplex to upload to arweave if we decide we don't like pinata or it's too expensive
+// See https://www.quicknode.com/guides/solana-development/nfts/how-to-mint-an-nft-on-solana-using-typescript/
 
 import pinataSDK from "@pinata/sdk";
 import mime from "mime";
