@@ -104,6 +104,10 @@ export const mintIdentityToken = async (
       tokenMetaData = makeTokenMetaDataForOrganization(
         recipientWallet,
         tokenClaims.legalName,
+        tokenClaims.state,
+        tokenClaims.country,
+        tokenClaims.jurisdiction,
+        tokenClaims.isNotable,
         tokenClaims.imageUrl,
         tokenCoverImage
       );
@@ -309,6 +313,10 @@ export const makeTokenMetaDataForIndividual = (
 export const makeTokenMetaDataForOrganization = (
   wallet: PublicKey,
   legalName: string,
+  state: string,
+  country: string,
+  jurisdiction: "state" | "country",
+  isNotable: boolean,
   companyImageUrl: string,
   tokenCoverImageUrl: string
 ): NonFungibleTokenMetadataStandard => {
@@ -330,16 +338,20 @@ export const makeTokenMetaDataForOrganization = (
         value: legalName,
       },
       {
-        trait_type: "jurisdiction",
-        value: "Country",
+        trait_type: "state",
+        value: state,
       },
       {
         trait_type: "country",
-        value: "United Kingdom",
+        value: country,
+      },
+      {
+        trait_type: "jurisdiction",
+        value: jurisdiction,
       },
       {
         trait_type: "isNotable",
-        value: String(false),
+        value: String(isNotable),
       },
       {
         trait_type: "version",
