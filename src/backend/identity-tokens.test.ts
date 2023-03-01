@@ -12,7 +12,7 @@ import {
   getBestMediaAndType,
   getCoverImage,
   getIdentityTokensFromWallet,
-  getIndividualClaimsFromNFTMetadata,
+  getVerifiedClaimsFromNFTMetadata,
   getMetaplex,
   makeTokenMetaDataForIndividual,
   mintIdentityToken,
@@ -336,7 +336,7 @@ describe(`identity tokens`, () => {
       },
     };
 
-    const result = getIndividualClaimsFromNFTMetadata(
+    const result = getVerifiedClaimsFromNFTMetadata(
       nftMetadata,
       new PublicKey("5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"),
       true

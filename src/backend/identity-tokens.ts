@@ -550,11 +550,11 @@ export const getAttributesFromNFT = (
   return attributes;
 };
 
-export const getIndividualClaimsFromNFTMetadata = (
+export const getVerifiedClaimsFromNFTMetadata = (
   nftMetadata: NonFungibleTokenMetadataStandard | OldNonStandardTokenMetaData,
   wallet: PublicKey,
   allowOldIdentityToken: boolean
-): VerifiedClaimsForIndividual | null => {
+): VerifiedClaimsForIndividual | VerifiedClaimsForOrganization | null => {
   if (isOldIdentityToken(nftMetadata)) {
     if (!allowOldIdentityToken) {
       log(
@@ -606,13 +606,29 @@ export const getIndividualClaimsFromNFTMetadata = (
   // Second image is the individual picture
   const individualImageUrl = nftMetadata.properties.files[1].uri;
 
-  let tokenType: "INDIVIDUAL" | "ORGANIZATION" = "INDIVIDUAL" as "INDIVIDUAL";
-  // TODO: add organization support
+  let tokenType: "INDIVIDUAL" | "ORGANIZATION";
+  if (attributes.type === "ORGANIZATION") {
+    tokenType = "ORGANIZATION" as "ORGANIZATION";
+    return {
+      legalName: String(attributes.legalName),
+      state: String(attributes.state),
+      country: String(attributes.country),
+      isNotable: Boolean(attributes.isNotable),
+      jurisdiction: attributes.jurisdiction as "State" | "Country",
+      imageUrl: individualImageUrl,
+      type: tokenType,
+    };
+  }
 
-  return {
-    givenName: String(attributes.givenName),
-    familyName: String(attributes.familyName),
-    imageUrl: individualImageUrl,
-    type: tokenType,
-  };
+  if (attributes.type === "INDIVIDUAL") {
+    tokenType = "INDIVIDUAL" as "INDIVIDUAL";
+    return {
+      givenName: String(attributes.givenName),
+      familyName: String(attributes.familyName),
+      imageUrl: individualImageUrl,
+      type: tokenType,
+    };
+  }
+
+  // TODO: add organization support
 };

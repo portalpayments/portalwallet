@@ -30,7 +30,7 @@ import { AccountLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { getProfilePicture as getProfilePictureUsingSolanaPFPStandard } from "@solflare-wallet/pfp";
 import {
   getIdentityTokensFromWallet,
-  getIndividualClaimsFromNFTMetadata,
+  getVerifiedClaimsFromNFTMetadata,
 } from "./identity-tokens";
 import type {
   BasicTokenAccount,
@@ -220,12 +220,13 @@ export const verifyWallet = async (
 
   const latestTokenMetadata = metadataForIdentityTokens?.[0];
 
-  const verifiedClaims: VerifiedClaimsForIndividual =
-    getIndividualClaimsFromNFTMetadata(
-      latestTokenMetadata,
-      wallet,
-      allowOldIdentityToken
-    );
+  const verifiedClaims:
+    | VerifiedClaimsForIndividual
+    | VerifiedClaimsForOrganization = getVerifiedClaimsFromNFTMetadata(
+    latestTokenMetadata,
+    wallet,
+    allowOldIdentityToken
+  );
 
   return verifiedClaims;
 };
