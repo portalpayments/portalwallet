@@ -35,7 +35,5 @@ export const uploadImageToPinata = async (fileName: string) => {
 
   const uploadedImageURL = contentIDtoUploadedImageURL(result.IpfsHash);
 
-  log(uploadedImageURL);
-
   return uploadedImageURL;
 };

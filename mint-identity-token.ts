@@ -40,16 +40,18 @@ dotenv.config();
 //   familyName: FAMILY_NAME,
 // };
 
-const WALLET_ADDRESS = "41zCUJsKk6cMB94DDtm99qWmyMZfp4GkAhhuz4xTwePu";
-const LEGAL_NAME = "Dialect Labs, Inc.";
-const STATE = "New York";
+const WALLET_ADDRESS = "7bz4h6T4p39ozCnz7vpDmmiFNssyV1d1Hu3TKcDXmSXu";
+const LEGAL_NAME = "Bridgesplit, Inc.";
+const STATE = "Delaware";
 const COUNTRY = "United States of America";
 const JURISDICTION = "State";
-const INDIVIDUAL_OR_ORGANIZATION_IMAGE_FILE = "dialect.jpg";
-const COVER_IMAGE_FILE = "identity-token-cover-image-for-dialect.png";
-const ALREADY_UPLOADED_INDIVIDUAL_OR_ORGANIZATION_IMAGE = null;
-const ALREADY_UPLOADED_COVER_IMAGE = null;
+const INDIVIDUAL_OR_ORGANIZATION_IMAGE_FILE = "bridgesplit.jpg";
+const COVER_IMAGE_FILE = "identity-token-cover-image-for-bridgesplit.png";
 const IS_NOTABLE = true;
+
+const ALREADY_UPLOADED_INDIVIDUAL_OR_ORGANIZATION_IMAGE =
+  "https://gateway.pinata.cloud/ipfs/QmYtohFcvN3DT9pdEofWd7meYA87gRpFnBRAKgRPMp5XBW";
+const ALREADY_UPLOADED_COVER_IMAGE = null;
 
 // Partial because we haven't filled in image URL yet
 const tokenClaimsNoImageUrl: Omit<VerifiedClaimsForOrganization, "imageUrl"> = {
@@ -68,6 +70,10 @@ const tokenClaimsNoImageUrl: Omit<VerifiedClaimsForOrganization, "imageUrl"> = {
 // ------------------------------------------------------------------------------
 
 const main = async () => {
+  log(
+    `'\n\nMake sure to fix the ENABLE BELOW FOR TOKEN MINTER code otherwise this will fail\n\n`
+  );
+
   log(`🎟️ Running Portal Identity token minter ...`);
 
   const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;
@@ -92,9 +98,6 @@ const main = async () => {
   const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
 
   // Step 0:
-  log(
-    `'\n\nMake sure to fix the ENABLE BELOW FOR TOKEN MINTER code otherwise this will fail\n\n`
-  );
 
   // Step 1a. Upload individual image if necessary
   let uploadedIndividualOrOrganizationImageUrl: string | null =
@@ -121,9 +124,7 @@ const main = async () => {
   if (uploadedCoverImageUrl) {
     log(`🖼️ Using already-uploaded cover image`, uploadedCoverImageUrl);
   } else {
-    uploadedCoverImageUrl = await uploadImageToPinata(
-      INDIVIDUAL_OR_ORGANIZATION_IMAGE_FILE
-    );
+    uploadedCoverImageUrl = await uploadImageToPinata(COVER_IMAGE_FILE);
     log(`🖼️ Uploaded cover image`, uploadedCoverImageUrl);
   }
 

@@ -156,13 +156,14 @@ export const mintIdentityToken = async (
     // >> Source: SDK
     // >> Problem: The account of type [MintAccount] was not found at the provided address [51pE2seG8HAk9ToWrKQfakMWrp3dJ8RPqRnnXu9jqyzV].
     // >> Solution: Ensure the provided address is correct and that an account exists at this address.
+    //
     // This seems to be a race condition - the NFT is actually there in Solana Explorer
-    log(`Potential metaplex bug found when creating NFT: ${error.message}`);
+    log(`DEBUG: raw error.message: ${error.message}`);
 
     const mintAddressInProblem = getAddressFromProblem(error.message);
     if (mintAddressInProblem) {
       throw new Error(
-        `Metaplex couldn't find the mint account, but check https://explorer.solana.com/address/${mintAddressInProblem}`
+        `⚠️ Metaplex couldn't find the mint account, but check https://explorer.solana.com/address/${mintAddressInProblem} - this is likely a bug in Metaplex, and the token was made. Just retry minting the token. `
       );
     }
 
