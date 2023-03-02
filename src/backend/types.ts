@@ -357,3 +357,5 @@ export interface TransactionsByDay {
   totalSpendingDisplay: string;
   transactions: Array<SimpleTransaction>;
 }
+
+export type Jurisdiction = "State" | "Country";

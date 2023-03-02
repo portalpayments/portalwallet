@@ -47,6 +47,7 @@ import type {
   NonFungibleTokenMetadataStandard,
   OldNonStandardTokenMetaData,
   Collectable,
+  Jurisdiction,
 } from "./types";
 import { makeTransaction } from "./tokens";
 import * as http from "../lib/http-client";
@@ -315,7 +316,7 @@ export const makeTokenMetaDataForOrganization = (
   legalName: string,
   state: string,
   country: string,
-  jurisdiction: "state" | "country",
+  jurisdiction: Jurisdiction,
   isNotable: boolean,
   companyImageUrl: string,
   tokenCoverImageUrl: string
@@ -614,7 +615,7 @@ export const getVerifiedClaimsFromNFTMetadata = (
       state: String(attributes.state),
       country: String(attributes.country),
       isNotable: Boolean(attributes.isNotable),
-      jurisdiction: attributes.jurisdiction as "State" | "Country",
+      jurisdiction: attributes.jurisdiction as Jurisdiction,
       imageUrl: individualImageUrl,
       type: tokenType,
     };
