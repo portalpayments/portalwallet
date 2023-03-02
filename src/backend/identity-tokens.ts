@@ -67,7 +67,7 @@ export const getMetaplex = (
     .use(mockStorage());
 };
 
-// Problem is in the form of
+// 'problem' is in the form of
 // "The account of type [MintAccount] was not found at the provided address [4DuUeum1r4MP19SAYfg57LdeqeWui7Z5a8mc1KCTiS1N]."
 const getAddressFromProblem = (problem: string): string | null => {
   const regex = /provided address \[(.*)\]/g;

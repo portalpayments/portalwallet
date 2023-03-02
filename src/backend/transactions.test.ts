@@ -531,7 +531,7 @@ describe(`grouping transactions`, () => {
       {
         isoDate: "2022-09-09",
         totalSpending: 30500000,
-        totalSpendingDisplay: "0.50",
+        totalSpendingDisplay: "30.50",
         transactions: [
           {
             id: "2",
@@ -570,7 +570,7 @@ describe(`grouping transactions`, () => {
       {
         isoDate: "2022-09-08",
         totalSpending: 790000,
-        totalSpendingDisplay: "0.07",
+        totalSpendingDisplay: "0.79",
         transactions: [
           {
             id: "4",
@@ -651,6 +651,90 @@ describe(`grouping transactions`, () => {
             receipt: null,
             swapAmount: null,
             swapCurrency: null,
+          },
+        ],
+      },
+    ]);
+  });
+
+  test(`totals for days are accurate`, () => {
+    const transactionSummaries = [
+      {
+        id: "utb9vY1PBesmc83vbGhnMf4rkhhSfKpNV5xkYcQ4yiHzyuXtvBE93UoKGzqCtKuuxk3QYCQ8NyDG713Rc9dcF3f",
+        date: 1676650317000,
+        status: true,
+        networkFee: 6100,
+        direction: 0,
+        amount: 1000000,
+        currency: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+        counterParty: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+        memo: "Demo for Dialect",
+        receipt: null,
+        swapAmount: null,
+        swapCurrency: null,
+      },
+      {
+        id: "2kpSZHdX8N1xkVqoTMgQk6drC8SurFrAyi9WWHuNZXH5J9jTaFzTdv9NEDbLkKrdnx1e6WziNsXCwN9hc9u9FQvV",
+        date: 1676647661000,
+        status: true,
+        networkFee: 5000,
+        direction: 0,
+        amount: 2000000000,
+        currency: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+        to: "6LL1j2XDC8FNWLwYfBtwG1kEViuZw2tqdPg1TPa3ZcqH",
+        counterParty: "6LL1j2XDC8FNWLwYfBtwG1kEViuZw2tqdPg1TPa3ZcqH",
+        memo: "",
+        receipt: null,
+        swapAmount: null,
+        swapCurrency: null,
+      },
+    ];
+    const transactionsByDays = getTransactionsByDays(
+      transactionSummaries,
+      contacts,
+      EMPTY,
+      getCurrencyBySymbol("USDC").decimals
+    );
+    expect(transactionsByDays).toEqual([
+      {
+        isoDate: "2023-02-17",
+        totalSpending: 2001000000,
+        totalSpendingDisplay: "2001",
+        transactions: [
+          {
+            amount: 1000000,
+            counterParty: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+            currency: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            date: 1676650317000,
+            direction: 0,
+            from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            id: "utb9vY1PBesmc83vbGhnMf4rkhhSfKpNV5xkYcQ4yiHzyuXtvBE93UoKGzqCtKuuxk3QYCQ8NyDG713Rc9dcF3f",
+            memo: "Demo for Dialect",
+            networkFee: 6100,
+            receipt: null,
+            status: true,
+            swapAmount: null,
+            swapCurrency: null,
+            to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
+          },
+          {
+            amount: 2000000000,
+            counterParty: "6LL1j2XDC8FNWLwYfBtwG1kEViuZw2tqdPg1TPa3ZcqH",
+            currency: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            date: 1676647661000,
+            direction: 0,
+            from: "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM",
+            id: "2kpSZHdX8N1xkVqoTMgQk6drC8SurFrAyi9WWHuNZXH5J9jTaFzTdv9NEDbLkKrdnx1e6WziNsXCwN9hc9u9FQvV",
+            memo: "",
+            networkFee: 5000,
+            receipt: null,
+            status: true,
+            swapAmount: null,
+            swapCurrency: null,
+            to: "6LL1j2XDC8FNWLwYfBtwG1kEViuZw2tqdPg1TPa3ZcqH",
           },
         ],
       },

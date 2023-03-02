@@ -61,7 +61,7 @@ export const amountAndDecimalsToString = (amount: number, decimals: number) => {
 };
 
 export const formatNumber = (
-  isRecievedOrSwapped: boolean,
+  showPlus: boolean,
   amount: number,
   decimals: number,
   hideMinorIfLarge = false
@@ -70,7 +70,7 @@ export const formatNumber = (
 
   let formattedAmount = "";
 
-  if (isRecievedOrSwapped) {
+  if (showPlus) {
     formattedAmount += "+";
   }
 

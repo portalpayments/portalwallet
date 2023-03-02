@@ -50,7 +50,7 @@ import {
   type PublicKey,
   Keypair,
 } from "@solana/web3.js";
-import { amountAndDecimalsToMajorAndMinor } from "../lib/utils";
+import { formatNumber } from "../lib/utils";
 
 import { recognizeDateTime } from "@microsoft/recognizers-text-date-time";
 
@@ -435,8 +435,6 @@ export const getTransactionsByDays = (
 ): Array<TransactionsByDay> => {
   transactions = transactions.sort(byDateNewestToOldest);
 
-  // debugger;
-
   const transactionsBeforeFiltering = transactions.length;
 
   if (filterValue.length) {
@@ -527,23 +525,35 @@ export const getTransactionsByDays = (
 
   transactions.forEach((transaction) => {
     const isoDate = dateToISODate(transaction.date);
-    const lastDay = transactionsByDays.at(-1) || null;
-    if (lastDay?.isoDate === isoDate) {
+    const mostRecentlyAddedDayItem = transactionsByDays.at(-1) || null;
+    const mostRecentlyAddedDayDate = mostRecentlyAddedDayItem?.isoDate || null;
+    if (mostRecentlyAddedDayDate === isoDate) {
       // Add this transaction to the existing entry for this day
-      lastDay.transactions.push(transaction);
+      mostRecentlyAddedDayItem.transactions.push(transaction);
       // And add it to the spending total for this day
-      lastDay.totalSpending += toSpendingAmount(transaction);
+      const thisTransactionsSpending = toSpendingAmount(transaction);
+      mostRecentlyAddedDayItem.totalSpending += thisTransactionsSpending;
+
+      if (thisTransactionsSpending) {
+        mostRecentlyAddedDayItem.totalSpendingDisplay = formatNumber(
+          false,
+          mostRecentlyAddedDayItem.totalSpending,
+          decimals,
+          true
+        );
+      }
     } else {
       // Create a new TransactionsByDay item
       const totalSpending = toSpendingAmount(transaction);
 
-      let totalSpendingDisplay: string | null = null;
+      let totalSpendingDisplay = null;
       if (totalSpending) {
-        // TODO: we could neaten this to not use the join()
-        totalSpendingDisplay = amountAndDecimalsToMajorAndMinor(
+        totalSpendingDisplay = formatNumber(
+          false,
           totalSpending,
-          decimals
-        ).join(".");
+          decimals,
+          true
+        );
       }
 
       transactionsByDays.push({
