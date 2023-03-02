@@ -573,5 +573,15 @@ describe(`identity tokens`, () => {
     });
   });
 
-  // TODO test verifyWallet() for Alice
+  // TODO: add http or pinata mocks
+  // test(`We can verify Alice`, async () => {
+  //   const claims = await verifyWallet(
+  //     connection,
+  //     testIdentityTokenIssuer,
+  //     testIdentityTokenIssuer.publicKey,
+  //     alice.publicKey
+  //   );
+
+  //   expect(claims).toEqual({});
+  // });
 });
