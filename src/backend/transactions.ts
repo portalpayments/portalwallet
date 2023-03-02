@@ -435,9 +435,9 @@ export const getTransactionsByDays = (
 ): Array<TransactionsByDay> => {
   transactions = transactions.sort(byDateNewestToOldest);
 
-  log(
-    `In getTransactionsByDays, ${transactions.length} transactions before filtering`
-  );
+  // debugger;
+
+  const transactionsBeforeFiltering = transactions.length;
 
   if (filterValue.length) {
     // TODO: this code works but library has no docs
@@ -512,7 +512,7 @@ export const getTransactionsByDays = (
   }
 
   log(
-    `In getTransactionsByDays, ${transactions.length} transactions after any filtering`
+    `In getTransactionsByDays, ${transactionsBeforeFiltering} before filtering, ${transactions.length} transactions after filtering`
   );
 
   const transactionsByDays: Array<TransactionsByDay> = [];
