@@ -16,6 +16,10 @@ if (!pinataAPIKey) {
   throw new Error(`Please set PINATA_API_KEY in .env file`);
 }
 
+if (!pinataSecretAPIKey) {
+  throw new Error(`Please set PINATA_API_SECRET in .env file`);
+}
+
 const pinata = new pinataSDK(pinataAPIKey, pinataSecretAPIKey);
 
 const contentIDtoUploadedImageURL = (contentID: string) => {
