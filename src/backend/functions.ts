@@ -106,12 +106,12 @@ export const toLocalTime = (date: number | Date) => {
 
 export const byDateNewestToOldest = (a, b) => {
   if (a.date === b.date) {
-    return 0;
+    return -1;
   }
   if (a.date < b.date) {
     return 1;
   }
-  return -1;
+  return 0;
 };
 
 export const isCamelCase = (string: string) => {
