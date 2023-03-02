@@ -25,6 +25,8 @@ import {
   type JsonMetadata,
   type Nft,
   type Sft,
+  type NftWithToken,
+  type SftWithToken,
 } from "@metaplex-foundation/js";
 import mime from "mime";
 import {
@@ -34,11 +36,12 @@ import {
   sendAndConfirmTransaction,
 } from "@solana/web3.js";
 
-import { asyncMap, log, stringify } from "./functions";
+import { asyncMap, log, sleep, stringify } from "./functions";
 import {
   IDENTITY_TOKEN_NAME,
   LATEST_IDENTITY_TOKEN_VERSION,
   MINIMUM_IDENTITY_TOKEN_VERSION,
+  SECONDS,
 } from "./constants";
 
 import type {
@@ -88,7 +91,7 @@ export const mintIdentityToken = async (
   tokenCoverImage: string,
   identityTokenIssuer: Keypair,
   isProduction: boolean
-) => {
+): Promise<Sft | SftWithToken | Nft | NftWithToken> => {
   log(`🏦 Minting identity token...`);
 
   let tokenMetaData: NonFungibleTokenMetadataStandard | null = null;
@@ -122,7 +125,7 @@ export const mintIdentityToken = async (
 
   const metaplex = getMetaplex(connection, identityTokenIssuer, isProduction);
   const metaplexNFTs = metaplex.nfts();
-  // TODO: see norte re: NonFungibleTokenMetadataStandard above
+  // TODO: see note re: NonFungibleTokenMetadataStandard above
   // @ts-ignore
   const uploadResponse = await metaplexNFTs.uploadMetadata(tokenMetaData);
 
@@ -132,14 +135,36 @@ export const mintIdentityToken = async (
 
   // See https://github.com/metaplex-foundation/js-examples/blob/main/getting-started-expressjs/createNFT.cjs too
 
-  // Sometimes fails with
-  let tokenCreateOutput: CreateNftOutput;
+  let createdNFT: Sft | SftWithToken | Nft | NftWithToken;
   try {
-    tokenCreateOutput = await metaplexNFTs.create({
+    // TODO
+    // This is a workaround for metaplex bug.
+    // Bug shows as:
+    //    The account of type [MintAccount] was not found at the provided address [51pE2seG8HAk9ToWrKQfakMWrp3dJ8RPqRnnXu9jqyzV].
+    //
+    // This seems to be a race condition - the NFT is actually there in Solana Explorer
+    // See https://github.com/metaplex-foundation/js/issues/430 and
+    // See https://github.com/metaplex-foundation/js/issues/344#issuecomment-1325265657
+
+    // TODO: re-enable the code below when this is fixes
+
+    // tokenCreateOutput = await metaplexNFTs.create({
+    //   uri: uploadResponse.uri, // "https://arweave.net/123",
+    //   name: IDENTITY_TOKEN_NAME,
+    //   sellerFeeBasisPoints: 0, // 500 would represent 5.00%.
+    // });
+
+    // TODO: remove the code below when this is fixed
+    const transactionBuilder = await metaplex.nfts().builders().create({
       uri: uploadResponse.uri, // "https://arweave.net/123",
       name: IDENTITY_TOKEN_NAME,
       sellerFeeBasisPoints: 0, // 500 would represent 5.00%.
     });
+    const { mintAddress } = transactionBuilder.getContext();
+    await metaplex.rpc().sendAndConfirmTransaction(transactionBuilder);
+    await sleep(2 * SECONDS);
+    createdNFT = await metaplex.nfts().findByMint({ mintAddress });
+    // End of hack for metaplex error
   } catch (thrownError) {
     const error = thrownError as Error;
 
@@ -156,15 +181,6 @@ export const mintIdentityToken = async (
       );
     }
 
-    // Another possible error - this is be a metaplex bug
-    // Unexpected error Account Not Found
-    // >> Source: SDK
-    // >> Problem: The account of type [MintAccount] was not found at the provided address [51pE2seG8HAk9ToWrKQfakMWrp3dJ8RPqRnnXu9jqyzV].
-    // >> Solution: Ensure the provided address is correct and that an account exists at this address.
-    //
-    // This seems to be a race condition - the NFT is actually there in Solana Explorer
-    // See https://github.com/metaplex-foundation/js/issues/430 and
-    // See https://github.com/metaplex-foundation/js/issues/344#issuecomment-1325265657
     log(`DEBUG: raw error.message: ${error.message}`);
 
     const mintAddressInProblem = getAddressFromProblem(error.message);
@@ -183,12 +199,10 @@ export const mintIdentityToken = async (
       tokenClaims.type === "INDIVIDUAL"
         ? tokenClaims.givenName
         : tokenClaims.legalName
-    } has been created, senderTokenAccount is ${
-      tokenCreateOutput.tokenAddress
-    }.`
+    } has been created, senderTokenAccount is ${createdNFT.address}.`
   );
 
-  return tokenCreateOutput;
+  return createdNFT;
 };
 
 // Transfer the token to the recipient's wallet

@@ -8,7 +8,6 @@
 //
 import { Metaplex, Pda, type Nft } from "@metaplex-foundation/js";
 import {
-  getAllNftMetadatasFromAWallet,
   getBestMediaAndType,
   getCoverImage,
   getIdentityTokensFromWallet,
@@ -19,7 +18,6 @@ import {
   nftToCollectable,
 } from "./identity-tokens";
 import {
-  clusterApiUrl,
   Connection,
   Keypair,
   PublicKey,
@@ -35,9 +33,9 @@ import { log, sleep, stringify } from "./functions";
 import {
   IDENTITY_TOKEN_NAME,
   ONE,
-  ZERO,
   SOLANA_SYSTEM_PROGRAM,
   SECONDS,
+  ZERO,
 } from "./constants";
 import base58 from "bs58";
 import { BN as BigNumber } from "bn.js";
@@ -101,9 +99,7 @@ describe(`identity tokens`, () => {
         imageUrl: fakeUrl,
       };
 
-      const name = IDENTITY_TOKEN_NAME;
-
-      const createOutput = await mintIdentityToken(
+      const newNFT = await mintIdentityToken(
         connection,
         alice.publicKey,
         tokenContents,
@@ -112,167 +108,90 @@ describe(`identity tokens`, () => {
         false
       );
 
-      mintAddress = createOutput.mintAddress;
+      mintAddress = newNFT.mint.address;
 
-      // Created fresh, but will be referenced a few times in our output
-      //
-      // From https://github.com/metaplex-foundation/js#create
-      // metaplexNFTs.create will take care of creating the mint account, the associated token account, the metadata PDA and the original edition PDA (a.k.a. the master edition) for you.
-      const masterEditionAddress = createOutput.masterEditionAddress;
-      const metadataAddress = createOutput.metadataAddress;
-      const tokenAddress = createOutput.tokenAddress;
-      const updateAuthorityAddress = createOutput.nft.updateAuthorityAddress;
+      const idTokenIssuer = testIdentityTokenIssuer.publicKey;
+      const alicePublicKey = alice.publicKey;
 
-      expect(createOutput).toEqual({
-        response: {
-          // lowercase just to keep you on your toes
-          blockhash: expect.any(String),
-          signature: expect.any(String),
-          lastValidBlockHeight: expect.any(Number),
-          confirmResponse: {
-            context: {
-              slot: expect.any(Number),
-            },
-            value: {
-              err: null,
-            },
+      expect(newNFT).toEqual({
+        address: expect.any(PublicKey),
+        collection: null,
+        collectionDetails: null,
+        creators: [
+          {
+            address: idTokenIssuer,
+            share: 100,
+            verified: true,
           },
+        ],
+        edition: {
+          address: expect.any(PublicKey),
+          isOriginal: true,
+          maxSupply: expect.any(BigNumber),
+          model: "nftEdition",
+          supply: expect.any(BigNumber),
         },
-        mintAddress: expect.any(PublicKey),
-        metadataAddress,
-        masterEditionAddress,
-        tokenAddress,
-        nft: {
-          model: "nft",
-          updateAuthorityAddress,
-          json: {
-            name,
-            description:
-              "Verification of real-world identity for Solana payments and apps",
-            image: "https://arweave.net/fakeImageForUnitTests.png",
-            external_url: "https://getportal.app",
-            attributes: [
-              {
-                trait_type: "type",
-                value: "INDIVIDUAL",
-              },
-              {
-                trait_type: "givenName",
-                value: "Alice",
-              },
-              {
-                trait_type: "familyName",
-                value: "Smith",
-              },
-              {
-                trait_type: "isNotable",
-                value: "false",
-              },
-              {
-                trait_type: "version",
-                value: "7",
-              },
-              {
-                trait_type: "issuedAgainst",
-                value: alice.publicKey.toBase58(),
-              },
-            ],
-            properties: {
-              files: [
-                {
-                  uri: "https://arweave.net/fakeImageForUnitTests.png",
-                  type: "image/png",
-                },
-                {
-                  uri: "https://arweave.net/fakeImageForUnitTests.png",
-                  type: "image/png",
-                },
-              ],
-            },
-          },
-
-          jsonLoaded: true,
-          name,
-          symbol: "",
-          // https://mockstorage.example.com/...
-          uri: expect.any(String),
-          isMutable: true,
-          primarySaleHappened: false,
-          programmableConfig: null,
-          sellerFeeBasisPoints: 0,
-          editionNonce: expect.any(Number),
-          creators: [
+        editionNonce: expect.any(Number),
+        isMutable: true,
+        json: {
+          attributes: [
+            { trait_type: "type", value: "INDIVIDUAL" },
+            { trait_type: "givenName", value: "Alice" },
+            { trait_type: "familyName", value: "Smith" },
+            { trait_type: "isNotable", value: "false" },
+            { trait_type: "version", value: "7" },
             {
-              address: testIdentityTokenIssuer.publicKey,
-              verified: true,
-              share: 100,
+              trait_type: "issuedAgainst",
+              value: alicePublicKey.toBase58(),
             },
           ],
-          tokenStandard: 0,
-          collection: null,
-          collectionDetails: null,
-          uses: null,
-          address: mintAddress,
-          metadataAddress: metadataAddress,
-          mint: {
-            model: "mint",
-            address: mintAddress,
-            mintAuthorityAddress: expect.any(PublicKey), // masterEditionAddressPDA,
-            freezeAuthorityAddress: expect.any(PublicKey), //masterEditionAddressPDA,
-            decimals: 0,
-            supply: {
-              basisPoints: ONE,
-              currency: {
-                symbol: "Token",
-                decimals: 0,
-                namespace: "spl-token",
+          description:
+            "Verification of real-world identity for Solana payments and apps",
+          external_url: "https://getportal.app",
+          image: "https://arweave.net/fakeImageForUnitTests.png",
+          name: "Portal Identity Token",
+          properties: {
+            files: [
+              {
+                type: "image/png",
+                uri: "https://arweave.net/fakeImageForUnitTests.png",
               },
-            },
-            isWrappedSol: false,
-            currency: {
-              symbol: "Token",
-              decimals: 0,
-              namespace: "spl-token",
-            },
-          },
-          token: {
-            model: "token",
-            address: tokenAddress,
-            isAssociatedToken: true,
-            mintAddress: mintAddress,
-            ownerAddress: testIdentityTokenIssuer.publicKey,
-            amount: {
-              basisPoints: ONE,
-              currency: {
-                symbol: "Token",
-                decimals: 0,
-                namespace: "spl-token",
+              {
+                type: "image/png",
+                uri: "https://arweave.net/fakeImageForUnitTests.png",
               },
-            },
-            closeAuthorityAddress: null,
-            delegateAddress: null,
-            delegateAmount: {
-              basisPoints: ZERO,
-              currency: {
-                symbol: "Token",
-                decimals: 0,
-                namespace: "spl-token",
-              },
-            },
-            state: 1,
-          },
-          edition: {
-            model: "nftEdition",
-            isOriginal: true,
-            address: masterEditionAddress,
-            // TODO: this is zero, but in a slightly different form
-            // from new BigNum(0). Actually check value.
-            supply: expect.any(BigNumber),
-            // TODO: this is zero, but in a slightly different form
-            // from new BigNum(0). Actually check value.
-            maxSupply: expect.any(BigNumber),
+            ],
           },
         },
+        jsonLoaded: true,
+        metadataAddress: expect.any(PublicKey),
+        mint: {
+          address: expect.any(PublicKey),
+          currency: { decimals: 0, namespace: "spl-token", symbol: "Token" },
+          decimals: 0,
+          freezeAuthorityAddress: expect.any(PublicKey),
+          isWrappedSol: false,
+          mintAuthorityAddress: expect.any(PublicKey),
+          model: "mint",
+          supply: {
+            basisPoints: ONE,
+            currency: {
+              decimals: 0,
+              namespace: "spl-token",
+              symbol: "Token",
+            },
+          },
+        },
+        model: "nft",
+        name: "Portal Identity Token",
+        primarySaleHappened: false,
+        programmableConfig: null,
+        sellerFeeBasisPoints: 0,
+        symbol: "",
+        tokenStandard: 0,
+        updateAuthorityAddress: idTokenIssuer,
+        uri: expect.stringContaining("https://mockstorage.example.com"),
+        uses: null,
       });
     },
     // Slow test as we're talking to the local validator
@@ -559,7 +478,6 @@ describe(`identity tokens`, () => {
 
   test(`nftToCollectable`, async () => {
     const collectable = await nftToCollectable(mcBurgerNFTOnChainData, 420);
-    log(stringify(collectable));
     expect(collectable).toEqual({
       id: expect.any(String),
       name: "McBurger Demo",
