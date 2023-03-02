@@ -131,7 +131,8 @@
             </div>
 
             <div class="day-total">
-              {transactionsByDay.totalSpendingDisplay}
+              {transactionsByDay.totalSpendingDisplay ??
+                transactionsByDay.totalSpendingDisplay}
             </div>
           </div>
 

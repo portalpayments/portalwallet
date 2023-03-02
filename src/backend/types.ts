@@ -354,7 +354,7 @@ export interface SimpleWalletMessage {
 export interface TransactionsByDay {
   isoDate: string;
   totalSpending: number;
-  totalSpendingDisplay: string;
+  totalSpendingDisplay: string | null;
   transactions: Array<SimpleTransaction>;
 }
 

@@ -536,11 +536,16 @@ export const getTransactionsByDays = (
     } else {
       // Create a new TransactionsByDay item
       const totalSpending = toSpendingAmount(transaction);
-      // TODO: we could neaten this to not use the join()
-      const totalSpendingDisplay = amountAndDecimalsToMajorAndMinor(
-        totalSpending,
-        decimals
-      ).join(".");
+
+      let totalSpendingDisplay: string | null = null;
+      if (totalSpending) {
+        // TODO: we could neaten this to not use the join()
+        totalSpendingDisplay = amountAndDecimalsToMajorAndMinor(
+          totalSpending,
+          decimals
+        ).join(".");
+      }
+
       transactionsByDays.push({
         isoDate,
         totalSpending,
