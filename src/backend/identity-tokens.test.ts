@@ -191,14 +191,6 @@ describe(`identity tokens`, () => {
             },
           },
 
-          // claims: {
-          //   familyName: "Smith",
-          //   givenName: "Alice",
-          //   imageUrl: expect.any(String),
-          //   type: "INDIVIDUAL",
-          // },
-          // issuedAgainst: expect.any(String),
-          // version: 7,
           jsonLoaded: true,
           name,
           symbol: "",
