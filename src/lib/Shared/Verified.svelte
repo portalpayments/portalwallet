@@ -66,12 +66,4 @@
     /* Move icon so the tick bottom is level with the text baseline */
     transform: translateY(5px);
   }
-
-  .labels {
-    display: grid;
-    grid-auto-flow: column;
-    justify-content: start;
-    align-items: center;
-    gap: 6px;
-  }
 </style>
