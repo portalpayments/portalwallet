@@ -68,6 +68,7 @@
       isNew: true,
       isPending: false,
       verifiedClaims,
+      profilePictureURL: null,
     };
   }
 
