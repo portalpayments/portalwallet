@@ -130,11 +130,14 @@
               {contact.verifiedClaims?.legalName}
             {/if}
           {:else}
-            Unverified {truncateWallet(contact.walletAddress)}
+            Anonymous
           {/if}
         </div>
         {#if transaction.memo && !transaction.receipt}
           <div class="memo">{transaction.memo}</div>
+        {/if}
+        {#if !transaction?.receipt?.shop && isEmpty(contact?.verifiedClaims)}
+          <div class="memo">{truncateWallet(contact.walletAddress)}</div>
         {/if}
       </div>
     {:else}
