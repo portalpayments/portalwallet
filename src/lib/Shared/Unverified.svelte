@@ -6,10 +6,12 @@
   import { truncateWallet, copyToClipboard } from "../utils";
   import { getGradient } from "../../backend/deterministic-beautiful-gradient";
   import { onMount } from "svelte";
+  import { getSolanaName as getWalletAddressName } from "sol-namor";
 
   export let contact: Contact;
 
-  let isNew = false;
+  const walletAddressName = getWalletAddressName(contact.walletAddress);
+
   let gradient: string | null = null;
 
   onMount(async () => {
@@ -29,21 +31,14 @@
   <div class="profile-pic" style={gradient} />
 {/if}
 <div class="recipient-info">
+  <div class="anonymous">Anonymous</div>
   <button
     class="truncated-wallet"
     on:click={async () => {
       await copyToClipboard(contact.walletAddress);
     }}>{truncateWallet(contact.walletAddress)}</button
   >
-  <div class="badges-and-labels">
-    <Label color={LabelColor.Grey}>Unverified</Label>
-    {#if isNew}
-      <Label color={LabelColor.Yellow}>New</Label>
-    {/if}
-    {#if contact.isPending}
-      <Label color={LabelColor.Yellow}>Pending</Label>
-    {/if}
-  </div>
+  <div class="wallet-address-name">{walletAddressName}</div>
 </div>
 
 <style lang="scss">
@@ -55,6 +50,7 @@
 
   .recipient-info {
     display: grid;
+    text-align: left;
     justify-content: start;
   }
 
@@ -63,9 +59,23 @@
     align-items: start;
   }
 
+  .anonymous {
+    font-weight: 600;
+  }
+
   .truncated-wallet {
     cursor: pointer;
     background-color: transparent;
     color: var(--black);
+    padding: 0;
+    border: 0;
+    text-align: left;
+    font-size: 12px;
+    line-height: 14px;
+  }
+
+  .wallet-address-name {
+    font-size: 10px;
+    line-height: 12px;
   }
 </style>
