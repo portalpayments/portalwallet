@@ -4,7 +4,53 @@ import {
   getHandleAndRegistryKey,
 } from "@bonfida/spl-name-service";
 import { URLS } from "./constants";
+import {
+  getDomainKeySync,
+  NameRegistryState,
+  getAllDomains,
+  performReverseLookup,
+} from "@bonfida/spl-name-service";
+
 // TODO: Add https://www.npmjs.com/package/@onsol/tldparser
+
+// See https://www.quicknode.com/guides/solana-development/accounts-and-data/how-to-query-solana-naming-service-domains-sol/#set-up-your-environment
+export const dotSolDomainToWallet = async (
+  connection: Connection,
+  dotSolDomain: string
+): Promise<string> => {
+  try {
+    const { pubkey } = getDomainKeySync(dotSolDomain);
+    const owner = (
+      await NameRegistryState.retrieve(connection, pubkey)
+    ).registry.owner.toBase58();
+    return owner;
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    if (error.message === "Invalid name account provided") {
+      return null;
+    }
+    throw error;
+  }
+};
+
+export const twitterHandleToWallet = async (
+  connection: Connection,
+  twitterHandle: string
+) => {
+  // Normalise the @ symbol. We don't need it.
+  if (twitterHandle.startsWith("@")) {
+    twitterHandle = twitterHandle.slice(1);
+  }
+  try {
+    const registry = await getTwitterRegistry(connection, twitterHandle);
+    return registry.owner.toString();
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    if (error.message === "Invalid name account provided") {
+      return null;
+    }
+  }
+};
 
 export const walletToTwitterHandle = async (wallet: string) => {
   const connection = new Connection(URLS["mainNetBeta"]);
@@ -32,25 +78,6 @@ export const walletToTwitterHandle = async (wallet: string) => {
 
     // An unexpected error
     throw error;
-  }
-};
-
-export const twitterHandleToWallet = async (
-  connection: Connection,
-  twitterHandle: string
-) => {
-  // Normalise the @ symbol. We don't need it.
-  if (twitterHandle.startsWith("@")) {
-    twitterHandle = twitterHandle.slice(1);
-  }
-  try {
-    const registry = await getTwitterRegistry(connection, twitterHandle);
-    return registry.owner.toString();
-  } catch (thrownObject) {
-    const error = thrownObject as Error;
-    if (error.message === "Invalid name account provided") {
-      return null;
-    }
   }
 };
 
