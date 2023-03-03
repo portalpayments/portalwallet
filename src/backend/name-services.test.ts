@@ -2,33 +2,28 @@ import type { Connection } from "@solana/web3.js";
 import {
   JOE_MCCANNS_WALLET,
   MIKES_WALLET,
+  SECONDS,
   SHAQS_WALLET,
   URLS,
 } from "./constants";
+import { sleep } from "./functions";
 import {
   walletToTwitterHandle,
   twitterHandleToWallet,
   dotSolDomainToWallet,
   dotBackpackToWallet,
+  dotGlowToWallet,
+  dotAbcDotBonkOrDotPoorDomainToWallet,
+  resolveAnyName,
 } from "./name-services";
 import { connect } from "./wallet";
+
+jest.mock("./functions");
 
 describe(`wallets to twitter handles`, () => {
   let connection: Connection;
   beforeAll(async () => {
     connection = await connect("quickNodeMainNetBeta");
-  });
-
-  describe(`dotBackpackToWallet`, () => {
-    test(`mikemaccana.backpack resolves`, async () => {
-      const wallet = await dotBackpackToWallet("mikemaccana.backpack");
-      expect(wallet).toEqual(MIKES_WALLET);
-    });
-
-    test(`genry.backpack does resolve`, async () => {
-      const wallet = await dotBackpackToWallet("genry.backpack");
-      expect(wallet).toEqual(null);
-    });
   });
 
   describe(`dotSolDomainToWallet`, () => {
@@ -51,26 +46,36 @@ describe(`wallets to twitter handles`, () => {
     });
   });
 
-  // Also tried 'raj', 'joker', 'hge' - nobody has reverse records to match Twitter to therr identity
-  describe("Wallet to Twitter mapping", () => {
-    test(`Says Shaq's wallet hasn't been set up for reverse Twitter`, async () => {
-      expect(await walletToTwitterHandle(SHAQS_WALLET)).toEqual(null);
+  describe(`dotBackpackToWallet`, () => {
+    test(`mikemaccana.backpack resolves`, async () => {
+      const wallet = await dotBackpackToWallet("mikemaccana.backpack");
+      expect(wallet).toEqual(MIKES_WALLET);
     });
 
-    test(`Says Joe McCann's wallet hasn't been set up for reverse Twitter`, async () => {
-      expect(await walletToTwitterHandle(JOE_MCCANNS_WALLET)).toEqual(null);
-    });
-
-    test(`Shows mapping to Mike's Twitter account`, async () => {
-      expect(await walletToTwitterHandle(MIKES_WALLET)).toEqual("mikemaccana");
-    });
-
-    test(`Returns null for a bad wallet address`, async () => {
-      expect(await walletToTwitterHandle("dfsdffdsfsdfdsfdsf")).toEqual(null);
+    test(`genry.backpack does not resolve`, async () => {
+      const wallet = await dotBackpackToWallet("genry.backpack");
+      expect(wallet).toEqual(null);
     });
   });
 
-  describe(`Twitter name to wallet look up`, () => {
+  describe(`dotGlowToWallet`, () => {
+    test(`mikemaccana.glow resolves`, async () => {
+      const wallet = await dotGlowToWallet("mikemaccana.glow");
+      expect(wallet).toEqual(MIKES_WALLET);
+    });
+  });
+
+  describe(`dotAbcDotBonkOrDotPoorDomainToWallet`, () => {
+    test(`mikemaccana.abc resolves`, async () => {
+      const wallet = await dotAbcDotBonkOrDotPoorDomainToWallet(
+        connection,
+        "mikemaccana.abc"
+      );
+      expect(wallet).toEqual(MIKES_WALLET);
+    });
+  });
+
+  describe(`atTwitterToWallet`, () => {
     test(`Finds @mikemaccana's wallet`, async () => {
       const wallet = await twitterHandleToWallet(connection, "mikemaccana");
       expect(wallet).toEqual(MIKES_WALLET);
@@ -87,6 +92,64 @@ describe(`wallets to twitter handles`, () => {
         "jdhfkljsdghghsflkghfkljgshjfgl"
       );
       expect(wallet).toEqual(null);
+    });
+  });
+
+  describe(`resolveAnyName`, () => {
+    let connection: Connection;
+    beforeAll(async () => {
+      connection = await connect("quickNodeMainNetBeta");
+    });
+
+    test(`mikemaccana.abc`, async () => {
+      const result = await resolveAnyName(connection, "mikemaccana.abc");
+      expect(result).toEqual(MIKES_WALLET);
+    });
+
+    test(`mikemaccana.sol`, async () => {
+      const result = await resolveAnyName(connection, "mikemaccana.sol");
+      expect(result).toEqual(MIKES_WALLET);
+    });
+
+    test(`mikemaccana.glow`, async () => {
+      const result = await resolveAnyName(connection, "mikemaccana.glow");
+      expect(result).toEqual(MIKES_WALLET);
+    });
+
+    test(`mikemaccana.backpack`, async () => {
+      const result = await resolveAnyName(connection, "mikemaccana.backpack");
+      expect(result).toEqual(MIKES_WALLET);
+    });
+
+    test(`@mikemaccana`, async () => {
+      const result = await resolveAnyName(connection, "mikemaccana.backpack");
+      expect(result).toEqual(MIKES_WALLET);
+    });
+  });
+
+  // TODO: silly workaround for https://github.com/ladjs/supertest/issues/520
+  afterAll(async () => {
+    await sleep(5 * SECONDS);
+  }, 6 * SECONDS);
+});
+
+describe("wallet to handles", () => {
+  // Also tried 'raj', 'joker', 'hge' - nobody has reverse records to match Twitter to their identity
+  describe("walletToTwitterHandle", () => {
+    test(`Says Shaq's wallet hasn't been set up for reverse Twitter`, async () => {
+      expect(await walletToTwitterHandle(SHAQS_WALLET)).toEqual(null);
+    });
+
+    test(`Says Joe McCann's wallet hasn't been set up for reverse Twitter`, async () => {
+      expect(await walletToTwitterHandle(JOE_MCCANNS_WALLET)).toEqual(null);
+    });
+
+    test(`Shows mapping to Mike's Twitter account`, async () => {
+      expect(await walletToTwitterHandle(MIKES_WALLET)).toEqual("mikemaccana");
+    });
+
+    test(`Returns null for a bad wallet address`, async () => {
+      expect(await walletToTwitterHandle("dfsdffdsfsdfdsfdsf")).toEqual(null);
     });
   });
 });

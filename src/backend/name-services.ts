@@ -4,16 +4,43 @@ import {
   getHandleAndRegistryKey,
 } from "@bonfida/spl-name-service";
 import { URLS } from "./constants";
-import {
-  getDomainKeySync,
-  NameRegistryState,
-  getAllDomains,
-  performReverseLookup,
-} from "@bonfida/spl-name-service";
+import { getDomainKeySync, NameRegistryState } from "@bonfida/spl-name-service";
 import * as http from "../lib/http-client";
 import { log, stringify } from "./functions";
+import { TldParser } from "@onsol/tldparser";
+import API from "api";
 
-// TODO: Add https://www.npmjs.com/package/@onsol/tldparser
+const glowAPI = API("@glowwallet/v1.0#145h1el95ur09a");
+
+const removeExtension = (string: string, extension: string): string => {
+  const extensionWithDot = `.${extension}`;
+  if (string.endsWith(extensionWithDot)) {
+    return string.split(extensionWithDot)[0];
+  }
+  return string;
+};
+
+// https://www.npmjs.com/package/@onsol/tldparser
+export const dotAbcDotBonkOrDotPoorDomainToWallet = async (
+  connection: Connection,
+  dotAbcDotBonkOrDotPoorDomain: string
+): Promise<String> => {
+  const parser = new TldParser(connection);
+  const ownerPublicKey = await parser.getOwnerFromDomainTld(
+    dotAbcDotBonkOrDotPoorDomain
+  );
+  return ownerPublicKey.toBase58();
+};
+
+// https://docs.glow.app/reference/resolve-glow-id
+export const dotGlowToWallet = async (
+  dotGlowDomain: string
+): Promise<String> => {
+  const dotGlowUserName = removeExtension(dotGlowDomain, "glow");
+  const response = await glowAPI.resolveGlowId({ handle: dotGlowUserName });
+  const walletAddress = response?.data?.info?.resolved || null;
+  return walletAddress;
+};
 
 // See https://www.quicknode.com/guides/solana-development/accounts-and-data/how-to-query-solana-naming-service-domains-sol/#set-up-your-environment
 export const dotSolDomainToWallet = async (
@@ -35,11 +62,11 @@ export const dotSolDomainToWallet = async (
   }
 };
 
-export const dotBackpackToWallet = async (dotBackpackUserName) => {
-  if (dotBackpackUserName.endsWith(".backpack")) {
-    dotBackpackUserName = dotBackpackUserName.split(".backpack")[0];
-  }
-  const backpackAPIEndpoint = `https://backpack-api.xnfts.dev/users/primarySolPubkey/${dotBackpackUserName}`;
+export const dotBackpackToWallet = async (
+  dotBackpackDomainName: string
+): Promise<String> => {
+  dotBackpackDomainName = removeExtension(dotBackpackDomainName, "backpack");
+  const backpackAPIEndpoint = `https://backpack-api.xnfts.dev/users/primarySolPubkey/${dotBackpackDomainName}`;
   const responseBody = await http.get(backpackAPIEndpoint);
   const result = responseBody.publicKey || null;
   return result;
@@ -62,6 +89,34 @@ export const twitterHandleToWallet = async (
       return null;
     }
   }
+};
+
+export const resolveAnyName = async (
+  connection: Connection,
+  string: string
+) => {
+  // This seems to be the nicest maintained and less land-grab naming service
+  // It also has mutliple TLDs
+  if (
+    string.endsWith(".abc") ||
+    string.endsWith(".bonk") ||
+    string.endsWith(".poor")
+  ) {
+    return dotAbcDotBonkOrDotPoorDomainToWallet(connection, string);
+  }
+  if (string.endsWith(".sol")) {
+    return dotSolDomainToWallet(connection, string);
+  }
+  if (string.endsWith(".glow")) {
+    return dotGlowToWallet(string);
+  }
+  if (string.endsWith(".backpack")) {
+    return dotBackpackToWallet(string);
+  }
+  if (string.startsWith("@")) {
+    return twitterHandleToWallet(connection, string);
+  }
+  return null;
 };
 
 export const walletToTwitterHandle = async (wallet: string) => {
@@ -92,11 +147,3 @@ export const walletToTwitterHandle = async (wallet: string) => {
     throw error;
   }
 };
-
-// export const resolveAnyName = async (string: String) => {
-//   // Try .sol
-//   // Try .twitter
-//   // Try .abc
-//   // Try .glow
-//   // Try .backpack
-// };
