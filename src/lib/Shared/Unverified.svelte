@@ -51,11 +51,6 @@
     justify-content: start;
   }
 
-  .badges-and-labels {
-    display: grid;
-    align-items: start;
-  }
-
   .anonymous {
     font-weight: 600;
   }
