@@ -9,6 +9,7 @@ import {
   walletToTwitterHandle,
   twitterHandleToWallet,
   dotSolDomainToWallet,
+  dotBackpackToWallet,
 } from "./name-services";
 import { connect } from "./wallet";
 
@@ -16,6 +17,18 @@ describe(`wallets to twitter handles`, () => {
   let connection: Connection;
   beforeAll(async () => {
     connection = await connect("quickNodeMainNetBeta");
+  });
+
+  describe(`dotBackpackToWallet`, () => {
+    test(`mikemaccana.backpack resolves`, async () => {
+      const wallet = await dotBackpackToWallet("mikemaccana.backpack");
+      expect(wallet).toEqual(MIKES_WALLET);
+    });
+
+    test(`genry.backpack does resolve`, async () => {
+      const wallet = await dotBackpackToWallet("genry.backpack");
+      expect(wallet).toEqual(null);
+    });
   });
 
   describe(`dotSolDomainToWallet`, () => {

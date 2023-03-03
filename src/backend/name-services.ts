@@ -10,6 +10,8 @@ import {
   getAllDomains,
   performReverseLookup,
 } from "@bonfida/spl-name-service";
+import * as http from "../lib/http-client";
+import { log, stringify } from "./functions";
 
 // TODO: Add https://www.npmjs.com/package/@onsol/tldparser
 
@@ -31,6 +33,16 @@ export const dotSolDomainToWallet = async (
     }
     throw error;
   }
+};
+
+export const dotBackpackToWallet = async (dotBackpackUserName) => {
+  if (dotBackpackUserName.endsWith(".backpack")) {
+    dotBackpackUserName = dotBackpackUserName.split(".backpack")[0];
+  }
+  const backpackAPIEndpoint = `https://backpack-api.xnfts.dev/users/primarySolPubkey/${dotBackpackUserName}`;
+  const responseBody = await http.get(backpackAPIEndpoint);
+  const result = responseBody.publicKey || null;
+  return result;
 };
 
 export const twitterHandleToWallet = async (
