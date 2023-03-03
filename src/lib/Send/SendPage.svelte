@@ -190,7 +190,7 @@
         bind:value={destinationWalletAddress}
         label="wallet address"
         isFocused={true}
-        filterField={"walletAddress"}
+        filterField={null}
         onTypingPause={handleKeyupDestinationWalletAddress}
         theme="square"
       />
