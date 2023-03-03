@@ -2,9 +2,15 @@
   import { log, isEmpty } from "../../backend/functions";
   import verifiedIndividualIcon from "../../assets/verified.svg";
   import verifiedOrganizationIcon from "../../assets/verified-organization.svg";
-  import AnonymousImage from "../../assets/anonymous.svg";
-
+  import { getGradient } from "../../backend/deterministic-beautiful-gradient";
+  import { onMount } from "svelte";
   import type { Contact } from "../../backend/types";
+
+  let gradient: string | null = null;
+
+  onMount(async () => {
+    gradient = await getGradient(user.walletAddress);
+  });
 
   export let onClick;
 
@@ -15,12 +21,11 @@
   <div class="fancy-border">
     <button class="menu" on:click={onClick}>
       {#if isEmpty(user?.verifiedClaims)}
-        <img class="avatar" src={AnonymousImage} alt="Anonymous" />
-        Anonymous
+        <div class="profile-pic" style={gradient} />
       {:else}
         {#if user.verifiedClaims.type === "INDIVIDUAL"}
           <img
-            class="avatar"
+            class="profile-pic"
             src={user.verifiedClaims.imageUrl}
             alt="{user.verifiedClaims.givenName} {user.verifiedClaims
               .familyName}"
@@ -30,7 +35,7 @@
         {/if}
         {#if user.verifiedClaims.type === "ORGANIZATION"}
           <img
-            class="avatar"
+            class="profile-pic"
             src={user.verifiedClaims.imageUrl}
             alt="{user.verifiedClaims.legalName} ({user.verifiedClaims
               .country})"
@@ -75,10 +80,10 @@
     vertical-align: middle;
   }
 
-  button img.avatar {
+  button img.profile-pic {
     width: 32px;
-    height: 32px;
-    border-radius: 15px;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
   }
 
   button img.verified {
