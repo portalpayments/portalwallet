@@ -4,20 +4,29 @@
   import { LabelColor } from "../frontend-constants";
   import type { Contact } from "../../backend/types";
   import { truncateWallet, copyToClipboard } from "../utils";
+  import { getGradient } from "../../backend/deterministic-beautiful-gradient";
+  import { onMount } from "svelte";
 
   export let contact: Contact;
 
   let isNew = false;
+  let gradient: string | null = null;
+
+  onMount(async () => {
+    gradient = await getGradient(contact.walletAddress);
+  });
 </script>
 
 {#if contact.profilePictureURL}
+  <!-- Solana PFP 'standard' (very few people uses this) -->
   <img
-    class="profile-pic"
+    class="profile-pic individual"
     src={contact.profilePictureURL}
-    alt="Address is not verified"
+    alt="anonymous wallet avatar"
   />
 {:else}
-  <img src={AnonymousImage} class="profile-pic" alt="Address is not verified" />
+  <!-- Make a gradient from the wallet address -->
+  <div class="profile-pic" style={gradient} />
 {/if}
 <div class="recipient-info">
   <button
@@ -40,6 +49,8 @@
 <style lang="scss">
   .profile-pic {
     width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
   }
 
   .recipient-info {

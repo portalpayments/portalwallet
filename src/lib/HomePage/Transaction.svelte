@@ -3,7 +3,6 @@
     amountAndDecimalsToMajorAndMinor,
     truncateWallet,
   } from "../../lib/utils";
-  import AnonymousImage from "../../assets/anonymous.svg";
   import type {
     SimpleTransaction,
     Contact,
@@ -13,13 +12,19 @@
   import { formatNumber } from "../utils";
   import { getCurrencyByMint } from "../../backend/solana-functions";
   import { Direction } from "../../backend/types";
-  import hashAvatar from "hash-avatar";
+  import { getGradient } from "../../backend/deterministic-beautiful-gradient";
   import { contactsStore } from "../stores";
 
-  const PROFILE_PICTURE_SIZE = 42;
+  import { onMount } from "svelte";
+
+  let gradient: string | null = null;
 
   export let transaction: SimpleTransaction | null;
   export let decimals: number;
+
+  onMount(async () => {
+    gradient = await getGradient(contact.walletAddress);
+  });
 
   // Find the contact for this transaction
   //
@@ -101,11 +106,7 @@
           />
         {:else}
           <!-- Make a gradient from the wallet address -->
-          <div class="hash-avatar-wrapper">
-            {@html hashAvatar(contact.walletAddress, {
-              size: PROFILE_PICTURE_SIZE,
-            })}
-          </div>
+          <div class="hash-avatar-wrapper" style={gradient} />
         {/if}
       {:else}
         <!-- Verified selfie -->
@@ -238,6 +239,8 @@
   }
 
   .hash-avatar-wrapper {
+    height: 42px;
+    width: 42px;
     overflow: hidden;
     border-radius: 50%;
   }
