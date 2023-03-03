@@ -18,7 +18,8 @@ export const JOE_MCCANNS_WALLET =
   "2EfiRdR97jnSknN7KiVwGqXATvuSgGiTypMdiwXxBbxh";
 export const KEVIN_ROSES_WALLET =
   "3ikkFnEDBvUXPHfCmvXma4qBGZxMooveQ5eM6LLQgeuQ";
-const VIDOR_SOLRISE_WALLET = "Hp8SsZZZot8UB28HTfEuxxCXECoSiwHfpzqwenjrMPKF";
+export const VIDOR_SOLRISE_WALLET =
+  "Hp8SsZZZot8UB28HTfEuxxCXECoSiwHfpzqwenjrMPKF";
 
 export const MIKES_WALLET = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
 export const VAHEHS_WALLET = "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG";

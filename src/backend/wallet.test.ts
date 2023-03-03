@@ -19,6 +19,7 @@ import {
   putSolIntoWallet,
   verifyWallet,
   getTokenAccountSummaries,
+  getProfilePicture,
 } from "./wallet";
 import base58 from "bs58";
 
@@ -39,6 +40,8 @@ import {
   MINUTE,
   USDC_MAINNET_MINT_ACCOUNT,
   GREGS_WALLET,
+  VIDOR_SOLRISE_WALLET,
+  SHAQS_WALLET,
 } from "./constants";
 import { getCurrencyBySymbol } from "./solana-functions";
 import {
@@ -54,7 +57,7 @@ import { Direction } from "./types";
 import { getABetterErrorMessage } from "./errors";
 import { createMintAccount } from "./tokens";
 
-jest.mock("./functions");
+// jest.mock("./functions");
 
 dotenv.config();
 
@@ -437,4 +440,30 @@ describe(`mainnet integration tests`, () => {
     },
     1 * MINUTE
   );
+});
+
+describe(`getProfilePicture`, () => {
+  let connection: Connection | null = null;
+
+  beforeAll(async () => {
+    connection = await connect("mainNetBeta");
+  });
+
+  test(`getProfilePicture find a profile picture for Vidor from Solrise`, async () => {
+    const profilePicture = await getProfilePicture(
+      connection,
+      new PublicKey(VIDOR_SOLRISE_WALLET)
+    );
+    expect(profilePicture).toEqual(
+      "https://solana-cdn.com/cdn-cgi/image/width=100/https://arweave.net/i1I1GXelcZaEe5n0_TcVbVEEdz4mQR5lMWR2f6OplTs"
+    );
+  });
+
+  test(`getProfilePicture returns null for people that don't have Solana PFPs`, async () => {
+    const profilePicture = await getProfilePicture(
+      connection,
+      new PublicKey(SHAQS_WALLET)
+    );
+    expect(profilePicture).toEqual(null);
+  });
 });

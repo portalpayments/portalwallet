@@ -13,8 +13,10 @@
   import { formatNumber } from "../utils";
   import { getCurrencyByMint } from "../../backend/solana-functions";
   import { Direction } from "../../backend/types";
-
+  import hashAvatar from "hash-avatar";
   import { contactsStore } from "../stores";
+
+  const PROFILE_PICTURE_SIZE = 42;
 
   export let transaction: SimpleTransaction | null;
   export let decimals: number;
@@ -91,19 +93,22 @@
     {#if contact}
       {#if isEmpty(contact.verifiedClaims)}
         {#if contact.profilePictureURL}
+          <!-- Solana PFP 'standard' (literally nobody uses this) -->
           <img
             class="profile-pic individual"
             src={contact.profilePictureURL}
             alt="wallet avatar"
           />
         {:else}
-          <img
-            class="profile-pic individual"
-            src={AnonymousImage}
-            alt="wallet avatar"
-          />
+          <!-- Make a gradient from the wallet address -->
+          <div class="hash-avatar-wrapper">
+            {@html hashAvatar(contact.walletAddress, {
+              size: PROFILE_PICTURE_SIZE,
+            })}
+          </div>
         {/if}
       {:else}
+        <!-- Verified selfie -->
         <img
           class="profile-pic {contact?.verifiedClaims?.type === 'ORGANIZATION'
             ? 'organization'
@@ -209,6 +214,10 @@
     text-align: left;
   }
 
+  .name {
+    font-weight: 600;
+  }
+
   .memo {
     font-size: 11px;
     line-height: 14px;
@@ -223,5 +232,10 @@
 
   .positive {
     color: var(--bright-green);
+  }
+
+  .hash-avatar-wrapper {
+    overflow: hidden;
+    border-radius: 50%;
   }
 </style>
