@@ -4,10 +4,7 @@ import {
   getHandleAndRegistryKey,
 } from "@bonfida/spl-name-service";
 import { URLS } from "./constants";
-import dotenv from "dotenv";
-// https://www.npmjs.com/package/@onsol/tldparser
-
-dotenv.config();
+// TODO: Add https://www.npmjs.com/package/@onsol/tldparser
 
 export const walletToTwitterHandle = async (wallet: string) => {
   const connection = new Connection(URLS["mainNetBeta"]);
@@ -57,10 +54,10 @@ export const twitterHandleToWallet = async (
   }
 };
 
-export const resolveAnyName = async (string: String) => {
-  // Try .sol
-  // Try .twitter
-  // Try .abc
-  // Try .glow
-  // Try .backpack
-};
+// export const resolveAnyName = async (string: String) => {
+//   // Try .sol
+//   // Try .twitter
+//   // Try .abc
+//   // Try .glow
+//   // Try .backpack
+// };
