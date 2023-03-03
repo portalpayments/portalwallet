@@ -106,7 +106,7 @@
           if (onTypingPause) {
             onTypingPause(event);
           }
-        }, 1 * SECOND)}
+        }, 2 * SECOND)}
         on:input|capture={filterInput}
       />
       <div class="floating-label">
