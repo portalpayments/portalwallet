@@ -34,11 +34,6 @@
       alt="User is Verified"
     />
   {/if}
-  <div class="labels">
-    {#if contact.isNew}
-      <Label color={LabelColor.Yellow}>New</Label>
-    {/if}
-  </div>
 </div>
 
 <style lang="scss">

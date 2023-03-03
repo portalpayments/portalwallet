@@ -3,11 +3,8 @@
   import { truncateWallet, copyToClipboard } from "../utils";
   import { getGradient } from "../../backend/deterministic-beautiful-gradient";
   import { onMount } from "svelte";
-  import { getSolanaName as getWalletAddressName } from "sol-namor";
 
   export let contact: Contact;
-
-  const walletAddressName = getWalletAddressName(contact.walletAddress);
 
   let gradient: string | null = null;
 
@@ -35,7 +32,6 @@
       await copyToClipboard(contact.walletAddress);
     }}>{truncateWallet(contact.walletAddress)}</button
   >
-  <div class="wallet-address-name">{walletAddressName}</div>
 </div>
 
 <style lang="scss">
@@ -64,10 +60,5 @@
     text-align: left;
     font-size: 12px;
     line-height: 14px;
-  }
-
-  .wallet-address-name {
-    font-size: 10px;
-    line-height: 12px;
   }
 </style>
