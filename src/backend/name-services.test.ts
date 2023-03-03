@@ -8,7 +8,6 @@ import {
 } from "./constants";
 import { sleep } from "./functions";
 import {
-  walletToTwitterHandle,
   twitterHandleToWallet,
   dotSolDomainToWallet,
   dotBackpackToWallet,
@@ -131,25 +130,4 @@ describe(`wallets to twitter handles`, () => {
   afterAll(async () => {
     await sleep(5 * SECONDS);
   }, 6 * SECONDS);
-});
-
-describe("wallet to handles", () => {
-  // Also tried 'raj', 'joker', 'hge' - nobody has reverse records to match Twitter to their identity
-  describe("walletToTwitterHandle", () => {
-    test(`Says Shaq's wallet hasn't been set up for reverse Twitter`, async () => {
-      expect(await walletToTwitterHandle(SHAQS_WALLET)).toEqual(null);
-    });
-
-    test(`Says Joe McCann's wallet hasn't been set up for reverse Twitter`, async () => {
-      expect(await walletToTwitterHandle(JOE_MCCANNS_WALLET)).toEqual(null);
-    });
-
-    test(`Shows mapping to Mike's Twitter account`, async () => {
-      expect(await walletToTwitterHandle(MIKES_WALLET)).toEqual("mikemaccana");
-    });
-
-    test(`Returns null for a bad wallet address`, async () => {
-      expect(await walletToTwitterHandle("dfsdffdsfsdfdsfdsf")).toEqual(null);
-    });
-  });
 });
