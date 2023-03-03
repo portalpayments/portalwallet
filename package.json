@@ -58,6 +58,7 @@
     "webextension-polyfill": "^0.10.0"
   },
   "dependencies": {
+    "@bonfida/spl-name-service": "^0.1.66",
     "@dialectlabs/blockchain-sdk-solana": "^1.0.0",
     "@dialectlabs/sdk": "^1.5.2",
     "@digitak/esrun": "^3.2.19",
@@ -92,6 +93,7 @@
     "scryptsy": "^2.1.0",
     "sol-namor": "^1.0.2",
     "ts-node": "^10.9.1",
+    "twitter-api-v2": "^1.14.2",
     "typescript": "^4.9.4"
   }
 }
