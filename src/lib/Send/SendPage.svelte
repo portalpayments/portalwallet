@@ -14,6 +14,7 @@
   import { verifyWallet } from "../../backend/wallet";
   import { makeAccountsAndDoTransfer } from "../../backend/tokens";
   import { checkIfValidWalletAddress, truncateWallet } from "../utils";
+  import { twitterHandleToWallet } from "../../backend/name-services";
   import { log, sleep, stringify } from "../../backend/functions";
   import { SECOND } from "../../backend/constants";
   import type {
@@ -145,6 +146,25 @@
   const handleKeyupDestinationWalletAddress = async () => {
     isCurrentlyLoadingVerificationStateFromNetwork = true;
     isSendButtonDisabled = true;
+
+    if (destinationWalletAddress.startsWith("@")) {
+      log(
+        `Looking up wallet for twitter account '${destinationWalletAddress}'`
+      );
+      const walletForTwitterAccount = await twitterHandleToWallet(
+        connection,
+        destinationWalletAddress
+      );
+      log(`Finished checking`, walletForTwitterAccount);
+      if (walletForTwitterAccount) {
+        log(
+          `Found wallet ${walletForTwitterAccount} matching ${destinationWalletAddress}`
+        );
+        destinationWalletAddress = walletForTwitterAccount;
+      } else {
+        log(`Did not find wallet matching ${destinationWalletAddress}`);
+      }
+    }
 
     let isValidDestinationWalletAddress = checkIfValidWalletAddress(
       destinationWalletAddress
