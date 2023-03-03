@@ -98,7 +98,7 @@
     {#if contact}
       {#if isEmpty(contact.verifiedClaims)}
         {#if contact.profilePictureURL}
-          <!-- Solana PFP 'standard' (literally nobody uses this) -->
+          <!-- Solana PFP 'standard' (very few people uses this) -->
           <img
             class="profile-pic individual"
             src={contact.profilePictureURL}
