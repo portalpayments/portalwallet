@@ -126,8 +126,6 @@ describe(`wallets to twitter handles`, () => {
     });
   });
 
-  // TODO: silly workaround for https://github.com/ladjs/supertest/issues/520
-  afterAll(async () => {
-    await sleep(5 * SECONDS);
-  }, 6 * SECONDS);
+  // TODO: fetch creates some open handles issues here. Fix them.
+  // No sleep() won't work.
 });
