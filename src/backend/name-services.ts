@@ -1,4 +1,4 @@
-import { PublicKey, Connection } from "@solana/web3.js";
+import type { Connection } from "@solana/web3.js";
 import {
   getTwitterRegistry,
   getHandleAndRegistryKey,
@@ -24,7 +24,7 @@ const removeExtension = (string: string, extension: string): string => {
 export const dotAbcDotBonkOrDotPoorDomainToWallet = async (
   connection: Connection,
   dotAbcDotBonkOrDotPoorDomain: string
-): Promise<String> => {
+): Promise<string> => {
   const parser = new TldParser(connection);
   const ownerPublicKey = await parser.getOwnerFromDomainTld(
     dotAbcDotBonkOrDotPoorDomain
@@ -35,7 +35,7 @@ export const dotAbcDotBonkOrDotPoorDomainToWallet = async (
 // https://docs.glow.app/reference/resolve-glow-id
 export const dotGlowToWallet = async (
   dotGlowDomain: string
-): Promise<String> => {
+): Promise<string> => {
   const dotGlowUserName = removeExtension(dotGlowDomain, "glow");
   const response = await glowAPI.resolveGlowId({ handle: dotGlowUserName });
   const walletAddress = response?.data?.info?.resolved || null;
@@ -64,7 +64,7 @@ export const dotSolDomainToWallet = async (
 
 export const dotBackpackToWallet = async (
   dotBackpackDomainName: string
-): Promise<String> => {
+): Promise<string> => {
   dotBackpackDomainName = removeExtension(dotBackpackDomainName, "backpack");
   const backpackAPIEndpoint = `https://backpack-api.xnfts.dev/users/primarySolPubkey/${dotBackpackDomainName}`;
   const responseBody = await http.get(backpackAPIEndpoint);
@@ -94,7 +94,7 @@ export const twitterHandleToWallet = async (
 export const resolveAnyName = async (
   connection: Connection,
   string: string
-) => {
+): Promise<string> => {
   // This seems to be the nicest maintained and less land-grab naming service
   // It also has mutliple TLDs
   if (
