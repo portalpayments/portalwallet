@@ -14,7 +14,6 @@
   import { verifyWallet } from "../../backend/wallet";
   import { makeAccountsAndDoTransfer } from "../../backend/tokens";
   import { checkIfValidWalletAddress, truncateWallet } from "../utils";
-  import { twitterHandleToWallet } from "../../backend/name-services";
   import { log, sleep, stringify } from "../../backend/functions";
   import { SECOND } from "../../backend/constants";
   import { resolveAnyName } from "../../backend/name-services";

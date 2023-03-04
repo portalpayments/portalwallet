@@ -1,16 +1,9 @@
 import type { Connection } from "@solana/web3.js";
-import {
-  getTwitterRegistry,
-  getHandleAndRegistryKey,
-} from "@bonfida/spl-name-service";
-import { URLS } from "./constants";
+import { getTwitterRegistry } from "@bonfida/spl-name-service";
 import { getDomainKeySync, NameRegistryState } from "@bonfida/spl-name-service";
 import * as http from "../lib/http-client";
 import { log, stringify } from "./functions";
 import { TldParser } from "@onsol/tldparser";
-import API from "api";
-
-const glowAPI = API("@glowwallet/v1.0#145h1el95ur09a");
 
 const removeExtension = (string: string, extension: string): string => {
   const extensionWithDot = `.${extension}`;
@@ -33,12 +26,15 @@ export const dotAbcDotBonkOrDotPoorDomainToWallet = async (
 };
 
 // https://docs.glow.app/reference/resolve-glow-id
+// The 'API' node module has a bunch of issues running in the browser so just use http module directly
 export const dotGlowToWallet = async (
   dotGlowDomain: string
 ): Promise<string> => {
   const dotGlowUserName = removeExtension(dotGlowDomain, "glow");
-  const response = await glowAPI.resolveGlowId({ handle: dotGlowUserName });
-  const walletAddress = response?.data?.info?.resolved || null;
+  const responseBody = await http.get(
+    `https://api.glow.app/glow-id/resolve?handle=${dotGlowUserName}`
+  );
+  const walletAddress = responseBody?.info?.resolved || null;
   return walletAddress;
 };
 
