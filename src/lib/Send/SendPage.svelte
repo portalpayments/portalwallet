@@ -17,6 +17,8 @@
   import { twitterHandleToWallet } from "../../backend/name-services";
   import { log, sleep, stringify } from "../../backend/functions";
   import { SECOND } from "../../backend/constants";
+  import { resolveAnyName } from "../../backend/name-services";
+
   import type {
     VerifiedClaimsForIndividual,
     VerifiedClaimsForOrganization,
@@ -30,6 +32,9 @@
   const identityTokenIssuerPublicKey = new PublicKey(
     PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
   );
+
+  // The entered wallet name or address (foo.sol, abcdef, foo.abc, whatever)
+  let inputWalletNameOrAddress = "";
 
   let destinationWalletAddress: string | null = null;
   let transferAmount: number | null = null;
@@ -143,36 +148,36 @@
     }
   });
 
-  const handleKeyupDestinationWalletAddress = async () => {
+  const resolveInputWalletNameOrAddress = async () => {
     isCurrentlyLoadingVerificationStateFromNetwork = true;
     isSendButtonDisabled = true;
 
-    if (destinationWalletAddress.startsWith("@")) {
+    let isValidWalletAddressOrName = checkIfValidWalletAddress(
+      inputWalletNameOrAddress
+    );
+
+    if (isValidWalletAddressOrName) {
+      log(`This is a valid wallet address`);
+      destinationWalletAddress = inputWalletNameOrAddress;
+    } else {
       log(
-        `Looking up wallet for twitter account '${destinationWalletAddress}'`
+        `This is not a valid wallet address, trying to resolve '${inputWalletNameOrAddress}' as a name...`
       );
-      const walletForTwitterAccount = await twitterHandleToWallet(
+      destinationWalletAddress = await resolveAnyName(
         connection,
-        destinationWalletAddress
+        inputWalletNameOrAddress
       );
-      log(`Finished checking`, walletForTwitterAccount);
-      if (walletForTwitterAccount) {
-        log(
-          `Found wallet ${walletForTwitterAccount} matching ${destinationWalletAddress}`
-        );
-        destinationWalletAddress = walletForTwitterAccount;
-      } else {
-        log(`Did not find wallet matching ${destinationWalletAddress}`);
+      // We're assuming any name that resolves to a wallet address is a valid wallet address
+      if (destinationWalletAddress) {
+        isValidWalletAddressOrName = true;
       }
     }
 
-    let isValidDestinationWalletAddress = checkIfValidWalletAddress(
-      destinationWalletAddress
-    );
-
-    if (!isValidDestinationWalletAddress) {
+    if (!isValidWalletAddressOrName) {
       // TODO: handle invalid wallet addresses better
-      log(`This ${destinationWalletAddress} is not a valid wallet address`);
+      log(
+        `This '${destinationWalletAddress}' is not a valid wallet address or name`
+      );
       verifiedClaims = null;
       isAskingWalletOwnerToGetVerified = false;
       isSendingAnyway = false;
@@ -207,11 +212,11 @@
   <div class="inputs">
     <FocusContext>
       <Input
-        bind:value={destinationWalletAddress}
-        label="wallet address"
+        bind:value={inputWalletNameOrAddress}
+        label="wallet address or name"
         isFocused={true}
         filterField={null}
-        onTypingPause={handleKeyupDestinationWalletAddress}
+        onTypingPause={resolveInputWalletNameOrAddress}
         theme="square"
       />
 
