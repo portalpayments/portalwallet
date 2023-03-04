@@ -9,7 +9,9 @@
   let gradient: string | null = null;
 
   onMount(async () => {
-    gradient = await getGradient(user.walletAddress);
+    if (user) {
+      gradient = await getGradient(user.walletAddress);
+    }
   });
 
   export let onClick;
