@@ -10,6 +10,7 @@
   export let contact: Contact;
   export let hasLoadedVerificationStateFromNetwork: boolean = false;
   export let isCurrentlyLoadingVerificationStateFromNetwork: boolean = false;
+  export let resolvedWalletName: string | null = null;
 </script>
 
 <div class="send-heading">
@@ -29,10 +30,12 @@
         {/if}
       </div>
       {#if !contact.verifiedClaims}
-        <div class="unverified-message">
-          Note there is not a guarantee that the wallet name represents a
-          particular individual or organisation.
-        </div>
+        {#if resolvedWalletName}
+          <div class="unverified-message">
+            There is no guarantee that '{resolvedWalletName}' represents a
+            particular individual or organisation.
+          </div>
+        {/if}
       {/if}
     </div>
   {:else}
@@ -84,5 +87,7 @@
     color: var(--black);
     font-weight: 500;
     font-style: italic;
+    text-align: center;
+    font-size: 10px;
   }
 </style>

@@ -38,6 +38,7 @@
   let destinationWalletAddress: string | null = null;
   let transferAmount: number | null = null;
   let memo: string | null = null;
+  let resolvedWalletName: string | null = null;
 
   let hasLoadedVerificationStateFromNetwork = false;
   let isCurrentlyLoadingVerificationStateFromNetwork = false;
@@ -171,6 +172,7 @@
       // We're assuming any name that resolves to a wallet address is a valid wallet address
       if (destinationWalletAddress) {
         isValidWalletAddressOrName = true;
+        resolvedWalletName = inputWalletNameOrAddress;
       }
     }
 
@@ -208,7 +210,11 @@
 </script>
 
 <div class="send-screen">
-  <SendHeading {contact} {hasLoadedVerificationStateFromNetwork} />
+  <SendHeading
+    {contact}
+    {hasLoadedVerificationStateFromNetwork}
+    {resolvedWalletName}
+  />
 
   <div class="inputs">
     <FocusContext>
