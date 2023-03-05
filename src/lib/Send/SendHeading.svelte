@@ -5,6 +5,7 @@
   import Verified from "../Shared/Verified.svelte";
   import Loader from "../Shared/Loader.svelte";
   import type { Contact } from "../../backend/types";
+  import { log, stringify } from "../../backend/functions";
 
   export let contact: Contact;
   export let hasLoadedVerificationStateFromNetwork: boolean = false;

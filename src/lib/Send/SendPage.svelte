@@ -177,7 +177,7 @@
     if (!isValidWalletAddressOrName) {
       // TODO: handle invalid wallet addresses better
       log(
-        `This '${destinationWalletAddress}' is not a valid wallet address or name`
+        `The name or addresss '${inputWalletNameOrAddress}' is not a valid wallet name or address`
       );
       verifiedClaims = null;
       isAskingWalletOwnerToGetVerified = false;
