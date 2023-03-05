@@ -12,14 +12,18 @@ import {
   dotSolDomainToWallet,
   dotBackpackToWallet,
   dotGlowToWallet,
-  dotAbcDotBonkOrDotPoorDomainToWallet,
+  dotAbcDotBonkOrDotPoorToWallet,
   resolveWalletName,
+  walletToDotAbcDotBonkOrDotPoor,
+  walletToDotGlow,
+  walletToDotSol,
+  walletToDotBackpackDomain,
 } from "./name-services";
 import { connect } from "./wallet";
 
 jest.mock("./functions");
 
-describe(`wallets to twitter handles`, () => {
+describe(`names to wallet`, () => {
   let connection: Connection;
   beforeAll(async () => {
     connection = await connect("quickNodeMainNetBeta");
@@ -66,7 +70,7 @@ describe(`wallets to twitter handles`, () => {
 
   describe(`dotAbcDotBonkOrDotPoorDomainToWallet`, () => {
     test(`mikemaccana.abc resolves`, async () => {
-      const wallet = await dotAbcDotBonkOrDotPoorDomainToWallet(
+      const wallet = await dotAbcDotBonkOrDotPoorToWallet(
         connection,
         "mikemaccana.abc"
       );
@@ -94,7 +98,7 @@ describe(`wallets to twitter handles`, () => {
     });
   });
 
-  describe(`resolveAnyName`, () => {
+  describe(`resolveWalletName`, () => {
     let connection: Connection;
     beforeAll(async () => {
       connection = await connect("quickNodeMainNetBeta");
@@ -124,14 +128,56 @@ describe(`wallets to twitter handles`, () => {
     });
 
     test(`@mikemaccana`, async () => {
-      const result = await resolveWalletName(
-        connection,
-        "mikemaccana.backpack"
-      );
+      const result = await resolveWalletName(connection, "@mikemaccana");
       expect(result).toEqual(MIKES_WALLET);
     });
   });
 
   // TODO: fetch creates some open handles issues here. Fix them.
   // No sleep() won't work.
+});
+
+describe(`wallets to names`, () => {
+  let connection: Connection;
+  beforeAll(async () => {
+    connection = await connect("quickNodeMainNetBeta");
+  });
+
+  describe(`walletToDotAbcDotBonkOrDotPoorDomain`, () => {
+    test(`mikemaccana.abc resolves`, async () => {
+      const domain = await walletToDotAbcDotBonkOrDotPoor(
+        connection,
+        MIKES_WALLET
+      );
+      expect(domain).toEqual("mikemaccana.abc");
+    });
+  });
+
+  describe(`walletToDotGlow`, () => {
+    test(`mikemaccana.glow resolves`, async () => {
+      const domain = await walletToDotGlow(MIKES_WALLET);
+      expect(domain).toEqual("mikemaccana.glow");
+    });
+  });
+
+  describe(`walletToDotSolDomain`, () => {
+    test(`mikemaccana.sol resolves`, async () => {
+      const domain = await walletToDotSol(connection, MIKES_WALLET);
+      expect(domain).toEqual("mikemaccana.sol");
+    });
+  });
+
+  describe(`walletToDotBackpackDomain`, () => {
+    // TODO:
+    // - Reverse lookup of backpack domains does not yet seem to work
+    // for domains other than Armani's.
+    // - Reverse lookup of backpack domains needs a JWT (we can get a JWT easily
+    // from the backpack app, but requiring one is silly, nobody else
+    // requires one, and this hurts Backpack more than anyone else)
+    const ARMANIS_WALLET = "DcpYXJsWBgkV6kck4a7cWBg6B4epPeFRCMZJjxudGKh4";
+    test.skip(`armani.backpack resolves`, async () => {
+      const domain = await walletToDotBackpackDomain(ARMANIS_WALLET, null);
+      expect(domain).toEqual("armani.backpack");
+    });
+  });
 });

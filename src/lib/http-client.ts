@@ -14,35 +14,43 @@ export const CONTENT_TYPES = {
   HTML: "text/html",
 };
 
+// TODO: change order of params
 export const get = async (
   uri: string,
-  forceContentType: string | null = null
+  forceContentType: string | null = null,
+  headers: Record<string, string> = {}
 ) => {
-  return fetchUnfucked(uri, forceContentType);
+  return fetchUnfucked(uri, "GET", headers, null, forceContentType);
 };
 
 export const post = async (
   uri: string,
   body: Record<string, unknown>,
-  forceContentType: string | null = null
+  forceContentType: string | null = null,
+  headers: Record<string, string> = {}
 ) => {
-  return fetchUnfucked(uri, forceContentType, "POST", body);
+  return fetchUnfucked(uri, "POST", headers, body, forceContentType);
 };
 
 export const fetchUnfucked = async (
   uri: string,
-  forceContentType: string | null = null,
   method = "GET",
-  body: Record<string, unknown> = null
+  headers: Record<string, string> = {},
+  body: Record<string, unknown> = null,
+  forceResponseContentType: string | null = null
 ) => {
-  const response = await fetch(uri, {
+  const options: RequestInit = {
     method,
     body: body ? JSON.stringify(body) : null,
-  });
+  };
+  if (Object.keys(headers).length > 0) {
+    options.headers = headers;
+  }
+  const response = await fetch(uri, options);
 
   let contentType = CONTENT_TYPES.JSON;
-  if (forceContentType) {
-    contentType = forceContentType;
+  if (forceResponseContentType) {
+    contentType = forceResponseContentType;
   } else {
     let contentTypeHeader = response.headers.get("Content-Type");
     if (contentTypeHeader) {
