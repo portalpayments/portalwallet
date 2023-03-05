@@ -16,7 +16,7 @@
   import { checkIfValidWalletAddress, truncateWallet } from "../utils";
   import { log, sleep, stringify } from "../../backend/functions";
   import { SECOND } from "../../backend/constants";
-  import { resolveAnyName } from "../../backend/name-services";
+  import { resolveWalletName } from "../../backend/name-services";
 
   import type {
     VerifiedClaimsForIndividual,
@@ -165,7 +165,7 @@
       log(
         `'${inputWalletNameOrAddress}' is not a valid wallet address, trying to resolve '${inputWalletNameOrAddress}' as a name...`
       );
-      destinationWalletAddress = await resolveAnyName(
+      destinationWalletAddress = await resolveWalletName(
         connection,
         inputWalletNameOrAddress
       );

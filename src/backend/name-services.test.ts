@@ -13,7 +13,7 @@ import {
   dotBackpackToWallet,
   dotGlowToWallet,
   dotAbcDotBonkOrDotPoorDomainToWallet,
-  resolveAnyName,
+  resolveWalletName,
 } from "./name-services";
 import { connect } from "./wallet";
 
@@ -101,27 +101,33 @@ describe(`wallets to twitter handles`, () => {
     });
 
     test(`mikemaccana.abc`, async () => {
-      const result = await resolveAnyName(connection, "mikemaccana.abc");
+      const result = await resolveWalletName(connection, "mikemaccana.abc");
       expect(result).toEqual(MIKES_WALLET);
     });
 
     test(`mikemaccana.sol`, async () => {
-      const result = await resolveAnyName(connection, "mikemaccana.sol");
+      const result = await resolveWalletName(connection, "mikemaccana.sol");
       expect(result).toEqual(MIKES_WALLET);
     });
 
     test(`mikemaccana.glow`, async () => {
-      const result = await resolveAnyName(connection, "mikemaccana.glow");
+      const result = await resolveWalletName(connection, "mikemaccana.glow");
       expect(result).toEqual(MIKES_WALLET);
     });
 
     test(`mikemaccana.backpack`, async () => {
-      const result = await resolveAnyName(connection, "mikemaccana.backpack");
+      const result = await resolveWalletName(
+        connection,
+        "mikemaccana.backpack"
+      );
       expect(result).toEqual(MIKES_WALLET);
     });
 
     test(`@mikemaccana`, async () => {
-      const result = await resolveAnyName(connection, "mikemaccana.backpack");
+      const result = await resolveWalletName(
+        connection,
+        "mikemaccana.backpack"
+      );
       expect(result).toEqual(MIKES_WALLET);
     });
   });
