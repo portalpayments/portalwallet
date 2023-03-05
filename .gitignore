@@ -11,3 +11,4 @@ arweave-wallet.json
 prebundle
 .rollup.cache
 vite.config.ts.timestamp*
+/assets
