@@ -8,9 +8,15 @@
 
   let gradient: string | null = null;
 
-  onMount(async () => {
+  const setGradient = async () => {
     gradient = await getGradient(contact.walletAddress);
+  };
+
+  onMount(async () => {
+    await setGradient();
   });
+
+  $: contact, setGradient();
 </script>
 
 {#if contact.profilePictureURL}

@@ -1,6 +1,6 @@
 import { getSHA256Hash } from "./sha256";
 
-export const getGradient = async (walletAddress: string, type = "diagonal") => {
+export const getGradient = async (walletAddress: string) => {
   const hash = await getSHA256Hash(walletAddress);
   // 'as' because there could bdse no matches
   // but our strings will always have a match
