@@ -71,6 +71,7 @@
     "@solana/spl-token-registry": "^0.2.7",
     "@solflare-wallet/pfp": "^0.1.0",
     "@types/coingecko-api": "^1.0.10",
+    "@types/lodash.debounce": "^4.0.7",
     "@types/lodash.throttle": "^4.1.7",
     "@types/lodash.uniqby": "^4.7.7",
     "@types/mime": "^3.0.1",
