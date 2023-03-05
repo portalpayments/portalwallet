@@ -178,7 +178,7 @@ export const verifyWallet = async (
   identityTokenIssuerPublicKey: PublicKey,
   wallet: PublicKey,
   useCache = true,
-  allowOldIdentityToken = true
+  allowOldIdentityToken = false
 ): Promise<
   VerifiedClaimsForIndividual | VerifiedClaimsForOrganization | null
 > => {
