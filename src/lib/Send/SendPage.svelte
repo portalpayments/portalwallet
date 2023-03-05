@@ -79,7 +79,9 @@
 
   const activeAccount = getActiveAccount();
 
-  const currency = getCurrencyByMint(activeAccount.currency);
+  const currency = activeAccount
+    ? getCurrencyByMint(activeAccount.currency)
+    : null;
 
   const updateFee = async () => {
     // TODO: estimate fee based on destinationWalletAddress and memo
@@ -205,14 +207,14 @@
   };
 </script>
 
-<div class="transfer-screen">
+<div class="send-screen">
   <SendHeading {contact} {hasLoadedVerificationStateFromNetwork} />
 
   <div class="inputs">
     <FocusContext>
       <Input
         bind:value={inputWalletNameOrAddress}
-        label="wallet address or name"
+        label="wallet name or address"
         isFocused={true}
         filterField={null}
         onTypingPause={resolveInputWalletNameOrAddress}
@@ -241,13 +243,6 @@
       <Fee amount={fee} />
     </FocusContext>
   </div>
-
-  {#if isCurrentlyLoadingVerificationStateFromNetwork}
-    <Modal>
-      <!-- TODO: we should probably use a different component for verifying versus sending -->
-      <Loader isComplete={false} />
-    </Modal>
-  {/if}
 
   {#if hasLoadedVerificationStateFromNetwork}
     <SendButtons
@@ -316,7 +311,7 @@
 </div>
 
 <style lang="scss">
-  .transfer-screen {
+  .send-screen {
     min-width: var(--wallet-width);
     max-width: var(--wallet-width);
     min-height: var(--wallet-height);

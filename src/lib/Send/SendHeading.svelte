@@ -3,17 +3,22 @@
   import Unverified from "../Shared/Unverified.svelte";
   import Heading from "../Shared/Heading.svelte";
   import Verified from "../Shared/Verified.svelte";
-  import { warningUnverifiedAccount } from "../frontend-constants";
+  import Loader from "../Shared/Loader.svelte";
   import type { Contact } from "../../backend/types";
 
   export let contact: Contact;
   export let hasLoadedVerificationStateFromNetwork: boolean = false;
+  export let isCurrentlyLoadingVerificationStateFromNetwork: boolean = false;
 </script>
 
 <div class="transfer-heading">
   <BackButton />
   <Heading>Send money</Heading>
-  {#if hasLoadedVerificationStateFromNetwork}
+
+  {#if isCurrentlyLoadingVerificationStateFromNetwork}
+    <!-- TODO: we should probably use a different component for verifying versus sending -->
+    <Loader isComplete={false} />
+  {:else if hasLoadedVerificationStateFromNetwork}
     <div class="verification-status">
       <div class="verified-header">
         {#if contact.verifiedClaims}
@@ -23,9 +28,15 @@
         {/if}
       </div>
       {#if !contact.verifiedClaims}
-        <div class="unverified-message">{warningUnverifiedAccount}</div>
+        <div class="unverified-message">
+          Only send money to verified recipients. We will notify you once the
+          address is verified.
+        </div>
       {/if}
     </div>
+  {:else}
+    <!-- the default state when the user hasn't entered anything -->
+    <div class="empty" />
   {/if}
 </div>
 
