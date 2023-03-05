@@ -231,14 +231,6 @@ export const verifyWallet = async (
   return verifiedClaims;
 };
 
-export const getOlderTransactionSummaries = async (
-  connection: Connection,
-  accountSummary: AccountSummary
-) => {
-  const oldestTransactionSummary = accountSummary.transactionSummaries.at(-1);
-  const oldestTransactionSignature = oldestTransactionSummary.id;
-};
-
 // https://www.quicknode.com/guides/web3-sdks/how-to-get-transaction-logs-on-solana
 export const getTransactionsForAddress = async (
   connection: Connection,
