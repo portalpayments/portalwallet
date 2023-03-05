@@ -82,6 +82,7 @@
   }
   .send-anyway {
     background-color: #9d9d9d;
+    @include grey-shadow;
   }
   .send {
     background: var(--blue-green-gradient);

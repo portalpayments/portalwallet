@@ -11,7 +11,7 @@
   export let isCurrentlyLoadingVerificationStateFromNetwork: boolean = false;
 </script>
 
-<div class="transfer-heading">
+<div class="send-heading">
   <BackButton />
   <Heading>Send money</Heading>
 
@@ -29,8 +29,8 @@
       </div>
       {#if !contact.verifiedClaims}
         <div class="unverified-message">
-          Only send money to verified recipients. We will notify you once the
-          address is verified.
+          Note there is not a guarantee that the wallet name represents a
+          particular individual or organisation.
         </div>
       {/if}
     </div>
@@ -41,7 +41,7 @@
 </div>
 
 <style lang="scss">
-  .transfer-heading {
+  .send-heading {
     display: grid;
     grid-auto-flow: row;
     grid-template-columns: 1fr;
@@ -50,6 +50,7 @@
     justify-content: center;
     align-items: baseline;
     padding: 0 24px;
+    gap: 12px;
   }
 
   .verification-status {
@@ -81,5 +82,6 @@
     line-height: 130%;
     color: var(--black);
     font-weight: 500;
+    font-style: italic;
   }
 </style>
