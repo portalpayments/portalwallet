@@ -162,7 +162,7 @@
       destinationWalletAddress = inputWalletNameOrAddress;
     } else {
       log(
-        `This is not a valid wallet address, trying to resolve '${inputWalletNameOrAddress}' as a name...`
+        `'${inputWalletNameOrAddress}' is not a valid wallet address, trying to resolve '${inputWalletNameOrAddress}' as a name...`
       );
       destinationWalletAddress = await resolveAnyName(
         connection,
