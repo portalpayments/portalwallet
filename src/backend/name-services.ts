@@ -2,13 +2,19 @@ import { PublicKey, type Connection } from "@solana/web3.js";
 import {
   getAllDomains,
   getTwitterRegistry,
-  performReverseLookup,
+  getHandleAndRegistryKey,
   reverseLookup,
 } from "@bonfida/spl-name-service";
 import { getDomainKeySync, NameRegistryState } from "@bonfida/spl-name-service";
 import * as http from "../lib/http-client";
-import { asyncMap, log, stringify } from "./functions";
 import { TldParser } from "@onsol/tldparser";
+import type { MainDomain } from "@onsol/tldparser/dist/types/state/main-domain";
+import { URLS } from "./constants";
+import type { TwitterApiReadOnly } from "twitter-api-v2";
+import dotenv from "dotenv";
+// https://www.npmjs.com/package/@onsol/tldparser
+
+dotenv.config();
 
 const removeExtension = (string: string, extension: string): string => {
   const extensionWithDot = `.${extension}`;
@@ -36,10 +42,18 @@ export const dotAbcDotBonkOrDotPoorToWallet = async (
 // getMainDomain() is what we want
 export const walletToDotAbcDotBonkOrDotPoor = async (
   connection: Connection,
-  wallet: string
+  wallet: PublicKey
 ): Promise<string> => {
   const parser = new TldParser(connection);
-  const mainDomain = await parser.getMainDomain(wallet);
+  let mainDomain: MainDomain;
+  try {
+    mainDomain = await parser.getMainDomain(wallet);
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    if (error.message.includes("Unable to find MainDomain account")) {
+      return null;
+    }
+  }
   if (!mainDomain?.domain) {
     return null;
   }
@@ -61,9 +75,10 @@ export const dotGlowToWallet = async (
   return walletAddress;
 };
 
-export const walletToDotGlow = async (wallet: string) => {
+export const walletToDotGlow = async (wallet: PublicKey) => {
+  const walletString = wallet.toBase58();
   const responseBody = await http.get(
-    `https://api.glow.app/glow-id/resolve?wallet=${wallet}`
+    `https://api.glow.app/glow-id/resolve?wallet=${walletString}`
   );
   const dotGlowUsername = responseBody?.info?.handle || null;
   const dotGlow = `${dotGlowUsername}.glow`;
@@ -93,7 +108,7 @@ export const dotSolDomainToWallet = async (
 // See https://www.quicknode.com/guides/solana-development/accounts-and-data/how-to-query-solana-naming-service-domains-sol/#reverse-lookup-find-all-domains-owned-by-a-wallet
 export const walletToDotSol = async (
   connection: Connection,
-  wallet: string
+  wallet: PublicKey
 ): Promise<string> => {
   try {
     const ownerWallet = new PublicKey(wallet);
@@ -125,14 +140,14 @@ export const dotBackpackToWallet = async (
 };
 
 export const walletToDotBackpackDomain = async (
-  wallet: string,
+  wallet: PublicKey,
   jwt: string
 ): Promise<string> => {
+  const walletString = wallet.toBase58();
   // const backpackAPIEndpoint = `https://backpack-api.xnfts.dev/users?usernamePrefix=${wallet}`;
-  const backpackAPIEndpoint = `https://backpack-api.xnfts.dev/users?usernamePrefix=${wallet}`;
+  const backpackAPIEndpoint = `https://backpack-api.xnfts.dev/users?usernamePrefix=${walletString}`;
   const responseBody = await http.get(backpackAPIEndpoint, null, {
-    cookie:
-      "jwt=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkMTU2MzgyYS1kYWE0LTQ2ZDMtYTNhYy1hMTUyNjBkMTQyZTQiLCJpc3MiOiJhdXRoLnhuZnRzLmRldiIsImF1ZCI6ImJhY2twYWNrIiwiaWF0IjoxNjc4MDUyODA4fQ.Ckkoi33ywdIbyn3aK19EwcmYNnerRYzVSf1WAyoDRpX0OGaTTTckjwdgQ5RO7gKEMhqi3GEUKj1pqV7AwsSMyhUv5UpsEKOFUD2wt_XWEVrfb43jj1Qw86PFOLSZ5enLVvWZMO91AaorZaX8zsCvpJLZ5N-soku8ghLO0Yub3pxWNAHdYXVXRrt5OFhQ1HFrkacoOiBpupnf5y4-Mdv-AJZIzsjhQP0RSuyVi97FzKI2YTN1XA_s1FZLljl0VPkxHycb0c6pq2TWGJaJ3NJXvULGGlUZ5eoTRezyDIFsBwSBNz1Iy9X2v9mbkn4CGvyp4nmWsGWkZoEWJCRI5ZuoTw",
+    cookie: `jwt=${jwt}`,
   });
 
   const users = responseBody?.users || null;
@@ -164,39 +179,62 @@ export const twitterHandleToWallet = async (
   }
 };
 
+export const walletToTwitterHandle = async (
+  connection: Connection,
+  wallet: PublicKey
+) => {
+  try {
+    const [handle, _RegistryKey] = await getHandleAndRegistryKey(
+      connection,
+      wallet
+    );
+
+    return `@${handle}`;
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    // They SNS user just doesn't have a Twitter reverse mapping set up
+    // This is super common
+    if (error.message === "Invalid reverse Twitter account provided") {
+      return null;
+    }
+    // An unexpected error
+    throw error;
+  }
+};
+
 export const resolveWalletName = async (
   connection: Connection,
-  string: string
+  walletName: string
 ): Promise<string> => {
   // This seems to be the nicest maintained and less land-grab naming service
   // It also has multiple TLDs
   if (
-    string.endsWith(".abc") ||
-    string.endsWith(".bonk") ||
-    string.endsWith(".poor")
+    walletName.endsWith(".abc") ||
+    walletName.endsWith(".bonk") ||
+    walletName.endsWith(".poor")
   ) {
-    return dotAbcDotBonkOrDotPoorToWallet(connection, string);
+    return dotAbcDotBonkOrDotPoorToWallet(connection, walletName);
   }
   // Requires people to buy a custom token
   // and is complex to set up, but was more popular
-  if (string.endsWith(".sol")) {
-    return dotSolDomainToWallet(connection, string);
+  if (walletName.endsWith(".sol")) {
+    return dotSolDomainToWallet(connection, walletName);
   }
-  if (string.endsWith(".glow")) {
-    return dotGlowToWallet(string);
+  if (walletName.endsWith(".glow")) {
+    return dotGlowToWallet(walletName);
   }
-  if (string.endsWith(".backpack")) {
-    return dotBackpackToWallet(string);
+  if (walletName.endsWith(".backpack")) {
+    return dotBackpackToWallet(walletName);
   }
-  if (string.startsWith("@")) {
-    return twitterHandleToWallet(connection, string);
+  if (walletName.startsWith("@")) {
+    return twitterHandleToWallet(connection, walletName);
   }
   return null;
 };
 
 export const resolveWalletAddress = async (
   connection: Connection,
-  wallet: string
+  wallet: PublicKey
 ): Promise<string> => {
   // Order chosen to match resolveWalletName() above.
   const dotAbcOrBonkOrPoor = await walletToDotAbcDotBonkOrDotPoor(
