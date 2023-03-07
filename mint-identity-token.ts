@@ -78,7 +78,7 @@ const main = async () => {
 
   const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;
 
-  const connection: Connection = await connect("quickNodeMainNetBeta");
+  const connection: Connection = await connect("quickNodeMainNetBetaBackup");
 
   const walletAddress = new PublicKey(WALLET_ADDRESS);
 
