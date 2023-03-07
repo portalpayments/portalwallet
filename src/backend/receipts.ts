@@ -66,7 +66,7 @@ export const getRawReceiptFromMessage = async (message: ThreadMessage) => {
     `http://localhost:8010/proxy`
   );
 
-  const html = await http.get(corsProxyURL, "text/html");
+  const html = await http.get(corsProxyURL, null, "text/html");
 
   let receipt = receiptHTMLToObject(html);
   return receipt;

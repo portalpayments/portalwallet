@@ -404,6 +404,7 @@ export const nftToCollectable = async (
   // See https://twitter.com/mikemaccana/status/1620140384302288896?s=20&t=gP3XffhtDkUiaYQvSph8vg
   const rawNFTMetaData: NonFungibleTokenMetadataStandard = await http.get(
     nftOnChainData.uri,
+    null,
     http.CONTENT_TYPES.JSON
   );
 

@@ -130,7 +130,7 @@ export const walletToDotBackpackDomain = async (
 ): Promise<string> => {
   // const backpackAPIEndpoint = `https://backpack-api.xnfts.dev/users?usernamePrefix=${wallet}`;
   const backpackAPIEndpoint = `https://backpack-api.xnfts.dev/users?usernamePrefix=${wallet}`;
-  const responseBody = await http.get(backpackAPIEndpoint, null, {
+  const responseBody = await http.get(backpackAPIEndpoint, {
     cookie:
       "jwt=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkMTU2MzgyYS1kYWE0LTQ2ZDMtYTNhYy1hMTUyNjBkMTQyZTQiLCJpc3MiOiJhdXRoLnhuZnRzLmRldiIsImF1ZCI6ImJhY2twYWNrIiwiaWF0IjoxNjc4MDUyODA4fQ.Ckkoi33ywdIbyn3aK19EwcmYNnerRYzVSf1WAyoDRpX0OGaTTTckjwdgQ5RO7gKEMhqi3GEUKj1pqV7AwsSMyhUv5UpsEKOFUD2wt_XWEVrfb43jj1Qw86PFOLSZ5enLVvWZMO91AaorZaX8zsCvpJLZ5N-soku8ghLO0Yub3pxWNAHdYXVXRrt5OFhQ1HFrkacoOiBpupnf5y4-Mdv-AJZIzsjhQP0RSuyVi97FzKI2YTN1XA_s1FZLljl0VPkxHycb0c6pq2TWGJaJ3NJXvULGGlUZ5eoTRezyDIFsBwSBNz1Iy9X2v9mbkn4CGvyp4nmWsGWkZoEWJCRI5ZuoTw",
   });
