@@ -57,7 +57,7 @@ import { Direction } from "./types";
 import { getABetterErrorMessage } from "./errors";
 import { createMintAccount } from "./tokens";
 
-// jest.mock("./functions");
+jest.mock("./functions");
 
 dotenv.config();
 
@@ -146,7 +146,7 @@ describe(`mainnet integration tests`, () => {
   );
 
   beforeAll(async () => {
-    mainNetConnection = await connect("quickNodeMainNetBeta");
+    mainNetConnection = await connect("quickNodeMainNetBetaBackup");
   });
 
   test(`We can get Vaheh's identity tokens from his wallet`, async () => {
