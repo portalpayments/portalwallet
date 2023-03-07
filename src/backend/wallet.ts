@@ -31,6 +31,7 @@ import { getProfilePicture as getProfilePictureUsingSolanaPFPStandard } from "@s
 import {
   getIdentityTokensFromWallet,
   getVerifiedClaimsFromNFTMetadata,
+  verifyWallet,
 } from "./identity-tokens";
 import type {
   BasicTokenAccount,
@@ -51,11 +52,6 @@ import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "../backend/constants";
 const identityTokenIssuerPublicKey = new PublicKey(
   PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
 );
-
-const VERIFIED_CLAIMS_BY_ADDRESS: Record<
-  string,
-  VerifiedClaimsForIndividual | VerifiedClaimsForOrganization
-> = {};
 
 const debug = (_unused) => {};
 
@@ -170,65 +166,6 @@ export const getTokenAccountsByOwner = async (
   );
 
   return tokenAccounts;
-};
-
-export const verifyWallet = async (
-  connection: Connection,
-  metaplexConnectionKeypair: Keypair,
-  identityTokenIssuerPublicKey: PublicKey,
-  wallet: PublicKey,
-  useCache = true,
-  allowOldIdentityToken = false
-): Promise<
-  VerifiedClaimsForIndividual | VerifiedClaimsForOrganization | null
-> => {
-  if (useCache) {
-    const cachedVerifiedClaims = VERIFIED_CLAIMS_BY_ADDRESS[wallet.toBase58()];
-    if (cachedVerifiedClaims) {
-      log(`Found verified claims for ${wallet.toBase58()} in cache`);
-      sleep(1 * SECOND);
-      return cachedVerifiedClaims;
-    }
-  }
-
-  const identityTokens = await getIdentityTokensFromWallet(
-    connection,
-    metaplexConnectionKeypair,
-    identityTokenIssuerPublicKey,
-    wallet
-  );
-
-  if (!identityTokens.length) {
-    return null;
-  }
-
-  const metadataForIdentityTokens = await asyncMap(
-    identityTokens,
-    async (identityTokens) => {
-      const metadata = (await http.get(identityTokens.uri)) as
-        | NonFungibleTokenMetadataStandard
-        | OldNonStandardTokenMetaData;
-      return metadata;
-    }
-  );
-
-  if (!metadataForIdentityTokens.length) {
-    // TODO: this seems to fire even with verified wallets
-    log(`No current identity token was issued to this wallet`);
-    return null;
-  }
-
-  const latestTokenMetadata = metadataForIdentityTokens?.[0];
-
-  const verifiedClaims:
-    | VerifiedClaimsForIndividual
-    | VerifiedClaimsForOrganization = getVerifiedClaimsFromNFTMetadata(
-    latestTokenMetadata,
-    wallet,
-    allowOldIdentityToken
-  );
-
-  return verifiedClaims;
 };
 
 // https://www.quicknode.com/guides/web3-sdks/how-to-get-transaction-logs-on-solana

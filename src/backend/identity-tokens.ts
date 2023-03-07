@@ -41,6 +41,8 @@ import {
   IDENTITY_TOKEN_NAME,
   LATEST_IDENTITY_TOKEN_VERSION,
   MINIMUM_IDENTITY_TOKEN_VERSION,
+  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET,
+  SECOND,
   SECONDS,
 } from "./constants";
 
@@ -54,6 +56,16 @@ import type {
 } from "./types";
 import { makeTransaction } from "./tokens";
 import * as http from "../lib/http-client";
+import { FEATURES } from "./features";
+
+export const identityTokenIssuerPublicKey = new PublicKey(
+  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
+);
+
+const VERIFIED_CLAIMS_BY_ADDRESS: Record<
+  string,
+  VerifiedClaimsForIndividual | VerifiedClaimsForOrganization
+> = {};
 
 export const getMetaplex = (
   connection: Connection,
@@ -68,6 +80,65 @@ export const getMetaplex = (
   return Metaplex.make(connection)
     .use(keypairIdentity(keypair))
     .use(mockStorage());
+};
+
+export const verifyWallet = async (
+  connection: Connection,
+  metaplexConnectionKeypair: Keypair,
+  identityTokenIssuerPublicKey: PublicKey,
+  wallet: PublicKey,
+  useCache = true,
+  allowOldIdentityToken = FEATURES.allowOldIdentityToken
+): Promise<
+  VerifiedClaimsForIndividual | VerifiedClaimsForOrganization | null
+> => {
+  if (useCache) {
+    const cachedVerifiedClaims = VERIFIED_CLAIMS_BY_ADDRESS[wallet.toBase58()];
+    if (cachedVerifiedClaims) {
+      log(`Found verified claims for ${wallet.toBase58()} in cache`);
+      sleep(1 * SECOND);
+      return cachedVerifiedClaims;
+    }
+  }
+
+  const identityTokens = await getIdentityTokensFromWallet(
+    connection,
+    metaplexConnectionKeypair,
+    identityTokenIssuerPublicKey,
+    wallet
+  );
+
+  if (!identityTokens.length) {
+    return null;
+  }
+
+  const metadataForIdentityTokens = await asyncMap(
+    identityTokens,
+    async (identityTokens) => {
+      const metadata = (await http.get(identityTokens.uri)) as
+        | NonFungibleTokenMetadataStandard
+        | OldNonStandardTokenMetaData;
+      return metadata;
+    }
+  );
+
+  if (!metadataForIdentityTokens.length) {
+    // TODO: this seems to fire even with verified wallets
+    log(`No current identity token was issued to this wallet`);
+    return null;
+  }
+
+  const latestTokenMetadata = metadataForIdentityTokens?.[0];
+
+  const verifiedClaims:
+    | VerifiedClaimsForIndividual
+    | VerifiedClaimsForOrganization = getVerifiedClaimsFromNFTMetadata(
+    latestTokenMetadata,
+    wallet,
+    allowOldIdentityToken
+  );
+
+  return verifiedClaims;
 };
 
 // 'problem' is in the form of
@@ -146,8 +217,7 @@ export const mintIdentityToken = async (
     // See https://github.com/metaplex-foundation/js/issues/430 and
     // See https://github.com/metaplex-foundation/js/issues/344#issuecomment-1325265657
 
-    // TODO: re-enable the code below when this is fixes
-
+    // TODO: re-enable the code below when this is fixed
     // tokenCreateOutput = await metaplexNFTs.create({
     //   uri: uploadResponse.uri, // "https://arweave.net/123",
     //   name: IDENTITY_TOKEN_NAME,

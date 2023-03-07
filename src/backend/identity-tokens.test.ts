@@ -23,12 +23,7 @@ import {
   PublicKey,
   sendAndConfirmTransaction,
 } from "@solana/web3.js";
-import {
-  connect,
-  getTokenAccountsByOwner,
-  putSolIntoWallet,
-  verifyWallet,
-} from "./wallet";
+import { connect, getTokenAccountsByOwner, putSolIntoWallet } from "./wallet";
 import { log, sleep, stringify } from "./functions";
 import {
   IDENTITY_TOKEN_NAME,

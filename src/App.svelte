@@ -10,7 +10,8 @@
   import TransactionsPage from "./lib/TransactionsPage/TransactionsPage.svelte";
   import Settings from "./lib/Settings/Settings.svelte";
   import { Router, Route } from "svelte-navigator";
-  import { connect, verifyWallet } from "./backend/wallet";
+  import { connect } from "./backend/wallet";
+  import { verifyWallet } from "./backend/identity-tokens";
   import { log } from "./backend/functions";
   import type { Contact as ContactType } from "./backend/types";
   import Lock from "./lib/Lock/Lock.svelte";

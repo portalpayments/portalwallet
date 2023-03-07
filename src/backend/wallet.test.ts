@@ -17,7 +17,6 @@ import {
   getKeypairFromEnvFile,
   getKeypairFromString,
   putSolIntoWallet,
-  verifyWallet,
   getTokenAccountSummaries,
   getProfilePicture,
 } from "./wallet";
@@ -47,6 +46,7 @@ import { getCurrencyBySymbol } from "./solana-functions";
 import {
   getAllNftMetadatasFromAWallet,
   getIdentityTokensFromWallet,
+  verifyWallet,
 } from "./identity-tokens";
 import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
