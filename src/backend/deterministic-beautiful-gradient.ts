@@ -2,7 +2,7 @@ import { getSHA256Hash } from "./sha256";
 
 export const getGradient = async (walletAddress: string) => {
   const hash = await getSHA256Hash(walletAddress);
-  // 'as' because there could bdse no matches
+  // 'as' because there could be no matches
   // but our strings will always have a match
   const hashParts = hash.match(/.{1,8}/g) as Array<string>;
   const hues = hashParts.map((hashPart) => parseInt(hashPart, 16) % 360);
