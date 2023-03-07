@@ -16,19 +16,21 @@
 </script>
 
 <div class="contacts">
-  {#each contacts as contact}
-    <Link to={`/contacts/${contact.walletAddress}`}>
-      <div class="contact">
-        {#if contact.verifiedClaims}
-          <Verified {contact} />
-        {:else}
-          <Unverified {contact} />
-        {/if}
-      </div>
-    </Link>
-  {/each}
-  {#if !contacts.length}
-    No contacts.
+  {#if contacts}
+    {#each contacts as contact}
+      <Link to={`/contacts/${contact.walletAddress}`}>
+        <div class="contact">
+          {#if contact.verifiedClaims}
+            <Verified {contact} />
+          {:else}
+            <Unverified {contact} />
+          {/if}
+        </div>
+      </Link>
+    {/each}
+    {#if !contacts.length}
+      No contacts.
+    {/if}
   {/if}
 </div>
 
