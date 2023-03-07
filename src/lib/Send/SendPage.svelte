@@ -15,8 +15,8 @@
   import { makeAccountsAndDoTransfer } from "../../backend/tokens";
   import { checkIfValidWalletAddress, truncateWallet } from "../utils";
   import { log, sleep, stringify } from "../../backend/functions";
+  import { walletNameToAddressAndProfilePicture } from "@portal-payments/solana-wallet-names";
   import { SECOND } from "../../backend/constants";
-  import { resolveWalletName } from "../../backend/name-services";
 
   import type {
     VerifiedClaimsForIndividual,
@@ -165,10 +165,13 @@
       log(
         `'${inputWalletNameOrAddress}' is not a valid wallet address, trying to resolve '${inputWalletNameOrAddress}' as a name...`
       );
-      destinationWalletAddress = await resolveWalletName(
-        connection,
-        inputWalletNameOrAddress
-      );
+      const foundAddressAndProfilePicture =
+        await walletNameToAddressAndProfilePicture(
+          connection,
+          inputWalletNameOrAddress
+        );
+      destinationWalletAddress = foundAddressAndProfilePicture.walletAddress;
+
       // We're assuming any name that resolves to a wallet address is a valid wallet address
       if (destinationWalletAddress) {
         isValidWalletAddressOrName = true;
@@ -192,7 +195,7 @@
 
     log(`Valid wallet address!`);
 
-    // Get identity from the portal Identity Token
+    // Get identity from the Portal Identity Token
     verifiedClaims = await verifyWallet(
       connection,
       keyPair,
