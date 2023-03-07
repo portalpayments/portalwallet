@@ -32,13 +32,12 @@
     PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
   );
 
-  // The entered wallet name or address (foo.sol, abcdef, foo.abc, whatever)
-  let inputWalletNameOrAddress = "";
-
   let destinationWalletAddress: string | null = null;
   let transferAmount: number | null = null;
   let memo: string | null = null;
-  let resolvedWalletName: string | null = null;
+
+  // The entered wallet name or address (foo.sol, abcdef, foo.abc, whatever)
+  let walletNameEnteredByUser: string | null = null;
 
   let hasLoadedVerificationStateFromNetwork = false;
   let isCurrentlyLoadingVerificationStateFromNetwork = false;
@@ -155,34 +154,34 @@
     isSendButtonDisabled = true;
 
     let isValidWalletAddressOrName = checkIfValidWalletAddress(
-      inputWalletNameOrAddress
+      walletNameEnteredByUser
     );
 
     if (isValidWalletAddressOrName) {
       log(`This is a valid wallet address`);
-      destinationWalletAddress = inputWalletNameOrAddress;
+      destinationWalletAddress = walletNameEnteredByUser;
     } else {
       log(
-        `'${inputWalletNameOrAddress}' is not a valid wallet address, trying to resolve '${inputWalletNameOrAddress}' as a name...`
+        `'${walletNameEnteredByUser}' is not a valid wallet address, trying to resolve '${walletNameEnteredByUser}' as a name...`
       );
       const foundAddressAndProfilePicture =
         await walletNameToAddressAndProfilePicture(
           connection,
-          inputWalletNameOrAddress
+          walletNameEnteredByUser
         );
       destinationWalletAddress = foundAddressAndProfilePicture.walletAddress;
 
       // We're assuming any name that resolves to a wallet address is a valid wallet address
       if (destinationWalletAddress) {
         isValidWalletAddressOrName = true;
-        resolvedWalletName = inputWalletNameOrAddress;
+        walletNameEnteredByUser = walletNameEnteredByUser;
       }
     }
 
     if (!isValidWalletAddressOrName) {
       // TODO: handle invalid wallet addresses better
       log(
-        `The name or addresss '${inputWalletNameOrAddress}' is not a valid wallet name or address`
+        `The name or addresss '${walletNameEnteredByUser}' is not a valid wallet name or address`
       );
       verifiedClaims = null;
       isAskingWalletOwnerToGetVerified = false;
@@ -216,13 +215,13 @@
   <SendHeading
     {contact}
     {hasLoadedVerificationStateFromNetwork}
-    {resolvedWalletName}
+    {walletNameEnteredByUser}
   />
 
   <div class="inputs">
     <FocusContext>
       <Input
-        bind:value={inputWalletNameOrAddress}
+        bind:value={walletNameEnteredByUser}
         label="wallet name or address"
         isFocused={true}
         filterField={null}

@@ -5,6 +5,7 @@
   import { onMount } from "svelte";
 
   export let contact: Contact;
+  export let walletNameEnteredByUser: string | null = null;
 
   let gradient: string | null = null;
 
@@ -31,7 +32,9 @@
   <div class="profile-pic" style={gradient} />
 {/if}
 <div class="recipient-info">
-  <div class="anonymous">Anonymous</div>
+  <div class="anonymous">
+    {walletNameEnteredByUser ? walletNameEnteredByUser : "Anonymous"}
+  </div>
   <button
     class="truncated-wallet"
     on:click={async () => {
