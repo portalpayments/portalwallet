@@ -146,7 +146,7 @@ describe(`mainnet integration tests`, () => {
   );
 
   beforeAll(async () => {
-    mainNetConnection = await connect("quickNodeMainNetBetaBackup");
+    mainNetConnection = await connect("quickNodeMainNetBeta");
   });
 
   test(`We can get Vaheh's identity tokens from his wallet`, async () => {

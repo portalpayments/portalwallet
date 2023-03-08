@@ -119,9 +119,9 @@ export const URLS = {
   testNet: clusterApiUrl("testnet"),
   // From https://www.quicknode.com/endpoints/49328
   quickNodeMainNetBeta:
-    "https://proportionate-greatest-needle.solana-mainnet.quiknode.pro/",
-  quickNodeMainNetBetaBackup:
     "https://orbital-polished-rain.solana-mainnet.quiknode.pro/aa92ba0b474b53f9ee8473aaa0a0370ef3dcfb0e/",
+  quickNodeMainNetBetaBackup:
+    "https://proportionate-greatest-needle.solana-mainnet.quiknode.pro/",
 };
 
 export const HELIUS_RPC_URL =
