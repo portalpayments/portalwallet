@@ -233,6 +233,8 @@ export const mintIdentityToken = async (
     const { mintAddress } = transactionBuilder.getContext();
     await metaplex.rpc().sendAndConfirmTransaction(transactionBuilder);
     await sleep(2 * SECONDS);
+
+    // https://github.com/metaplex-foundation/js#usage
     createdNFT = await metaplex.nfts().findByMint({ mintAddress });
     // End of hack for metaplex error
   } catch (thrownError) {
