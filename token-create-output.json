@@ -1,0 +1,98 @@
+{
+  "model": "nft",
+  "updateAuthorityAddress": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+  "json": {
+    "name": "Portal Identity Token",
+    "description": "Verification of real-world identity for Solana payments and apps",
+    "image": "https://gateway.pinata.cloud/ipfs/QmXX3QMppHdN9y6fR85nTZr6dZYchZ9Yr1r3UK3r1X4gNT",
+    "external_url": "https://getportal.app",
+    "attributes": [
+      {
+        "trait_type": "type",
+        "value": "INDIVIDUAL"
+      },
+      {
+        "trait_type": "givenName",
+        "value": "Micheal-Sean"
+      },
+      {
+        "trait_type": "familyName",
+        "value": "MacCana"
+      },
+      {
+        "trait_type": "isNotable",
+        "value": "false"
+      },
+      {
+        "trait_type": "version",
+        "value": "7"
+      },
+      {
+        "trait_type": "issuedAgainst",
+        "value": "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM"
+      }
+    ],
+    "properties": {
+      "files": [
+        {
+          "uri": "https://gateway.pinata.cloud/ipfs/QmXX3QMppHdN9y6fR85nTZr6dZYchZ9Yr1r3UK3r1X4gNT",
+          "type": null
+        },
+        {
+          "uri": "https://gateway.pinata.cloud/ipfs/QmeoX3MX2tvKx7xMqgC7rmsWewTfvAk2bqecadozed2xVJ",
+          "type": null
+        }
+      ]
+    }
+  },
+  "jsonLoaded": true,
+  "name": "Portal Identity Token",
+  "symbol": "",
+  "uri": "https://arweave.net/iyxYwAarxvGBydZhIUvknIo9sVwpyT9zxuWxBwi3FxA",
+  "isMutable": true,
+  "primarySaleHappened": false,
+  "sellerFeeBasisPoints": 0,
+  "editionNonce": 254,
+  "creators": [
+    {
+      "address": "FSVgrW58amFmH91ZKBic686qVhHayMt3wS8bCpisUph9",
+      "verified": true,
+      "share": 100
+    }
+  ],
+  "tokenStandard": 0,
+  "collection": null,
+  "collectionDetails": null,
+  "uses": null,
+  "programmableConfig": null,
+  "address": "Be3eGDCarMkBbX6T4XuRiaWsZVHVX4aZMFgcYbzmcFEQ",
+  "metadataAddress": "DrPQ6db9notU4VFxGgQ2GW6mHreEmyF3qEoJMLXHvAfz",
+  "mint": {
+    "model": "mint",
+    "address": "Be3eGDCarMkBbX6T4XuRiaWsZVHVX4aZMFgcYbzmcFEQ",
+    "mintAuthorityAddress": "8Ak319J1y4o9NM8q2wggbAyv9da5CUaABRdz8mimYsHa",
+    "freezeAuthorityAddress": "8Ak319J1y4o9NM8q2wggbAyv9da5CUaABRdz8mimYsHa",
+    "decimals": 0,
+    "supply": {
+      "basisPoints": "01",
+      "currency": {
+        "symbol": "Token",
+        "decimals": 0,
+        "namespace": "spl-token"
+      }
+    },
+    "isWrappedSol": false,
+    "currency": {
+      "symbol": "Token",
+      "decimals": 0,
+      "namespace": "spl-token"
+    }
+  },
+  "edition": {
+    "model": "nftEdition",
+    "isOriginal": true,
+    "address": "8Ak319J1y4o9NM8q2wggbAyv9da5CUaABRdz8mimYsHa",
+    "supply": "00",
+    "maxSupply": "00"
+  }
+}
