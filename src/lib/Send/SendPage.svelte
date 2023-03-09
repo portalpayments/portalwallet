@@ -203,7 +203,7 @@
       true
     );
 
-    log(`Verification result!`, verifiedClaims);
+    log(`Verification result:`, verifiedClaims);
 
     hasLoadedVerificationStateFromNetwork = true;
     isCurrentlyLoadingVerificationStateFromNetwork = false;
