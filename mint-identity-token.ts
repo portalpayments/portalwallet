@@ -26,6 +26,7 @@ import { connect } from "./src/backend/wallet";
 dotenv.config();
 
 import { config } from "./mint-identity-token-config";
+import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 
 const main = async () => {
   log(
@@ -46,91 +47,75 @@ const main = async () => {
 
   const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
 
-  // // Step 0:
+  // Step 1a. Upload individual image if necessary
+  let uploadedIndividualOrOrganizationImageUrl: string | null =
+    config.alreadyUploadedIndividualOrOrganizationImage;
 
-  // // Step 1a. Upload individual image if necessary
-  // let uploadedIndividualOrOrganizationImageUrl: string | null =
-  //   config.alreadyUploadedIndividualOrOrganizationImage;
+  if (uploadedIndividualOrOrganizationImageUrl) {
+    log(
+      `🖼️ Using already-uploaded individual image`,
+      uploadedIndividualOrOrganizationImageUrl
+    );
+  } else {
+    uploadedIndividualOrOrganizationImageUrl = await uploadImageToPinata(
+      config.individualOrOrganizationImageFile
+    );
+    log(
+      `🖼️ Uploaded individual image`,
+      uploadedIndividualOrOrganizationImageUrl
+    );
+  }
 
-  // if (uploadedIndividualOrOrganizationImageUrl) {
-  //   log(
-  //     `🖼️ Using already-uploaded individual image`,
-  //     uploadedIndividualOrOrganizationImageUrl
-  //   );
-  // } else {
-  //   uploadedIndividualOrOrganizationImageUrl = await uploadImageToPinata(
-  //     config.individualOrOrganizationImageFile
-  //   );
-  //   log(
-  //     `🖼️ Uploaded individual image`,
-  //     uploadedIndividualOrOrganizationImageUrl
-  //   );
-  // }
+  // Step 1b. Upload cover image if necessary
+  let uploadedCoverImageUrl: string | null = config.alreadyUploadedCoverImage;
 
-  // // Step 1b. Upload cover image if necessary
-  // let uploadedCoverImageUrl: string | null = config.alreadyUploadedCoverImage;
+  if (uploadedCoverImageUrl) {
+    log(`🖼️ Using already-uploaded cover image`, uploadedCoverImageUrl);
+  } else {
+    uploadedCoverImageUrl = await uploadImageToPinata(config.coverImageFile);
+    log(`🖼️ Uploaded cover image`, uploadedCoverImageUrl);
+  }
 
-  // if (uploadedCoverImageUrl) {
-  //   log(`🖼️ Using already-uploaded cover image`, uploadedCoverImageUrl);
-  // } else {
-  //   uploadedCoverImageUrl = await uploadImageToPinata(config.coverImageFile);
-  //   log(`🖼️ Uploaded cover image`, uploadedCoverImageUrl);
-  // }
+  const tokenClaims:
+    | VerifiedClaimsForIndividual
+    | VerifiedClaimsForOrganization = {
+    ...config.tokenClaimsNoImageUrl,
+    imageUrl: uploadedIndividualOrOrganizationImageUrl,
+  };
 
-  // const tokenClaims:
-  //   | VerifiedClaimsForIndividual
-  //   | VerifiedClaimsForOrganization = {
-  //   ...config.tokenClaimsNoImageUrl,
-  //   imageUrl: uploadedIndividualOrOrganizationImageUrl,
-  // };
+  // Step 2. Mint token (using the identity token issuer wallet) and then move the minted token to the final receipient.
+  let tokenCreateOutput = await mintIdentityToken(
+    connection,
+    walletAddress,
+    tokenClaims,
+    uploadedCoverImageUrl,
+    identityTokenIssuer,
+    true
+  );
 
-  // // Step 2. Mint token (using the identity token issuer wallet) and then move the minted token to the final receipient.
-  // let tokenCreateOutput = (await mintIdentityToken(
-  //   connection,
-  //   walletAddress,
-  //   tokenClaims,
-  //   uploadedCoverImageUrl,
-  //   identityTokenIssuer,
-  //   true
-  // )) as Nft;
-
-  //   export type Nft = Omit<Metadata, 'model' | 'address' | 'mintAddress'> & {
-  //     /** A model identifier to distinguish models in the SDK. */
-  //     readonly model: 'nft';
-  //     /** The mint address of the NFT. */
-  //     readonly address: PublicKey;
-  //     /** The metadata address of the NFT. */
-  //     readonly metadataAddress: Pda;
-  //     /** The mint account of the NFT. */
-  //     readonly mint: Mint;
-  //     /**
-  //      * Defines whether the NFT is an original edition or a
-  //      * printed edition and provides additional information accordingly.
-  //      */
-  //     readonly edition: NftEdition;
-  // };
-
-  // log("tokenCreateOutput", stringify(tokenCreateOutput));
+  log("tokenCreateOutput", stringify(tokenCreateOutput));
 
   // Step 3. Move the minted token to the final recipient.
-  // const mintAddress = tokenCreateOutput.mint.mintAuthorityAddress;
-  const mintAddress = new PublicKey(
-    "Be3eGDCarMkBbX6T4XuRiaWsZVHVX4aZMFgcYbzmcFEQ"
-  );
-  // const senderTokenAccount = tokenCreateOutput.address;
-  const senderTokenAccount = new PublicKey(
-    "3w4KXzRNaT5cLxKUQLF7wrBN3RoPj1Hk3DtMveNKfNhk"
+  const mintAddress = tokenCreateOutput.address;
+
+  const senderTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    identityTokenIssuer,
+    mintAddress,
+    identityTokenIssuer.publicKey
   );
 
-  // log(`>>> DEBUG mintAddress`, mintAddress);
-  // log(`>>> DEBUG senderTokenAccount`, senderTokenAccount);
+  const senderTokenAccountAddress = senderTokenAccount.address;
+
+  log(`>>> DEBUG mintAddress`, mintAddress);
+  log(`>>> DEBUG senderTokenAccountAddress`, senderTokenAccountAddress);
 
   const recipientWallet = new PublicKey(config.walletAddress);
 
   const transactionId = await transferIdentityToken(
     connection,
     mintAddress,
-    senderTokenAccount,
+    senderTokenAccountAddress,
     recipientWallet,
     identityTokenIssuer
   );

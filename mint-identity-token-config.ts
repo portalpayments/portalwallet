@@ -1,10 +1,10 @@
 import { VerifiedClaimsForIndividual } from "./src/backend/types";
 
-const WALLET_ADDRESS = "5FHwkrdxntdK24hgQU8qgBjn35Y1zwhz1GZwCkP2UJnM";
-const GIVEN_NAME = "Micheal-Sean";
-const FAMILY_NAME = "MacCana";
-const INDIVIDUAL_OR_ORGANIZATION_IMAGE_FILE = "mike.jpg";
-const COVER_IMAGE_FILE = "identity-token-cover-image-for-mike.png";
+const WALLET_ADDRESS = "2EfiRdR97jnSknN7KiVwGqXATvuSgGiTypMdiwXxBbxh";
+const GIVEN_NAME = "Joseph";
+const FAMILY_NAME = "McCann";
+const INDIVIDUAL_OR_ORGANIZATION_IMAGE_FILE = "joe.jpg";
+const COVER_IMAGE_FILE = "identity-token-cover-image-for-joe.png";
 
 const ALREADY_UPLOADED_INDIVIDUAL_OR_ORGANIZATION_IMAGE = null;
 
