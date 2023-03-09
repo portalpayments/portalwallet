@@ -171,6 +171,10 @@
         );
       destinationWalletAddress = foundAddressAndProfilePicture.walletAddress;
 
+      if (foundAddressAndProfilePicture.profilePictureURL) {
+        contact.profilePictureURL =
+          foundAddressAndProfilePicture.profilePictureURL;
+      }
       // We're assuming any name that resolves to a wallet address is a valid wallet address
       if (destinationWalletAddress) {
         isValidWalletAddressOrName = true;
