@@ -165,9 +165,13 @@ export const mintIdentityToken = async (
 ): Promise<Sft | SftWithToken | Nft | NftWithToken> => {
   log(`🏦 Minting identity token...`);
 
-  let tokenMetaData: NonFungibleTokenMetadataStandard | null = null;
+  // This is the 'off-chain' metadata
+  // stored in the 'uri' property of the on-chain metadata
+  // From https://docs.metaplex.com/programs/token-metadata/overview#a-json-standard
+  // "This is used to safely provide additional data whilst not being constrained by the fees involved in storing on-chain data. "
+  let offChainMetaData: NonFungibleTokenMetadataStandard | null = null;
   if (tokenClaims.type === "INDIVIDUAL") {
-    tokenMetaData = makeTokenMetaDataForIndividual(
+    offChainMetaData = makeTokenMetaDataForIndividual(
       recipientWallet,
       tokenClaims.givenName,
       tokenClaims.familyName,
@@ -176,7 +180,7 @@ export const mintIdentityToken = async (
     );
   } else {
     if (tokenClaims.type === "ORGANIZATION") {
-      tokenMetaData = makeTokenMetaDataForOrganization(
+      offChainMetaData = makeTokenMetaDataForOrganization(
         recipientWallet,
         tokenClaims.legalName,
         tokenClaims.state,
@@ -187,7 +191,7 @@ export const mintIdentityToken = async (
         tokenCoverImage
       );
     }
-    if (tokenMetaData === null) {
+    if (offChainMetaData === null) {
       throw new Error(
         `COuld not work out why type of token metadata to create.`
       );
@@ -198,7 +202,7 @@ export const mintIdentityToken = async (
   const metaplexNFTs = metaplex.nfts();
   // TODO: see note re: NonFungibleTokenMetadataStandard above
   // @ts-ignore
-  const uploadResponse = await metaplexNFTs.uploadMetadata(tokenMetaData);
+  const uploadResponse = await metaplexNFTs.uploadMetadata(offChainMetaData);
 
   // From https://github.com/metaplex-foundation/js#create
   // "This will take care of creating the mint account, the associated token account, the metadata PDA and the original edition PDA (a.k.a. the master edition) for you.""
@@ -209,7 +213,7 @@ export const mintIdentityToken = async (
   let createdNFT: Sft | SftWithToken | Nft | NftWithToken;
   try {
     // TODO
-    // This is a workaround for metaplex bug.
+    // This is a workaround for metaplex bug in .create().
     // Bug shows as:
     //    The account of type [MintAccount] was not found at the provided address [51pE2seG8HAk9ToWrKQfakMWrp3dJ8RPqRnnXu9jqyzV].
     //
@@ -217,7 +221,7 @@ export const mintIdentityToken = async (
     // See https://github.com/metaplex-foundation/js/issues/430 and
     // See https://github.com/metaplex-foundation/js/issues/344#issuecomment-1325265657
 
-    // TODO: re-enable the code below when this is fixed
+    // TODO: re-enable the code below when the issue above is fixed
     // tokenCreateOutput = await metaplexNFTs.create({
     //   uri: uploadResponse.uri, // "https://arweave.net/123",
     //   name: IDENTITY_TOKEN_NAME,
