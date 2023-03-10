@@ -47,21 +47,6 @@ export const getOrSetSalt = async () => {
   return salt;
 };
 
-export const getSettingsOrNull = async (
-  suppliedPassword: string
-): Promise<Settings | null> => {
-  try {
-    const settings = await getSettings(suppliedPassword);
-    return settings;
-  } catch (thrownObject) {
-    // TODO: we're assuming all getSettings() failures are a bad password
-    // The other possibility is: we simply don't have settings get
-    // We should check localforage for PORTAL_SETTINGS and show the onboarding UI
-    // if it doesn't exist.
-    return null;
-  }
-};
-
 export const saveSettings = async (
   settings: Settings,
   password: string
@@ -82,7 +67,9 @@ export const checkIfOnboarded = async () => {
   return Boolean(settings);
 };
 
-export const getSettings = async (password: string): Promise<Settings> => {
+export const getSettings = async (
+  password: string
+): Promise<Settings | null> => {
   const salt = await getOrSetSalt();
   const decryptionKey: CryptoKey = await passwordToKey(password, salt);
   const initialisationVector = await getOrSetInitialisationVector();
@@ -94,11 +81,17 @@ export const getSettings = async (password: string): Promise<Settings> => {
     return null;
   }
 
-  let settings = (await decryptWithAESGCM(
+  let settingsOrNull = await decryptWithAESGCM(
     encryptedData,
     initialisationVector,
     decryptionKey
-  )) as Settings;
+  );
+
+  if (!settingsOrNull) {
+    return null;
+  }
+
+  const settings = settingsOrNull as Settings;
 
   // Extra step: the Uint8Array gets turned into an object during save, fix the type.
   settings.secretKey = Uint8Array.from(Object.values(settings.secretKey));

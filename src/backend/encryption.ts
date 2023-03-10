@@ -94,7 +94,11 @@ export const decryptWithAESGCM = async (
     const error = thrownObject as Error;
     // Original error is 'Unsupported state or unable to authenticate data'
     // but that's vague.
-    throw new Error("Bad password");
+    if (error.message.includes("unable to authenticate data")) {
+      log("Bad password");
+      return null;
+    }
+    throw error;
   }
   // 2. Turn ArrayBuffer into String
   const decodedEncryptedData = textDecoder.decode(decrypted);

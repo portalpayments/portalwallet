@@ -17,7 +17,7 @@
       await sleep(1 * SECOND);
       isBadPassword = false;
     }
-    let settings = await getSettingsOrNull(password);
+    let settings = await getSettings(password);
 
     if (!settings) {
       throw new Error(`Password was bad`);

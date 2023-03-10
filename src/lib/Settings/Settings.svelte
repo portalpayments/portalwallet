@@ -8,7 +8,7 @@
   import { log } from "../../backend/functions";
   import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "../../backend/constants";
   import Modal from "../Shared/Modal.svelte";
-  import { getSettingsOrNull } from "../../lib/settings";
+  import { getSettings } from "../../lib/settings";
   import BlurredText from "./BlurredText.svelte";
   import Heading from "../Shared/Heading.svelte";
   import Password from "../Shared/Password.svelte";
@@ -51,12 +51,10 @@
     newItemToConfirm: typeof itemToConfirm
   ) => {
     log(`Trying to get settings...`);
-    const settings = await getSettingsOrNull(suppliedPassword);
+    const settings = await getSettings(suppliedPassword);
 
-    log(`Got settings`, settings);
-
-    const isPasswordCorrect = Boolean(settings);
-    if (!isPasswordCorrect) {
+    log(`Got settings:`, settings);
+    if (!settings) {
       // TODO: error UI - copy lock screen
       log(`password was bad`);
       return;
