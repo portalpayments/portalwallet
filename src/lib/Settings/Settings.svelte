@@ -7,6 +7,7 @@
   import twitterIconURL from "../../assets/Icons/twitter.svg";
   import { log } from "../../backend/functions";
   import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "../../backend/constants";
+  import { secretKeyToHex } from "../../backend/solana-functions";
   import Modal from "../Shared/Modal.svelte";
   import { getSettings } from "../../lib/settings";
   import BlurredText from "./BlurredText.svelte";
