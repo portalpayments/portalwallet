@@ -67,7 +67,7 @@
     "@open-wc/building-rollup": "^2.2.1",
     "@peculiar/webcrypto": "^1.4.0",
     "@pinata/sdk": "^2.1.0",
-    "@portal-payments/solana-wallet-names": "^1.1.1",
+    "@portal-payments/solana-wallet-names": "^1.2.0",
     "@solana/spl-token": "^0.3.7",
     "@solana/spl-token-registry": "^0.2.7",
     "@solflare-wallet/pfp": "^0.1.0",
