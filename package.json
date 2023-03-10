@@ -21,7 +21,7 @@
     "update-on-chain-programs": "bash update-on-chain-programs.bash",
     "start-validator": "bash start-validator.bash",
     "make-zip-file": "bash make-zip-file.bash",
-    "mint-identity-token": "npx esrun mint-identity-token.ts",
+    "mint-identity-token": "npx esrun src/mint-identity-token.ts",
     "start-decaf-proxy-server": "lcp --proxyUrl https://www.decaf.so"
   },
   "devDependencies": {

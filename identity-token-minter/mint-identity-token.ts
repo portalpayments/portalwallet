@@ -2,30 +2,25 @@
 // Otherwise trying to load Dialect npm module will fail
 // (the npm script sets an environent variable to disable Dialect)
 
-import { log, sleep, stringify } from "./src/backend/functions";
+import { log, sleep, stringify } from "../src/backend/functions";
 import {
   transferIdentityToken,
   mintIdentityToken,
-} from "./src/backend/identity-tokens";
-import { uploadImageToPinata } from "./src/backend/pinata";
+} from "../src/backend/identity-tokens";
+import { uploadImageToPinata } from "../src/backend/pinata";
 import dotenv from "dotenv";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import base58 from "bs58";
-import { getKeypairFromString } from "./src/backend/solana-functions";
+import { getKeypairFromString } from "../src/backend/solana-functions";
 import type {
   VerifiedClaimsForIndividual,
   VerifiedClaimsForOrganization,
-} from "./src/backend/types";
-import type {
-  CreateNftOutput,
-  Nft,
-  NftWithToken,
-} from "@metaplex-foundation/js";
-import { connect } from "./src/backend/wallet";
+} from "../src/backend/types";
+import { connect } from "../src/backend/wallet";
 
 dotenv.config();
 
-import { config } from "./mint-identity-token-config";
+import { config } from "../mint-identity-token-config";
 import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 
 const main = async () => {
