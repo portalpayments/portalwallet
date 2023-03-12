@@ -4,7 +4,7 @@
   import Password from "../Shared/Password.svelte";
   import { SECOND } from "../../backend/constants";
   import { log, sleep } from "../../backend/functions";
-  import { getSettingsOrNull } from "../../lib/settings";
+  import { getSettings } from "../../lib/settings";
   import { Keypair } from "@solana/web3.js";
 
   let password = "";
