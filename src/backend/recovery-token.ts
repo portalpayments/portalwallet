@@ -13,7 +13,13 @@ import {
   SECONDS,
   SOLANA_SEED_SIZE_BYTES,
 } from "./constants";
-import { log, sleep, toArrayBuffer } from "./functions";
+import {
+  base64ToString,
+  log,
+  sleep,
+  stringToBase64,
+  toArrayBuffer,
+} from "./functions";
 import ESSerializer from "esserializer";
 // Looks like a small bug in scryptsy types
 // @ts-ignore
@@ -94,7 +100,7 @@ export const makeRecoveryTokenPayload = async (
   secretKey: Uint8Array,
   personalPhrase: string,
   walletUnlockPassword: string
-) => {
+): Promise<string> => {
   // Step 0 - normalize personal phrase
   const cleanedPersonalPhrase = cleanPhrase(personalPhrase);
 
@@ -116,10 +122,13 @@ export const makeRecoveryTokenPayload = async (
     tokenEncryptionKey
   );
 
-  return {
+  const serialized = ESSerializer.serialize({
     cipherText,
     initialisationVector,
-  };
+  });
+
+  const recoveryTokenPayload = stringToBase64(serialized);
+  return recoveryTokenPayload;
 };
 
 // Create an identityToken, it will be owned by identityTokenIssuer
@@ -138,13 +147,13 @@ export const mintIdentityToken = async (
 
   let createdNFT: Sft | SftWithToken | Nft | NftWithToken;
   try {
-    const dataToShoveInsideURIField = ESSerializer.serialize({
+    const recoveryTokenPayload = ESSerializer.serialize({
       cipherText,
       initialisationVector,
     });
 
     const createNftOptions: CreateNftBuilderParams = {
-      uri: dataToShoveInsideURIField,
+      uri: recoveryTokenPayload,
       name: RECOVERY_TOKEN_NAME,
       sellerFeeBasisPoints: 0, // 500 would represent 5.00%.
     };
@@ -190,10 +199,16 @@ export const mintIdentityToken = async (
 export const recoverFromToken = async (
   personalPhrase: string,
   walletUnlockPassword: string,
-  cipherText: ArrayBuffer,
-  initialisationVector: Uint8Array
+  recoveryTokenPayload: string
 ): Promise<Keypair | null> => {
   try {
+    // It's a base64 encoded ESSerialiser JSON
+    const toDeserialize = base64ToString(recoveryTokenPayload);
+
+    // Decode the ESSerializer JSON back to JS
+    const decodedDataFromURIField = ESSerializer.deserialize(
+      toDeserialize
+    ) as CipherTextAndInitialisationVector;
     // Step 0 - normalize personal phrase
     const cleanedPersonalPhrase = cleanPhrase(personalPhrase);
 
@@ -207,8 +222,8 @@ export const recoverFromToken = async (
 
     // Step 3 - decrypt the AES
     const decryptedData = (await decryptWithAESGCM(
-      cipherText,
-      initialisationVector,
+      decodedDataFromURIField.cipherText,
+      decodedDataFromURIField.initialisationVector,
       tokenDecryptionKey
     )) as string;
 

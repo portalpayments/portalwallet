@@ -32,7 +32,7 @@ describe(`recovery token`, () => {
   let originalWallet: Keypair;
   let restoredWallet: Keypair;
   let walletUnlockPassword: string;
-  let dataToShoveInsideURIField: string;
+  let recoveryTokenPayload: string;
 
   beforeAll(async () => {
     connection = await connect("localhost");
@@ -51,39 +51,27 @@ describe(`recovery token`, () => {
     originalWallet = originalWalletKeyPairs[0];
 
     // Make a recovery token payload
-    const { cipherText, initialisationVector } = await makeRecoveryTokenPayload(
+    recoveryTokenPayload = await makeRecoveryTokenPayload(
       originalWallet.secretKey,
       dirtyPersonalPhrase,
       walletUnlockPassword
     );
 
-    const serialized = ESSerializer.serialize({
-      cipherText,
-      initialisationVector,
-    });
-
-    dataToShoveInsideURIField = stringToBase64(serialized);
-
     // A 'reasonable' length for a URL
     // TODO: actally find out what max is from Metaplex.
-    expect(dataToShoveInsideURIField.length).toBeLessThan(2000);
+    expect(recoveryTokenPayload.length).toBeLessThan(2000);
   }, SCRYPT_IS_DESIGNED_TO_BE_SLOW);
 
   test(
     `We can NOT recover a wallet with a bad personal phrase`,
     async () => {
-      const toDeserialize = base64ToString(dataToShoveInsideURIField);
-
-      const decodedDataFromURIField = ESSerializer.deserialize(toDeserialize);
-
       // Now decrypt them (as if we'd read them out of the token)
 
       // Let's try a bad personal phrase first
       let restoredWallet = await recoverFromToken(
         "an incorrect personal phrase",
         walletUnlockPassword,
-        decodedDataFromURIField.cipherText,
-        decodedDataFromURIField.initialisationVector
+        recoveryTokenPayload
       );
 
       // No password, no wallet.
@@ -95,16 +83,11 @@ describe(`recovery token`, () => {
   test(
     `We can NOT recover a wallet with a bad wallet unlock phrase`,
     async () => {
-      const toDeserialize = base64ToString(dataToShoveInsideURIField);
-
-      const decodedDataFromURIField = ESSerializer.deserialize(toDeserialize);
-
       // Let's try a bad wallet unlock phrase
       restoredWallet = await recoverFromToken(
         dirtyPersonalPhrase,
         "not the wallet unlock password",
-        decodedDataFromURIField.cipherText,
-        decodedDataFromURIField.initialisationVector
+        recoveryTokenPayload
       );
 
       // No password, no wallet.
@@ -118,14 +101,10 @@ describe(`recovery token`, () => {
     async () => {
       // Now decrypt them using the correct personal phrase and wallet unlock password
 
-      const toDeserialize = base64ToString(dataToShoveInsideURIField);
-
-      const decodedDataFromURIField = ESSerializer.deserialize(toDeserialize);
       restoredWallet = await recoverFromToken(
         dirtyPersonalPhrase,
         walletUnlockPassword,
-        decodedDataFromURIField.cipherText,
-        decodedDataFromURIField.initialisationVector
+        recoveryTokenPayload
       );
 
       const originalSecretKey = originalWallet.secretKey.toString();
