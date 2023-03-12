@@ -91,6 +91,11 @@ export interface NonFungibleTokenMetadataStandard {
   };
 }
 
+export interface CipherTextAndInitialisationVector {
+  cipherText: ArrayBuffer;
+  initialisationVector: Uint8Array;
+}
+
 // See https://docs.solflare.com/solflare/technical/profile-picture-protocol/get-a-wallets-profile-picture
 export interface ProfilePictureResponse {
   isAvailable: boolean;

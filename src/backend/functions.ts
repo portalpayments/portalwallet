@@ -235,3 +235,11 @@ export const toArrayBuffer = (buffer: Buffer) => {
   }
   return arrayBuffer;
 };
+
+export const stringToBase64 = (string: string): string => {
+  return Buffer.from(string).toString("base64");
+};
+
+export const base64ToString = (base64: string): string => {
+  return Buffer.from(base64, "base64").toString();
+};

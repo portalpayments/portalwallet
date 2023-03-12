@@ -10,6 +10,7 @@ import { clusterApiUrl, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { BN as BigNumber } from "bn.js";
 
 export const IDENTITY_TOKEN_NAME = "Portal Identity Token";
+export const RECOVERY_TOKEN_NAME = "Portal Recovery Token";
 
 // Shaq is one of the only people I know
 // with a verified Twitter handle and a Solana wallet.

@@ -7,9 +7,14 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 
-import { SOLANA_SEED_SIZE_BYTES } from "./constants";
-import { log, toArrayBuffer } from "./functions";
-
+import {
+  IDENTITY_TOKEN_NAME,
+  RECOVERY_TOKEN_NAME,
+  SECONDS,
+  SOLANA_SEED_SIZE_BYTES,
+} from "./constants";
+import { log, sleep, toArrayBuffer } from "./functions";
+import ESSerializer from "esserializer";
 // Looks like a small bug in scryptsy types
 // @ts-ignore
 import { async as scryptAsync } from "scryptsy";
@@ -20,8 +25,24 @@ import {
   decryptWithAESGCM,
 } from "./encryption";
 import { cleanPhrase, secretKeyToHex } from "./solana-functions";
-import type { Keypair } from "@solana/web3.js";
+import type { Connection, Keypair } from "@solana/web3.js";
 import { getKeypairFromString } from "./wallet";
+import type {
+  Sft,
+  SftWithToken,
+  Nft,
+  NftWithToken,
+  CreateNftBuilderParams,
+} from "@metaplex-foundation/js";
+import {
+  makeTokenMetaDataForIndividual,
+  makeTokenMetaDataForOrganization,
+  getMetaplex,
+} from "./identity-tokens";
+import type {
+  CipherTextAndInitialisationVector,
+  NonFungibleTokenMetadataStandard,
+} from "./types";
 
 if (!globalThis.setImmediate) {
   // Fixes 'ReferenceError: setImmediate is not defined' when running in browser
@@ -96,6 +117,71 @@ export const makeRecoveryTokenPayload = async (
     cipherText,
     initialisationVector,
   };
+};
+
+// Create an identityToken, it will be owned by identityTokenIssuer
+export const mintIdentityToken = async (
+  connection: Connection,
+  user: Keypair,
+  cipherText: ArrayBuffer,
+  initialisationVector: Uint8Array
+): Promise<Sft | SftWithToken | Nft | NftWithToken> => {
+  log(`🏦 Minting identity token...`);
+
+  const metaplex = getMetaplex(connection, user, false);
+  const metaplexNFTs = metaplex.nfts();
+
+  // See https://github.com/metaplex-foundation/js-examples/blob/main/getting-started-expressjs/createNFT.cjs too
+
+  let createdNFT: Sft | SftWithToken | Nft | NftWithToken;
+  try {
+    const dataToShoveInsideURIField = ESSerializer.serialize({
+      cipherText,
+      initialisationVector,
+    });
+
+    const createNftOptions: CreateNftBuilderParams = {
+      uri: dataToShoveInsideURIField,
+      name: RECOVERY_TOKEN_NAME,
+      sellerFeeBasisPoints: 0, // 500 would represent 5.00%.
+    };
+
+    // TODO: metaplexNFTs.create() has a bug, see identity-tokens for details.
+    // when this is fixed we can mvoe to metaplex.create() ad save some code
+    const transactionBuilder = await metaplexNFTs
+      .builders()
+      .create(createNftOptions);
+    const { mintAddress } = transactionBuilder.getContext();
+    await metaplex.rpc().sendAndConfirmTransaction(transactionBuilder);
+
+    // https://github.com/metaplex-foundation/js#usage
+    createdNFT = await metaplex.nfts().findByMint({ mintAddress });
+    // End of hack for metaplex error
+  } catch (thrownError) {
+    const error = thrownError as Error;
+
+    // See https://github.com/metaplex-foundation/js/issues/148
+    if (error.message.includes("Failed to pack instruction data")) {
+      throw new Error(
+        `Increase Sol balance of wallet for user ${user.publicKey.toBase58()}`
+      );
+    }
+
+    if (error.message.includes("insufficient lamports")) {
+      throw new Error(
+        `⚠️ The user account has run out of Sol. Please send a small amount of Sol to the user account ${user.publicKey.toBase58()}`
+      );
+    }
+
+    log(`Unexpected error creating NFT:`, error.message);
+    throw error;
+  }
+
+  log(
+    `🎟️ The recoveryToken has been created, and is in the token account at address ${createdNFT.address}.`
+  );
+
+  return createdNFT;
 };
 
 export const recoverFromToken = async (

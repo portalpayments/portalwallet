@@ -7,21 +7,17 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import type { Connection, Keypair } from "@solana/web3.js";
-import { Keypair as KeypairConstructor } from "@solana/web3.js";
-import { log } from "./functions";
-import {
-  personalPhraseToEntropy,
-  makeRecoveryTokenPayload,
-  recoverFromToken,
-} from "./recovery-token";
+import { base64ToString, log, stringToBase64 } from "./functions";
+import { makeRecoveryTokenPayload, recoverFromToken } from "./recovery-token";
+import ESSerializer from "esserializer";
 import * as dotenv from "dotenv";
-import base58 from "bs58";
 import * as bip39 from "bip39";
 import { checkIfSecretKeyIsValid, mnemonicToKeypairs } from "./recovery";
 import { dirtyPersonalPhrase } from "./test-data/transactions/test-phrases";
 import { SECONDS } from "./constants";
 import { connect } from "./wallet";
 import { Crypto } from "@peculiar/webcrypto";
+import type { CipherTextAndInitialisationVector } from "./types";
 
 jest.mock("./functions");
 
@@ -61,12 +57,27 @@ describe(`recovery token`, () => {
           walletUnlockPassword
         );
 
+      const serialized = ESSerializer.serialize({
+        cipherText,
+        initialisationVector,
+      });
+
+      const dataToShoveInsideURIField = stringToBase64(serialized);
+
+      // A 'reasonable' length for a URL
+      // TODO: actally find out what max is from Metaplex.
+      expect(dataToShoveInsideURIField.length).toBeLessThan(2000);
+
+      const toDeserialize = base64ToString(dataToShoveInsideURIField);
+
+      const decodedDataFromURIField = ESSerializer.deserialize(toDeserialize);
+
       // Now decrypt them (as if we'd read them out of the token)
       restoredWallet = await recoverFromToken(
         dirtyPersonalPhrase,
         walletUnlockPassword,
-        cipherText,
-        initialisationVector
+        decodedDataFromURIField.cipherText,
+        decodedDataFromURIField.initialisationVector
       );
 
       const originalSecretKey = originalWallet.secretKey.toString();
