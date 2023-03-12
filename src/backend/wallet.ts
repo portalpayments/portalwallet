@@ -23,7 +23,7 @@ import {
   SECOND,
   SOLANA_DECIMALS,
 } from "./constants";
-import { getCurrencyBySymbol } from "./solana-functions";
+import { getCurrencyBySymbol, getKeypairFromString } from "./solana-functions";
 import { asyncMap } from "./functions";
 import base58 from "bs58";
 import { AccountLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
@@ -54,16 +54,6 @@ const identityTokenIssuerPublicKey = new PublicKey(
 );
 
 const debug = (_unused) => {};
-
-export const getKeypairFromString = (secretKeyString: string) => {
-  let decodedSecretKey: Uint8Array;
-  try {
-    decodedSecretKey = base58.decode(secretKeyString);
-  } catch (throwObject) {
-    throw new Error("Invalid secret key! See README.md");
-  }
-  return Keypair.fromSecretKey(decodedSecretKey);
-};
 
 export const connect = async (
   networkName: keyof typeof URLS

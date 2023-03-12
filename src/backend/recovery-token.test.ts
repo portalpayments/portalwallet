@@ -18,6 +18,7 @@ import { SECONDS } from "./constants";
 import { connect } from "./wallet";
 import { Crypto } from "@peculiar/webcrypto";
 import type { CipherTextAndInitialisationVector } from "./types";
+import { error } from "console";
 
 jest.mock("./functions");
 
@@ -73,6 +74,30 @@ describe(`recovery token`, () => {
       const decodedDataFromURIField = ESSerializer.deserialize(toDeserialize);
 
       // Now decrypt them (as if we'd read them out of the token)
+
+      // Let's try a bad personal phrase first
+      let restoredWallet = await recoverFromToken(
+        "an incorrect personal phrase",
+        walletUnlockPassword,
+        decodedDataFromURIField.cipherText,
+        decodedDataFromURIField.initialisationVector
+      );
+
+      // No password, no wallet.
+      expect(restoredWallet).toBeNull();
+
+      // Let's try a bad wallet unlock phrase
+      restoredWallet = await recoverFromToken(
+        dirtyPersonalPhrase,
+        "not the wallet unlock password",
+        decodedDataFromURIField.cipherText,
+        decodedDataFromURIField.initialisationVector
+      );
+
+      // No password, no wallet.
+      expect(restoredWallet).toBeNull();
+
+      // Now decrypt them using the correct personal phrase and wallet unlock password
       restoredWallet = await recoverFromToken(
         dirtyPersonalPhrase,
         walletUnlockPassword,

@@ -38,4 +38,5 @@ export const makePromise = actualFunctions.makePromise;
 export const hexToUtf8 = actualFunctions.hexToUtf8;
 export const instructionDataToNote = actualFunctions.instructionDataToNote;
 export const toArrayBuffer = actualFunctions.toArrayBuffer;
-export const addItemsAndStayUnique = actualFunctions.addItemsAndStayUnique;
+export const stringToBase64 = actualFunctions.stringToBase64;
+export const base64ToString = actualFunctions.base64ToString;

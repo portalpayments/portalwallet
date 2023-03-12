@@ -24,9 +24,12 @@ import {
   encryptWithAESGCM,
   decryptWithAESGCM,
 } from "./encryption";
-import { cleanPhrase, secretKeyToHex } from "./solana-functions";
+import {
+  cleanPhrase,
+  secretKeyToHex,
+  getKeypairFromString,
+} from "./solana-functions";
 import type { Connection, Keypair } from "@solana/web3.js";
-import { getKeypairFromString } from "./wallet";
 import type {
   Sft,
   SftWithToken,
@@ -189,26 +192,34 @@ export const recoverFromToken = async (
   walletUnlockPassword: string,
   cipherText: ArrayBuffer,
   initialisationVector: Uint8Array
-): Promise<Keypair> => {
-  // Step 0 - normalize personal phrase
-  const cleanedPersonalPhrase = cleanPhrase(personalPhrase);
+): Promise<Keypair | null> => {
+  try {
+    // Step 0 - normalize personal phrase
+    const cleanedPersonalPhrase = cleanPhrase(personalPhrase);
 
-  // Step 1 - use personal phrase and wallet unlock to rebuild entropy
-  const entropy = await personalPhraseToEntropy(
-    cleanedPersonalPhrase,
-    walletUnlockPassword
-  );
+    // Step 1 - use personal phrase and wallet unlock to rebuild entropy
+    const entropy = await personalPhraseToEntropy(
+      cleanedPersonalPhrase,
+      walletUnlockPassword
+    );
 
-  const tokenDecryptionKey = await importKey(entropy);
+    const tokenDecryptionKey = await importKey(entropy);
 
-  // Step 3 - decrypt the AES
-  const decryptedData = (await decryptWithAESGCM(
-    cipherText,
-    initialisationVector,
-    tokenDecryptionKey
-  )) as string;
+    // Step 3 - decrypt the AES
+    const decryptedData = (await decryptWithAESGCM(
+      cipherText,
+      initialisationVector,
+      tokenDecryptionKey
+    )) as string;
 
-  // We're done decrypting, now let's turn it back into a KeyPair
-  const restoredWallet = getKeypairFromString(decryptedData as string);
-  return restoredWallet;
+    // We're done decrypting, now let's turn it back into a KeyPair
+    const restoredWallet = getKeypairFromString(decryptedData as string);
+    return restoredWallet;
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    if (error.message.includes("Invalid secret key")) {
+      return null;
+    }
+    throw error;
+  }
 };
