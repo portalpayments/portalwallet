@@ -8,7 +8,7 @@
 //
 import type { Keypair } from "@solana/web3.js";
 import dotenv from "dotenv";
-import { getKeypairFromString } from "./wallet";
+import { getKeypairFromString } from "./solana-functions";
 
 dotenv.config();
 

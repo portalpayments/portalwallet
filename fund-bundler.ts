@@ -2,7 +2,8 @@
 
 import { BundlrStorageDriver } from "@metaplex-foundation/js";
 import { getMetaplex } from "./src/backend/identity-tokens";
-import { connect, getKeypairFromString } from "./src/backend/wallet";
+import { connect } from "./src/backend/wallet";
+import { getKeypairFromString } from "./src/backend/solana-functions";
 import dotenv from "dotenv";
 
 dotenv.config();
