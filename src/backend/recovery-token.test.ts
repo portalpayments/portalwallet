@@ -20,6 +20,8 @@ import { Crypto } from "@peculiar/webcrypto";
 import type { CipherTextAndInitialisationVector } from "./types";
 import { error } from "console";
 
+const SCRYPT_IS_DESIGNED_TO_BE_SLOW = 30 * SECONDS;
+
 jest.mock("./functions");
 
 dotenv.config();
@@ -30,6 +32,7 @@ describe(`recovery token`, () => {
   let originalWallet: Keypair;
   let restoredWallet: Keypair;
   let walletUnlockPassword: string;
+  let dataToShoveInsideURIField: string;
 
   beforeAll(async () => {
     connection = await connect("localhost");
@@ -37,38 +40,38 @@ describe(`recovery token`, () => {
     if (!global.crypto) {
       global.crypto = new Crypto();
     }
-  });
+
+    // Make a wallet with the traditional method
+    mnemonic = bip39.generateMnemonic();
+    walletUnlockPassword = `bad password for unit testing`;
+    const originalWalletKeyPairs = await mnemonicToKeypairs(
+      mnemonic,
+      walletUnlockPassword
+    );
+    originalWallet = originalWalletKeyPairs[0];
+
+    // Make a recovery token payload
+    const { cipherText, initialisationVector } = await makeRecoveryTokenPayload(
+      originalWallet.secretKey,
+      dirtyPersonalPhrase,
+      walletUnlockPassword
+    );
+
+    const serialized = ESSerializer.serialize({
+      cipherText,
+      initialisationVector,
+    });
+
+    dataToShoveInsideURIField = stringToBase64(serialized);
+
+    // A 'reasonable' length for a URL
+    // TODO: actally find out what max is from Metaplex.
+    expect(dataToShoveInsideURIField.length).toBeLessThan(2000);
+  }, SCRYPT_IS_DESIGNED_TO_BE_SLOW);
 
   test(
-    `We can create encrypted data for the recovery token, and recover it`,
+    `We can NOT recover a wallet with a bad personal phrase`,
     async () => {
-      // Make a wallet with the traditional method
-      mnemonic = bip39.generateMnemonic();
-      walletUnlockPassword = `bad password for unit testing`;
-      const originalWalletKeyPairs = await mnemonicToKeypairs(
-        mnemonic,
-        walletUnlockPassword
-      );
-      originalWallet = originalWalletKeyPairs[0];
-      // These are the bits we'll store in the token
-      const { cipherText, initialisationVector } =
-        await makeRecoveryTokenPayload(
-          originalWallet.secretKey,
-          dirtyPersonalPhrase,
-          walletUnlockPassword
-        );
-
-      const serialized = ESSerializer.serialize({
-        cipherText,
-        initialisationVector,
-      });
-
-      const dataToShoveInsideURIField = stringToBase64(serialized);
-
-      // A 'reasonable' length for a URL
-      // TODO: actally find out what max is from Metaplex.
-      expect(dataToShoveInsideURIField.length).toBeLessThan(2000);
-
       const toDeserialize = base64ToString(dataToShoveInsideURIField);
 
       const decodedDataFromURIField = ESSerializer.deserialize(toDeserialize);
@@ -85,6 +88,16 @@ describe(`recovery token`, () => {
 
       // No password, no wallet.
       expect(restoredWallet).toBeNull();
+    },
+    SCRYPT_IS_DESIGNED_TO_BE_SLOW
+  );
+
+  test(
+    `We can NOT recover a wallet with a bad wallet unlock phrase`,
+    async () => {
+      const toDeserialize = base64ToString(dataToShoveInsideURIField);
+
+      const decodedDataFromURIField = ESSerializer.deserialize(toDeserialize);
 
       // Let's try a bad wallet unlock phrase
       restoredWallet = await recoverFromToken(
@@ -96,8 +109,18 @@ describe(`recovery token`, () => {
 
       // No password, no wallet.
       expect(restoredWallet).toBeNull();
+    },
+    SCRYPT_IS_DESIGNED_TO_BE_SLOW
+  );
 
+  test(
+    `We can recover a wallet from a recovery token`,
+    async () => {
       // Now decrypt them using the correct personal phrase and wallet unlock password
+
+      const toDeserialize = base64ToString(dataToShoveInsideURIField);
+
+      const decodedDataFromURIField = ESSerializer.deserialize(toDeserialize);
       restoredWallet = await recoverFromToken(
         dirtyPersonalPhrase,
         walletUnlockPassword,
@@ -109,7 +132,6 @@ describe(`recovery token`, () => {
       const recoveredSecretKey = restoredWallet.secretKey.toString();
       expect(originalSecretKey).toEqual(recoveredSecretKey);
     },
-    // Slow test because it uses scrypt which is designed to be slow
-    30 * SECONDS
+    SCRYPT_IS_DESIGNED_TO_BE_SLOW
   );
 });
