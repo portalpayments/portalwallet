@@ -21,10 +21,7 @@ import {
   toArrayBuffer,
 } from "./functions";
 import ESSerializer from "esserializer";
-// Looks like a small bug in scryptsy types
-// @ts-ignore
-import { async as scryptAsync } from "scryptsy";
-import { buffer } from "stream/consumers";
+import scryptAsync from "scryptsy";
 import {
   getRandomValues,
   encryptWithAESGCM,
@@ -43,11 +40,7 @@ import type {
   NftWithToken,
   CreateNftBuilderParams,
 } from "@metaplex-foundation/js";
-import {
-  makeTokenMetaDataForIndividual,
-  makeTokenMetaDataForOrganization,
-  getMetaplex,
-} from "./identity-tokens";
+import { getMetaplex } from "./identity-tokens";
 import type {
   CipherTextAndInitialisationVector,
   NonFungibleTokenMetadataStandard,
@@ -131,14 +124,14 @@ export const makeRecoveryTokenPayload = async (
   return recoveryTokenPayload;
 };
 
-// Create an identityToken, it will be owned by identityTokenIssuer
-export const mintIdentityToken = async (
+// Create an recoveryToken, it will be owned by user
+export const mintRecoveryToken = async (
   connection: Connection,
   user: Keypair,
-  cipherText: ArrayBuffer,
-  initialisationVector: Uint8Array
+  personalPhrase: string,
+  walletUnlockPassword: string
 ): Promise<Sft | SftWithToken | Nft | NftWithToken> => {
-  log(`🏦 Minting identity token...`);
+  log(`🏦🛟 Minting recovery token...`);
 
   const metaplex = getMetaplex(connection, user, false);
   const metaplexNFTs = metaplex.nfts();
@@ -147,10 +140,11 @@ export const mintIdentityToken = async (
 
   let createdNFT: Sft | SftWithToken | Nft | NftWithToken;
   try {
-    const recoveryTokenPayload = ESSerializer.serialize({
-      cipherText,
-      initialisationVector,
-    });
+    const recoveryTokenPayload = await makeRecoveryTokenPayload(
+      user.secretKey,
+      personalPhrase,
+      walletUnlockPassword
+    );
 
     const createNftOptions: CreateNftBuilderParams = {
       uri: recoveryTokenPayload,
