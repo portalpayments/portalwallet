@@ -1,6 +1,4 @@
 // Run with 'npm run mint-identity-token'
-// Otherwise trying to load Dialect npm module will fail
-// (the npm script sets an environent variable to disable Dialect)
 
 import { log, sleep, stringify } from "../src/backend/functions";
 import {
