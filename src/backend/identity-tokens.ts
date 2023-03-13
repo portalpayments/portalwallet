@@ -22,7 +22,6 @@ import {
   type CreateNftOutput,
   type FindNftsByOwnerOutput,
   type Metadata,
-  type JsonMetadata,
   type Nft,
   type Sft,
   type NftWithToken,

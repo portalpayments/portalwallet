@@ -76,6 +76,10 @@ export interface CipherTextAndInitializationVector {
   cipherText: ArrayBuffer;
   initializationVector: Uint8Array;
 }
+export interface CipherTextAndInitializationVectorSerialized {
+  cipherText: string;
+  initializationVector: string;
+}
 
 // See https://docs.solflare.com/solflare/technical/profile-picture-protocol/get-a-wallets-profile-picture
 export interface ProfilePictureResponse {

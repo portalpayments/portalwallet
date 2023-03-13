@@ -39,11 +39,12 @@ import type {
   Nft,
   NftWithToken,
   CreateNftBuilderParams,
+  JsonMetadata,
 } from "@metaplex-foundation/js";
 import { getMetaplex } from "./identity-tokens";
 import type {
-  CipherTextAndInitialisationVector,
-  NonFungibleTokenMetadataStandard,
+  CipherTextAndInitializationVector,
+  CipherTextAndInitializationVectorSerialized,
 } from "./types";
 
 if (!globalThis.setImmediate) {
@@ -89,11 +90,11 @@ export const importKey = async (entropy: ArrayBuffer): Promise<CryptoKey> => {
   ]);
 };
 
-export const makeRecoveryTokenPayload = async (
+export const makeRecoveryTokenCiphertextAndInitializationVector = async (
   secretKey: Uint8Array,
   personalPhrase: string,
   walletUnlockPassword: string
-): Promise<string> => {
+): Promise<CipherTextAndInitializationVectorSerialized> => {
   // Step 0 - normalize personal phrase
   const cleanedPersonalPhrase = cleanPhrase(personalPhrase);
 
@@ -106,30 +107,67 @@ export const makeRecoveryTokenPayload = async (
   const tokenEncryptionKey = await importKey(entropy);
 
   // Step 2 - make an IV and store it in the resulting NFT
-  const initialisationVector: Uint8Array = await getRandomValues();
+  const initializationVector: Uint8Array = await getRandomValues();
 
   // Step 3 - encrypt the secret key, using the entropy and IV we just made
   const cipherText = await encryptWithAESGCM(
     secretKeyToHex(secretKey),
-    initialisationVector,
+    initializationVector,
     tokenEncryptionKey
   );
 
-  const serialized = ESSerializer.serialize({
-    cipherText,
-    initialisationVector,
-  });
+  const recoveryTokenCiphertextAndInitializationVector = {
+    cipherText: ESSerializer.serialize(cipherText),
+    initializationVector: ESSerializer.serialize(initializationVector),
+  };
 
-  const recoveryTokenPayload = serialized;
-  return recoveryTokenPayload;
+  return recoveryTokenCiphertextAndInitializationVector;
+};
+
+export const makeRecoveryTokenOffChainMetadata = async (
+  user: Keypair,
+  personalPhrase: string,
+  walletUnlockPassword: string
+): Promise<JsonMetadata> => {
+  const recoveryTokenPayload =
+    await makeRecoveryTokenCiphertextAndInitializationVector(
+      user.secretKey,
+      personalPhrase,
+      walletUnlockPassword
+    );
+
+  return {
+    name: "Portal Recovery Token",
+    description:
+      "Beta of Portal Recovery Token. This will eventually live on-chain but we're using Pinata temporarily while we create the on-chain app.",
+    // TODO: we could add an image later if we wanted. I just don't have the time to draw right now.
+    image: null,
+    external_url: "https://getportal.app",
+    attributes: [
+      {
+        trait_type: "about",
+        value: "This is a proof of concept of the Portal Recovery token.",
+      },
+      {
+        trait_type: "initializationVector",
+        value: recoveryTokenPayload.initializationVector,
+      },
+      {
+        trait_type: "cipherText",
+        value: recoveryTokenPayload.cipherText,
+      },
+    ],
+    properties: {
+      files: [],
+    },
+  };
 };
 
 // Create an recoveryToken, it will be owned by user
 export const mintRecoveryToken = async (
   connection: Connection,
   user: Keypair,
-  personalPhrase: string,
-  walletUnlockPassword: string
+  externalMetaDataUri: string
 ): Promise<Sft | SftWithToken | Nft | NftWithToken> => {
   log(`🏦🛟 Minting recovery token...`);
 
@@ -140,20 +178,14 @@ export const mintRecoveryToken = async (
 
   let createdNFT: Sft | SftWithToken | Nft | NftWithToken;
   try {
-    const recoveryTokenPayload = await makeRecoveryTokenPayload(
-      user.secretKey,
-      personalPhrase,
-      walletUnlockPassword
-    );
-
     const createNftOptions: CreateNftBuilderParams = {
-      uri: recoveryTokenPayload,
+      uri: externalMetaDataUri,
       name: RECOVERY_TOKEN_NAME,
       sellerFeeBasisPoints: 0, // 500 would represent 5.00%.
     };
 
     // TODO: metaplexNFTs.create() has a bug, see identity-tokens for details.
-    // when this is fixed we can mvoe to metaplex.create() ad save some code
+    // when this is fixed we can move to metaplex.create() and save some code
     const transactionBuilder = await metaplexNFTs
       .builders()
       .create(createNftOptions);
@@ -193,16 +225,17 @@ export const mintRecoveryToken = async (
 export const recoverFromToken = async (
   personalPhrase: string,
   walletUnlockPassword: string,
-  recoveryTokenPayload: string
+  recoveryTokenPayload: CipherTextAndInitializationVectorSerialized
 ): Promise<Keypair | null> => {
   try {
-    // It's a base64 encoded ESSerialiser JSON
-    const toDeserialize = recoveryTokenPayload;
-
     // Decode the ESSerializer JSON back to JS
-    const decodedDataFromURIField = ESSerializer.deserialize(
-      toDeserialize
-    ) as CipherTextAndInitialisationVector;
+    const cipherText = ESSerializer.deserialize(
+      recoveryTokenPayload.cipherText
+    );
+    const initializationVector = ESSerializer.deserialize(
+      recoveryTokenPayload.initializationVector
+    );
+
     // Step 0 - normalize personal phrase
     const cleanedPersonalPhrase = cleanPhrase(personalPhrase);
 
@@ -216,8 +249,8 @@ export const recoverFromToken = async (
 
     // Step 3 - decrypt the AES
     const decryptedData = (await decryptWithAESGCM(
-      decodedDataFromURIField.cipherText,
-      decodedDataFromURIField.initialisationVector,
+      cipherText,
+      initializationVector,
       tokenDecryptionKey
     )) as string;
 

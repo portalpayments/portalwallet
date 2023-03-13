@@ -8,7 +8,10 @@
 //
 import type { Connection, Keypair } from "@solana/web3.js";
 import { base64ToString, log, stringToBase64 } from "./functions";
-import { makeRecoveryTokenPayload, recoverFromToken } from "./recovery-token";
+import {
+  makeRecoveryTokenCiphertextAndInitializationVector,
+  recoverFromToken,
+} from "./recovery-token";
 import ESSerializer from "esserializer";
 import * as dotenv from "dotenv";
 import * as bip39 from "bip39";
@@ -17,7 +20,10 @@ import { dirtyPersonalPhrase } from "./test-data/transactions/test-phrases";
 import { SECONDS } from "./constants";
 import { connect } from "./wallet";
 import { Crypto } from "@peculiar/webcrypto";
-import type { CipherTextAndInitializationVector } from "./types";
+import type {
+  CipherTextAndInitializationVector,
+  CipherTextAndInitializationVectorSerialized,
+} from "./types";
 import { error } from "console";
 
 const METAPLEX_MAX_URI_LENGTH = 200;
@@ -35,7 +41,7 @@ describe(`recovery token`, () => {
   let originalWallet: Keypair;
   let restoredWallet: Keypair;
   let walletUnlockPassword: string;
-  let recoveryTokenPayload: string;
+  let recoveryTokenPayload: CipherTextAndInitializationVectorSerialized;
 
   beforeAll(async () => {
     connection = await connect("localhost");
@@ -54,18 +60,13 @@ describe(`recovery token`, () => {
     originalWallet = originalWalletKeyPairs[0];
 
     // Make a recovery token payload
-    recoveryTokenPayload = await makeRecoveryTokenPayload(
-      originalWallet.secretKey,
-      dirtyPersonalPhrase,
-      walletUnlockPassword
-    );
+    recoveryTokenPayload =
+      await makeRecoveryTokenCiphertextAndInitializationVector(
+        originalWallet.secretKey,
+        dirtyPersonalPhrase,
+        walletUnlockPassword
+      );
   }, SCRYPT_IS_DESIGNED_TO_BE_SLOW);
-
-  // TODO Sadly Metaplex's field sizes are tiny - we'll need to move to a different on-chain app.
-  // See https://solana.stackexchange.com/questions/6146/how-can-i-have-more-on-chain-data-in-an-nft
-  test.skip(`Recovery token payload will fit on Metaplex`, () => {
-    expect(recoveryTokenPayload.length).toBeLessThan(METAPLEX_MAX_URI_LENGTH);
-  });
 
   test(
     `We can NOT recover a wallet with a bad personal phrase`,
