@@ -27,6 +27,7 @@ import {
   type Sft,
   type NftWithToken,
   type SftWithToken,
+  type JsonMetadata,
 } from "@metaplex-foundation/js";
 import mime from "mime";
 import {
@@ -374,7 +375,7 @@ export const makeTokenMetaDataForIndividual = (
         trait_type: "version",
         value: String(LATEST_IDENTITY_TOKEN_VERSION),
       },
-      // In future this can be removed, however right now Solana
+      // TODO: In future this can be removed, however right now Solana
       // token standard doesn't support non-transferrable tokens
       // So check that that token wasn't issued against another wallet and transferred
       {

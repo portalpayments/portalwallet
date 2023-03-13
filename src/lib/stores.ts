@@ -8,23 +8,20 @@
 //
 import { get as getFromStore, writable, type Writable } from "svelte/store";
 import type { PublicKey, Connection, Keypair } from "@solana/web3.js";
-import type {
-  AccountSummary,
-  Collectable,
-  Contact,
-  JsonMetadata,
-} from "../backend/types";
+import type { AccountSummary, Collectable, Contact } from "../backend/types";
 import { asyncMap, log, sleep, stringify } from "../backend/functions";
 import uniqBy from "lodash.uniqby";
 import {
   getContactsFromTransactions,
-  getKeypairFromString,
   getNativeAccountSummary,
   getTokenAccountSummaries,
   getTransactionSummariesForAddress,
 } from "../backend/wallet";
 import { MILLISECONDS, NOT_FOUND, SECONDS } from "../backend/constants";
-import { getCurrencyBySymbol } from "../backend/solana-functions";
+import {
+  getKeypairFromString,
+  getCurrencyBySymbol,
+} from "../backend/solana-functions";
 import base58 from "bs58";
 import {
   getAllNftMetadatasFromAWallet,
