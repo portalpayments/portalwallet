@@ -91,9 +91,9 @@ export interface NonFungibleTokenMetadataStandard {
   };
 }
 
-export interface CipherTextAndInitialisationVector {
+export interface CipherTextAndInitializationVector {
   cipherText: ArrayBuffer;
-  initialisationVector: Uint8Array;
+  initializationVector: Uint8Array;
 }
 
 // See https://docs.solflare.com/solflare/technical/profile-picture-protocol/get-a-wallets-profile-picture

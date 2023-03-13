@@ -17,7 +17,7 @@ import { dirtyPersonalPhrase } from "./test-data/transactions/test-phrases";
 import { SECONDS } from "./constants";
 import { connect } from "./wallet";
 import { Crypto } from "@peculiar/webcrypto";
-import type { CipherTextAndInitialisationVector } from "./types";
+import type { CipherTextAndInitializationVector } from "./types";
 import { error } from "console";
 
 const METAPLEX_MAX_URI_LENGTH = 200;

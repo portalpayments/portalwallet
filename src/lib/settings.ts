@@ -25,16 +25,16 @@ import {
 
 // 'Simply store the IV alongside data you encrypt.'
 // https://crypto.stackexchange.com/questions/8589/is-it-safe-to-use-a-constant-iv-for-one-off-symmetric-file-encryption
-export const getOrSetInitialisationVector = async () => {
-  let initialisationVector: Uint8Array = await localforage.getItem(
-    "PORTAL_INITIALISATION_VECTOR"
+export const getOrSetInitializationVector = async () => {
+  let initializationVector: Uint8Array = await localforage.getItem(
+    "PORTAL_INITIALIZATION_VECTOR"
   );
-  if (initialisationVector) {
-    return initialisationVector;
+  if (initializationVector) {
+    return initializationVector;
   }
-  initialisationVector = await getRandomValues();
-  localforage.setItem("PORTAL_INITIALISATION_VECTOR", initialisationVector);
-  return initialisationVector;
+  initializationVector = await getRandomValues();
+  localforage.setItem("PORTAL_INITIALIZATION_VECTOR", initializationVector);
+  return initializationVector;
 };
 
 export const getOrSetSalt = async () => {
@@ -51,12 +51,12 @@ export const saveSettings = async (
   settings: Settings,
   password: string
 ): Promise<unknown> => {
-  const initialisationVector = await getOrSetInitialisationVector();
+  const initializationVector = await getOrSetInitializationVector();
   const salt = await getOrSetSalt();
 
   const key: CryptoKey = await passwordToKey(password, salt);
 
-  const encrypted = encryptWithAESGCM(settings, initialisationVector, key);
+  const encrypted = encryptWithAESGCM(settings, initializationVector, key);
   await localforage.setItem("PORTAL_SETTINGS", encrypted);
   log(`Saved PORTAL_SETTINGS.`);
   return;
@@ -72,7 +72,7 @@ export const getSettings = async (
 ): Promise<Settings | null> => {
   const salt = await getOrSetSalt();
   const decryptionKey: CryptoKey = await passwordToKey(password, salt);
-  const initialisationVector = await getOrSetInitialisationVector();
+  const initializationVector = await getOrSetInitializationVector();
   // 4. Get from localforage
   const encryptedData: ArrayBuffer | null =
     (await localforage.getItem("PORTAL_SETTINGS")) || null;
@@ -83,7 +83,7 @@ export const getSettings = async (
 
   let settingsOrNull = await decryptWithAESGCM(
     encryptedData,
-    initialisationVector,
+    initializationVector,
     decryptionKey
   );
 

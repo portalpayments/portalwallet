@@ -55,7 +55,7 @@ export const passwordToKey = async (password: string, salt: Uint8Array) => {
 
 export const encryptWithAESGCM = async (
   payload: unknown,
-  initialisationVector: Uint8Array,
+  initializationVector: Uint8Array,
   key: CryptoKey
 ): Promise<ArrayBuffer> => {
   // 1. To JSON
@@ -66,7 +66,7 @@ export const encryptWithAESGCM = async (
   const encrypted = await crypto.subtle.encrypt(
     {
       name: "AES-GCM",
-      iv: initialisationVector,
+      iv: initializationVector,
     },
     key,
     encodedText
@@ -76,7 +76,7 @@ export const encryptWithAESGCM = async (
 
 export const decryptWithAESGCM = async (
   encryptedData: ArrayBuffer,
-  initialisationVector: Uint8Array,
+  initializationVector: Uint8Array,
   decryptionKey: CryptoKey
 ): Promise<unknown> => {
   // 3. Decrypt
@@ -85,7 +85,7 @@ export const decryptWithAESGCM = async (
     decrypted = await crypto.subtle.decrypt(
       {
         name: "AES-GCM",
-        iv: initialisationVector,
+        iv: initializationVector,
       },
       decryptionKey,
       encryptedData
