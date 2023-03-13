@@ -9,18 +9,10 @@ import { log, stringify } from "./functions";
 
 dotenv.config();
 
-const pinataAPIKey = process.env.PINATA_API_KEY;
-const pinataSecretAPIKey = process.env.PINATA_API_SECRET;
+const pinataAPIKey = process.env.PINATA_API_KEY || null;
+const pinataSecretAPIKey = process.env.PINATA_API_SECRET || null;
 
-if (!pinataAPIKey) {
-  throw new Error(`Please set PINATA_API_KEY in .env file`);
-}
-
-if (!pinataSecretAPIKey) {
-  throw new Error(`Please set PINATA_API_SECRET in .env file`);
-}
-
-const pinata = new pinataSDK(pinataAPIKey, pinataSecretAPIKey);
+let pinata: pinataSDK | null;
 
 const contentIDtoUploadedImageURL = (contentID: string) => {
   // From Lindsay at Pinata
@@ -28,7 +20,27 @@ const contentIDtoUploadedImageURL = (contentID: string) => {
   return `https://gateway.pinata.cloud/ipfs/${contentID}`;
 };
 
+// We only start Pinata as necessary, so we don't fail when
+// the module is loaded without PINATA_API_KEY
+const startPinata = () => {
+  if (pinata) {
+    return pinata;
+  }
+  if (!pinataAPIKey) {
+    throw new Error(`Please set PINATA_API_KEY in .env file`);
+  }
+
+  if (!pinataSecretAPIKey) {
+    throw new Error(`Please set PINATA_API_SECRET in .env file`);
+  }
+
+  pinata = new pinataSDK(pinataAPIKey, pinataSecretAPIKey);
+
+  return pinata;
+};
+
 export const uploadImageToPinata = async (fileName: string) => {
+  const pinata = startPinata();
   const contentType = mime.getType(fileName);
 
   if (!contentType) {
