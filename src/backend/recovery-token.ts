@@ -120,7 +120,7 @@ export const makeRecoveryTokenPayload = async (
     initialisationVector,
   });
 
-  const recoveryTokenPayload = stringToBase64(serialized);
+  const recoveryTokenPayload = serialized;
   return recoveryTokenPayload;
 };
 
@@ -197,7 +197,7 @@ export const recoverFromToken = async (
 ): Promise<Keypair | null> => {
   try {
     // It's a base64 encoded ESSerialiser JSON
-    const toDeserialize = base64ToString(recoveryTokenPayload);
+    const toDeserialize = recoveryTokenPayload;
 
     // Decode the ESSerializer JSON back to JS
     const decodedDataFromURIField = ESSerializer.deserialize(
