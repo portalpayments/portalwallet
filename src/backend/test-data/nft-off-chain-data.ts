@@ -1,6 +1,6 @@
-import type { NonFungibleTokenMetadataStandard } from "../types";
+import type { JsonMetadata } from "@metaplex-foundation/js";
 
-export const rawNFTOffChainData: NonFungibleTokenMetadataStandard = {
+export const rawNFTOffChainData: JsonMetadata = {
   name: "iSolmetric",
   symbol: "",
   description:

@@ -6,6 +6,7 @@
 //
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
+import type { JsonMetadata } from "@metaplex-foundation/js";
 import type { PublicKey } from "@solana/web3.js";
 import type { mintToCurrencyMap } from "../backend/mint-to-currency-map";
 
@@ -63,32 +64,12 @@ export interface ExpandedNFT {
   };
 }
 
-// TODO: retire in favour of NonFungibleTokenMetadataStandard below
+// TODO: retire in favour of JsonMetadata
 // Once we no longer use this for demos.
 export interface OldNonStandardTokenMetaData {
   version: number;
   issuedAgainst: string;
   claims: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization;
-}
-
-// From https://docs.metaplex.com/programs/token-metadata/token-standard#the-non-fungible-standard
-// Note we don't currently know which fields are required / optional
-// See https://github.com/metaplex-foundation/metaplex/issues/2284
-export interface NonFungibleTokenMetadataStandard {
-  name: string;
-  description: string;
-  image: string;
-  external_url: string;
-  attributes: Array<{
-    trait_type: string;
-    value: string;
-  }>;
-  properties: {
-    files: Array<{
-      uri: string;
-      type: string;
-    }>;
-  };
 }
 
 export interface CipherTextAndInitializationVector {
@@ -101,7 +82,7 @@ export interface ProfilePictureResponse {
   isAvailable: boolean;
   url: string;
   name: string;
-  metadata: NonFungibleTokenMetadataStandard;
+  metadata: JsonMetadata;
   tokenAccount: PublicKey;
   mintAccount: PublicKey;
 }

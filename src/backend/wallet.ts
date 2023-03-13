@@ -35,7 +35,6 @@ import {
 } from "./identity-tokens";
 import type {
   BasicTokenAccount,
-  NonFungibleTokenMetadataStandard,
   OldNonStandardTokenMetaData,
   ProfilePictureResponse,
   VerifiedClaimsForIndividual,

@@ -12,7 +12,7 @@ import type {
   AccountSummary,
   Collectable,
   Contact,
-  NonFungibleTokenMetadataStandard,
+  JsonMetadata,
 } from "../backend/types";
 import { asyncMap, log, sleep, stringify } from "../backend/functions";
 import uniqBy from "lodash.uniqby";

@@ -49,7 +49,6 @@ import {
 import type {
   VerifiedClaimsForIndividual,
   VerifiedClaimsForOrganization,
-  NonFungibleTokenMetadataStandard,
   OldNonStandardTokenMetaData,
   Collectable,
   Jurisdiction,
@@ -116,7 +115,7 @@ export const verifyWallet = async (
     identityTokens,
     async (identityTokens) => {
       const metadata = (await http.get(identityTokens.uri)) as
-        | NonFungibleTokenMetadataStandard
+        | JsonMetadata
         | OldNonStandardTokenMetaData;
       return metadata;
     }
@@ -169,7 +168,7 @@ export const mintIdentityToken = async (
   // stored in the 'uri' property of the on-chain metadata
   // From https://docs.metaplex.com/programs/token-metadata/overview#a-json-standard
   // "This is used to safely provide additional data whilst not being constrained by the fees involved in storing on-chain data. "
-  let offChainMetaData: NonFungibleTokenMetadataStandard | null = null;
+  let offChainMetaData: JsonMetadata | null = null;
   if (tokenClaims.type === "INDIVIDUAL") {
     offChainMetaData = makeTokenMetaDataForIndividual(
       recipientWallet,
@@ -200,8 +199,6 @@ export const mintIdentityToken = async (
 
   const metaplex = getMetaplex(connection, identityTokenIssuer, isProduction);
   const metaplexNFTs = metaplex.nfts();
-  // TODO: see note re: NonFungibleTokenMetadataStandard above
-  // @ts-ignore
   const uploadResponse = await metaplexNFTs.uploadMetadata(offChainMetaData);
 
   // From https://github.com/metaplex-foundation/js#create
@@ -346,7 +343,7 @@ export const makeTokenMetaDataForIndividual = (
   familyName: string,
   userImageUrl: string,
   tokenCoverImageUrl: string
-): NonFungibleTokenMetadataStandard => {
+): JsonMetadata => {
   const userImageContentType = mime.getType(userImageUrl);
   const coverImageContentType = mime.getType(tokenCoverImageUrl);
   return {
@@ -409,7 +406,7 @@ export const makeTokenMetaDataForOrganization = (
   isNotable: boolean,
   companyImageUrl: string,
   tokenCoverImageUrl: string
-): NonFungibleTokenMetadataStandard => {
+): JsonMetadata => {
   const companyImageContentType = mime.getType(tokenCoverImageUrl);
   return {
     name: IDENTITY_TOKEN_NAME,
@@ -477,7 +474,7 @@ export const nftToCollectable = async (
 ): Promise<Collectable> => {
   // We have to force content type as nftstorage.link returns incorrect types
   // See https://twitter.com/mikemaccana/status/1620140384302288896?s=20&t=gP3XffhtDkUiaYQvSph8vg
-  const rawNFTMetaData: NonFungibleTokenMetadataStandard = await http.get(
+  const rawNFTMetaData: JsonMetadata = await http.get(
     nftOnChainData.uri,
     null,
     http.CONTENT_TYPES.JSON
@@ -550,7 +547,7 @@ const isOldIdentityToken = (
   return Object.hasOwn(object, "version");
 };
 
-export const getCoverImage = (metadata: NonFungibleTokenMetadataStandard) => {
+export const getCoverImage = (metadata: JsonMetadata) => {
   // Sometimes 'files' is an empty list, but 'image' still exists
   // See https://crossmint.myfilebase.com/ipfs/bafkreig5nuz3qswtnipclnhdw4kbdn5s6fpujtivyt4jf3diqm4ivpmv5u
   let coverImage: null | string = metadata.image || null;
@@ -571,7 +568,7 @@ export const getCoverImage = (metadata: NonFungibleTokenMetadataStandard) => {
 
 // The best is video, then images.
 export const getBestMediaAndType = (
-  metadata: NonFungibleTokenMetadataStandard
+  metadata: JsonMetadata
 ): { file: string; type: string } | null => {
   // Sometimes 'files' is an empty list, but 'image' still exists
   // See https://crossmint.myfilebase.com/ipfs/bafkreig5nuz3qswtnipclnhdw4kbdn5s6fpujtivyt4jf3diqm4ivpmv5u
@@ -617,7 +614,7 @@ export const getBestMediaAndType = (
 
 // NFT metadata has arrays of trait_type/value objects instead of a single object with keys and values
 export const getAttributesFromNFT = (
-  metadata: NonFungibleTokenMetadataStandard
+  metadata: JsonMetadata
 ): Record<string, string | boolean | number> => {
   if (!metadata.attributes) {
     return {};
@@ -642,7 +639,7 @@ export const getAttributesFromNFT = (
 };
 
 export const getVerifiedClaimsFromNFTMetadata = (
-  nftMetadata: NonFungibleTokenMetadataStandard | OldNonStandardTokenMetaData,
+  nftMetadata: JsonMetadata | OldNonStandardTokenMetaData,
   wallet: PublicKey,
   allowOldIdentityToken: boolean
 ): VerifiedClaimsForIndividual | VerifiedClaimsForOrganization | null => {
