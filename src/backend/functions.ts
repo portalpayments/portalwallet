@@ -236,6 +236,7 @@ export const toArrayBuffer = (buffer: Buffer) => {
   return arrayBuffer;
 };
 
+// node has 'btoa' and 'atob' but the node docs tells us to do this instead
 export const stringToBase64 = (string: string): string => {
   return Buffer.from(string).toString("base64");
 };
