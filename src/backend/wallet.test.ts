@@ -15,11 +15,11 @@ import {
   connect,
   getAccountBalance,
   getKeypairFromEnvFile,
-  getKeypairFromString,
   putSolIntoWallet,
   getTokenAccountSummaries,
   getProfilePicture,
 } from "./wallet";
+import { getKeypairFromString } from "./solana-functions";
 import base58 from "bs58";
 
 import {

@@ -59,8 +59,8 @@ describe(`settings`, () => {
     expect(settings.secretKey).toEqual(wallet.secretKey);
   });
 
-  test(`Throws an error when the password is bad`, async () => {
-    const settingsPromise = getSettings(INCORRECT_PASSWORD);
-    await expect(settingsPromise).rejects.toThrow("Bad password");
+  test(`Returns null when the password is bad`, async () => {
+    const settings = await getSettings(INCORRECT_PASSWORD);
+    await expect(settings).toBe(null);
   });
 });
