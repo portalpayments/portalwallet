@@ -70,6 +70,15 @@
     letter-spacing: 0.05em;
   }
 
+  input::placeholder {
+    // Undo the 'big dots' font for the placeholder
+    font-family: "Inter var", Avenir, Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: normal;
+    color: var(--light-grey);
+  }
+
   @keyframes shake {
     10%,
     90% {

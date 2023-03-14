@@ -1,11 +1,18 @@
 <script lang="ts">
+  import { connectionStore } from "../stores";
+  import { checkWalletAddressOrName } from "../../backend/check-wallet-address-or-name";
+  import type { CipherTextAndInitializationVectorSerialized } from "../../backend/types";
+  import { PublicKey } from "@solana/web3.js";
+  import type { Connection } from "@solana/web3.js";
   import Logo from "../../assets/portal-logo.svg";
   import BackButton from "../Shared/BackButton.svelte";
   import TextArea from "../Shared/TextArea.svelte";
+  import Input from "../Shared/Input.svelte";
   import Password from "../Shared/Password.svelte";
   import ProgressBar from "../Shared/ProgressBar.svelte";
   import { Circle } from "svelte-loading-spinners";
   import { log } from "../../backend/functions";
+  import { secretKeyToHex } from "../../backend/solana-functions";
   import {
     mnemonicToKeypairs,
     checkIfSecretKeyIsValid,
@@ -13,6 +20,10 @@
   } from "../../backend/recovery";
   import base58 from "bs58";
   import { saveSettings, checkIfOnboarded } from "../settings";
+  import {
+    getRecoveryTokenFromWallet,
+    recoverFromToken,
+  } from "../../backend/recovery-token";
 
   import Heading from "../Shared/Heading.svelte";
 
@@ -23,6 +34,9 @@
 
   const steps = ["first", "second", "third", "final"];
   const stepCount = steps.length;
+
+  let connection: Connection | null = null;
+
   let currentStep = 0;
 
   let secretKeyToImport: string | null = null;
@@ -40,6 +54,60 @@
   let isBuildingWallet = false;
 
   let restoringOrMakingNewWallet: "restoring" | "makingNewWallet" = "restoring";
+
+  // True for demo, since nmemonics suck.
+  // TODO: We could switch false for now since most people importing wallets won't already have a recovery token
+  let isUsingRecoveryToken = true;
+
+  let recoveryTokenWalletAddress: string | null = null;
+
+  let recoveryTokenUserEnteredWallet: string | null = null;
+  let isRecoveryTokenNameOrAddressValid: Boolean | null = null;
+  let recoveryTokenPayload: CipherTextAndInitializationVectorSerialized | null =
+    null;
+  let recoveryTokenPersonalPhrase: string | null = null;
+  let recoveryTokenWalletUnlockPassword: string | null = null;
+
+  const recoverWalletUsingRecoveryToken = async () => {
+    log(`Trying to recover wallet from token`);
+    if (recoveryTokenWalletUnlockPassword) {
+      log(`Recovering wallet`);
+      const restoredWallet = await recoverFromToken(
+        recoveryTokenPersonalPhrase,
+        recoveryTokenWalletUnlockPassword,
+        recoveryTokenPayload
+      );
+      await saveSettings(
+        {
+          version: 1,
+          secretKey: restoredWallet.secretKey,
+          personalPhrase: recoveryTokenPersonalPhrase,
+          // TODO: we should probably encrypt the mnemonic instead of the secret key
+          mnemonic: null,
+        },
+        recoveryTokenWalletUnlockPassword
+      );
+      isOnboarded = await checkIfOnboarded();
+      move(true);
+
+      // Wait till animation finished so button doesn't flash colorfully for a moment
+      setTimeout(() => {
+        isBuildingWallet = false;
+      }, 0);
+    }
+  };
+
+  $: recoveryTokenPersonalPhrase,
+    recoveryTokenWalletUnlockPassword,
+    recoverWalletUsingRecoveryToken();
+
+  connectionStore.subscribe((newValue) => {
+    connection = newValue;
+  });
+
+  const toggleRecoveryMethod = () => {
+    isUsingRecoveryToken = !isUsingRecoveryToken;
+  };
 
   const checkSecretKeyOrMnemonicPhrase = (event) => {
     // Reset these while we check...
@@ -67,7 +135,7 @@
     }
   };
 
-  const checkPersonalPhrase = (event) => {
+  const checkNewPersonalPhrase = (event) => {
     // null while we check...
     isPersonalPhraseSecure = null;
     const suggestedPersonalPhrase = event.target.value;
@@ -194,22 +262,70 @@
 
             <div class="content">
               <Heading size="large">Import wallet</Heading>
-              <p>Paste your secret key or mnemonic phrase below.</p>
-              <div class="fancy-border">
-                <TextArea
-                  placeholder="Secret key or mnemonic phrase"
-                  onInputDelay={checkSecretKeyOrMnemonicPhrase}
-                />
-              </div>
+              {#if isUsingRecoveryToken}
+                <p>Use a recovery token</p>
+                <Input
+                  value={recoveryTokenUserEnteredWallet}
+                  theme="round"
+                  isFocused={false}
+                  label="Wallet name or address"
+                  onTypingPause={async (event) => {
+                    log(`Check wallet address:`, event.target);
 
-              {#if isSuggestedSecretOrMnemonicPhraseValid !== null}
-                {#if isSuggestedSecretOrMnemonicPhraseValid === true}
-                  <p class="subtle">✅ {walletImportedFrom} is valid!</p>
-                {/if}
-                {#if isSuggestedSecretOrMnemonicPhraseValid === false}
-                  <p class="subtle">
-                    🤔 This is not a valid secret key or mnemonic phrase!
-                  </p>
+                    // TODO: not sure why this is necessary
+                    // @ts-ignore
+                    recoveryTokenUserEnteredWallet = event.target?.value;
+                    if (!connection) {
+                      throw new Error(`No connection`);
+                    }
+
+                    const walletNameCheckResult =
+                      await checkWalletAddressOrName(
+                        connection,
+                        recoveryTokenUserEnteredWallet
+                      );
+                    if (!walletNameCheckResult) {
+                      log(`Wallet name check failed`);
+                      isRecoveryTokenNameOrAddressValid = false;
+                      return;
+                    }
+                    recoveryTokenWalletAddress =
+                      walletNameCheckResult.destinationWalletAddress;
+                    // Check for presence of recovery token
+                    recoveryTokenPayload = await getRecoveryTokenFromWallet(
+                      connection,
+                      new PublicKey(recoveryTokenWalletAddress)
+                    );
+                  }}
+                />
+
+                <button
+                  class="toggle-recovery-method"
+                  on:click={toggleRecoveryMethod}
+                  >Use a secret key or mnemonic instead</button
+                >
+              {:else}
+                <p>Paste your secret key or mnemonic phrase below.</p>
+                <div class="fancy-border">
+                  <TextArea
+                    placeholder="Secret key or mnemonic phrase"
+                    onInputDelay={checkSecretKeyOrMnemonicPhrase}
+                  />
+                </div>
+                <button
+                  class="toggle-recovery-method"
+                  on:click={toggleRecoveryMethod}
+                  >Use a recovery token instead</button
+                >
+
+                {#if isSuggestedSecretOrMnemonicPhraseValid !== null}
+                  {#if isSuggestedSecretOrMnemonicPhraseValid === true}
+                    <p class="subtle">✅ {walletImportedFrom} is valid!</p>
+                  {:else}
+                    <p class="subtle">
+                      🤔 This is not a valid secret key or mnemonic phrase!
+                    </p>
+                  {/if}
                 {/if}
               {/if}
             </div>
@@ -217,11 +333,15 @@
             <button
               type="button"
               on:click={() => {
-                if (isSuggestedSecretOrMnemonicPhraseValid) {
+                if (
+                  isSuggestedSecretOrMnemonicPhraseValid ||
+                  recoveryTokenPayload
+                ) {
                   move(true);
                 }
               }}
-              class="next  {isSuggestedSecretOrMnemonicPhraseValid
+              class="next  {isSuggestedSecretOrMnemonicPhraseValid ||
+              recoveryTokenPayload
                 ? ''
                 : 'disabled'}">Next</button
             >
@@ -240,8 +360,7 @@
               {#if isPasswordSecure !== null}
                 {#if isPasswordSecure === true}
                   <p class="subtle">✅ That's a good password.</p>
-                {/if}
-                {#if isPasswordSecure === false}
+                {:else}
                   <p class="subtle">🤔 That's too simple.</p>
                 {/if}
               {/if}
@@ -261,20 +380,40 @@
           {#if restoringOrMakingNewWallet === "restoring"}
             <ProgressBar steps={steps.length} currentStep={stepNumber} />
             <div class="content">
-              <Heading>Set a password</Heading>
-              <div class="fancy-border">
-                <Password
-                  bind:value={passwordToUse}
-                  onInputDelay={checkPassword}
-                />
-              </div>
+              {#if isUsingRecoveryToken}
+                <Heading>Enter your personal phrase</Heading>
+                <div class="fancy-border">
+                  <TextArea
+                    placeholder="Personal phrase"
+                    onInputDelay={(event) => {
+                      // TODO: not sure why this is necessary
+                      // @ts-ignore
+                      recoveryTokenPersonalPhrase = event.target.value;
+                    }}
+                  />
+                </div>
+                <div class="fancy-border">
+                  <Password
+                    bind:value={recoveryTokenWalletUnlockPassword}
+                    placeHolder="Unlock password"
+                  />
+                </div>
+              {:else}
+                <Heading>Set a password</Heading>
+                <div class="fancy-border">
+                  <Password
+                    bind:value={passwordToUse}
+                    onInputDelay={checkPassword}
+                  />
+                </div>
 
-              {#if isPasswordSecure !== null}
-                {#if isPasswordSecure === true}
-                  <p class="subtle">✅ That's a good password.</p>
-                {/if}
-                {#if isPasswordSecure === false}
-                  <p class="subtle">🤔 That's too simple.</p>
+                {#if isPasswordSecure !== null}
+                  {#if isPasswordSecure === true}
+                    <p class="subtle">✅ That's a good password.</p>
+                  {/if}
+                  {#if isPasswordSecure === false}
+                    <p class="subtle">🤔 That's too simple.</p>
+                  {/if}
                 {/if}
               {/if}
             </div>
@@ -296,7 +435,7 @@
               <div class="fancy-border">
                 <TextArea
                   placeholder="When I was six my brother Finian got a train set for Christmas."
-                  onInputDelay={checkPersonalPhrase}
+                  onInputDelay={checkNewPersonalPhrase}
                 />
               </div>
 
@@ -372,6 +511,16 @@
 
   .content {
     gap: 8px;
+  }
+
+  button.toggle-recovery-method {
+    background: none;
+    font-size: 12px;
+    color: var(--mid-grey);
+    text-align: left;
+    padding: 6px 0;
+    margin: none;
+    border: none;
   }
 
   p {

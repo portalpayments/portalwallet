@@ -13,9 +13,10 @@
   import TransactionFailed from "./TransactionFailed.svelte";
   import { verifyWallet } from "../../backend/identity-tokens";
   import { makeAccountsAndDoTransfer } from "../../backend/tokens";
-  import { checkIfValidWalletAddress, truncateWallet } from "../utils";
+  import { truncateWallet } from "../utils";
+  import { checkIfValidWalletAddress } from "../../backend/solana-functions";
   import { log, sleep, stringify } from "../../backend/functions";
-  import { walletNameToAddressAndProfilePicture } from "@portal-payments/solana-wallet-names";
+  import { checkWalletAddressOrName } from "../../backend/check-wallet-address-or-name";
   import { SECOND } from "../../backend/constants";
 
   import type {
@@ -153,36 +154,12 @@
     isCurrentlyLoadingVerificationStateFromNetwork = true;
     isSendButtonDisabled = true;
 
-    let isValidWalletAddressOrName = checkIfValidWalletAddress(
+    const walletNameCheckResults = await checkWalletAddressOrName(
+      connection,
       walletNameEnteredByUser
     );
 
-    if (isValidWalletAddressOrName) {
-      log(`This is a valid wallet address`);
-      destinationWalletAddress = walletNameEnteredByUser;
-    } else {
-      log(
-        `'${walletNameEnteredByUser}' is not a valid wallet address, trying to resolve '${walletNameEnteredByUser}' as a name...`
-      );
-      const foundAddressAndProfilePicture =
-        await walletNameToAddressAndProfilePicture(
-          connection,
-          walletNameEnteredByUser
-        );
-      destinationWalletAddress = foundAddressAndProfilePicture.walletAddress;
-
-      if (foundAddressAndProfilePicture.profilePictureURL) {
-        contact.profilePictureURL =
-          foundAddressAndProfilePicture.profilePictureURL;
-      }
-      // We're assuming any name that resolves to a wallet address is a valid wallet address
-      if (destinationWalletAddress) {
-        isValidWalletAddressOrName = true;
-        walletNameEnteredByUser = walletNameEnteredByUser;
-      }
-    }
-
-    if (!isValidWalletAddressOrName) {
+    if (!walletNameCheckResults.destinationWalletAddress) {
       // TODO: handle invalid wallet addresses better
       log(
         `The name or addresss '${walletNameEnteredByUser}' is not a valid wallet name or address`
@@ -195,6 +172,14 @@
       isCurrentlyLoadingVerificationStateFromNetwork = false;
       return;
     }
+
+    log(
+      `This is a valid wallet ${
+        walletNameCheckResults.isUsingWalletname ? "name" : "address"
+      }}`
+    );
+    destinationWalletAddress = walletNameCheckResults.destinationWalletAddress;
+    contact.profilePictureURL = walletNameCheckResults.profilePictureURL;
 
     log(`Valid wallet address!`);
 

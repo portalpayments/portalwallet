@@ -28,6 +28,7 @@
   {placeholder}
   on:input|preventDefault={debounce(runInputDelayIfExists)}
   on:keyup|preventDefault={debounce(runKeyUpDelayIfExists)}
+  spellcheck="false"
 />
 
 <style lang="scss">

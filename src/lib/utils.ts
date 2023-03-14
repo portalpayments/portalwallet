@@ -110,15 +110,6 @@ export const getFormattedMinorUnits = (
   return `.${minorUnitsRemainder}`;
 };
 
-export const checkIfValidWalletAddress = (walletAddress: string) => {
-  try {
-    new PublicKey(walletAddress);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
 export const truncateWallet = (wallet: string): string => {
   const start = wallet.slice(0, WALLET_CHARACTERS_TO_SHOW);
   const lastCharacter = wallet.length;

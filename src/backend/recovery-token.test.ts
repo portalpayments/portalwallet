@@ -7,8 +7,9 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import type { Connection, Keypair } from "@solana/web3.js";
-import { base64ToString, log, stringToBase64 } from "./functions";
+import { base64ToString, log, stringify, stringToBase64 } from "./functions";
 import {
+  getRecoveryTokenFromWallet,
   makeRecoveryTokenCiphertextAndInitializationVector,
   recoverFromToken,
 } from "./recovery-token";
@@ -24,14 +25,11 @@ import type {
   CipherTextAndInitializationVector,
   CipherTextAndInitializationVectorSerialized,
 } from "./types";
-import { error } from "console";
-
-const METAPLEX_MAX_URI_LENGTH = 200;
-// https://github.com/metaplex-foundation/metaplex-program-library/blob/ecb0dcd82274b8e70dacd171e1a553b6f6dab5c6/token-metadata/program/src/state/metadata.rs#L17
+import { getKeypairFromString } from "./solana-functions";
 
 const SCRYPT_IS_DESIGNED_TO_BE_SLOW = 30 * SECONDS;
 
-jest.mock("./functions");
+// jest.mock("./functions");
 
 dotenv.config();
 
@@ -119,4 +117,53 @@ describe(`recovery token`, () => {
     },
     SCRYPT_IS_DESIGNED_TO_BE_SLOW
   );
+});
+
+describe(`Finding recovery token in a real wallet`, () => {
+  let connection: Connection;
+  beforeAll(async () => {
+    connection = await connect("quickNodeMainNetBeta");
+  });
+
+  beforeAll(() => {
+    // Enable webcrypto in node, so we can test things that use browser crypto
+    if (!global.crypto) {
+      global.crypto = new Crypto();
+    }
+  });
+
+  test(`Can recover Mike's wallet`, async () => {
+    if (!process.env.MIKES_SECRET_KEY) {
+      throw new Error(`Please set MIKES_SECRET_KEY in .env`);
+    }
+
+    const mike = getKeypairFromString(process.env.MIKES_SECRET_KEY);
+
+    if (!process.env.MIKES_PERSONAL_PHRASE) {
+      throw new Error(`Please set MIKES_PERSONAL_PHRASE in .env`);
+    }
+
+    const mikesPersonalPhrase = process.env.MIKES_PERSONAL_PHRASE;
+
+    if (!process.env.MIKES_WALLET_UNLOCK_PASSWORD) {
+      throw new Error(`Please set MIKES_WALLET_UNLOCK_PASSWORD in .env`);
+    }
+
+    const mikesWalletUnlockPassword = process.env.MIKES_WALLET_UNLOCK_PASSWORD;
+
+    const recoveryTokenPayload = await getRecoveryTokenFromWallet(
+      connection,
+      mike.publicKey
+    );
+
+    const restoredWallet = await recoverFromToken(
+      mikesPersonalPhrase,
+      mikesWalletUnlockPassword,
+      recoveryTokenPayload
+    );
+
+    expect(restoredWallet.secretKey.toString()).toEqual(
+      mike.secretKey.toString()
+    );
+  });
 });

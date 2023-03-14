@@ -12,7 +12,7 @@ const SINGLE_SPACE = " ";
 const NON_ALPHA_NUMERIC = /[\n,']+/g;
 const NOTHING = "";
 
-import { Keypair } from "@solana/web3.js";
+import { Keypair, PublicKey } from "@solana/web3.js";
 import base58 from "bs58";
 import { log } from "./functions";
 import { mintToCurrencyMap } from "./mint-to-currency-map";
@@ -29,6 +29,15 @@ export const cleanPhrase = (phrase: string) => {
 
 export const secretKeyToHex = (secretKey: Uint8Array) => {
   return base58.encode(secretKey);
+};
+
+export const checkIfValidWalletAddress = (walletAddress: string) => {
+  try {
+    new PublicKey(walletAddress);
+    return true;
+  } catch {
+    return false;
+  }
 };
 
 export const getKeypairFromString = (secretKeyString: string) => {

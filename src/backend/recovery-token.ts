@@ -8,18 +8,12 @@
 //
 
 import {
-  IDENTITY_TOKEN_NAME,
   RECOVERY_TOKEN_NAME,
   SECONDS,
   SOLANA_SEED_SIZE_BYTES,
 } from "./constants";
-import {
-  base64ToString,
-  log,
-  sleep,
-  stringToBase64,
-  toArrayBuffer,
-} from "./functions";
+import * as http from "../lib/http-client";
+import { log, stringify, sleep, toArrayBuffer } from "./functions";
 import ESSerializer from "esserializer";
 import scryptAsync from "scryptsy";
 import {
@@ -32,7 +26,7 @@ import {
   secretKeyToHex,
   getKeypairFromString,
 } from "./solana-functions";
-import type { Connection, Keypair } from "@solana/web3.js";
+import type { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import type {
   Sft,
   SftWithToken,
@@ -41,7 +35,12 @@ import type {
   CreateNftBuilderParams,
   JsonMetadata,
 } from "@metaplex-foundation/js";
-import { getMetaplex } from "./identity-tokens";
+import {
+  getAnonymousMetaplex,
+  getAttributesFromNFT,
+  getMetaplex,
+  identityTokenIssuerPublicKey,
+} from "./identity-tokens";
 import type {
   CipherTextAndInitializationVector,
   CipherTextAndInitializationVectorSerialized,
@@ -264,4 +263,44 @@ export const recoverFromToken = async (
     }
     throw error;
   }
+};
+
+export const getRecoveryTokenFromWallet = async (
+  connection: Connection,
+  address: PublicKey
+): Promise<CipherTextAndInitializationVectorSerialized | null> => {
+  const metaplex = await getAnonymousMetaplex(connection);
+  const nfts = await metaplex.nfts().findAllByOwner({
+    owner: address,
+  });
+
+  const allSelfIssuedRecoveryTokens = nfts.filter((nft) => {
+    // Look for Portal Recovery Token issued by user
+    // Quick note we need to toBase58() both addresses for the comparison to work.
+    const firstCreator = nft.creators?.[0]?.address?.toBase58();
+    return (
+      nft.name === RECOVERY_TOKEN_NAME && firstCreator === address.toBase58()
+    );
+  });
+
+  if (!allSelfIssuedRecoveryTokens.length) {
+    return null;
+  }
+  const firstRecoveryToken = allSelfIssuedRecoveryTokens[0];
+
+  const metadata = await http.get(firstRecoveryToken.uri);
+
+  const attributes = getAttributesFromNFT(metadata);
+
+  if (!attributes.cipherText || !attributes.initializationVector) {
+    log(
+      `Warning: could not get cipherText or initializationVector from recovery token!`
+    );
+    return null;
+  }
+
+  return {
+    cipherText: attributes.cipherText as string,
+    initializationVector: attributes.initializationVector as string,
+  };
 };

@@ -66,6 +66,10 @@ const VERIFIED_CLAIMS_BY_ADDRESS: Record<
   VerifiedClaimsForIndividual | VerifiedClaimsForOrganization
 > = {};
 
+export const getAnonymousMetaplex = (connection: Connection) => {
+  return Metaplex.make(connection);
+};
+
 export const getMetaplex = (
   connection: Connection,
   keypair: Keypair,
@@ -95,7 +99,6 @@ export const verifyWallet = async (
     const cachedVerifiedClaims = VERIFIED_CLAIMS_BY_ADDRESS[wallet.toBase58()];
     if (cachedVerifiedClaims) {
       log(`Found verified claims for ${wallet.toBase58()} in cache`);
-      sleep(1 * SECOND);
       return cachedVerifiedClaims;
     }
   }
@@ -524,7 +527,7 @@ export const getIdentityTokensFromWallet = async (
   metaplexConnectionKeypair: Keypair,
   identityTokenIssuerPublicKey: PublicKey,
   wallet: PublicKey
-) => {
+): Promise<Array<Metadata<JsonMetadata<string>> | Sft | Nft>> => {
   const metaplex = getMetaplex(connection, metaplexConnectionKeypair);
   const nfts = await metaplex.nfts().findAllByOwner({
     owner: wallet,

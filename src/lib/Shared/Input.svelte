@@ -39,6 +39,7 @@
 
   const badValuesByFilters = {
     numbers: /[^\d\.]/gi,
+    // TODO: remove this, we don't need it anymore, since we allow wallet names as well as addresses
     walletAddress: /[^1-9A-HJ-NP-Za-km-z]/gi,
   };
 
@@ -87,7 +88,12 @@
 
 <div class="input-and-label">
   <div class="border {theme === 'square' ? 'square' : ''} ">
-    <div class="big-white-area {hasButton ? 'with-submit-button' : ''}">
+    <div
+      class="big-white-area {hasButton ? 'with-submit-button' : ''} {theme ===
+      'square'
+        ? 'square'
+        : ''}"
+    >
       <input
         bind:value
         type="text"
@@ -145,6 +151,11 @@
     background-color: white;
     justify-items: end;
     padding: 0 2px;
+    border-radius: 22px;
+  }
+
+  .big-white-area.square {
+    border-radius: 0;
   }
 
   .big-white-area.with-submit-button {

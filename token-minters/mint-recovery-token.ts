@@ -28,9 +28,9 @@ if (!personalPhrase) {
   throw new Error(`Please set MIKES_PERSONAL_PHRASE in .env file`);
 }
 
-const walletUnlockPassword = process.env.MIKES_WALLET_UNLOCK || null;
+const walletUnlockPassword = process.env.MIKES_WALLET_UNLOCK_PASSWORD || null;
 if (!walletUnlockPassword) {
-  throw new Error(`Please set MIKES_WALLET_UNLOCK in .env file`);
+  throw new Error(`Please set MIKES_WALLET_UNLOCK_PASSWORD in .env file`);
 }
 
 // ----------------------------------------------------------
