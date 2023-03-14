@@ -12,6 +12,7 @@
   import ProgressBar from "../Shared/ProgressBar.svelte";
   import { Circle } from "svelte-loading-spinners";
   import { log } from "../../backend/functions";
+  import { SECONDS } from "../../backend/constants";
   import { secretKeyToHex } from "../../backend/solana-functions";
   import {
     mnemonicToKeypairs,
@@ -24,7 +25,7 @@
     getRecoveryTokenFromWallet,
     recoverFromToken,
   } from "../../backend/recovery-token";
-
+  import debounce from "lodash.debounce";
   import Heading from "../Shared/Heading.svelte";
 
   const MINIMUM_PASSWORD_LENGTH = 8;
@@ -67,39 +68,6 @@
     null;
   let recoveryTokenPersonalPhrase: string | null = null;
   let recoveryTokenWalletUnlockPassword: string | null = null;
-
-  const recoverWalletUsingRecoveryToken = async () => {
-    log(`Trying to recover wallet from token`);
-    if (recoveryTokenWalletUnlockPassword) {
-      log(`Recovering wallet`);
-      const restoredWallet = await recoverFromToken(
-        recoveryTokenPersonalPhrase,
-        recoveryTokenWalletUnlockPassword,
-        recoveryTokenPayload
-      );
-      await saveSettings(
-        {
-          version: 1,
-          secretKey: restoredWallet.secretKey,
-          personalPhrase: recoveryTokenPersonalPhrase,
-          // TODO: we should probably encrypt the mnemonic instead of the secret key
-          mnemonic: null,
-        },
-        recoveryTokenWalletUnlockPassword
-      );
-      isOnboarded = await checkIfOnboarded();
-      move(true);
-
-      // Wait till animation finished so button doesn't flash colorfully for a moment
-      setTimeout(() => {
-        isBuildingWallet = false;
-      }, 0);
-    }
-  };
-
-  $: recoveryTokenPersonalPhrase,
-    recoveryTokenWalletUnlockPassword,
-    recoverWalletUsingRecoveryToken();
 
   connectionStore.subscribe((newValue) => {
     connection = newValue;
@@ -178,20 +146,54 @@
     let secretKey: Uint8Array | null = null;
 
     if (restoringOrMakingNewWallet === "restoring") {
-      if (walletImportedFrom === "secret key") {
-        secretKey = base58.decode(secretKeyToImport);
-        // it's not possible to recover a mnemonic from a secret key
-        // (since the mnemonic was used to create the entropy used for the secret)
+      if (isUsingRecoveryToken) {
+        log(`Using recovery token, we have already made the wallet`);
+        if (!recoveryTokenPersonalPhrase?.length) {
+          return;
+        }
+        if (!recoveryTokenWalletUnlockPassword?.length) {
+          return;
+        }
+        if (!recoveryTokenPayload) {
+          return;
+        }
+        log(`Trying to recover wallet from token`);
+        isBuildingWallet = true;
+        const restoredWallet = await recoverFromToken(
+          recoveryTokenPersonalPhrase,
+          recoveryTokenWalletUnlockPassword,
+          recoveryTokenPayload
+        );
+
+        if (!restoredWallet) {
+          log(`Failed to recover wallet from token`);
+
+          setTimeout(() => {
+            isBuildingWallet = false;
+          }, 0);
+          return;
+        }
+
+        secretKey = restoredWallet.secretKey;
+        personalPhrase = recoveryTokenPersonalPhrase;
+        passwordToUse = recoveryTokenWalletUnlockPassword;
+        // TODO: we should probably encrypt the mnemonic instead of the secret key
         mnemonic = null;
+      } else {
+        if (walletImportedFrom === "secret key") {
+          secretKey = base58.decode(secretKeyToImport);
+          // it's not possible to recover a mnemonic from a secret key
+          // (since the mnemonic was used to create the entropy used for the secret)
+          mnemonic = null;
+        }
+        if (walletImportedFrom === "mnemonic phrase") {
+          mnemonic = mnemonicToImport;
+          personalPhrase = null;
+          const keypairs = await mnemonicToKeypairs(mnemonic, null);
+          const firstWallet = keypairs[0];
+          secretKey = firstWallet.secretKey;
+        }
       }
-      if (walletImportedFrom === "mnemonic phrase") {
-        mnemonic = mnemonicToImport;
-        personalPhrase = null;
-        const keypairs = await mnemonicToKeypairs(mnemonic, null);
-        const firstWallet = keypairs[0];
-        secretKey = firstWallet.secretKey;
-      }
-      // TODO: in future we will allow recovery from personal phrase
     }
     if (restoringOrMakingNewWallet === "makingNewWallet") {
       if (!isPersonalPhraseSecure) {
@@ -421,8 +423,10 @@
             <button
               type="button"
               on:click={() => makeWallet()}
-              class="next  {passwordToUse?.length ? '' : 'disabled'}"
-              >Open wallet</button
+              class="next  {passwordToUse?.length ||
+              recoveryTokenWalletUnlockPassword?.length
+                ? ''
+                : 'disabled'}">Open wallet</button
             >
           {:else}
             <ProgressBar steps={steps.length} currentStep={stepNumber} />
