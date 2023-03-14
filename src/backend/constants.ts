@@ -35,6 +35,11 @@ export const SPL_TOKEN_PROGRAM = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
 export const COMPUTE_BUDGET_PROGRAM =
   "ComputeBudget111111111111111111111111111111";
 
+// From https://github.com/Squads-Protocol/squads-mpl#addresses
+export const SQUADS_ADDRESS = "SMPLecH534NA9acpos4G6x7uf3LWbCAwZQE9e8ZekMu";
+
+export const HELIUS = "45xu19B21vnDMWGWb4M57Yu9D4xZfx5KYroVGhb5RnAF";
+
 // https://docs.lightprotocol.com/
 export const LIGHT_PROGRAM = "2c54pLrGpQdGxJWUAoME6CReBrtDbsx5Tqx4nLZZo6av";
 

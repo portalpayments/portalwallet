@@ -58,6 +58,10 @@ import base58 from "bs58";
 
 const decoder = new TextDecoder("utf-8");
 
+// We often get unusual transactions and want to check them out in detail
+// but we don't want to spam logs of the actual wallet product
+const IS_DEBUGGING = false;
+
 export const instructionDataToNote = (string: string) => {
   const binaryArray = base58.decode(string);
   return decoder.decode(Buffer.from(binaryArray));
@@ -390,12 +394,14 @@ export const summarizeTransaction = async (
     const error = thrownObject as Error;
     // TODO: throw error instead of just log
     // (once we can handle more types of transactions in future)
-    // Quieten logging for now
-    // log(
-    //   `Warning: could not summarize transaction ID: see https://explorer.solana.com/tx/${id} - for more info, ${error.message}`
-    // );
-    // log(error.stack);
-    // log(stringify(rawTransaction));
+    if (IS_DEBUGGING) {
+      log(
+        `Warning: could not summarize transaction ID: see https://explorer.solana.com/tx/${id} - for more info, ${error.message}`
+      );
+      log(error.stack);
+      // log(stringify(rawTransaction));
+    }
+
     return null;
   }
 };

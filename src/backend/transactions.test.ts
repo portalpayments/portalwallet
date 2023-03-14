@@ -19,8 +19,10 @@ import {
 import {
   EMPTY,
   GREGS_WALLET,
+  HELIUS,
   JOHN_TESTUSER_DEMO_WALLET,
   JUPITER,
+  MIKES_USDC_ACCOUNT,
   MIKES_WALLET,
   PORTAL_IDENTITY_TOKEN_ISSUER_WALLET,
   USDC_MAINNET_MINT_ACCOUNT,
@@ -44,6 +46,7 @@ import {
 import { sendingUSDH } from "./test-data/transactions/sendingUSDH";
 import { makingLightShieldAccount } from "./test-data/transactions/makingLightShieldAccount";
 import { getCurrencyBySymbol } from "./solana-functions";
+import { multiSigTransaction } from "./test-data/transactions/multisig";
 
 jest.mock("./functions");
 
@@ -224,6 +227,37 @@ describe(`transaction summaries`, () => {
       status: true,
       to: null,
       counterParty: null,
+    });
+  });
+
+  test(`We can produce a transaction summary from a Squads Protocol multisig address`, async () => {
+    const portalSimpleTransaction = await summarizeTransaction(
+      // TODO: fix 'transaction.message.accountKeys' (is a string, should be something else)
+      // in the demo transaction below
+      // @ts-ignore
+      multiSigTransaction,
+      new PublicKey(MIKES_WALLET),
+      null,
+      false
+    );
+
+    log(stringify(portalSimpleTransaction));
+
+    expect(portalSimpleTransaction).toEqual({
+      id: "2ctGNBdXCVtNkKtcPNZqe2QtMxkCCU9fHU6HkHwKraf2YEgK3Adfbd9pb2CifvKfys5apJSSrUP9W4LbRjUpmjc8",
+      date: 1678286935000,
+      status: true,
+      networkFee: 5000,
+      direction: 1,
+      amount: 200000000,
+      currency: USDC_MAINNET_MINT_ACCOUNT,
+      from: HELIUS,
+      to: MIKES_WALLET,
+      counterParty: HELIUS,
+      memo: null,
+      receipt: null,
+      swapAmount: null,
+      swapCurrency: null,
     });
   });
 
