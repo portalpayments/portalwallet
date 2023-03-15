@@ -13,11 +13,9 @@ export const checkWalletAddressOrName = async (
   connection: Connection,
   walletNameEnteredByUser: string
 ): Promise<walletAddressAndProfilePicture> => {
-  let isValidWalletAddressOrName = checkIfValidWalletAddress(
-    walletNameEnteredByUser
-  );
+  let isValidWalletAddress = checkIfValidWalletAddress(walletNameEnteredByUser);
 
-  if (isValidWalletAddressOrName) {
+  if (isValidWalletAddress) {
     log(`This is a valid wallet address`);
     return {
       destinationWalletAddress: walletNameEnteredByUser,
