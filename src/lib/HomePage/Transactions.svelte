@@ -87,16 +87,13 @@
     const hasScrolledAllTheWay = checkIfScrolledAllTheWay(element);
 
     if (hasScrolledAllTheWay) {
-      log(`we have scrolled all the way down`);
-    }
-
-    if (hasScrolledAllTheWay) {
       // The element has been scrolled all the way down
       log(`_________________________________________________________________`);
       log("Element scrolled all the way down, updating account!");
       await updateActiveAccount();
       log("Finished updating account");
       log(`_________________________________________________________________`);
+      return;
     }
   };
 
