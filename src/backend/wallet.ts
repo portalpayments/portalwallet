@@ -47,10 +47,13 @@ import { HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE } from "../lib/frontend-constants"
 import { Direction, type Contact, type SimpleTransaction } from "./types";
 import type { AccountSummary } from "./types";
 import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "../backend/constants";
+import localforage from "localforage";
 
 const identityTokenIssuerPublicKey = new PublicKey(
   PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
 );
+
+const IS_TRANSACTION_CACHE_ENABLED = true;
 
 const debug = (_unused) => {};
 
@@ -192,17 +195,121 @@ export const getTransactionsForAddress = async (
   log(`Got ${signatures.length} signatures`);
 
   const transactions: Array<ParsedTransactionWithMeta> =
-    await connection.getParsedTransactions(signatures, {
-      // NOTE: we can't use commitment: finalised in our localhost validator
-      // (it's a limitation of the localhost validator)
-      // commitment: "finalized",
-
-      // Fixes:
-      // SolanaJSONRPCError: failed to get transactions: Transaction version (0) is not supported
-      maxSupportedTransactionVersion: 0,
-    });
+    await getParsedTransactionsAndCache(connection, signatures);
 
   return transactions;
+};
+
+// A single transaction
+export const getParsedTransactionAndCache = async (
+  connection: Connection,
+  signature: string
+): Promise<ParsedTransactionWithMeta> => {
+  let rawTransaction: ParsedTransactionWithMeta | null = null;
+  const transactionCacheId = `transaction-${signature}`;
+  if (IS_TRANSACTION_CACHE_ENABLED) {
+    rawTransaction = await localforage.getItem(transactionCacheId);
+    if (rawTransaction) {
+      log(`Found transaction ${transactionCacheId} in cache`);
+    }
+    return rawTransaction;
+  }
+  log(`Getting transaction ${signature} from the network`);
+  rawTransaction = await connection.getParsedTransaction(
+    signature,
+    // Only wait for confirmed so we can show transaction in list immediately
+    "confirmed"
+  );
+  if (rawTransaction) {
+    if (IS_TRANSACTION_CACHE_ENABLED) {
+      log(`Caching transaction ${transactionCacheId}`);
+      await localforage.setItem(transactionCacheId, rawTransaction);
+    }
+  } else {
+    throw new Error(
+      `Could not find transaction id ${signature}. Wrong network?`
+    );
+  }
+  return rawTransaction;
+};
+
+// Multiple transactions
+// Slightly complied, as some, all or none of the transactions can be cached.
+export const getParsedTransactionsAndCache = async (
+  connection: Connection,
+  signatures: Array<string>
+) => {
+  const options = {
+    // NOTE: we can't use commitment: finalised in our localhost validator
+    // (it's a limitation of the localhost validator)
+    // commitment: "finalized",
+
+    // Fixes:
+    // SolanaJSONRPCError: failed to get transactions: Transaction version (0) is not supported
+    maxSupportedTransactionVersion: 0,
+  };
+
+  let transactions: Array<ParsedTransactionWithMeta>;
+  if (!IS_TRANSACTION_CACHE_ENABLED) {
+    transactions = await connection.getParsedTransactions(signatures, options);
+    return transactions;
+  }
+
+  const transactionSignaturesToGetFromNetwork: Array<string> = [];
+
+  // TODO - we could change this and do cachedTransActionsBySignature instead of using arrays
+  // First, get all the cached transactions
+
+  const cachedTransactionsBySignature: Record<
+    string,
+    ParsedTransactionWithMeta
+  > = {};
+  await asyncMap(signatures, async (signature: string) => {
+    const transactionCacheId = `transaction-${signature}`;
+    const cachedTransaction = (await localforage.getItem(
+      transactionCacheId
+    )) as ParsedTransactionWithMeta;
+    if (cachedTransaction) {
+      cachedTransactionsBySignature[signature] = cachedTransaction;
+    } else {
+      transactionSignaturesToGetFromNetwork.push(signature);
+    }
+  });
+
+  log(
+    `We have ${
+      Object.keys(cachedTransactionsBySignature).length
+    } cached transactions out of ${signatures.length} total transactions.`
+  );
+
+  // Then, get all the transactions from the network
+  const transactionsFromNetwork = await connection.getParsedTransactions(
+    transactionSignaturesToGetFromNetwork,
+    options
+  );
+
+  // Then, get all the uncached transactions
+  const allTransactions = await asyncMap(signatures, async (signature) => {
+    const cachedTransaction = cachedTransactionsBySignature[signature] || null;
+    if (cachedTransaction) {
+      return cachedTransaction;
+    }
+    const transactionFromNetwork = transactionsFromNetwork.find(
+      (transactionFromNetwork) => {
+        const transactionSignature =
+          transactionFromNetwork?.transaction?.signatures?.[0];
+        return transactionSignature === signature;
+      }
+    );
+    if (transactionFromNetwork) {
+      return transactionFromNetwork;
+    }
+    throw new Error(
+      `Could not find transaction id ${signature}. Wrong network?`
+    );
+  });
+
+  return allTransactions;
 };
 
 export const getTransactionSummariesForAddress = async (

@@ -7,13 +7,19 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import { get as getFromStore, writable, type Writable } from "svelte/store";
-import type { PublicKey, Connection, Keypair } from "@solana/web3.js";
+import type {
+  PublicKey,
+  Connection,
+  Keypair,
+  ParsedTransactionWithMeta,
+} from "@solana/web3.js";
 import type { AccountSummary, Collectable, Contact } from "../backend/types";
 import { asyncMap, log, sleep, stringify } from "../backend/functions";
 import uniqBy from "lodash.uniqby";
 import {
   getContactsFromTransactions,
   getNativeAccountSummary,
+  getParsedTransactionAndCache,
   getTokenAccountSummaries,
   getTransactionSummariesForAddress,
 } from "../backend/wallet";
@@ -32,6 +38,7 @@ import * as http from "./http-client";
 import { summarizeTransaction } from "../backend/transactions";
 import { runRepeatedlyWithTimeout } from "../backend/run-with-timeout";
 import { HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE } from "./frontend-constants";
+import localforage from "localforage";
 
 let connection: Connection | null;
 let keyPair: Keypair | null;
@@ -182,17 +189,10 @@ export const updateAccountsForNewTransaction = async (
   signature: string,
   nativeOrTokenAccountAddress: PublicKey
 ) => {
-  const rawTransaction = await connection.getParsedTransaction(
-    signature,
-    // Only wait for confirmed so we can show transaction in list immediately
-    "confirmed"
+  let rawTransaction = await getParsedTransactionAndCache(
+    connection,
+    signature
   );
-
-  if (rawTransaction === null) {
-    throw new Error(
-      `rawTransaction for transaction signature ${signature} was null`
-    );
-  }
   const simpleTransaction = await summarizeTransaction(
     rawTransaction,
     keyPair.publicKey,
