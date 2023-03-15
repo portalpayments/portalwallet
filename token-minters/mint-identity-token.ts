@@ -23,7 +23,7 @@ import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 
 const main = async () => {
   log(
-    `'\n\nMake sure to fix the ENABLE BELOW FOR TOKEN MINTER code otherwise this will fail\n\n`
+    `'\n\nMake sure to fix the ENABLE BELOW FOR TOKEN MINTER code (search for it) otherwise this will fail\n\n`
   );
 
   log(`🎟️ Running Portal Identity token minter ...`);
