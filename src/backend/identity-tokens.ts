@@ -56,15 +56,11 @@ import type {
 import { makeTransaction } from "./tokens";
 import * as http from "../lib/http-client";
 import { FEATURES } from "./features";
+import localforage from "localforage";
 
 export const identityTokenIssuerPublicKey = new PublicKey(
   PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
 );
-
-const VERIFIED_CLAIMS_BY_ADDRESS: Record<
-  string,
-  VerifiedClaimsForIndividual | VerifiedClaimsForOrganization
-> = {};
 
 export const getAnonymousMetaplex = (connection: Connection) => {
   return Metaplex.make(connection);
@@ -95,8 +91,11 @@ export const verifyWallet = async (
 ): Promise<
   VerifiedClaimsForIndividual | VerifiedClaimsForOrganization | null
 > => {
+  const verifiedClaimsCacheId = `verifiedClaims-${wallet.toBase58()}`;
   if (useCache) {
-    const cachedVerifiedClaims = VERIFIED_CLAIMS_BY_ADDRESS[wallet.toBase58()];
+    const cachedVerifiedClaims = (await localforage.getItem(
+      verifiedClaimsCacheId
+    )) as VerifiedClaimsForIndividual | VerifiedClaimsForOrganization;
     if (cachedVerifiedClaims) {
       log(`Found verified claims for ${wallet.toBase58()} in cache`);
       return cachedVerifiedClaims;
@@ -139,6 +138,10 @@ export const verifyWallet = async (
     wallet,
     allowOldIdentityToken
   );
+
+  if (useCache) {
+    await localforage.setItem(verifiedClaimsCacheId, verifiedClaims);
+  }
 
   return verifiedClaims;
 };
