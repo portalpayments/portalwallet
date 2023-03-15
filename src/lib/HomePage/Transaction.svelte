@@ -130,6 +130,8 @@
             {#if contact.verifiedClaims.type === "ORGANIZATION"}
               {contact.verifiedClaims?.legalName}
             {/if}
+          {:else if transaction.isMultisig}
+            Multisig wallet
           {:else}
             Anonymous
           {/if}

@@ -83,6 +83,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     receipt: null,
     swapAmount: null,
     swapCurrency: null,
+    isMultisig: false,
   },
   {
     id: "2",
@@ -99,6 +100,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     receipt: null,
     swapAmount: null,
     swapCurrency: null,
+    isMultisig: false,
   },
   // Sneaky sol transaction - we don't want to see this in our USDC transaction summary!
   {
@@ -116,6 +118,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     receipt: null,
     swapAmount: null,
     swapCurrency: null,
+    isMultisig: false,
   },
   {
     id: "4",
@@ -132,6 +135,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     receipt: null,
     swapAmount: null,
     swapCurrency: null,
+    isMultisig: false,
   },
   {
     id: "5",
@@ -147,6 +151,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     memo: null,
     receipt: null,
     swapAmount: null,
+    isMultisig: false,
     swapCurrency: null,
   },
   {
@@ -163,6 +168,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     memo: null,
     receipt: null,
     swapAmount: null,
+    isMultisig: false,
     swapCurrency: null,
   },
   {
@@ -179,6 +185,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     memo: null,
     receipt: null,
     swapAmount: null,
+    isMultisig: false,
     swapCurrency: null,
   },
   {
@@ -195,6 +202,7 @@ const transactionSummaries: Array<SimpleTransaction> = [
     memo: null,
     receipt: null,
     swapAmount: null,
+    isMultisig: false,
     swapCurrency: null,
   },
 ];
@@ -226,6 +234,7 @@ describe(`transaction summaries`, () => {
       swapCurrency: null,
       status: true,
       to: null,
+      isMultisig: false,
       counterParty: null,
     });
   });
@@ -257,6 +266,7 @@ describe(`transaction summaries`, () => {
       memo: null,
       receipt: null,
       swapAmount: null,
+      isMultisig: true,
       swapCurrency: null,
     });
   });
@@ -287,6 +297,7 @@ describe(`transaction summaries`, () => {
       swapCurrency: getCurrencyBySymbol("SOL").mintAddress,
       status: true,
       to: MIKES_WALLET,
+      isMultisig: false,
       counterParty: JUPITER,
     });
   });
@@ -317,6 +328,7 @@ describe(`transaction summaries`, () => {
       memo: "Hey Greg! 🙋🏻‍♂️",
       receipt: null,
       swapAmount: null,
+      isMultisig: false,
       swapCurrency: null,
     });
   });
@@ -345,6 +357,7 @@ describe(`transaction summaries`, () => {
       memo: "Hey Greg! 🙋🏻‍♂️",
       receipt: null,
       swapAmount: null,
+      isMultisig: false,
       swapCurrency: null,
     });
   });
@@ -373,6 +386,7 @@ describe(`transaction summaries`, () => {
       swapCurrency: null,
       status: true,
       to: MIKES_WALLET,
+      isMultisig: false,
       counterParty: "BfkRD3gGQGLjHxUw7oqhizkaxrDrw7itHT98f9j2gh6t",
     });
   });
@@ -422,6 +436,7 @@ describe(`transaction summaries`, () => {
       memo: null,
       receipt: null,
       swapAmount: null,
+      isMultisig: false,
       swapCurrency: null,
     });
   });
@@ -454,6 +469,7 @@ describe(`transaction summaries`, () => {
       memo: null,
       receipt: null,
       swapAmount: null,
+      isMultisig: false,
       swapCurrency: null,
     });
   });
@@ -487,6 +503,7 @@ describe(`transaction summaries`, () => {
       memo: null,
       receipt: null,
       swapAmount: null,
+      isMultisig: false,
       swapCurrency: null,
     });
   });
@@ -524,6 +541,7 @@ describe(`transaction summaries`, () => {
       memo: null,
       receipt: null,
       swapAmount: null,
+      isMultisig: false,
       swapCurrency: null,
     });
   });
@@ -558,6 +576,7 @@ describe(`grouping transactions`, () => {
             memo: null,
             receipt: null,
             swapAmount: null,
+            isMultisig: false,
             swapCurrency: null,
           },
         ],
@@ -581,6 +600,7 @@ describe(`grouping transactions`, () => {
             memo: null,
             receipt: null,
             swapAmount: null,
+            isMultisig: false,
             swapCurrency: null,
           },
           {
@@ -597,6 +617,7 @@ describe(`grouping transactions`, () => {
             swapCurrency: null,
             status: true,
             to: YCOMBINATOR_DEMO_WALLET_FOR_JARED,
+            isMultisig: false,
             counterParty: YCOMBINATOR_DEMO_WALLET_FOR_JARED,
           },
         ],
@@ -620,6 +641,7 @@ describe(`grouping transactions`, () => {
             memo: null,
             receipt: null,
             swapAmount: null,
+            isMultisig: false,
             swapCurrency: null,
           },
           {
@@ -636,6 +658,7 @@ describe(`grouping transactions`, () => {
             memo: null,
             receipt: null,
             swapAmount: null,
+            isMultisig: false,
             swapCurrency: null,
           },
           {
@@ -652,6 +675,7 @@ describe(`grouping transactions`, () => {
             memo: null,
             receipt: null,
             swapAmount: null,
+            isMultisig: false,
             swapCurrency: null,
           },
           {
@@ -668,6 +692,7 @@ describe(`grouping transactions`, () => {
             memo: null,
             receipt: null,
             swapAmount: null,
+            isMultisig: false,
             swapCurrency: null,
           },
           {
@@ -684,6 +709,7 @@ describe(`grouping transactions`, () => {
             memo: null,
             receipt: null,
             swapAmount: null,
+            isMultisig: false,
             swapCurrency: null,
           },
         ],
@@ -707,6 +733,7 @@ describe(`grouping transactions`, () => {
         memo: "Demo for Dialect",
         receipt: null,
         swapAmount: null,
+        isMultisig: false,
         swapCurrency: null,
       },
       {
@@ -723,6 +750,7 @@ describe(`grouping transactions`, () => {
         memo: "",
         receipt: null,
         swapAmount: null,
+        isMultisig: false,
         swapCurrency: null,
       },
     ];
@@ -752,6 +780,7 @@ describe(`grouping transactions`, () => {
             status: true,
             swapAmount: null,
             swapCurrency: null,
+            isMultisig: false,
             to: "6PCANXw778iMrBzLUVK4c9q6Xc2X9oRUCvLoa4tfsLWG",
           },
           {
@@ -768,6 +797,7 @@ describe(`grouping transactions`, () => {
             status: true,
             swapAmount: null,
             swapCurrency: null,
+            isMultisig: false,
             to: "6LL1j2XDC8FNWLwYfBtwG1kEViuZw2tqdPg1TPa3ZcqH",
           },
         ],
@@ -791,6 +821,7 @@ describe(`grouping transactions`, () => {
         memo: null,
         receipt: null,
         swapAmount: null,
+        isMultisig: false,
         swapCurrency: null,
       },
     ];
@@ -822,6 +853,7 @@ describe(`grouping transactions`, () => {
             memo: null,
             receipt: null,
             swapAmount: null,
+            isMultisig: false,
             swapCurrency: null,
           },
         ],
@@ -845,6 +877,7 @@ describe(`grouping transactions`, () => {
         memo: null,
         receipt: null,
         swapAmount: null,
+        isMultisig: false,
         swapCurrency: null,
       },
     ];
@@ -877,6 +910,7 @@ describe(`grouping transactions`, () => {
             receipt: null,
             swapAmount: null,
             swapCurrency: null,
+            isMultisig: false,
           },
         ],
       },
@@ -908,6 +942,7 @@ describe(`memos and notes`, () => {
       receipt: null,
       swapAmount: null,
       swapCurrency: null,
+      isMultisig: false,
     });
   });
 
@@ -942,6 +977,7 @@ describe(`memos and notes`, () => {
       receipt: null,
       swapAmount: null,
       swapCurrency: null,
+      isMultisig: false,
     });
   });
 });

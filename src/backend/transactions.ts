@@ -28,7 +28,13 @@ import {
   type Contact,
 } from "../backend/types";
 import { mintToCurrencyMap } from "../backend/mint-to-currency-map";
-import { JUPITER, MEMO_PROGRAM, NOTE_PROGRAM, NOT_FOUND } from "./constants";
+import {
+  JUPITER,
+  MEMO_PROGRAM,
+  NOTE_PROGRAM,
+  NOT_FOUND,
+  SQUADS_ADDRESS,
+} from "./constants";
 
 // Dialect (used by the receipts module)
 // Causes problems with identity token minter when running under 'tsx' (without vite doing all the transforms)
@@ -203,18 +209,18 @@ export const summarizeTransaction = async (
     memo = getNoteOrMemo(rawTransaction);
 
     if (isSolTransaction) {
-      // TODO:
-      // Bad naming. Rename to firstInstruction or add check this is only instruction.
-      const onlyInstruction = instructions[0];
+      const solTransactionFirstInstruction = instructions[0];
 
-      if (onlyInstruction?.parsed?.type === "createAccountWithSeed") {
+      if (
+        solTransactionFirstInstruction?.parsed?.type === "createAccountWithSeed"
+      ) {
         const simpleTransaction = {
           id,
           date,
           status,
           networkFee,
           direction: null,
-          amount: onlyInstruction.parsed.info.lamports,
+          amount: solTransactionFirstInstruction.parsed.info.lamports,
           currency: null,
           from: null,
           to: null,
@@ -223,17 +229,19 @@ export const summarizeTransaction = async (
           receipt: null,
           swapAmount: null,
           swapCurrency: null,
+          isMultisig: false,
         };
 
         return simpleTransaction;
       }
 
       const direction =
-        onlyInstruction.parsed.info.source === walletAccount.toBase58()
+        solTransactionFirstInstruction.parsed.info.source ===
+        walletAccount.toBase58()
           ? Direction.sent
           : Direction.recieved;
 
-      const amount = onlyInstruction.parsed.info.lamports;
+      const amount = solTransactionFirstInstruction.parsed.info.lamports;
       if (!amount) {
         throw new Error(
           `Ignoring transaction where no money was sent (eg, creating wallet without transferring funds) see https://explorer.solana.com/tx/${id}`
@@ -245,8 +253,8 @@ export const summarizeTransaction = async (
         receipt = await getReceiptForSimpleTransaction(keyPair, memo, date);
       }
 
-      const from = onlyInstruction.parsed.info.source;
-      const to = onlyInstruction.parsed.info.destination;
+      const from = solTransactionFirstInstruction.parsed.info.source;
+      const to = solTransactionFirstInstruction.parsed.info.destination;
       const counterParty = getCounterParty(direction, from, to);
 
       const simpleTransaction = {
@@ -255,7 +263,7 @@ export const summarizeTransaction = async (
         status,
         networkFee,
         direction,
-        amount: onlyInstruction.parsed.info.lamports,
+        amount: solTransactionFirstInstruction.parsed.info.lamports,
         currency: getCurrencyBySymbol("SOL").mintAddress,
         from,
         to,
@@ -263,6 +271,7 @@ export const summarizeTransaction = async (
         memo,
         receipt,
         swapAmount: null,
+        isMultisig: false,
         swapCurrency: null,
       };
 
@@ -291,6 +300,10 @@ export const summarizeTransaction = async (
     let isSwap = false;
     let swapAmount: number | null = null;
     let swapCurrency: Currency | null = null;
+
+    const isMultisig = instructions.some(
+      (instruction) => instruction.programId.toBase58() === SQUADS_ADDRESS
+    );
 
     // TODO: look at swaps outside Jupiter
     const innerInstructionsForJupiter = getInnerInstructionsForProgram(
@@ -386,6 +399,7 @@ export const summarizeTransaction = async (
       memo,
       receipt,
       swapAmount,
+      isMultisig,
       swapCurrency,
     };
 

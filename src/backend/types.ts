@@ -331,6 +331,7 @@ export interface SimpleTransaction {
   receipt: ReceiptSummary | null;
   swapAmount: number | null;
   swapCurrency: Currency;
+  isMultisig: boolean;
 }
 
 export interface SimpleWalletMessage {
