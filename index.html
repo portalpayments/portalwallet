@@ -9,6 +9,12 @@
     <link rel="preconnect" href="https://rsms.me/" />
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <title>Portal</title>
+    <script type="module">
+      // Needed for window.Buffer to exist (used by Send Page and more)
+      import { Buffer } from "buffer";
+      window.Buffer = Buffer;
+      window.global = window;
+    </script>
   </head>
   <body>
     <script type="module" src="/src/main.ts"></script>
