@@ -257,9 +257,7 @@ export const getParsedTransactionsAndCache = async (
 
   const transactionSignaturesToGetFromNetwork: Array<string> = [];
 
-  // TODO - we could change this and do cachedTransActionsBySignature instead of using arrays
   // First, get all the cached transactions
-
   const cachedTransactionsBySignature: Record<
     string,
     ParsedTransactionWithMeta
