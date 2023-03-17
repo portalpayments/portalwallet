@@ -120,7 +120,11 @@
         memo
       );
       log(`Finished transfer, signature was`, signature);
-      await updateAccountsForNewTransaction(signature, activeAccount.address);
+
+      // TODO: we broke something for this in grizzlython
+      // looks like when we get transaction .meta is missing
+      // fix and re-enable (also check our the raw transaction we're priving to summarizeTransaction - why does it lack meta?)
+      // await updateAccountsForNewTransaction(signature, activeAccount.address);
 
       isSending = false;
       isSendingAnyway = false;
