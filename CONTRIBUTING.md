@@ -24,3 +24,15 @@ See [coding guidelines](CODING_GUIDELINES.md).
 ### Tests
 
 Tests are in jest. Note that logging is disabled in tests - comment out `jest.mock("./functions");` at the top of your test file to re-enable logging during TDD.
+
+## Quick reminder of all Solana Accounts
+
+https://whitepaper.metaplex.com/whitepaper.pdf
+
+ - Wallet account: me
+ - Associated token account: my account for this token
+ - Mint account: where thi token is minted (controls supply)
+ - For NFTs: metadata account (Creators, Collection, etc.)
+ - For NFTs: Off chain metadata (traits)
+
+Standards for off chain metadata are at: https://docs.metaplex.com/programs/token-metadata/token-standard#the-non-fungible-standard
