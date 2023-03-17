@@ -7,7 +7,7 @@ Portal is a wallet with a strong focus on transfers and payments, and is built t
 
 ## Want to contribute?
 
-See [CONTRIBUTING.md] and [CODING_GUIDELINES.md] to get started building!
+See [contributing](CONTRIBUTING.md) and [coding guidelines](CODING_GUIDELINES.md) to get started building!
 
 ## For browser development
 
