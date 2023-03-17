@@ -220,16 +220,20 @@ export const getParsedTransactionAndCache = async (
     // Only wait for confirmed so we can show transaction in list immediately
     "confirmed"
   );
-  if (rawTransaction) {
-    if (IS_TRANSACTION_CACHE_ENABLED) {
-      log(`Caching transaction ${transactionCacheId}`);
-      await localforage.setItem(transactionCacheId, rawTransaction);
-    }
-  } else {
+  if (!rawTransaction) {
     throw new Error(
       `Could not find transaction id ${signature}. Wrong network?`
     );
   }
+  log(
+    `got transaction ${signature} from the network`,
+    stringify(rawTransaction)
+  );
+  if (IS_TRANSACTION_CACHE_ENABLED) {
+    log(`Caching transaction ${transactionCacheId}`);
+    await localforage.setItem(transactionCacheId, rawTransaction);
+  }
+
   return rawTransaction;
 };
 
