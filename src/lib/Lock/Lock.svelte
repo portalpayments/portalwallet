@@ -44,8 +44,6 @@
     <span class="welcome-message">Welcome Back!</span>
 
     <div class="password-container">
-      <div class="password-prompt">Enter your password</div>
-
       <!-- Form only to prevent annoying 'Password field is not contained in a form' message in devtools -->
       <form on:submit={(event) => event.preventDefault()}>
         <div class="fancy-border">
@@ -119,8 +117,8 @@
 
   .password-container {
     display: grid;
-    gap: 10px;
+    gap: 24px;
     grid-auto-flow: row;
-    grid-template-rows: 30px 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
   }
 </style>
