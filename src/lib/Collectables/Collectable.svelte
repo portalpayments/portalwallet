@@ -4,13 +4,25 @@
   import type { Collectable } from "../../backend/types";
   import SkeletonGallery from "../Shared/Skeletons/SkeletonGallery.svelte";
   import BackButton from "../Shared/BackButton.svelte";
-  import { Link } from "svelte-navigator";
+  import Twitter from "../../assets/twitter.svg";
   import { collectablesStore } from "../stores";
 
   let isLoading = false;
 
   let collectableID: string = window.location.pathname.split("/").at(-1);
   let collectable: Collectable | null = null;
+
+  const TWITTER_USERNAME_REGEX = /^@(\w){1,15}$/;
+
+  const getTwitterUsername = (value: unknown): null | string => {
+    if (typeof value !== "string") {
+      return null;
+    }
+    if (TWITTER_USERNAME_REGEX.test(value)) {
+      return value.split("@")[1];
+    }
+    return null;
+  };
 
   collectablesStore.subscribe((newValue) => {
     if (newValue !== null) {
@@ -56,7 +68,23 @@
       <div class="attributes">
         {#each Object.entries(formatObjectKeys(collectable.attributes)) as [attributeName, attributeValue]}
           <div class="attribute-name">{attributeName}</div>
-          <div class="attribute-value">{attributeValue}</div>
+
+          <div class="attribute-value">
+            {#if getTwitterUsername(attributeValue)}
+              <a
+                class="twitter-link"
+                href={`https://twitter.com/${getTwitterUsername(
+                  attributeValue
+                )}`}
+                target="_blank"
+              >
+                <img class="twitter-logo" src={Twitter} alt="Twitter logo" />
+                {getTwitterUsername(attributeValue)}
+              </a>
+            {:else}
+              {attributeValue}
+            {/if}
+          </div>
         {/each}
       </div>
     </div>
@@ -111,7 +139,13 @@
   .attributes {
     display: grid;
     grid-template-columns: 136px 136px;
-    grid-auto-rows: 24px;
+    // 24px plus 1px border
+    grid-auto-rows: 33px;
+  }
+
+  .attributes * {
+    height: 100%;
+    align-items: center;
   }
 
   .attribute-name {
@@ -127,5 +161,18 @@
     border-bottom: 1px solid var(--black);
     font-size: 12px;
     overflow: hidden;
+  }
+
+  a.twitter-link {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: end;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .twitter-logo {
+    opacity: 0.7;
+    height: 9px;
   }
 </style>
