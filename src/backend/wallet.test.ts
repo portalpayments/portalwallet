@@ -58,6 +58,7 @@ import { getABetterErrorMessage } from "./errors";
 import { createMintAccount } from "./tokens";
 
 jest.mock("./functions");
+jest.mock("localforage");
 
 dotenv.config();
 

@@ -11,17 +11,9 @@ import { saveSettings, getSettings } from "./settings";
 import { Crypto } from "@peculiar/webcrypto";
 import { stringify, log } from "../backend/functions";
 
-const fakeLocalForageStore: Record<string, any> = {};
+jest.mock("localforage");
 
 jest.mock("../backend/functions");
-
-// localforage doesn't work in node, so simulate it
-jest.mock("localforage", () => ({
-  getItem: (key) => fakeLocalForageStore[key] || null,
-  setItem: (key, value) => {
-    fakeLocalForageStore[key] = value;
-  },
-}));
 
 describe(`settings`, () => {
   const wallet = new Keypair();
