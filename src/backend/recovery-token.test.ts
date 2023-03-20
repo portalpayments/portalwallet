@@ -152,6 +152,11 @@ describe(`Finding recovery token in a real wallet`, () => {
       mike.publicKey
     );
 
+    expect(recoveryTokenPayload).toEqual({
+      cipherText: expect.any(String),
+      initializationVector: expect.any(String),
+    });
+
     const restoredWallet = await recoverFromToken(
       mikesPersonalPhrase,
       mikesWalletUnlockPassword,
