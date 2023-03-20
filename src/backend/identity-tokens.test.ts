@@ -40,8 +40,7 @@ import { rawNFTOffChainData } from "./test-data/nft-off-chain-data";
 import { mcBurgerNFTOnChainData } from "./test-data/nft-on-chain-data";
 import { uploadImageToPinata } from "./pinata";
 
-// Arweave currently 400ing and also
-// we don't want to upload images to public arweave routinely
+// We don't want to waste Pinata tokens unecessarily
 const testPinataIfAskedSpecfically = process.env.TEST_PINATA ? test : test.skip;
 
 jest.mock("./functions");
