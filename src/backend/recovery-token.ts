@@ -254,7 +254,7 @@ export const recoverFromToken = async (
     )) as string;
 
     // We're done decrypting, now let's turn it back into a KeyPair
-    const restoredWallet = getKeypairFromString(decryptedData as string);
+    const restoredWallet = getKeypairFromString(decryptedData);
     return restoredWallet;
   } catch (thrownObject) {
     const error = thrownObject as Error;
