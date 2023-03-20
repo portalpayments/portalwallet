@@ -28,5 +28,15 @@
   "content_security_policy": {
     "script-src": "self ",
     "object-src": "self"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*/*"
+      ],
+      "js": [
+        "content-script.js"
+      ]
+    }
+  ]
 }
