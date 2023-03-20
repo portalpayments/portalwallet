@@ -3,6 +3,7 @@
 // see README.md
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
+import alias from "@rollup/plugin-alias";
 
 // Config came from https://www.thisdot.co/blog/how-to-setup-a-typescript-project-using-rollup-js
 export default {
@@ -26,6 +27,14 @@ export default {
         "src/backend/constants.ts",
       ],
     }),
-    nodeResolve(),
+    alias({
+      entries: [
+        {
+          find: "node-fetch",
+          replacement: "just-use-native-fetch",
+        },
+      ],
+    }),
+    nodeResolve({}),
   ],
 };
