@@ -10,7 +10,7 @@ We don't recommend you use Portal as your main Solana wallet yet.
 
 ## Want to contribute?
 
-See [CONTRIBUTING.md] and [CODING_GUIDELINES.md] to get started building!
+See [contributing](CONTRIBUTING.md) and [coding guidelines](CODING_GUIDELINES.md) to get started building!
 
 ## For browser development
 
