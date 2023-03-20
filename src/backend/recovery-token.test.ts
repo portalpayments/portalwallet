@@ -139,8 +139,6 @@ describe(`Finding recovery token in a real wallet`, () => {
   });
 
   test(`Can recover Mike's wallet`, async () => {
-    log(`process.env`, stringify(Object.keys(process.env).sort()));
-
     const mike = getKeypairFromString(getFromEnv("MIKES_SECRET_KEY"));
 
     const mikesPersonalPhrase = getFromEnv("MIKES_PERSONAL_PHRASE");
