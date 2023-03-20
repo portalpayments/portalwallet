@@ -10,28 +10,18 @@ import {
 } from "../src/backend/recovery-token";
 import dotenv from "dotenv";
 import { log } from "console";
-import { stringify } from "../src/backend/functions";
+import { getFromEnv, stringify } from "../src/backend/functions";
 import { getMetaplex } from "../src/backend/identity-tokens";
 
 const connection = await connect("quickNodeMainNetBeta");
 
 dotenv.config();
 
-const userSecretKey = process.env.MIKES_SECRET_KEY || null;
-if (!userSecretKey) {
-  throw new Error(`Please set MIKES_SECRET_KEY in .env file`);
-}
-const user = getKeypairFromString(userSecretKey);
+const user = getKeypairFromString(getFromEnv("MIKES_SECRET_KEY"));
 
-const personalPhrase = process.env.MIKES_PERSONAL_PHRASE || null;
-if (!personalPhrase) {
-  throw new Error(`Please set MIKES_PERSONAL_PHRASE in .env file`);
-}
+const personalPhrase = getFromEnv("MIKES_PERSONAL_PHRASE");
 
-const walletUnlockPassword = process.env.MIKES_WALLET_UNLOCK_PASSWORD || null;
-if (!walletUnlockPassword) {
-  throw new Error(`Please set MIKES_WALLET_UNLOCK_PASSWORD in .env file`);
-}
+const walletUnlockPassword = getFromEnv("MIKES_WALLET_UNLOCK_PASSWORD");
 
 // ----------------------------------------------------------
 

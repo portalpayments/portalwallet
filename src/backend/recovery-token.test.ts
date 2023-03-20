@@ -7,7 +7,13 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import type { Connection, Keypair } from "@solana/web3.js";
-import { base64ToString, log, stringify, stringToBase64 } from "./functions";
+import {
+  base64ToString,
+  getFromEnv,
+  log,
+  stringify,
+  stringToBase64,
+} from "./functions";
 import {
   getRecoveryTokenFromWallet,
   makeRecoveryTokenCiphertextAndInitializationVector,
@@ -133,23 +139,15 @@ describe(`Finding recovery token in a real wallet`, () => {
   });
 
   test(`Can recover Mike's wallet`, async () => {
-    if (!process.env.MIKES_SECRET_KEY) {
-      throw new Error(`Please set MIKES_SECRET_KEY in .env`);
-    }
+    log(`process.env`, stringify(Object.keys(process.env).sort()));
 
-    const mike = getKeypairFromString(process.env.MIKES_SECRET_KEY);
+    const mike = getKeypairFromString(getFromEnv("MIKES_SECRET_KEY"));
 
-    if (!process.env.MIKES_PERSONAL_PHRASE) {
-      throw new Error(`Please set MIKES_PERSONAL_PHRASE in .env`);
-    }
+    const mikesPersonalPhrase = getFromEnv("MIKES_PERSONAL_PHRASE");
 
-    const mikesPersonalPhrase = process.env.MIKES_PERSONAL_PHRASE;
-
-    if (!process.env.MIKES_WALLET_UNLOCK_PASSWORD) {
-      throw new Error(`Please set MIKES_WALLET_UNLOCK_PASSWORD in .env`);
-    }
-
-    const mikesWalletUnlockPassword = process.env.MIKES_WALLET_UNLOCK_PASSWORD;
+    const mikesWalletUnlockPassword = getFromEnv(
+      "MIKES_WALLET_UNLOCK_PASSWORD"
+    );
 
     const recoveryTokenPayload = await getRecoveryTokenFromWallet(
       connection,

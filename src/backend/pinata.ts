@@ -5,12 +5,9 @@
 import pinataSDK from "@pinata/sdk";
 import mime from "mime";
 import * as dotenv from "dotenv";
-import { log, stringify } from "./functions";
+import { getFromEnv, log, stringify } from "./functions";
 
 dotenv.config();
-
-const pinataAPIKey = process.env.PINATA_API_KEY || null;
-const pinataSecretAPIKey = process.env.PINATA_API_SECRET || null;
 
 let pinata: pinataSDK | null;
 
@@ -26,13 +23,9 @@ const startPinata = () => {
   if (pinata) {
     return pinata;
   }
-  if (!pinataAPIKey) {
-    throw new Error(`Please set PINATA_API_KEY in .env file`);
-  }
 
-  if (!pinataSecretAPIKey) {
-    throw new Error(`Please set PINATA_API_SECRET in .env file`);
-  }
+  const pinataAPIKey = getFromEnv("PINATA_API_KEY");
+  const pinataSecretAPIKey = getFromEnv("PINATA_API_SECRET");
 
   pinata = new pinataSDK(pinataAPIKey, pinataSecretAPIKey);
 

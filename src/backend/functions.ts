@@ -15,6 +15,14 @@ const HOUR = 60 * MINUTES;
 
 const ACCOUNT_CACHE = 1 * HOUR;
 
+export const getFromEnv = (variableName) => {
+  const value = process.env[variableName];
+  if (!value) {
+    throw new Error(`Please set '${variableName}' in .env or GitHub Secrets`);
+  }
+  return value;
+};
+
 export const toUnique = function <T>(array: Array<T>): Array<T> {
   return Array.from(new Set(array));
 };

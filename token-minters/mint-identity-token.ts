@@ -1,6 +1,6 @@
 // Run with 'npm run mint-identity-token'
 
-import { log, sleep, stringify } from "../src/backend/functions";
+import { getFromEnv, log, sleep, stringify } from "../src/backend/functions";
 import {
   transferIdentityToken,
   mintIdentityToken,
@@ -28,15 +28,11 @@ const main = async () => {
 
   log(`🎟️ Running Portal Identity token minter ...`);
 
-  const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;
+  const identityTokenSecretKey = getFromEnv("IDENTITY_TOKEN_SECRET_KEY");
 
   const connection: Connection = await connect("quickNodeMainNetBeta");
 
   const walletAddress = new PublicKey(config.walletAddress);
-
-  if (!identityTokenSecretKey) {
-    throw new Error(`Please set IDENTITY_TOKEN_SECRET_KEY in .env file`);
-  }
 
   const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
 

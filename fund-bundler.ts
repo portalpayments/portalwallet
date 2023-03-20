@@ -5,16 +5,13 @@ import { getMetaplex } from "./src/backend/identity-tokens";
 import { connect } from "./src/backend/wallet";
 import { getKeypairFromString } from "./src/backend/solana-functions";
 import dotenv from "dotenv";
+import { getFromEnv } from "./src/backend/functions";
 
 dotenv.config();
 
-const identityTokenSecretKey = process.env.IDENTITY_TOKEN_SECRET_KEY;
-
-if (!identityTokenSecretKey) {
-  throw new Error(`Please set IDENTITY_TOKEN_SECRET_KEY in .env file`);
-}
-
-const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
+const identityTokenIssuer = getKeypairFromString(
+  getFromEnv("IDENTITY_TOKEN_SECRET_KEY")
+);
 
 (async () => {
   // See https://www.npmjs.com/package/@metaplex-foundation/js

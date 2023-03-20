@@ -12,6 +12,7 @@ const actualFunctions = jest.requireActual("../functions");
 export const log = jest.fn();
 
 // Use actual implementation of everything else
+// TODO: there should be a way to do this more efficiently
 export const debug = actualFunctions.debug;
 export const solanaBlocktimeToJSTime = actualFunctions.solanaBlocktimeToJSTime;
 export const isIncludedCaseInsensitive =
@@ -40,3 +41,4 @@ export const instructionDataToNote = actualFunctions.instructionDataToNote;
 export const toArrayBuffer = actualFunctions.toArrayBuffer;
 export const stringToBase64 = actualFunctions.stringToBase64;
 export const base64ToString = actualFunctions.base64ToString;
+export const getFromEnv = actualFunctions.getFromEnv;
