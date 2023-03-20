@@ -32,17 +32,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      # https://github.com/marketplace/actions/debugging-with-ssh
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        with:
-          limit-access-to-actor: true
-          limit-access-to-users: mikemaccana
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-
       # Install Solana
       - run: sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
       - run: export PATH="~/.local/share/solana/install/active_release/bin:$PATH"
@@ -50,6 +39,19 @@ jobs:
       - run: ~/.local/share/solana/install/active_release/bin/solana-test-validator --bpf-program ${METAPLEX_TOKEN_METADATA_PROGRAM_ADDRESS} on-chain-programs/metaplex_token_metadata_program.so --reset &
       # Install everything
       - run: npm ci
+
+      # Can be used for debugging if needed
+      # https://github.com/marketplace/actions/debugging-with-ssh
+      # - name: Setup upterm session
+      #   uses: lhotari/action-upterm@v1
+      #   with:
+      #     limit-access-to-actor: true
+      #     limit-access-to-users: mikemaccana
+      # - name: Use Node.js ${{ matrix.node-version }}
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: ${{ matrix.node-version }}
+
       # Run CORS proxy (needed to access Decaf receipts)
       - run: npm run start-decaf-proxy-server &
       # Run tests
