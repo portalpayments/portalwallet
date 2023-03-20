@@ -45,10 +45,10 @@ import {
 // https://stackoverflow.com/questions/70725063/jest-wont-accept-top-level-awaits-with-nodejs16-typescript
 // Proper solution is to get Dialect to fix.
 
-// ENABLE BELOW FOR TOKEN MINTER
-let getReceiptForSimpleTransaction = (_unused1, _unused2, _unused3) => null;
-// DISABLE BELOW FOR TOKEN MINTER
-// import { getReceiptForSimpleTransaction } from "./receipts";
+// ENABLE BELOW FOR TOKEN MINTER but do not commit
+// let getReceiptForSimpleTransaction = (_unused1, _unused2, _unused3) => null;
+// DISABLE BELOW FOR TOKEN MINTER but keep committed
+import { getReceiptForSimpleTransaction } from "./receipts";
 
 import {
   type ParsedInstruction,
