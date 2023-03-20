@@ -382,7 +382,8 @@ describe(`mainnet integration tests`, () => {
         mainNetConnection,
         new PublicKey(MIKES_WALLET),
         new PublicKey(MIKES_USDC_ACCOUNT),
-        1
+        // We'll assume at least one of the last 3 transactions will be summarizable
+        5
       );
 
       const lastTransaction = transactionSummaries[0];
