@@ -70,6 +70,7 @@
     "@pinata/sdk": "^2.1.0",
     "@portal-payments/solana-wallet-names": "^1.2.0",
     "@rollup/plugin-alias": "^4.0.3",
+    "@rollup/plugin-commonjs": "^24.0.1",
     "@solana/spl-token": "^0.3.7",
     "@solana/spl-token-registry": "^0.2.7",
     "@solflare-wallet/pfp": "^0.1.0",

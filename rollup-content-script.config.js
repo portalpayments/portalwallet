@@ -2,6 +2,7 @@
 // The rest of the app uses Vite. Vite Service Worker / Extension support has some issues.
 // see README.md
 import { nodeResolve } from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
 import alias from "@rollup/plugin-alias";
 
@@ -34,6 +35,9 @@ export default {
         },
       ],
     }),
-    nodeResolve({}),
+    nodeResolve({
+      preferBuiltins: false,
+    }),
+    commonjs(),
   ],
 };
