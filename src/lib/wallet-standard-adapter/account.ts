@@ -4,20 +4,24 @@ import {
   SolanaSignAndSendTransaction,
   SolanaSignMessage,
   SolanaSignTransaction,
-} from '@solana/wallet-standard-features';
-import type { WalletAccount } from '@wallet-standard/base';
-import { SOLANA_CHAINS } from './solana.js';
+} from "@solana/wallet-standard-features";
+import type { WalletAccount } from "@wallet-standard/base";
+import { SOLANA_CHAINS } from "./solana-chains.js";
 
 const chains = SOLANA_CHAINS;
-const features = [SolanaSignAndSendTransaction, SolanaSignTransaction, SolanaSignMessage] as const;
+const features = [
+  SolanaSignAndSendTransaction,
+  SolanaSignTransaction,
+  SolanaSignMessage,
+] as const;
 
 export class GhostWalletAccount implements WalletAccount {
-  readonly #address: WalletAccount['address'];
-  readonly #publicKey: WalletAccount['publicKey'];
-  readonly #chains: WalletAccount['chains'];
-  readonly #features: WalletAccount['features'];
-  readonly #label: WalletAccount['label'];
-  readonly #icon: WalletAccount['icon'];
+  readonly #address: WalletAccount["address"];
+  readonly #publicKey: WalletAccount["publicKey"];
+  readonly #chains: WalletAccount["chains"];
+  readonly #features: WalletAccount["features"];
+  readonly #label: WalletAccount["label"];
+  readonly #icon: WalletAccount["icon"];
 
   get address() {
     return this.#address;
@@ -43,7 +47,12 @@ export class GhostWalletAccount implements WalletAccount {
     return this.#icon;
   }
 
-  constructor({ address, publicKey, label, icon }: Omit<WalletAccount, 'chains' | 'features'>) {
+  constructor({
+    address,
+    publicKey,
+    label,
+    icon,
+  }: Omit<WalletAccount, "chains" | "features">) {
     if (new.target === GhostWalletAccount) {
       Object.freeze(this);
     }

@@ -1,5 +1,9 @@
 // This is copied from @wallet-standard/wallet
 
+import type { IdentifierString } from "@wallet-standard/base";
+import { SOLANA_CHAINS } from "./solana-chains";
+import type { SolanaChain } from "./types";
+
 export function bytesEqual(a: Uint8Array, b: Uint8Array): boolean {
   return isArrayEqual(a, b);
 }
@@ -20,4 +24,11 @@ export function isArrayEqual<T>(a: Indexed<T>, b: Indexed<T>): boolean {
   }
 
   return true;
+}
+
+/**
+ * Check if a chain corresponds with one of the Solana clusters.
+ */
+export function isSolanaChain(chain: IdentifierString): chain is SolanaChain {
+  return SOLANA_CHAINS.includes(chain as SolanaChain);
 }

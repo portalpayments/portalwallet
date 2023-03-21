@@ -1,6 +1,3 @@
-// Rollup is only used directly by the service worker -
-// The rest of the app uses Vite. Vite Service Worker / Extension support has some issues.
-// see README.md
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 

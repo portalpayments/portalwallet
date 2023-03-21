@@ -1,24 +1,35 @@
-// This is copied from @wallet-standard/wallet
+// This file from https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md which turn copies it from @wallet-standard/wallet
 
 import type {
-  DEPRECATED_WalletsWindow,
   Wallet,
   WalletEventsWindow,
   WindowRegisterWalletEvent,
   WindowRegisterWalletEventCallback,
-} from '@wallet-standard/base';
+} from "@wallet-standard/base";
 
 export function registerWallet(wallet: Wallet): void {
-  const callback: WindowRegisterWalletEventCallback = ({ register }) => register(wallet);
+  const callback: WindowRegisterWalletEventCallback = ({ register }) =>
+    register(wallet);
   try {
-    (window as WalletEventsWindow).dispatchEvent(new RegisterWalletEvent(callback));
+    (window as WalletEventsWindow).dispatchEvent(
+      new RegisterWalletEvent(callback)
+    );
   } catch (error) {
-    console.error('wallet-standard:register-wallet event could not be dispatched\n', error);
+    console.error(
+      "wallet-standard:register-wallet event could not be dispatched\n",
+      error
+    );
   }
   try {
-    (window as WalletEventsWindow).addEventListener('wallet-standard:app-ready', ({ detail: api }) => callback(api));
+    (window as WalletEventsWindow).addEventListener(
+      "wallet-standard:app-ready",
+      ({ detail: api }) => callback(api)
+    );
   } catch (error) {
-    console.error('wallet-standard:app-ready event listener could not be added\n', error);
+    console.error(
+      "wallet-standard:app-ready event listener could not be added\n",
+      error
+    );
   }
 }
 
@@ -30,11 +41,11 @@ class RegisterWalletEvent extends Event implements WindowRegisterWalletEvent {
   }
 
   get type() {
-    return 'wallet-standard:register-wallet' as const;
+    return "wallet-standard:register-wallet" as const;
   }
 
   constructor(callback: WindowRegisterWalletEventCallback) {
-    super('wallet-standard:register-wallet', {
+    super("wallet-standard:register-wallet", {
       bubbles: false,
       cancelable: false,
       composed: false,
@@ -44,16 +55,16 @@ class RegisterWalletEvent extends Event implements WindowRegisterWalletEvent {
 
   /** @deprecated */
   preventDefault(): never {
-    throw new Error('preventDefault cannot be called');
+    throw new Error("preventDefault cannot be called");
   }
 
   /** @deprecated */
   stopImmediatePropagation(): never {
-    throw new Error('stopImmediatePropagation cannot be called');
+    throw new Error("stopImmediatePropagation cannot be called");
   }
 
   /** @deprecated */
   stopPropagation(): never {
-    throw new Error('stopPropagation cannot be called');
+    throw new Error("stopPropagation cannot be called");
   }
 }

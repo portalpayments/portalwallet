@@ -1,19 +1,24 @@
-import { log, stringify } from "./backend/functions";
-import { PublicKey } from "@solana/web3.js";
+// Register our wallet implementation with the wallet standard, and attach it to the windo so dapps can find it.
 // From https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md
 
-// Import the `initialize` function from your wallet-standard package.
-import { MIKES_WALLET } from "./backend/constants";
+import { log, stringify } from "./backend/functions";
+import { PublicKey } from "@solana/web3.js";
+import { registerWallet } from "./lib/wallet-standard-adapter/register";
+import { PortalWalletStandardImplementation } from "./lib/wallet-standard-adapter/wallet-standard";
 
-// Methods borrowed from window.solana since the docs are non-existent:
-// https://github.com/solana-labs/wallet-standard/issues/17
+log("Registering wallet implementation");
 
-// See /home/mike/Code/portal/portal-standard-wallet/src/window.ts
-// (which is not our code but rather a clone of https://github.com/solana-labs/wallet-standard)
+// Register your wallet implementation using the Wallet Standard, passing the reference.
+registerWallet(PortalWalletStandardImplementation);
 
-// Note: deliberately uses undefined instead of null
-
-const mikesPublicKey = new PublicKey(MIKES_WALLET);
-
-// log("Hello from conntent script", mikesPublicKey.toBase58());
-console.log("Hello from content script", mikesPublicKey);
+// Attach the wallet implementation to the window, guarding against errors.
+try {
+  Object.defineProperty(window, "portal", {
+    value: PortalWalletStandardImplementation,
+  });
+  log("Attached wallet implementation to window");
+} catch (thrownObject) {
+  const error = thrownObject as Error;
+  console.error(error);
+  log(`Failed to attach wallet implementation to window: ${stringify(error)}`);
+}

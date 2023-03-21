@@ -1,6 +1,3 @@
-// Rollup is only used directly by the service worker -
-// The rest of the app uses Vite. Vite Service Worker / Extension support has some issues.
-// see README.md
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
@@ -24,6 +21,11 @@ export default {
       },
       include: [
         "src/content-script.ts",
+        "src/lib/wallet-standard-adapter/wallet-standard.ts",
+        "src/lib/wallet-standard-adapter/register.ts",
+        "src/lib/wallet-standard-adapter/icon.ts",
+        "src/lib/wallet-standard-adapter/util.ts",
+        "src/lib/wallet-standard-adapter/solana-chains.ts",
         "src/backend/functions.ts",
         "src/backend/constants.ts",
       ],
