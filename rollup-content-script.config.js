@@ -6,7 +6,7 @@ import nodePolyfills from "rollup-plugin-polyfill-node";
 
 // Config came from https://www.thisdot.co/blog/how-to-setup-a-typescript-project-using-rollup-js
 export default {
-  input: "./src/content-script.ts",
+  input: "./src/injected.ts",
   output: {
     dir: "dist",
     sourcemap: true,
@@ -20,7 +20,7 @@ export default {
         moduleResolution: "Node",
       },
       include: [
-        "src/content-script.ts",
+        "src/injected.ts",
         "src/lib/wallet-standard-adapter/wallet-standard.ts",
         "src/lib/wallet-standard-adapter/register.ts",
         "src/lib/wallet-standard-adapter/icon.ts",
