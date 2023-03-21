@@ -212,3 +212,24 @@ self.addEventListener("message", (event) => {
 self.addEventListener("fetch", (event) => {
   return cacheWebRequests(event, VERSION);
 });
+
+// https://developer.mozilla.org/en-US/docs/mozilla/add-ons/webextensions/api/webnavigation/oncompleted
+chrome.webNavigation.onCompleted.addListener((event) => {
+  log(`The user has loaded ${event.url}! Time to inject the wallet!`);
+  const tabId = event.tabId;
+
+  // https://developer.chrome.com/docs/extensions/reference/scripting/#method-executeScript
+  chrome.scripting.executeScript({
+    files: ["./injected.js"],
+    target: { tabId },
+    world: "MAIN",
+  });
+});
+
+// Only call event.respondWith() if this is a navigation request
+// for an HTML page.
+// self.addEventListener("fetch", (event) => {
+//   if (event.request.mode === "navigate") {
+//     event.respondWith(navigateOrDisplayOfflinePage());
+//   }
+// });

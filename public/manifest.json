@@ -17,10 +17,15 @@
     "48": "icon48.png",
     "128": "icon128.png"
   },
+  "host_permissions": [
+    "https://*/*"
+  ],
   "permissions": [
     "storage",
     "background",
-    "tabs"
+    "tabs",
+    "webNavigation",
+    "scripting"
   ],
   "background": {
     "service_worker": "service-worker.js",
