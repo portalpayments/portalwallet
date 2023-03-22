@@ -21,7 +21,7 @@ self.window = self;
 // Yes use .js, TypeScript will apparently figure it out, as .ts breaks.
 // https://stackoverflow.com/questions/62619058/appending-js-extension-on-relative-import-statements-during-typescript-compilat
 import type { AccountSummary, Contact } from "./backend/types.js";
-import { log, isFresh } from "./backend/functions.js";
+import { log, isFresh, stringify } from "./backend/functions.js";
 import { cacheWebRequests } from "./service-worker-webcache";
 // See https://github.com/localForage/localForage/issues/831
 import localforage from "localforage/src/localforage.js";
@@ -36,7 +36,6 @@ import localforage from "localforage/src/localforage.js";
 // getItem is not exported by node_modules/localforage/dist/localforage.js
 const VERSION = 23;
 log(`VERSION IS ${VERSION}`);
-log(`localforage is`, localforage.getItem);
 
 let secretKey: string | null = null;
 

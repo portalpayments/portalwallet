@@ -6,15 +6,41 @@ import nodePolyfills from "rollup-plugin-polyfill-node";
 
 // Config came from https://www.thisdot.co/blog/how-to-setup-a-typescript-project-using-rollup-js
 export default [
-  // This script injects a script into the page
+  // This script run on the page
+  // It recieves events from both the service worker (using chrome ports)
+  // and the injected page (using window.postMessage() and window.addEventListener() )
   {
     input: "./src/content-script.ts",
     output: {
       dir: "dist",
       sourcemap: true,
     },
+    plugins: [
+      typescript({
+        compilerOptions: {
+          module: "es2020",
+          target: "es2020",
+          moduleResolution: "Node",
+        },
+        include: ["src/backend/functions.ts", "src/backend/constants.ts"],
+      }),
+      alias({
+        entries: [
+          {
+            find: "node-fetch",
+            replacement: "just-use-native-fetch",
+          },
+        ],
+      }),
+      nodeResolve({
+        preferBuiltins: false,
+      }),
+      commonjs(),
+      nodePolyfills({}),
+    ],
   },
-  // This script is injected into the page
+  // This script is injected into the page by the service worker
+  // It talks to the content script using window.postMessage() and window.addEventListener()
   {
     input: "./src/injected.ts",
     output: {
