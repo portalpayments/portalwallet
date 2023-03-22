@@ -8,7 +8,7 @@ import nodePolyfills from "rollup-plugin-polyfill-node";
 export default [
   // This script injects a script into the page
   {
-    input: "./src/new-content-script.ts",
+    input: "./src/content-script.ts",
     output: {
       dir: "dist",
       sourcemap: true,

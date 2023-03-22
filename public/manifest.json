@@ -41,7 +41,7 @@
         "https://*/*"
       ],
       "js": [
-        "new-content-script.js"
+        "content-script.js"
       ]
     }
   ]
