@@ -19,7 +19,7 @@ import {
 import { icon } from "./icon";
 
 import { SOLANA_CHAINS } from "./solana-chains";
-import { log } from "../../backend/functions";
+import { log } from "../backend/functions";
 
 const ANY_ORIGIN = "*";
 
@@ -36,7 +36,7 @@ const connect: StandardConnectMethod = async ({
   // "request accounts that have already been authorized without prompting"
   silent,
 } = {}): Promise<StandardConnectOutput> => {
-  log("Connect");
+  log("Connect. Sending message to content script...");
   // Send message to the content script
   window.postMessage(
     {

@@ -26,9 +26,7 @@ export function isArrayEqual<T>(a: Indexed<T>, b: Indexed<T>): boolean {
   return true;
 }
 
-/**
- * Check if a chain corresponds with one of the Solana clusters.
- */
+// Check if a chain corresponds with one of the Solana clusters.
 export function isSolanaChain(chain: IdentifierString): chain is SolanaChain {
   return SOLANA_CHAINS.includes(chain as SolanaChain);
 }

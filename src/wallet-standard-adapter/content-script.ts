@@ -1,7 +1,7 @@
 // Still needs a async wrapper to use await, otherwise
 // "await is only valid in async functions and the top level bodies of modules"
 
-import { log, stringify } from "./backend/functions.js";
+import { log, stringify } from "../backend/functions.js";
 
 const main = async () => {
   log(`In content script`);

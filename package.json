@@ -13,7 +13,7 @@
     "build:frontend": "vite build",
     "build:icons": "mkdir -p dist/assets; cp -rv src/assets/token-logos dist/assets",
     "build:service-worker": "npx rollup -c rollup-service-worker.config.js",
-    "build:content-script": "npx rollup -c rollup-content-script.config.js",
+    "build:content-script": "npx rollup -c rollup-content-script-and-injected.config.js",
     "clean": "npx rimraf dist/* .rollup.cache",
     "publish": "bash make-zip-file.bash",
     "preview": "vite preview",

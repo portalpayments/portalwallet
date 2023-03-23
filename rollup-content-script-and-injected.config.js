@@ -10,7 +10,7 @@ export default [
   // It recieves events from both the service worker (using chrome ports)
   // and the injected page (using window.postMessage() and window.addEventListener() )
   {
-    input: "./src/content-script.ts",
+    input: "./src/wallet-standard-adapter/content-script.ts",
     output: {
       dir: "dist",
       sourcemap: true,
@@ -40,9 +40,10 @@ export default [
     ],
   },
   // This script is injected into the page by the service worker
+  // it creates and registers a Solana wallet adapter for use by dApps
   // It talks to the content script using window.postMessage() and window.addEventListener()
   {
-    input: "./src/injected.ts",
+    input: "./src/wallet-standard-adapter/injected.ts",
     output: {
       dir: "dist",
       sourcemap: true,
@@ -56,12 +57,12 @@ export default [
           moduleResolution: "Node",
         },
         include: [
-          "src/injected.ts",
-          "src/lib/wallet-standard-adapter/wallet-standard.ts",
-          "src/lib/wallet-standard-adapter/register.ts",
-          "src/lib/wallet-standard-adapter/icon.ts",
-          "src/lib/wallet-standard-adapter/util.ts",
-          "src/lib/wallet-standard-adapter/solana-chains.ts",
+          "src/wallet-standard-adapter/injected.ts",
+          "src/wallet-standard-adapter/wallet-standard.ts",
+          "src/wallet-standard-adapter/register.ts",
+          "src/wallet-standard-adapter/icon.ts",
+          "src/wallet-standard-adapter/util.ts",
+          "src/wallet-standard-adapter/solana-chains.ts",
           "src/backend/functions.ts",
           "src/backend/constants.ts",
         ],
