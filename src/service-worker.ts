@@ -26,14 +26,7 @@ import { cacheWebRequests } from "./service-worker-webcache";
 // See https://github.com/localForage/localForage/issues/831
 import localforage from "localforage/src/localforage.js";
 
-// import localforage from "localforage";
-// Error: 'default' is not exported by node_modules/localforage/dist/localforage.js,
 
-// import { getItem } from "localforage";
-// getItem is not exported by node_modules/localforage/dist/localforage.js
-
-// import * as localforage from "localforage";
-// getItem is not exported by node_modules/localforage/dist/localforage.js
 const VERSION = 23;
 log(`VERSION IS ${VERSION}`);
 
@@ -59,14 +52,24 @@ const sendMessage = async (message: Record<string, any>) => {
 
 log(`Parsing service worker version: ${VERSION}`);
 
-const handleMessage = async (eventData) => {
-  log(`📩 Got a message from the app on this topic: ${eventData.topic}`);
+interface PortalMessage {
+  topic: string;
+  [key: string]: any;
+}
 
-  if (eventData.topic === "getSecretKey") {
+const handleMessage = async (
+  message: PortalMessage,
+  sendReply: (object: any) => void
+) => {
+  log(
+    `📩 Service worker got a message from elsewhere in the extension on this topic: '${message.topic}'`
+  );
+
+  if (message.topic === "getSecretKey") {
     if (secretKey) {
       log(`😃 Service worker cache: we have the secret key`);
 
-      sendMessage({
+      sendReply({
         topic: "replySecretKey",
         secretKey,
       });
@@ -75,17 +78,17 @@ const handleMessage = async (eventData) => {
     }
   }
 
-  if (eventData.topic === "setSecretKey") {
-    secretKey = eventData.secretKey;
+  if (message.topic === "setSecretKey") {
+    secretKey = message.secretKey;
   }
 
-  if (eventData.topic === "getNativeAccountSummary") {
+  if (message.topic === "getNativeAccountSummary") {
     if (nativeAccountSummary) {
       log(
         `😃 Service worker cache: we have the nativeAccountSummary in memory already`
       );
 
-      sendMessage({
+      sendReply({
         topic: "replyNativeAccountSummary",
         nativeAccountSummary,
       });
@@ -114,18 +117,18 @@ const handleMessage = async (eventData) => {
     log(`☹️ Service worker does not have the nativeAccountSummary`);
   }
 
-  if (eventData.topic === "setNativeAccountSummary") {
-    nativeAccountSummary = eventData.nativeAccountSummary;
+  if (message.topic === "setNativeAccountSummary") {
+    nativeAccountSummary = message.nativeAccountSummary;
     nativeAccountSummary.lastUpdated = Date.now();
     await localforage.setItem("NATIVE_ACCOUNT_SUMMARY", nativeAccountSummary);
     log(`Saved NATIVE_ACCOUNT_SUMMARY to localForage`);
   }
 
-  if (eventData.topic === "getTokenAccountSummaries") {
+  if (message.topic === "getTokenAccountSummaries") {
     if (tokenAccountSummaries) {
       log(`😃 Service worker cache: we have the tokenAccountSummaries`);
 
-      sendMessage({
+      sendReply({
         topic: "replyTokenAccountSummaries",
         tokenAccountSummaries,
       });
@@ -145,7 +148,7 @@ const handleMessage = async (eventData) => {
       log(
         `😀 Service worker cache: we have the tokenAccountSummaries in localforage and they're all fresh!`
       );
-      sendMessage({
+      sendReply({
         topic: "replyTokenAccountSummaries",
         tokenAccountSummaries: tokenAccountSummariesFromLocalForage,
       });
@@ -160,8 +163,8 @@ const handleMessage = async (eventData) => {
     return;
   }
 
-  if (eventData.topic === "setTokenAccountSummaries") {
-    tokenAccountSummaries = eventData.tokenAccountSummaries;
+  if (message.topic === "setTokenAccountSummaries") {
+    tokenAccountSummaries = message.tokenAccountSummaries;
     tokenAccountSummaries.map((tokenAccountSummary) => {
       tokenAccountSummary.lastUpdated = Date.now();
     });
@@ -169,10 +172,10 @@ const handleMessage = async (eventData) => {
     log(`Saved TOKEN_ACCOUNT_SUMMARIES to localForage`);
   }
 
-  if (eventData.topic === "getContacts") {
+  if (message.topic === "getContacts") {
     if (contacts) {
       log(`😃 Service worker cache: we have the contacts`);
-      sendMessage({
+      sendReply({
         topic: "replyContacts",
         contacts,
       });
@@ -181,8 +184,8 @@ const handleMessage = async (eventData) => {
     }
   }
 
-  if (eventData.topic === "setContacts") {
-    contacts = eventData.contacts;
+  if (message.topic === "setContacts") {
+    contacts = message.contacts;
   }
 };
 
@@ -202,8 +205,17 @@ self.addEventListener("activate", (event) => {
   log(event);
 });
 
-self.addEventListener("message", (event) => {
-  handleMessage(event.data);
+// We don't use 'self.addEventListener("message")' or serviceWorker.controller.postMessage for general messages
+// because Chrome has a better API for messaging across the entire extension
+chrome.runtime.onMessage.addListener(function (message, sender, sendReply) {
+  // TODO: this is just debugging we can get rid of it
+  const isFromContentScript = sender.tab || false;
+  log(`isFromContentScript: ${isFromContentScript}`);
+
+  if (!message.topic) {
+    throw new Error(`No topic in request`);
+  }
+  handleMessage(message as PortalMessage, sendReply);
 });
 
 // Cache GET requests for images
@@ -214,6 +226,9 @@ self.addEventListener("fetch", (event) => {
 
 // https://developer.mozilla.org/en-US/docs/mozilla/add-ons/webextensions/api/webnavigation/oncompleted
 chrome.webNavigation.onCompleted.addListener((event) => {
+  if (!event.url.startsWith("http")) {
+    return;
+  }
   log(`The user has loaded ${event.url}! Time to inject the wallet!`);
   const tabId = event.tabId;
 
@@ -224,11 +239,3 @@ chrome.webNavigation.onCompleted.addListener((event) => {
     world: "MAIN",
   });
 });
-
-// Only call event.respondWith() if this is a navigation request
-// for an HTML page.
-// self.addEventListener("fetch", (event) => {
-//   if (event.request.mode === "navigate") {
-//     event.respondWith(navigateOrDisplayOfflinePage());
-//   }
-// });
