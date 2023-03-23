@@ -237,91 +237,52 @@ export const hasUSDCAccountStore: Writable<boolean | null> = writable(null);
 export const collectablesStore: Writable<Array<Collectable> | null> =
   writable(null);
 
-const getNativeAccountSummaryOrCached = async () => {
-  let nativeAccountSummary: AccountSummary;
-  try {
-    nativeAccountSummary = await runRepeatedlyWithTimeout(
-      async () => {
-        let nativeAccountSummaryFromStore = getFromStore(nativeAccountStore);
-        if (nativeAccountSummaryFromStore) {
-          return nativeAccountSummaryFromStore;
-        } else {
-          throw new Error(
-            `Store not ready yet, background page may have not responded to our getNativeAccountSummary message yet`
-          );
-        }
-      },
-      500 * MILLISECONDS,
-      3 * SECONDS
-    );
-
-    return nativeAccountSummary;
-  } catch (error) {
-    if (error.message.includes("Timeout")) {
-      // Not already in the store, let's get it from the blockchain (and save it to the store)
-      console.time("Getting Solana account");
-      nativeAccountSummary = await getNativeAccountSummary(connection, keyPair);
-      console.timeEnd("Getting Solana account");
-
-      if (HAS_SERVICE_WORKER) {
-        log(`Saving nativeAccountSummary to serviceworker`);
-        SERVICE_WORKER.controller.postMessage({
-          topic: "setNativeAccountSummary",
-          nativeAccountSummary,
-        });
-      }
-      return nativeAccountSummary;
-    }
-    log(
-      `Got an error we didn't expect when getting native account: ${error.message}`
-    );
-    throw error;
+const getNativeAccountSummaryOrCached = async (): Promise<AccountSummary> => {
+  let nativeAccountSummaryFromStore = getFromStore(nativeAccountStore);
+  if (nativeAccountSummaryFromStore) {
+    return nativeAccountSummaryFromStore;
   }
+
+  // Not already in the store, let's get it from the blockchain (and save it to the store)
+  const date = new Date().valueOf();
+  console.time(`Getting Solana account ${date}`);
+  let nativeAccountSummary = await getNativeAccountSummary(connection, keyPair);
+  console.timeEnd(`Getting Solana account ${date}`);
+
+  if (HAS_SERVICE_WORKER) {
+    log(`Saving nativeAccountSummary to serviceworker`);
+    await chrome.runtime.sendMessage({
+      topic: "setNativeAccountSummary",
+      nativeAccountSummary,
+    });
+  }
+  return nativeAccountSummary;
 };
 
-const getTokenAccountSummariesOrCached = async () => {
-  let tokenAccountSummaries: Array<AccountSummary>;
-  try {
-    // checks, every 500ms, for a max of 3 seconds, if the background page has the account summaries.
-    tokenAccountSummaries = await runRepeatedlyWithTimeout(
-      async () => {
-        const tokenAccountSummariesFromStore = getFromStore(tokenAccountsStore);
+const getTokenAccountSummariesOrCached = async (): Promise<
+  Array<AccountSummary>
+> => {
+  const tokenAccountSummariesFromStore = getFromStore(tokenAccountsStore);
 
-        if (tokenAccountSummariesFromStore) {
-          return tokenAccountSummariesFromStore;
-        } else {
-          throw new Error(
-            `Store not ready yet, background page may have not responded to our getTokenAccountSummaries message yet`
-          );
-        }
-      },
-      500 * MILLISECONDS,
-      3 * SECONDS
-    );
-    return tokenAccountSummaries;
-  } catch (error) {
-    if (error.message.includes("Timeout")) {
-      console.time("Getting token accounts");
-      tokenAccountSummaries = await getTokenAccountSummaries(
-        connection,
-        keyPair
-      );
-      console.timeEnd("Getting token accounts");
-
-      if (HAS_SERVICE_WORKER) {
-        log(`Saving tokenAccountSummaries to serviceworker`);
-        SERVICE_WORKER.controller.postMessage({
-          topic: "setTokenAccountSummaries",
-          tokenAccountSummaries,
-        });
-      }
-      return tokenAccountSummaries;
-    }
-    log(
-      `Got an error we didn't expect when getting token accounts: ${error.message}`
-    );
-    throw error;
+  if (tokenAccountSummariesFromStore) {
+    return tokenAccountSummariesFromStore;
   }
+  const date = new Date().valueOf();
+  console.time(`Getting native accounts ${date}`);
+  let tokenAccountSummaries = await getTokenAccountSummaries(
+    connection,
+    keyPair
+  );
+  console.timeEnd(`Getting native accounts ${date}`);
+
+  if (HAS_SERVICE_WORKER) {
+    log(`Saving tokenAccountSummaries to serviceworker`);
+    await chrome.runtime.sendMessage({
+      topic: "setTokenAccountSummaries",
+      tokenAccountSummaries,
+    });
+  }
+  return tokenAccountSummaries;
 };
 
 const updateContactsStoreForNewTransactions = async (
@@ -366,12 +327,13 @@ const updateAccounts = async () => {
   }
 
   // Get both Solana account and token accounts at same time
-  console.time("Getting all accounts");
+  const date = new Date().valueOf();
+  console.time(`Getting all accounts ${date}`);
   const [nativeAccountSummary, tokenAccountSummaries] = await Promise.all([
     getNativeAccountSummaryOrCached(),
     getTokenAccountSummariesOrCached(),
   ]);
-  console.timeEnd("Getting all accounts");
+  console.timeEnd(`Getting all accounts ${date}`);
   nativeAccountStore.set(nativeAccountSummary);
   tokenAccountsStore.set(tokenAccountSummaries);
   haveAccountsLoadedStore.set(true);
@@ -408,13 +370,13 @@ connectionStore.subscribe((newValue) => {
   }
 });
 
-authStore.subscribe((newValue) => {
+authStore.subscribe(async (newValue) => {
   if (newValue.keyPair) {
     log(`🗝️ keyPair has changed, updating accounts`);
     keyPair = newValue.keyPair;
     if (HAS_SERVICE_WORKER) {
       log(`Setting secret key on service worker`);
-      SERVICE_WORKER.controller.postMessage({
+      await chrome.runtime.sendMessage({
         // Post a message telling the serviceWorker about the secretKey
         topic: "setSecretKey",
         secretKey: base58.encode(newValue.keyPair.secretKey),
@@ -446,75 +408,69 @@ const setupServiceWorker = async () => {
     log("⚡Service worker registration succeeded:", registration);
 
     // Post messaging asking for all the things we'd like to get from the cache
+
+    // Get the secret key
     console.time("getSecretKey");
-    SERVICE_WORKER.controller.postMessage({
+    const secretKeyReply = await chrome.runtime.sendMessage({
       topic: "getSecretKey",
     });
+    if (secretKeyReply.topic === "replySecretKey") {
+      const secretKey = secretKeyReply.secretKey;
+      if (secretKey) {
+        log(`we have a secret key! Setting it.`);
+        authStore.set({
+          isLoggedIn: true,
+          keyPair: getKeypairFromString(secretKey),
+        });
+      } else {
+        log(`We don't have a cached secret key`);
+      }
+    }
+    console.timeEnd("getSecretKey");
+
+    // Get the native account summary
     console.time("getNativeAccountSummary");
-    SERVICE_WORKER.controller.postMessage({
+    const nativeAccountReply = await chrome.runtime.sendMessage({
       topic: "getNativeAccountSummary",
     });
+    if (nativeAccountReply.topic === "replyNativeAccountSummary") {
+      const nativeAccountSummary =
+        nativeAccountReply.nativeAccountSummary as AccountSummary;
+      log(
+        `nativeAccountSummary reply from Service Worker with  ${nativeAccountSummary.transactionSummaries.length} transactions`
+      );
+      if (nativeAccountSummary) {
+        log(
+          `we have recieved a nativeAccountSummary from the service worker! Setting it.`
+        );
+        nativeAccountStore.set(nativeAccountSummary);
+      } else {
+        log(`We don't have a nativeAccountSummary from the service worker`);
+      }
+    }
+    console.timeEnd("getNativeAccountSummary");
+
+    // Get the token account summaries
     console.time("getTokenAccountSummaries");
-    SERVICE_WORKER.controller.postMessage({
+    const tokenAccountSummariesReply = await chrome.runtime.sendMessage({
       topic: "getTokenAccountSummaries",
     });
-
-    // messages from service worker
-    SERVICE_WORKER.onmessage = function (event) {
+    if (tokenAccountSummariesReply.topic === "replyTokenAccountSummaries") {
+      const tokenAccountSummaries =
+        tokenAccountSummariesReply.tokenAccountSummaries as Array<AccountSummary>;
       log(
-        `📩 Got a message from the service worker on this topic ${event.data.topic}`
+        `tokenAccountSummaries reply from Service Worker with  ${tokenAccountSummaries.length} token accounts`
       );
-
-      if (event.data.topic === "replySecretKey") {
-        console.timeEnd("getSecretKey");
-        const secretKey = event.data.secretKey;
-        if (secretKey) {
-          log(`we have a secret key! Setting it.`);
-          authStore.set({
-            isLoggedIn: true,
-            keyPair: getKeypairFromString(secretKey),
-          });
-        } else {
-          log(`We don't have a cached secret key`);
-        }
-      }
-
-      if (event.data.topic === "replyNativeAccountSummary") {
-        console.timeEnd("getNativeAccountSummary");
-
-        const nativeAccountSummary = event.data
-          .nativeAccountSummary as AccountSummary;
+      if (tokenAccountSummaries) {
         log(
-          `nativeAccountSummary reply from Service Worker with  ${nativeAccountSummary.transactionSummaries.length} transactions`
+          `we have recieved tokenAccountSummaries from the service worker! Setting it.`
         );
-        if (nativeAccountSummary) {
-          log(
-            `we have recieved a nativeAccountSummary from the service worker! Setting it.`
-          );
-          nativeAccountStore.set(nativeAccountSummary);
-        } else {
-          log(`We don't have a nativeAccountSummary from the service worker`);
-        }
+        tokenAccountsStore.set(tokenAccountSummaries);
+      } else {
+        log(`We don't have tokenAccountSummaries from the service worker`);
       }
-
-      if (event.data.topic === "replyTokenAccountSummaries") {
-        console.timeEnd("getTokenAccountSummaries");
-
-        const tokenAccountSummaries = event.data
-          .tokenAccountSummaries as Array<AccountSummary>;
-        log(
-          `tokenAccountSummaries reply from Service Worker with  ${tokenAccountSummaries.length} token accounts`
-        );
-        if (tokenAccountSummaries) {
-          log(
-            `we have recieved tokenAccountSummaries from the service worker! Setting it.`
-          );
-          tokenAccountsStore.set(tokenAccountSummaries);
-        } else {
-          log(`We don't have tokenAccountSummaries from the service worker`);
-        }
-      }
-    };
+    }
+    console.timeEnd("getTokenAccountSummaries");
   } else {
     log(
       `Not contacting service worker as not loaded as an extension (or running in node)`
