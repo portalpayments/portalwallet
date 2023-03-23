@@ -26,6 +26,12 @@ import { cacheWebRequests } from "./service-worker-webcache";
 // See https://github.com/localForage/localForage/issues/831
 import localforage from "localforage/src/localforage.js";
 
+//  Cannot access chrome:// and edge:// URLs
+if (!window.location.protocol.startsWith("http")) {
+  log(
+    `Not loading service worker for a chrome:// or edge:// URL (${window.location.href}).`
+  );
+}
 
 const VERSION = 23;
 log(`VERSION IS ${VERSION}`);
