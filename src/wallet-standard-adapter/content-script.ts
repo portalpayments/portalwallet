@@ -10,7 +10,7 @@ const main = async () => {
   window.addEventListener(
     "message",
     (event) => {
-      log(`In the content script, recieved a message!`);
+      log(`In the content script, recieved a message from the page's JS!`);
       // We only accept messages from ourselves
       if (event.source !== window) {
         return;
@@ -22,7 +22,6 @@ const main = async () => {
       if (source === "PORTAL_INJECTED_PAGE") {
         log(`The content script received: ${stringify(message)}`);
         log(`We should start the popup now`);
-        // port.postMessage(event.data.text);
       }
     },
     false
