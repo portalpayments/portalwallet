@@ -22,9 +22,6 @@
   export let transaction: SimpleTransaction | null;
   export let decimals: number;
 
-  onMount(async () => {
-    gradient = await getGradient(contact.walletAddress);
-  });
 
   // Find the contact for this transaction
   //
@@ -42,7 +39,9 @@
         log(
           `Contact for ${contactWalletAddress} used in this transaction hasn't yet loaded in contact store`
         );
+        return;
       }
+      gradient = await getGradient(contact.walletAddress);
     }
   });
 
