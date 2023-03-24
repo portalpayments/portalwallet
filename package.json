@@ -9,7 +9,7 @@
     "dev": "run-p --print-label dev:*",
     "dev:vite": "[ -L assets ] || ln -s src/assets assets && vite",
     "dev:manifest": "bash watch-manifest.bash",
-    "build": "run-p --print-label build:*",
+    "build": "npm run clean; run-p --print-label build:*",
     "build:frontend": "vite build",
     "build:icons": "mkdir -p dist/assets; cp -rv src/assets/token-logos dist/assets",
     "build:service-worker": "npx rollup -c rollup-service-worker.config.js",
