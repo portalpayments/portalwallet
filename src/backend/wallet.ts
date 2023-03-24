@@ -468,43 +468,37 @@ export const getProfilePicture = async (
 export const getContactsFromTransactions = async (
   connection: Connection,
   keyPair: Keypair,
-  // Can be all accounts, or just a single one.
+  // Can be all AccountSummarys, or just a single one.
   accounts: Array<AccountSummary>
 ): Promise<Array<Contact>> => {
-  const transactionWalletAddresses = accounts.map((account) => {
+  const transactionCounterParties = accounts.map((account) => {
     return account.transactionSummaries.map((transaction) => {
-      let transactionWalletAddress: string;
-      if (transaction.direction === Direction.sent) {
-        transactionWalletAddress = transaction.to;
-      } else {
-        transactionWalletAddress = transaction.from;
-      }
-      return transactionWalletAddress;
+      return transaction.counterParty;
     });
   });
 
-  const uniqueTransactionWalletAddresses: Array<string> = toUniqueStringArray(
-    transactionWalletAddresses.flat()
+  const uniqueTransactionCounterParties: Array<string> = toUniqueStringArray(
+    transactionCounterParties.flat()
   );
   log(
-    `We need to verify ${uniqueTransactionWalletAddresses.length} uniqueTransactionWalletAddresses:`
+    `We need to verify ${uniqueTransactionCounterParties.length} uniqueTransactionWalletAddresses:`
   );
 
   const contacts = await asyncMap(
-    uniqueTransactionWalletAddresses,
-    async (walletAddress): Promise<Contact> => {
+    uniqueTransactionCounterParties,
+    async (counterParty): Promise<Contact> => {
       const [verifiedClaims, profilePictureURL] = await Promise.all([
         verifyWallet(
           connection,
           keyPair,
           identityTokenIssuerPublicKey,
-          new PublicKey(walletAddress)
+          new PublicKey(counterParty)
         ),
-        getProfilePicture(connection, new PublicKey(walletAddress)),
+        getProfilePicture(connection, new PublicKey(counterParty)),
       ]);
 
       const contact: Contact = {
-        walletAddress,
+        walletAddress: counterParty,
         isNew: false,
         isPending: false,
         verifiedClaims,
