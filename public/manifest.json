@@ -1,6 +1,6 @@
 {
   "name": "Portal",
-  "description": "Instant, safe, simple payments with near-zero fees using crypto.",
+  "description": "The crypto wallet built for payments.",
   "version": "1.0",
   "manifest_version": 3,
   "action": {
