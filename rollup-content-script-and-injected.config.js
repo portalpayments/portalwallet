@@ -20,9 +20,10 @@ export default [
         compilerOptions: {
           module: "es2020",
           target: "es2020",
+          lib: ["es2022", "dom"],
           moduleResolution: "Node",
         },
-        include: ["src/backend/functions.ts", "src/backend/constants.ts"],
+        include: [],
       }),
       alias({
         entries: [
@@ -54,6 +55,7 @@ export default [
         compilerOptions: {
           module: "es2020",
           target: "es2020",
+          lib: ["es2022", "dom"],
           moduleResolution: "Node",
         },
         include: [
@@ -65,6 +67,7 @@ export default [
           "src/wallet-standard-adapter/solana-chains.ts",
           "src/backend/functions.ts",
           "src/backend/constants.ts",
+          "src/backend/types.ts",
         ],
       }),
       alias({
