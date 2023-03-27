@@ -44,8 +44,7 @@ import { summarizeTransaction } from "./transactions";
 import { toUniqueStringArray } from "../lib/utils";
 import * as http from "../lib/http-client";
 import { HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE } from "../lib/frontend-constants";
-import { Direction, type Contact, type SimpleTransaction } from "./types";
-import type { AccountSummary } from "./types";
+import type { AccountSummary, Contact, SimpleTransaction } from "./types";
 import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "../backend/constants";
 import localforage from "localforage";
 
