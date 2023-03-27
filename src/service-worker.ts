@@ -5,15 +5,10 @@
 // Portal Wallet is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
-//
+
 // Do not move this file into a folder!
 // Service workers must be in location that 'manages' the result on the content
 // See https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/how-to/service-workers
-
-// Service worker types support has a number of major bugs
-// See https://joshuatz.com/posts/2021/strongly-typed-service-workers/
-// Compiling with tsconfig specified in that blog post creates a service worker that won't install.
-// Proper TS support is a huge time suck, be warned! Best wait until bugs mentioned above are fixed.
 
 // localForage seems to want window.
 self.window = self;
