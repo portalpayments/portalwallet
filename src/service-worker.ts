@@ -15,8 +15,13 @@ self.window = self;
 
 // Yes use .js, TypeScript will apparently figure it out, as .ts breaks.
 // https://stackoverflow.com/questions/62619058/appending-js-extension-on-relative-import-statements-during-typescript-compilat
-import type { AccountSummary, Contact } from "./backend/types.js";
-import { log, isFresh, stringify } from "./backend/functions.js";
+import type {
+  AccountSummary,
+  Contact,
+  PortalMessage,
+} from "./backend/types.js";
+import { log, isFresh, stringify } from "./backend/functions";
+import { setBadge } from "./service-worker-helpers";
 import { cacheWebRequests } from "./service-worker-webcache";
 // See https://github.com/localForage/localForage/issues/831
 import localforage from "localforage/src/localforage.js";
@@ -31,32 +36,20 @@ if (!window.location.protocol.startsWith("http")) {
 const VERSION = 23;
 log(`VERSION IS ${VERSION}`);
 
+// From app
+const MID_BLUE = "#419cfd";
+
 let secretKey: string | null = null;
 
 let nativeAccountSummary: AccountSummary | null = null;
 let tokenAccountSummaries: Array<AccountSummary> | null = null;
 let contacts: Array<Contact> | null = null;
 
-const sendMessage = async (message: Record<string, any>) => {
-  // @ts-ignore see top of file
-  const clients = await self.clients.matchAll();
-  if (clients && clients.length) {
-    // TODO: we always send to first client. Not sure if this is correct.
-    const firstClient = clients[0];
-    firstClient.postMessage(message);
-  }
-};
-
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 // and https://github.com/GoogleChrome/chrome-extensions-samples
 // From https://dev.to/wtho/custom-service-worker-logic-in-typescript-on-vite-4f27
 
 log(`Parsing service worker version: ${VERSION}`);
-
-interface PortalMessage {
-  topic: string;
-  [key: string]: any;
-}
 
 const handleMessage = async (
   message: PortalMessage,
@@ -65,6 +58,12 @@ const handleMessage = async (
   log(
     `📩 Service worker got a message from elsewhere in the extension on this topic: '${message.topic}'`
   );
+
+  if (message.topic === "connect") {
+    // Make the Portal toolbar icon glow so users click the toolbar icon
+    setBadge("i", "white", MID_BLUE);
+    log(`Finished setting badge text and background color`);
+  }
 
   if (message.topic === "getSecretKey") {
     if (secretKey) {
@@ -103,7 +102,7 @@ const handleMessage = async (
         log(
           `😀 Service worker cache: we have the nativeAccountSummary in localforage and it's fresh!`
         );
-        sendMessage({
+        sendReply({
           topic: "replyNativeAccountSummary",
           nativeAccountSummary: nativeAccountSummaryFromLocalForage,
         });
@@ -206,17 +205,23 @@ self.addEventListener("activate", (event) => {
   log(event);
 });
 
-// We don't use 'self.addEventListener("message")' or serviceWorker.controller.postMessage for general messages
-// because Chrome has a better API for messaging across the entire extension
-chrome.runtime.onMessage.addListener(function (message, sender, sendReply) {
-  // TODO: this is just debugging we can get rid of it
-  const isFromContentScript = sender.tab || false;
-  log(`isFromContentScript: ${isFromContentScript}`);
-
-  if (!message.topic) {
-    throw new Error(`No topic in request`);
-  }
-  handleMessage(message as PortalMessage, sendReply);
+// We use onMessage instead of self.addEventListener("message")
+// See https://stackoverflow.com/questions/75824421/should-a-mv3-extension-use-chrome-runtime-sendmessage-or-serviceworker-control/75825039#75825039
+chrome.runtime.onMessage.addListener((message, sender, sendReply) => {
+  // See https://stackoverflow.com/a/70802055/123671
+  (async () => {
+    log(`Service worker got a message from elsewhere in the extension`);
+    if (!message.topic) {
+      throw new Error(`No topic in message`);
+    }
+    await handleMessage(message as PortalMessage, sendReply);
+    console.log(
+      `Service worker has finished handling the message from elsewhere in the extension`
+    );
+  })();
+  // From https://developer.chrome.com/docs/extensions/mv3/messaging/#simple
+  // If you want to asynchronously use sendResponse(), add return true; to the onMessage event handler.
+  return true;
 });
 
 // Cache GET requests for images

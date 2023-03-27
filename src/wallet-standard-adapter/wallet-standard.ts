@@ -40,11 +40,8 @@ const connect: StandardConnectMethod = async ({
   // Send message to the content script
   window.postMessage(
     {
-      source: "PORTAL_INJECTED_PAGE",
-      message: {
-        walletStandardMethod: "connect",
-        isSilent: silent,
-      },
+      topic: "connect",
+      isSilent: silent,
     },
     ANY_ORIGIN
   );

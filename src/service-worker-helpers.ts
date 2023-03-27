@@ -6,4 +6,27 @@
 //
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
-export const log = console.log.bind(console);
+import { log } from "./backend/functions";
+
+export const setBadge = (
+  text: string,
+  textColor: string,
+  backgroundColor: string
+) => {
+  log(`Setting badge text and background color`);
+
+  chrome.action.setBadgeText({
+    text,
+  });
+
+  // Does not appear in docs, but does actually work!
+  // @ts-ignore
+  chrome.action.setBadgeTextColor({
+    color: textColor,
+  });
+
+  chrome.action.setBadgeBackgroundColor({
+    // mid-blue from app.scss
+    color: backgroundColor,
+  });
+};

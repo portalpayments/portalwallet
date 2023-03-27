@@ -349,4 +349,14 @@ export interface TransactionsByDay {
   transactions: Array<SimpleTransaction>;
 }
 
+// Used for
+// 1. chrome.runtime.sendMessage() and chrome.runtime.onMessage()
+//    in the popup, service worker, and content script
+// 2. window.postMessage() and window.addEventListener('message')
+//    in the content script and injected script (since they communicate via the 'window' object)
+export interface PortalMessage {
+  topic: string;
+  [key: string]: any;
+}
+
 export type Jurisdiction = "State" | "Country";
