@@ -18,8 +18,10 @@ import {
 } from "@wallet-standard/features";
 import { icon } from "./icon";
 
-import { SOLANA_CHAINS } from "./solana-chains";
+import { SOLANA_CHAINS, SOLANA_MAINNET_CHAIN } from "./solana-chains";
 import { log } from "../backend/functions";
+import { MIKES_WALLET } from "src/backend/constants";
+import { PublicKey } from "@solana/web3.js";
 
 const ANY_ORIGIN = "*";
 
@@ -46,9 +48,29 @@ const connect: StandardConnectMethod = async ({
     ANY_ORIGIN
   );
 
+  const walletAddress = MIKES_WALLET;
+
+  const publicKey = new PublicKey(walletAddress);
+
   // Then start a timer waiting for the extension to respond
 
-  const accounts: Array<WalletAccount> = [];
+  // See constructor() in https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
+  const walletAccount = {
+    address: publicKey.toBase58(),
+    publicKey: publicKey.toBytes(),
+    chains: [SOLANA_MAINNET_CHAIN],
+    features: [
+      SolanaSignAndSendTransaction,
+      SolanaSignTransaction,
+      SolanaSignMessage,
+    ],
+    // Work around very odd typing with 'chains' property
+    // TODO: fix properly
+  } as WalletAccount;
+
+  log(`Returning wallet account`, walletAccount);
+
+  const accounts: Array<WalletAccount> = [walletAccount];
   return { accounts };
 };
 
