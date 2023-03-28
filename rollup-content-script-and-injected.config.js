@@ -48,6 +48,9 @@ export default [
     output: {
       dir: "dist",
       sourcemap: true,
+      // Default format creates a file that inclines "@solana/web3.js",
+      // which in turn obliterates window.URL, setting it to '6ba7b811-9dad-11d1-80b4-00c04fd430c8'
+      format: "iife",
     },
     // Used to include modules like localforage in our service worker bundle
     plugins: [
