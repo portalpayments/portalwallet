@@ -59,6 +59,7 @@ export default [
           moduleResolution: "Node",
         },
         include: [
+          // Yes we have to include the input file itself
           "src/wallet-standard-adapter/injected.ts",
           "src/wallet-standard-adapter/wallet-standard.ts",
           "src/wallet-standard-adapter/register.ts",
