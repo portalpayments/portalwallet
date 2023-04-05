@@ -2,6 +2,8 @@ import {
   SolanaSignAndSendTransaction,
   SolanaSignMessage,
   SolanaSignTransaction,
+  type SolanaSignMessageOutput,
+  type SolanaSignMessageInput,
 } from "@solana/wallet-standard-features";
 import type {
   Wallet as WalletStandard,
@@ -17,13 +19,31 @@ import {
   StandardEvents,
 } from "@wallet-standard/features";
 import { icon } from "./icon";
-
 import { SOLANA_CHAINS, SOLANA_MAINNET_CHAIN } from "./solana-chains";
 import { log } from "../backend/functions";
-import { MIKES_WALLET } from "src/backend/constants";
-import { PublicKey } from "@solana/web3.js";
-
+import { Keypair, PublicKey } from "@solana/web3.js";
+import { sign as naclSign } from "tweetnacl";
 const ANY_ORIGIN = "*";
+
+// TODO: temp wallet address until we add the UI
+
+const keyPair = new Keypair();
+
+const publicKey = keyPair.publicKey;
+
+// See constructor() in https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
+const walletAccount = {
+  address: publicKey.toBase58(),
+  publicKey: publicKey.toBytes(),
+  chains: [SOLANA_MAINNET_CHAIN],
+  features: [
+    SolanaSignAndSendTransaction,
+    SolanaSignTransaction,
+    SolanaSignMessage,
+  ],
+  // Work around very odd typing with 'chains' property
+  // TODO: fix properly
+} as WalletAccount;
 
 // The instructions at https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md
 // https://github.com/wallet-standard/wallet-standard
@@ -48,29 +68,9 @@ const connect: StandardConnectMethod = async ({
     ANY_ORIGIN
   );
 
-  const walletAddress = MIKES_WALLET;
-
-  const publicKey = new PublicKey(walletAddress);
-
-  // Then start a timer waiting for the extension to respond
-
-  // See constructor() in https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
-  const walletAccount = {
-    address: publicKey.toBase58(),
-    publicKey: publicKey.toBytes(),
-    chains: [SOLANA_MAINNET_CHAIN],
-    features: [
-      SolanaSignAndSendTransaction,
-      SolanaSignTransaction,
-      SolanaSignMessage,
-    ],
-    // Work around very odd typing with 'chains' property
-    // TODO: fix properly
-  } as WalletAccount;
-
-  log(`Returning wallet account`, walletAccount);
-
   const accounts: Array<WalletAccount> = [walletAccount];
+
+  log(`Returning accounts`, accounts);
   return { accounts };
 };
 
@@ -94,8 +94,8 @@ export const PortalWalletStandardImplementation: WalletStandard = {
     },
     [StandardEvents]: {
       version: "1.0.0",
-      on: async () => {
-        log("On");
+      on: async (eventName) => {
+        log("On", eventName);
       },
     },
     [SolanaSignAndSendTransaction]: {
@@ -108,18 +108,50 @@ export const PortalWalletStandardImplementation: WalletStandard = {
     [SolanaSignTransaction]: {
       version: "1.0.0",
       supportedTransactionVersions: ["legacy", 0],
-      signTransaction: async () => {
-        log("Sign transaction");
+      signTransaction: async (args) => {
+        log("Sign transaction arguments:", ...args);
       },
     },
     [SolanaSignMessage]: {
       version: "1.0.0",
 
-      signMessage: async () => {
-        log("Sign message");
+      signMessage: async (accountAndMessage: SolanaSignMessageInput) => {
+        log("Sign message", accountAndMessage);
+        const outputs: Array<SolanaSignMessageOutput> = [];
+
+        // A little weird, but the wallt-adapter test page expects
+        // - a single input
+        // - multiple outputs
+
+        if (
+          !accountAndMessage.account.features.includes("solana:signMessage")
+        ) {
+          throw new Error("invalid feature");
+        }
+
+        if (!keyPair) {
+          throw new Error("invalid account");
+        }
+        if (!confirm("Do you want to sign this message?")) {
+          throw new Error("signature declined");
+        }
+
+        const signature = naclSign.detached(
+          accountAndMessage.message,
+          keyPair.secretKey
+        );
+
+        const output: SolanaSignMessageOutput = {
+          signedMessage: accountAndMessage.message,
+          signature,
+        };
+
+        outputs.push(output);
+
+        return outputs;
       },
     },
     // We can also add a 'portal:' name space if we want, but there's no need right now
   },
-  accounts: [],
+  accounts: [walletAccount],
 };

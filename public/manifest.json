@@ -18,7 +18,8 @@
     "128": "icon128.png"
   },
   "host_permissions": [
-    "https://*/*"
+    "https://*/*",
+    "http://localhost/*"
   ],
   "permissions": [
     "storage",
