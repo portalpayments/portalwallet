@@ -1,43 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`dialect Getting receipts from messages 1`] = `
-Object {
+{
   "buildId": Any<String>,
   "gsp": true,
   "isFallback": false,
   "page": "/receipt/[receiptId]",
-  "props": Object {
+  "props": {
     "__N_SSG": true,
-    "pageProps": Object {
+    "pageProps": {
       "dev": false,
-      "order": Object {
+      "order": {
         "attemptedPaymentNum": 1,
         "cashier": "Tessa",
         "creationTime": 1667678976911,
         "discount": 0,
-        "discountBreakdown": Object {
-          "solana-or-not-financial-advice-tee": Object {
+        "discountBreakdown": {
+          "solana-or-not-financial-advice-tee": {
             "appliedDiscountNFTName": "",
             "appliedDiscountPubKey": "",
             "appliedDiscountUSD": 0,
             "isMaxDiscount": false,
           },
         },
-        "discountItem": Object {},
+        "discountItem": {},
         "email": "",
         "fiatTotal": 32,
         "functionError": null,
         "gateway": "solana_counter",
         "id": "qqS5qxxEjMg7mSup0rBI",
-        "items": Array [
-          Object {
-            "addOns": Array [
-              Object {
+        "items": [
+          {
+            "addOns": [
+              {
                 "categorySlug": "solana-or-not-financial-advice-tee-variants",
                 "externalId": "4AGMD3ZOHMU3J5V5XGCGUMFO",
                 "id": "solana-or-not-financial-advice-tee-medium-white",
                 "name": "Medium, White",
-                "price": Object {
+                "price": {
                   "currencyCode": "usd",
                   "value": 32,
                 },
@@ -54,7 +54,7 @@ Object {
             "productId": "solana-or-not-financial-advice-tee",
             "productName": "Solana | Not Financial Advice Tee",
             "specialInstructions": "",
-            "taxIds": Array [
+            "taxIds": [
               "YX7PHIKISGZU53WNHSFE6BT6",
             ],
             "toAmount": 0,
@@ -73,7 +73,7 @@ Object {
         "restaurantId": "mtJcsdB9ETLJdmjrOLff",
         "squareOrderId": "hhe5I60wV1ZqHrU4ge5vFrR03QSZY",
         "squarePaymentId": "LNkSvZUuVADHFaAXHpFoS3uqEt9YY",
-        "squarePaymentIds": Array [
+        "squarePaymentIds": [
           "LNkSvZUuVADHFaAXHpFoS3uqEt9YY",
         ],
         "status": "completed",
@@ -82,37 +82,37 @@ Object {
         "tax": 0,
         "tip": 0,
         "total": 32,
-        "txOutcome": Object {
+        "txOutcome": {
           "err": "",
           "outcome": true,
           "tx": "2Wgzyv1fFFiF4jd8ckPvSJa2eRBHF7pj3wbeTpEzMvqzpfx1jpUgWUZbJW9h915rxWccNqZ9ksFjP7PVVckArZtX",
         },
       },
-      "shop": Object {
-        "contact": Object {
+      "shop": {
+        "contact": {
           "name": "Solana Spaces Breakpoint",
           "number": "",
         },
-        "logoUri": Object {
+        "logoUri": {
           "cdn": "https://ik.imagekit.io/r3y94jb5zai/firebasePROD/o/images%2Fusers%2FMZcVyOrfU8dWUd7U5lKVWDAJX1k1%2Flogo%2F4b8ce112-0a84-4f26-a3f7-6b094f46635a-Solana_logo.png?alt=media",
           "firebase": "https://firebasestorage.googleapis.com/v0/b/decaf-c57a3.appspot.com/o/images%2Fusers%2FMZcVyOrfU8dWUd7U5lKVWDAJX1k1%2Flogo%2F4b8ce112-0a84-4f26-a3f7-6b094f46635a-Solana_logo.png?alt=media",
         },
         "name": "Solana Spaces Breakpoint",
-        "notifications": Array [
-          Object {
+        "notifications": [
+          {
             "id": "DhF84xpim3cPL53vcNRNfJByBKNn73jTaAghSpe3DwRH",
             "priority": 1,
             "text": "Wallet balance is low for Breakpoint Prod Fee Payer",
             "time": 1667844487802,
           },
-          Object {
+          {
             "id": "DhF84xpim3cPL53vcNRNfJByBKNn73jTaAghSpe3DwRH",
             "priority": 1,
             "text": "Wallet balance is low for Breakpoint Prod Fee Payer",
             "time": 1667934392665,
           },
         ],
-        "settings": Object {
+        "settings": {
           "acceptBitcoin": false,
           "acceptCard": false,
           "acceptCash": true,
@@ -121,13 +121,13 @@ Object {
           "acceptSolanaInAppWalletPayment": false,
           "activeOrdering": false,
           "bitcoinAddress": "",
-          "currency": Object {
+          "currency": {
             "id": "usd",
             "name": "USD",
           },
           "exchangeFeePercentageCard": 0,
           "exchangeFeePercentageCash": 0,
-          "exchangeWallet": Object {
+          "exchangeWallet": {
             "walletLabel": "Breakpoint Prod Fee Payer",
             "walletPublicKey": "DhF84xpim3cPL53vcNRNfJByBKNn73jTaAghSpe3DwRH",
           },
@@ -136,12 +136,12 @@ Object {
           "requireSquareSync": true,
           "requireTable": false,
           "solanaAddress": "4iDRFnp2N4UAsZEePHAxs7ozBanQcGtLYd12HG2HJm4s",
-          "solanaWalletFeePayer": Object {
+          "solanaWalletFeePayer": {
             "walletLabel": "Breakpoint Prod Fee Payer",
             "walletPublicKey": "DhF84xpim3cPL53vcNRNfJByBKNn73jTaAghSpe3DwRH",
           },
           "taxPercentage": 0,
-          "taxes": Array [],
+          "taxes": [],
           "tippingPercentage": 0,
           "transactionFeesPaidFor": true,
         },
@@ -149,9 +149,9 @@ Object {
       },
     },
   },
-  "query": Object {
+  "query": {
     "receiptId": "XgVU1qK4i4zXKanjHZpr",
   },
-  "scriptLoader": Array [],
+  "scriptLoader": [],
 }
 `;

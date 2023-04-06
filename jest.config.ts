@@ -1,12 +1,12 @@
 import type { Config } from "jest";
+import { SECONDS } from "./src/backend/constants";
 
 const config: Config = {
   preset: "ts-jest",
   testEnvironment: "node",
-  // Suppress 'A worker process has failed to exit gracefully and has been force exited.'
-  // Oddly this doesn't detect any open handles, but it does stop the message.
-  // TODO: fix when we can be bothered.
-  detectOpenHandles: true,
+
+  // https://jestjs.io/docs/configuration#openhandlestimeout-number
+  openHandlesTimeout: 2 * SECONDS,
 
   // From https://stackoverflow.com/questions/58603201/jest-cannot-load-svg-file
   transform: {

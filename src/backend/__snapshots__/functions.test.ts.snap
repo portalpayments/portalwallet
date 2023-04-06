@@ -2,8 +2,8 @@
 
 exports[`print formats objects nicely 1`] = `
 "{
-  \\"location\\": {
-    \\"city\\": \\"London\\"
+  "location": {
+    "city": "London"
   }
 }"
 `;

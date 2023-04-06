@@ -46,20 +46,25 @@ describe(`dialect`, () => {
     10 * SECONDS
   );
 
-  test(`Getting receipts from messages`, async () => {
-    const rawReceipt = await getRawReceiptFromMessage({
-      author: {
-        address: DECAF_APP,
-        scopes: [ThreadMemberScope.ADMIN, ThreadMemberScope.WRITE],
-      },
-      timestamp: expect.anything(),
-      text: "Thank you for your order! You can find your receipt here: https://www.decaf.so/receipt/XgVU1qK4i4zXKanjHZpr",
-    });
+  test(
+    `Getting receipts from messages`,
+    async () => {
+      const rawReceipt = await getRawReceiptFromMessage({
+        author: {
+          address: DECAF_APP,
+          scopes: [ThreadMemberScope.ADMIN, ThreadMemberScope.WRITE],
+        },
+        timestamp: expect.anything(),
+        text: "Thank you for your order! You can find your receipt here: https://www.decaf.so/receipt/XgVU1qK4i4zXKanjHZpr",
+      });
 
-    expect(rawReceipt).toMatchSnapshot({
-      buildId: expect.any(String),
-    });
-  });
+      expect(rawReceipt).toMatchSnapshot({
+        buildId: expect.any(String),
+      });
+    },
+    // This can be slow
+    10 * SECONDS
+  );
 
   test(`Getting receiptSummary from raw receipts`, async () => {
     const receiptSummary = getReceiptSummaryFromRawReceipt(rawReceipt);
