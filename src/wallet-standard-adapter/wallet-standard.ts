@@ -53,25 +53,39 @@ const walletAccount = {
 // (which is not our code but rather a clone of https://github.com/solana-labs/wallet-standard)
 // https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
 
+const sendMessageToContentScript = (message: any) => {
+  // Send message to the content script
+  window.postMessage(
+    {
+      topic: "walletStandardConnect",
+    },
+    ANY_ORIGIN
+  );
+};
+
 const connect: StandardConnectMethod = async ({
   // From typescript definition:
   // "request accounts that have already been authorized without prompting"
   silent,
 } = {}): Promise<StandardConnectOutput> => {
   log("Connect. Sending message to content script...");
-  // Send message to the content script
-  window.postMessage(
-    {
-      topic: "connect",
-      isSilent: silent,
-    },
-    ANY_ORIGIN
-  );
+  sendMessageToContentScript({
+    topic: "walletStandardConnect",
+    isSilent: silent,
+  });
 
   const accounts: Array<WalletAccount> = [walletAccount];
 
   log(`Returning accounts`, accounts);
   return { accounts };
+};
+
+const signMessage = async () => {
+  log("signMessage. Sending message to content script...");
+  // Send message to the content script
+  sendMessageToContentScript({
+    topic: "walletStandardSignMessage",
+  });
 };
 
 // Portal's implementation of the wallet standard
@@ -132,6 +146,10 @@ export const PortalWalletStandardImplementation: WalletStandard = {
         if (!keyPair) {
           throw new Error("invalid account");
         }
+
+        // Make the wallet popup show an icon so the users clicks on it.
+        // Give the user some time to approve, decline or do nothing
+        signMessage();
         if (!confirm("Do you want to sign this message?")) {
           throw new Error("signature declined");
         }

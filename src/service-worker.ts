@@ -38,6 +38,7 @@ log(`VERSION IS ${VERSION}`);
 
 // From app
 const MID_BLUE = "#419cfd";
+const RED = "#ff0000";
 
 let secretKey: string | null = null;
 
@@ -59,10 +60,18 @@ const handleMessage = async (
     `📩 Service worker got a message from elsewhere in the extension on this topic: '${message.topic}'`
   );
 
-  if (message.topic === "connect") {
+  if (message.topic === "walletStandardConnect") {
     // Make the Portal toolbar icon glow so users click the toolbar icon
-    setBadge("i", "white", MID_BLUE);
+    setBadge("i", MID_BLUE);
     log(`Finished setting badge text and background color`);
+  }
+
+  if (message.topic === "walletStandardSignMessage") {
+    // Make the Portal toolbar icon glow so users click the toolbar icon
+    setBadge("i", RED);
+    log(`Finished setting badge text and background color`);
+
+    // Set something requiring approval
   }
 
   if (message.topic === "getSecretKey") {

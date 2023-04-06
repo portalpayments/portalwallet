@@ -6,7 +6,6 @@ import { log, stringify } from "../backend/functions";
 
 const main = async () => {
   log(`In content script`);
-  // const port = chrome.runtime.connect();
 
   window.addEventListener(
     "message",
@@ -27,8 +26,12 @@ const main = async () => {
         throw new Error(`No message.topic in event from wallet`);
       }
 
-      if (message.topic === "connect") {
+      if (
+        message.topic === "walletStandardConnect" ||
+        message.topic === "walletStandardSignMessage"
+      ) {
         log(`The content script received: ${stringify(message)}`);
+        log(`We will forward the message on to the rest of the extension`);
         log(`We should start the popup now`);
         // Forward the message onto the service worker (we use the same format we got it from the injected wallet)
         await chrome.runtime.sendMessage(message);

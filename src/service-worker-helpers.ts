@@ -8,11 +8,7 @@
 //
 import { log } from "./backend/functions";
 
-export const setBadge = (
-  text: string,
-  textColor: string,
-  backgroundColor: string
-) => {
+export const setBadge = (text: string, backgroundColor: string) => {
   log(`Setting badge text and background color`);
 
   chrome.action.setBadgeText({
@@ -22,7 +18,7 @@ export const setBadge = (
   // Does not appear in docs, but does actually work!
   // @ts-ignore
   chrome.action.setBadgeTextColor({
-    color: textColor,
+    color: "white",
   });
 
   chrome.action.setBadgeBackgroundColor({
