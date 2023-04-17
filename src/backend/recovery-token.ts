@@ -52,7 +52,6 @@ if (!globalThis.setImmediate) {
   globalThis.setImmediate = (func: Function) => setTimeout(func, 0);
 }
 
-// Also called the 'seed'.
 export const personalPhraseToEntropy = async (
   phrase: string,
   password: string
