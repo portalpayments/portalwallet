@@ -7,7 +7,7 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import type { JsonMetadata } from "@metaplex-foundation/js";
-import type { PublicKey } from "@solana/web3.js";
+import type { Keypair, PublicKey } from "@solana/web3.js";
 import type { mintToCurrencyMap } from "../backend/mint-to-currency-map";
 
 // Shouldn't be necessary but the metaplex will return an array of 3 possible data types
@@ -291,6 +291,13 @@ export interface AccountSummary {
   decimals: number;
   transactionSummaries: Array<SimpleTransaction>;
   lastUpdated: number;
+}
+
+// TODO: 'Auth' is a silly name
+export interface Auth {
+  // TODO: can we do without isLoggedIn? Just use keyPair?
+  isLoggedIn: boolean;
+  keyPair: null | Keypair;
 }
 
 export enum Direction {

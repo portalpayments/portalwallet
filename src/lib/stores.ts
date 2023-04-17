@@ -13,7 +13,13 @@ import type {
   Keypair,
   ParsedTransactionWithMeta,
 } from "@solana/web3.js";
-import type { AccountSummary, Collectable, Contact } from "../backend/types";
+import type {
+  AccountSummary,
+  Auth,
+  Collectable,
+  Contact,
+  PendingUserApproval,
+} from "../backend/types";
 import { asyncMap, log, sleep, stringify } from "../backend/functions";
 import uniqBy from "lodash.uniqby";
 import {
@@ -173,11 +179,6 @@ export const onChangeActiveAccount = (
     }
   });
 };
-
-interface Auth {
-  isLoggedIn: boolean;
-  keyPair: null | Keypair;
-}
 
 // From https://svelte.dev/repl/cc54944f9c2f44209d6da7344ea4c101?version=3.17.2
 export const authStore: Writable<Auth> = writable({
