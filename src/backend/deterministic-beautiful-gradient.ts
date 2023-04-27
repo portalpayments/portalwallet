@@ -1,4 +1,4 @@
-import { getSHA256Hash } from "./sha256";
+import { getSHA256Hash } from "boring-webcrypto-sha256";
 
 export const getGradient = async (walletAddress: string) => {
   const hash = await getSHA256Hash(walletAddress);

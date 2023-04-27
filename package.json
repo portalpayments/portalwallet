@@ -85,6 +85,7 @@
     "@types/scryptsy": "^2.0.0",
     "@wallet-standard/base": "^1.0.1",
     "api": "^5.0.7",
+    "boring-webcrypto-sha256": "^1.0.0",
     "coingecko-api": "^1.0.10",
     "deepmerge": "^4.2.2",
     "dotenv": "^16.0.2",
