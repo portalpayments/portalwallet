@@ -125,7 +125,8 @@ const updateCollectables = async () => {
 };
 
 // Our connection to Solana
-export const connectionStore: Writable<null | Connection> = writable(null);
+export const connectionStore: Writable<null | ConnectionWithCompressedNFTSupport> =
+  writable(null);
 connectionStore.subscribe((newValue) => {
   connection = newValue;
   updateCollectables();
