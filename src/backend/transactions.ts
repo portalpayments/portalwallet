@@ -48,9 +48,9 @@ import {
 // I dislike having unused code committed, but not sure which one to keep.
 // TODO: maybe remove receipts as Solana retail seems less popular right now?
 // ENABLE BELOW FOR COMMAND LINE TS
-let getReceiptForSimpleTransaction = (_unused1, _unused2, _unused3) => null;
+// let getReceiptForSimpleTransaction = (_unused1, _unused2, _unused3) => null;
 // DISABLE BELOW FOR COMMAND LINE TS
-// import { getReceiptForSimpleTransaction } from "./receipts";
+import { getReceiptForSimpleTransaction } from "./receipts";
 
 import {
   type ParsedInstruction,
