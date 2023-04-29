@@ -7,22 +7,28 @@ import { rawNFTOffChainData } from "./test-data/nft-off-chain-data";
 import { mcBurgerNFTOnChainData } from "./test-data/nft-on-chain-data";
 import { PublicKey } from "@solana/web3.js";
 import { connect } from "./wallet";
-import { MIKES_WALLET } from "./constants";
+import { MIKES_WALLET, SECONDS } from "./constants";
 import { getCollectables } from "./collectables";
 import { describe } from "node:test";
 
 describe(`collectables`, () => {
-  test(`getCollectables`, async () => {
-    const connection = await connect("heliusMainNet");
-    const wallet = new PublicKey(MIKES_WALLET);
-    const collectables = await getCollectables(connection, wallet);
+  test(
+    `getCollectables`,
+    async () => {
+      const connection = await connect("heliusMainNet");
+      const wallet = new PublicKey(MIKES_WALLET);
+      const collectables = await getCollectables(connection, wallet);
 
-    const flagMonkez = collectables.find((collectable) => {
-      return collectable.description.includes("@flagmonkez");
-    });
+      const flagMonkez = collectables.find((collectable) => {
+        return collectable.description.includes("@flagmonkez");
+      });
 
-    expect(flagMonkez).toBeTruthy();
-  });
+      expect(flagMonkez).toBeTruthy();
+    },
+    // Can be slow
+    // TODO: we could add some kind of on-demand metadata loading
+    10 * SECONDS
+  );
 
   test(`getCoverImage`, () => {
     const coverImage = getCoverImage(rawNFTOffChainData);
