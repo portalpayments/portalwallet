@@ -322,23 +322,6 @@ export const transferIdentityToken = async (
   return signature;
 };
 
-// From https://solana.stackexchange.com/questions/137/how-do-i-get-all-nfts-for-a-given-wallet
-export const getAllNftMetadatasFromAWallet = async (
-  connection: Connection,
-  metaplexKeypair: Keypair,
-  wallet: PublicKey
-) => {
-  const metaplex = new Metaplex(connection);
-  metaplex.use(keypairIdentity(metaplexKeypair));
-
-  const owner = new PublicKey(wallet);
-  const findNftsByOwnerOutput = await metaplex.nfts().findAllByOwner({
-    owner,
-  });
-
-  return findNftsByOwnerOutput;
-};
-
 export const makeTokenMetaDataForIndividual = (
   wallet: PublicKey,
   givenName: string,

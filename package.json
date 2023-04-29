@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "@bonfida/spl-name-service": "^0.1.66",
-    "@dialectlabs/blockchain-sdk-solana": "^1.0.0",
+    "@dialectlabs/blockchain-sdk-solana": "^1.0.1",
     "@dialectlabs/sdk": "^1.5.2",
     "@digitak/esrun": "^3.2.19",
     "@metaplex-foundation/mpl-bubblegum": "^0.6.2",
@@ -70,7 +70,7 @@
     "@open-wc/building-rollup": "^2.2.1",
     "@peculiar/webcrypto": "^1.4.0",
     "@pinata/sdk": "^2.1.0",
-    "@portal-payments/solana-wallet-names": "^1.2.3",
+    "@portal-payments/solana-wallet-names": "^1.2.5",
     "@rollup/plugin-alias": "^4.0.3",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@solana/spl-account-compression": "^0.1.7",
