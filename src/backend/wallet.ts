@@ -46,6 +46,7 @@ import * as http from "../lib/http-client";
 import { HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE } from "../lib/frontend-constants";
 import type { AccountSummary, Contact, SimpleTransaction } from "./types";
 import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "../backend/constants";
+import { ConnectionWithCompressedNFTSupport } from "../metaplex-read-api/ConnectionWithCompressedNFTSupport";
 import localforage from "localforage";
 
 const identityTokenIssuerPublicKey = new PublicKey(
@@ -58,9 +59,11 @@ const debug = (_unused) => {};
 
 export const connect = async (
   networkName: keyof typeof URLS
-): Promise<Connection> => {
+): Promise<ConnectionWithCompressedNFTSupport> => {
   log(`⚡ Connecting to ${networkName}`);
-  const connection = new Connection(URLS[networkName], {
+  // Connection with added Metaplex Read API functionality
+  // for compressed NFTs
+  const connection = new ConnectionWithCompressedNFTSupport(URLS[networkName], {
     // Use 'finalized' as we often want to do things with items right after we make them
     // (like make a token account and then immediately transfer tokens to it)
     //
@@ -104,7 +107,10 @@ export const putSolIntoWallet = async (
   lamports: number
 ) => {
   // Generate a new wallet keypair and airdrop SOL
-  var airdropSignature = await connection.requestAirdrop(publicKey, lamports);
+  var airdropTransactionSignature = await connection.requestAirdrop(
+    publicKey,
+    lamports
+  );
 
   const latestBlockHash = await connection.getLatestBlockhash();
 
@@ -112,7 +118,7 @@ export const putSolIntoWallet = async (
   await connection.confirmTransaction({
     blockhash: latestBlockHash.blockhash,
     lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
-    signature: airdropSignature,
+    signature: airdropTransactionSignature,
   });
 };
 

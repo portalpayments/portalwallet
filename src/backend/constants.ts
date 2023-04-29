@@ -123,6 +123,9 @@ export const URLS = {
   devNet: clusterApiUrl("devnet"),
   mainNetBeta: clusterApiUrl("mainnet-beta"),
   testNet: clusterApiUrl("testnet"),
+  // From https://dev.helius.xyz/rpcs/my
+  heliusMainNet:
+    "https://rpc.helius.xyz/?api-key=9e66be52-acf4-44a1-8bbe-a9852f8ab3c7",
   // From https://www.quicknode.com/endpoints/49328
   quickNodeMainNetBeta:
     "https://orbital-polished-rain.solana-mainnet.quiknode.pro/aa92ba0b474b53f9ee8473aaa0a0370ef3dcfb0e/",

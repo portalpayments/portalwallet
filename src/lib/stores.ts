@@ -35,18 +35,12 @@ import {
   getCurrencyBySymbol,
 } from "../backend/solana-functions";
 import base58 from "bs58";
-import {
-  getAllNftMetadatasFromAWallet,
-  getAttributesFromNFT,
-  getCollectables,
-} from "../backend/identity-tokens";
-import * as http from "./http-client";
 import { summarizeTransaction } from "../backend/transactions";
-import { runRepeatedlyWithTimeout } from "../backend/run-with-timeout";
 import { HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE } from "./frontend-constants";
-import localforage from "localforage";
+import { getCollectables } from "src/backend/collectables";
+import type { ConnectionWithCompressedNFTSupport } from "src/metaplex-read-api/ConnectionWithCompressedNFTSupport";
 
-let connection: Connection | null;
+let connection: ConnectionWithCompressedNFTSupport | null;
 let keyPair: Keypair | null;
 
 const SERVICE_WORKER = globalThis?.navigator?.serviceWorker || null;
@@ -124,13 +118,7 @@ const updateCollectables = async () => {
     return;
   }
 
-  const allNftsFromAWallet = await getAllNftMetadatasFromAWallet(
-    connection,
-    keyPair,
-    keyPair.publicKey
-  );
-
-  const collectables = await getCollectables(allNftsFromAWallet);
+  const collectables = await getCollectables(connection, keyPair.publicKey);
 
   collectablesStore.set(collectables);
 };

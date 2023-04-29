@@ -45,10 +45,12 @@ import {
 // https://stackoverflow.com/questions/70725063/jest-wont-accept-top-level-awaits-with-nodejs16-typescript
 // Proper solution is to get Dialect to fix.
 
-// ENABLE BELOW FOR TOKEN MINTER but do not commit
-// let getReceiptForSimpleTransaction = (_unused1, _unused2, _unused3) => null;
-// DISABLE BELOW FOR TOKEN MINTER but keep committed
-import { getReceiptForSimpleTransaction } from "./receipts";
+// I dislike having unused code committed, but not sure which one to keep.
+// TODO: maybe remove receipts as Solana retail seems less popular right now?
+// ENABLE BELOW FOR COMMAND LINE TS
+let getReceiptForSimpleTransaction = (_unused1, _unused2, _unused3) => null;
+// DISABLE BELOW FOR COMMAND LINE TS
+// import { getReceiptForSimpleTransaction } from "./receipts";
 
 import {
   type ParsedInstruction,

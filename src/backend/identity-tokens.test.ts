@@ -8,14 +8,11 @@
 //
 import { Metaplex, Pda, type Nft } from "@metaplex-foundation/js";
 import {
-  getBestMediaAndType,
-  getCoverImage,
   getIdentityTokensFromWallet,
   getVerifiedClaimsFromNFTMetadata,
   getMetaplex,
   makeTokenMetaDataForIndividual,
   mintIdentityToken,
-  nftToCollectable,
 } from "./identity-tokens";
 import {
   Connection,
@@ -453,36 +450,6 @@ describe(`identity tokens`, () => {
         uses: null,
       },
     ]);
-  });
-
-  test(`getCoverImage`, () => {
-    const coverImage = getCoverImage(rawNFTOffChainData);
-    expect(coverImage).toEqual(
-      "https://shdw-drive.genesysgo.net/52zh6ZjiUQ5UKCwLBwob2k1BC3KF2qhvsE7V4e8g2pmD/Fevra---Isolmetric.png"
-    );
-  });
-
-  test(`getBestMediaAndType`, () => {
-    const bestMedia = getBestMediaAndType(rawNFTOffChainData);
-    expect(bestMedia).toEqual({
-      file: "https://shdw-drive.genesysgo.net/52zh6ZjiUQ5UKCwLBwob2k1BC3KF2qhvsE7V4e8g2pmD/Fevra%20-%20iSolmetric.mp4",
-      type: "video/mp4",
-    });
-  });
-
-  test(`nftToCollectable`, async () => {
-    const collectable = await nftToCollectable(mcBurgerNFTOnChainData, 420);
-    expect(collectable).toEqual({
-      id: expect.any(String),
-      name: "McBurger Demo",
-      description: "Demo of composable loyalty. Not redeemable for a burger.",
-      coverImage:
-        "https://shdw-drive.genesysgo.net/52zh6ZjiUQ5UKCwLBwob2k1BC3KF2qhvsE7V4e8g2pmD/mcdonalds_nft.png",
-      media:
-        "https://shdw-drive.genesysgo.net/52zh6ZjiUQ5UKCwLBwob2k1BC3KF2qhvsE7V4e8g2pmD/mcdonalds_nft.png",
-      type: "image/png",
-      attributes: {},
-    });
   });
 
   // TODO: add http or pinata mocks
