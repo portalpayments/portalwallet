@@ -134,10 +134,10 @@ try {
 
 ## Use `secretKey` do not use `privateKey`
 
-Solana uses `secretKey` and the terms is more indicative of it's value than `privateKey`.
+Solana uses `secretKey` and the terms is more indicative of it's importance than `privateKey`.
 
 # CSS Guidelines
 
 **Just use CSS grid**. There's no point bothering with margins, overflow, clear: both etc. Just use grid.
 
-**There's no need to use margins.** `div`s are configured tp display as grid by default in our CSS. If you want more space between items, increase the padding.
+**There's no need to use margins.** `div`s are configured tp display as grid by default in our CSS. If you want more space between items, increase the `pad`ding.
