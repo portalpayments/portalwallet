@@ -31,10 +31,12 @@ const main = async () => {
         message.topic === "walletStandardSignMessage"
       ) {
         log(`The content script received: ${stringify(message)}`);
-        log(`We will forward the message on to the rest of the extension`);
-        log(`We should start the popup now`);
+        log(
+          `We will forward the message on to the rest of the extension - we should see an indicator on the popup now`
+        );
         // Forward the message onto the service worker (we use the same format we got it from the injected wallet)
-        await chrome.runtime.sendMessage(message);
+        const reply = await chrome.runtime.sendMessage(message);
+        log(`Content script recieved reply:`, reply);
       }
     },
     false

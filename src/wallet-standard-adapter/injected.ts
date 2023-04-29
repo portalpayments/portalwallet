@@ -1,4 +1,4 @@
-// Register our wallet implementation with the wallet standard, and attach it to the windo so dapps can find it.
+// Register our wallet implementation with the wallet standard, and attach it to the window so dapps can find it.
 // From https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md
 
 import { log, stringify } from "../backend/functions";

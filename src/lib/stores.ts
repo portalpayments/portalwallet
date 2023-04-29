@@ -19,6 +19,7 @@ import type {
   Collectable,
   Contact,
   PendingUserApproval,
+  PortalMessage,
 } from "../backend/types";
 import { asyncMap, log, sleep, stringify } from "../backend/functions";
 import uniqBy from "lodash.uniqby";
@@ -221,6 +222,22 @@ export const updateAccountsForNewTransaction = async (
 
 export const haveAccountsLoadedStore: Writable<boolean> = writable(false);
 
+export const pendingUserApprovalStore: Writable<PendingUserApproval | null> =
+  writable(null);
+(async () => {
+  if (SERVICE_WORKER) {
+    log(`Store checking service worker for getPendingUserApproval`);
+    const response = (await chrome.runtime.sendMessage({
+      topic: "getPendingUserApproval",
+    })) as PortalMessage;
+    if (response.topic === "replyPendingUserApproval") {
+      log(`store got a response from service worker`),
+        response.pendingUserApproval;
+      pendingUserApprovalStore.set(response.pendingUserApproval);
+    }
+  }
+})();
+
 export const hasUSDCAccountStore: Writable<boolean | null> = writable(null);
 
 export const collectablesStore: Writable<Array<Collectable> | null> =
@@ -420,6 +437,26 @@ const setupServiceWorker = async () => {
       }
     }
     console.timeEnd("getSecretKey");
+
+    // Get pending user actions (eg, the we need to approve a transaction etc)
+    console.time("getPendingUserApproval");
+    const pendingUserApprovalReply = await chrome.runtime.sendMessage({
+      topic: "getPendingUserApproval",
+    });
+    if (pendingUserApprovalReply.topic === "replyPendingUserApproval") {
+      if (pendingUserApprovalReply) {
+        log(
+          `we have received a replyPendingUserApproval from the service worker! Setting it.`
+        );
+        log(stringify(pendingUserApprovalReply));
+        // Reply should be whether it was allowed or not
+        // maybe some unique id
+        pendingUserApprovalStore.set(null);
+      } else {
+        log(`We don't have a pending user action`);
+      }
+    }
+    console.timeEnd("getPendingUserApproval");
 
     // Get the native account summary
     console.time("getNativeAccountSummary");

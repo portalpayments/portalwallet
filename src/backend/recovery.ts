@@ -13,6 +13,8 @@ import { debug, log } from "./functions";
 import * as bip39 from "bip39";
 import base58 from "bs58";
 
+const MAX_ACCOUNTS_TO_RESTORE = 10;
+
 if (!globalThis.setImmediate) {
   // Fixes 'ReferenceError: setImmediate is not defined' when running in browser
   // @ts-ignore
@@ -38,7 +40,11 @@ export const mnemonicToKeypairs = async (
 
   const keyPairs: Array<Keypair> = [];
 
-  for (let accountIndex = 0; accountIndex < 10; accountIndex++) {
+  for (
+    let accountIndex = 0;
+    accountIndex < MAX_ACCOUNTS_TO_RESTORE;
+    accountIndex++
+  ) {
     const path = `m/${PURPOSE}'/${SOLANA_COIN_TYPE}'/${accountIndex}'/0'`;
     const keypair = Keypair.fromSeed(
       derivePath(path, seed.toString("hex")).key

@@ -191,6 +191,26 @@ export const sleep = async (timeInMs: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, timeInMs));
 };
 
+export const runWithTimeout = <T>(
+  promise: Promise<T>,
+  timeout: number,
+  message: string | null = null
+): Promise<T | void> => {
+  // TODO: not entirely sure the Promise<void> is correct
+  // but reject returns void so I think it is
+  const timeoutPromise: Promise<void> = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(
+        message != null
+          ? message
+          : `Timeout! Operation did not complete within ${timeout} ms`
+      );
+    }, timeout);
+  });
+
+  return Promise.race([promise, timeoutPromise]);
+};
+
 // 'any' is OK - JSON.stringify itself uses 'any'
 export const stringify = (object: any): string => {
   return JSON.stringify(object, null, 2);

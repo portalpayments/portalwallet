@@ -13,10 +13,17 @@
   import { connect } from "./backend/wallet";
   import { verifyWallet } from "./backend/identity-tokens";
   import { log } from "./backend/functions";
-  import type { Contact as ContactType } from "./backend/types";
+  import type {
+    Contact as ContactType,
+    PendingUserApproval,
+  } from "./backend/types";
   import Lock from "./lib/Lock/Lock.svelte";
   import ContactAndMessages from "./lib/Contacts/Contact/ContactAndMessages.svelte";
-  import { connectionStore, authStore } from "./lib/stores";
+  import {
+    connectionStore,
+    authStore,
+    pendingUserApprovalStore,
+  } from "./lib/stores";
   import { checkIfOnboarded } from "./lib/settings";
   import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "./backend/constants";
   import WalletAddress from "./lib/MyWalletAddress/MyWalletAddress.svelte";
@@ -28,6 +35,8 @@
 
   let isOnboarded: null | Boolean = null;
 
+  let pendingUserApproval: null | PendingUserApproval = null;
+
   let currentFeature: number = 0;
 
   const identityTokenIssuerPublicKey = new PublicKey(
@@ -37,6 +46,13 @@
   connectionStore.subscribe((newValue) => {
     if (newValue) {
       log(`🔌Connected!`);
+    }
+  });
+
+  pendingUserApprovalStore.subscribe((newValue) => {
+    if (pendingUserApproval) {
+      pendingUserApproval = newValue;
+      log(`⏹️ There is a pending user approval`);
     }
   });
 
@@ -80,27 +96,50 @@
   {:else if !isOnboarded}
     <Onboarding />
   {:else if $authStore.isLoggedIn}
-    <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
-    <Route path="sendMoney"><SendPage /></Route>
-    <Route path="myWalletAddress/:walletaddress"><WalletAddress /></Route>
-    <Route path="transactions">
-      <TransactionsPage />
-    </Route>
-    <Route path="settings"><Settings /></Route>
-    <Route path="contacts/:address"><ContactAndMessages /></Route>
-    <Route path="collectables/:index"><Collectable /></Route>
-    <Route primary={false}>
-      <div class="header-and-features">
-        {#if currentFeature === 0}
-          <HomeScreen {user} />
-        {:else if currentFeature === 1}
-          <ContactsPage />
-        {:else if currentFeature === 2}
-          <Collectables />
-        {/if}
-        <Navbar bind:currentFeature />
-      </div>
-    </Route>
+    {#if pendingUserApproval}
+      {#if pendingUserApproval.type === "signature"}
+        There is a pending user approval Signature request (address of site) is
+        askin you to approve this message:
+        {pendingUserApproval.message}
+        <button
+          on:click={() => {
+            log(`Approving user approval`);
+            pendingUserApprovalStore.set(null);
+          }}>Approve</button
+        >
+        <button
+          on:click={() => {
+            log(`Approving user approval`);
+            pendingUserApprovalStore.set(null);
+          }}>Decline</button
+        >
+        <!-- <PendingUserApproval {pendingUserApproval} /> -->
+      {:else}
+        Some other type of approval
+      {/if}
+    {:else}
+      <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
+      <Route path="sendMoney"><SendPage /></Route>
+      <Route path="myWalletAddress/:walletaddress"><WalletAddress /></Route>
+      <Route path="transactions">
+        <TransactionsPage />
+      </Route>
+      <Route path="settings"><Settings /></Route>
+      <Route path="contacts/:address"><ContactAndMessages /></Route>
+      <Route path="collectables/:index"><Collectable /></Route>
+      <Route primary={false}>
+        <div class="header-and-features">
+          {#if currentFeature === 0}
+            <HomeScreen {user} />
+          {:else if currentFeature === 1}
+            <ContactsPage />
+          {:else if currentFeature === 2}
+            <Collectables />
+          {/if}
+          <Navbar bind:currentFeature />
+        </div>
+      </Route>
+    {/if}
   {:else}
     <Route>
       <Lock />

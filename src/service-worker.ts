@@ -19,6 +19,7 @@ import type {
   AccountSummary,
   Contact,
   PortalMessage,
+  PendingUserApproval,
 } from "./backend/types.js";
 import { log, isFresh, stringify } from "./backend/functions";
 import { setBadge } from "./service-worker-helpers";
@@ -52,6 +53,8 @@ let contacts: Array<Contact> | null = null;
 
 log(`Parsing service worker version: ${VERSION}`);
 
+let pendingUserApproval: null | PendingUserApproval = null;
+
 const handleMessage = async (
   message: PortalMessage,
   sendReply: (object: any) => void
@@ -63,15 +66,32 @@ const handleMessage = async (
   if (message.topic === "walletStandardConnect") {
     // Make the Portal toolbar icon glow so users click the toolbar icon
     setBadge("i", MID_BLUE);
-    log(`Finished setting badge text and background color`);
   }
 
   if (message.topic === "walletStandardSignMessage") {
     // Make the Portal toolbar icon glow so users click the toolbar icon
     setBadge("i", RED);
-    log(`Finished setting badge text and background color`);
 
     // Set something requiring approval
+    pendingUserApproval = message;
+
+    // We must reply immediately, otherwise the extension will hang
+    // (nothing will be don with this message, it's just an acknowledgement)
+    sendReply({
+      topic: "replyWalletStandardSignMessage",
+      secretKey,
+    });
+  }
+
+  if (message.topic === "getPendingUserApproval") {
+    log(
+      `😃 Service worker cache: we have a pendingUserApproval, sending reply...`
+    );
+
+    sendReply({
+      topic: "replyPendingUserApproval",
+      pendingUserApproval,
+    });
   }
 
   if (message.topic === "getSecretKey") {
@@ -89,6 +109,21 @@ const handleMessage = async (
 
   if (message.topic === "setSecretKey") {
     secretKey = message.secretKey;
+  }
+
+  if (message.topic === "getPendingUserApproval") {
+    if (pendingUserApproval) {
+      log(
+        `😃 Service worker cache: we have a pendingUserApproval, sending reply...`
+      );
+
+      sendReply({
+        topic: "replyPendingUserApproval",
+        pendingUserApproval,
+      });
+    } else {
+      log(`☹️ Service worker does not have a pendingUserApproval`);
+    }
   }
 
   if (message.topic === "getNativeAccountSummary") {
@@ -202,16 +237,13 @@ const handleMessage = async (
 self.addEventListener("install", function (event) {
   // From https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope/skipWaiting
   // 'forces the waiting service worker to become the active service worker.'
-
   // @ts-ignore see top of file
   self.skipWaiting();
   log(`INSTALL service worker version: ${VERSION}`);
-  log(`globalThis is`, globalThis);
 });
 
 self.addEventListener("activate", (event) => {
-  log(`ACTIVATE service worker version: ${VERSION}`);
-  log(event);
+  log(`ACTIVATE service worker version: ${VERSION}`, event);
 });
 
 // We use onMessage instead of self.addEventListener("message")

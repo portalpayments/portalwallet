@@ -25,4 +25,20 @@ export const setBadge = (text: string, backgroundColor: string) => {
     // mid-blue from app.scss
     color: backgroundColor,
   });
+
+  log(`Finished setting badge text and background color`);
+};
+
+export const clearBadge = () => {
+  log(`Clearing badge text and background color`);
+
+  chrome.action.setBadgeText({
+    text: "",
+  });
+
+  chrome.action.setBadgeBackgroundColor({
+    color: "transparent",
+  });
+
+  log(`Finished clearing badge text and background color`);
 };

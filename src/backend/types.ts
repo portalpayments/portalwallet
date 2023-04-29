@@ -293,6 +293,11 @@ export interface AccountSummary {
   lastUpdated: number;
 }
 
+export interface PendingUserApproval {
+  topic: string;
+  [key: string]: any;
+}
+
 // TODO: 'Auth' is a silly name
 export interface Auth {
   // TODO: can we do without isLoggedIn? Just use keyPair?

@@ -30,3 +30,11 @@ export function isArrayEqual<T>(a: Indexed<T>, b: Indexed<T>): boolean {
 export function isSolanaChain(chain: IdentifierString): chain is SolanaChain {
   return SOLANA_CHAINS.includes(chain as SolanaChain);
 }
+
+// Convert a Solana 'message to sign' (like "Accept our terms of service") to a string
+export const convertSolanaMessageToString = (message: Uint8Array) => {
+  // First, convert the Solana message to a string, but also 'message' is a confusing
+  // variable name, since we already have window.postMessage() and 'message' is a different type of message
+  const text = new TextDecoder().decode(message);
+  return text;
+};

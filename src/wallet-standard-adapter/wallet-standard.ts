@@ -20,9 +20,11 @@ import {
 } from "@wallet-standard/features";
 import { icon } from "./icon";
 import { SOLANA_CHAINS, SOLANA_MAINNET_CHAIN } from "./solana-chains";
-import { log } from "../backend/functions";
+import { log, runWithTimeout, sleep } from "../backend/functions";
 import { Keypair, PublicKey } from "@solana/web3.js";
 import { sign as naclSign } from "tweetnacl";
+import { SECONDS } from "src/backend/constants";
+import { convertSolanaMessageToString } from "./util";
 const ANY_ORIGIN = "*";
 
 // TODO: temp wallet address until we add the UI
@@ -55,12 +57,7 @@ const walletAccount = {
 
 const sendMessageToContentScript = (message: any) => {
   // Send message to the content script
-  window.postMessage(
-    {
-      topic: "walletStandardConnect",
-    },
-    ANY_ORIGIN
-  );
+  window.postMessage(message, ANY_ORIGIN);
 };
 
 const connect: StandardConnectMethod = async ({
@@ -80,11 +77,19 @@ const connect: StandardConnectMethod = async ({
   return { accounts };
 };
 
-const signMessage = async () => {
-  log("signMessage. Sending message to content script...");
+const askUserToSignMessage = async (message: Uint8Array) => {
+  log(
+    "In askUserToSignMessage(). Sending 'walletStandardSignMessage' message to content script..."
+  );
+
+  // First, convert the Solana message to a string, but also 'message' is a confusing
+  // variable name, since we already have window.postMessage() and 'message' is a different type of message
+  const text = convertSolanaMessageToString(message);
+
   // Send message to the content script
   sendMessageToContentScript({
     topic: "walletStandardSignMessage",
+    text,
   });
 };
 
@@ -133,7 +138,7 @@ export const PortalWalletStandardImplementation: WalletStandard = {
         log("Sign message", accountAndMessage);
         const outputs: Array<SolanaSignMessageOutput> = [];
 
-        // A little weird, but the wallt-adapter test page expects
+        // A little weird, but the wallet-adapter test page expects
         // - a single input
         // - multiple outputs
 
@@ -149,19 +154,62 @@ export const PortalWalletStandardImplementation: WalletStandard = {
 
         // Make the wallet popup show an icon so the users clicks on it.
         // Give the user some time to approve, decline or do nothing
-        signMessage();
-        if (!confirm("Do you want to sign this message?")) {
-          throw new Error("signature declined");
+        await askUserToSignMessage(accountAndMessage.message);
+
+        const getWalletStandardSignMessageResponse =
+          (): Promise<Uint8Array> => {
+            return new Promise((resolve, reject) => {
+              const handler = (event: MessageEvent) => {
+                const { topic, isApproved } = event.data;
+                if (topic === "walletStandardSignMessageResponse") {
+                  window.removeEventListener("message", handler);
+                  if (!isApproved) {
+                    resolve(null);
+                  }
+                  const signature = naclSign.detached(
+                    accountAndMessage.message,
+                    keyPair.secretKey
+                  );
+                  resolve(signature);
+                }
+              };
+              window.addEventListener("message", handler);
+            });
+          };
+
+        // if (!confirm("Do you want to sign this message?")) {
+        //   throw new Error("signature declined");
+        // }
+
+        log(`Waiting for 'walletStandardSignMessageResponse' or a timeout...`);
+
+        let signatureOrNull: unknown;
+        try {
+          // I think the 'as' is acually necessary below
+          signatureOrNull = (await runWithTimeout(
+            getWalletStandardSignMessageResponse(),
+            30 * SECONDS
+          )) as Uint8Array;
+        } catch (error) {
+          log(`The user did not sign the transaction in time`, error.message);
+          signatureOrNull = null;
         }
 
-        const signature = naclSign.detached(
-          accountAndMessage.message,
-          keyPair.secretKey
+        log(`!!! WOO RESULT IS`, signatureOrNull);
+        log(
+          `We should send a message clearing the notification now (since it's timed out)`
         );
+
+        if (signatureOrNull === null) {
+          return;
+        }
+
+        await sleep(60 * SECONDS);
+        log(`Finished sleeping. Approving signature...`);
 
         const output: SolanaSignMessageOutput = {
           signedMessage: accountAndMessage.message,
-          signature,
+          signature: signatureOrNull,
         };
 
         outputs.push(output);

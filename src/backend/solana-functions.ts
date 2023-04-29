@@ -17,6 +17,7 @@ import base58 from "bs58";
 import { log } from "./functions";
 import { mintToCurrencyMap } from "./mint-to-currency-map";
 import type { CurrencyDetails } from "./types";
+import type { JsonMetadata } from "@metaplex-foundation/js";
 
 // We could also use 'bs58' but have to convert string to bytes first
 export const cleanPhrase = (phrase: string) => {
@@ -45,7 +46,6 @@ export const getKeypairFromString = (secretKeyString: string) => {
   try {
     decodedSecretKey = base58.decode(secretKeyString);
   } catch (throwObject) {
-    const error = throwObject as Error;
     throw new Error("Invalid secret key! See README.md");
   }
   return Keypair.fromSecretKey(decodedSecretKey);
@@ -76,4 +76,30 @@ export const getCurrencyByMint = (mint: string) => {
 export const getCurrencySymbolByMint = (mint: string) => {
   const currency = getCurrencyByMint(mint);
   return currency.symbol;
+};
+
+// NFT metadata has arrays of trait_type/value objects instead of a single object with keys and values
+export const getAttributesFromNFT = (
+  metadata: JsonMetadata
+): Record<string, string | boolean | number> => {
+  if (!metadata.attributes) {
+    return {};
+  }
+  const attributes = Object.fromEntries(
+    metadata.attributes
+      // Sort by trait type first
+      // Even though we're making an object, key ordering will likely to be stable
+      .sort((a, b) => a.trait_type.localeCompare(b.trait_type))
+      .map((attribute) => {
+        let value: string | boolean | number = attribute.value;
+        if (value === "true") {
+          value = true;
+        }
+        if (value === "false") {
+          value = false;
+        }
+        return [attribute.trait_type, attribute.value];
+      })
+  );
+  return attributes;
 };
