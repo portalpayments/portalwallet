@@ -12,7 +12,7 @@ import {
   SECONDS,
   SOLANA_SEED_SIZE_BYTES,
 } from "./constants";
-import * as http from "../lib/http-client";
+import * as http from "fetch-unfucked";
 import { log, stringify, sleep, toArrayBuffer } from "./functions";
 import ESSerializer from "esserializer";
 import scryptAsync from "scryptsy";
@@ -25,6 +25,7 @@ import {
   cleanPhrase,
   secretKeyToHex,
   getKeypairFromString,
+  getAttributesFromNFT,
 } from "./solana-functions";
 import type { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import type {
@@ -37,7 +38,6 @@ import type {
 } from "@metaplex-foundation/js";
 import {
   getAnonymousMetaplex,
-  getAttributesFromNFT,
   getMetaplex,
   identityTokenIssuerPublicKey,
 } from "./identity-tokens";
@@ -287,9 +287,9 @@ export const getRecoveryTokenFromWallet = async (
   }
   const firstRecoveryToken = allSelfIssuedRecoveryTokens[0];
 
-  const metadata = await http.get(firstRecoveryToken.uri);
+  const { body } = await http.get(firstRecoveryToken.uri);
 
-  const attributes = getAttributesFromNFT(metadata);
+  const attributes = getAttributesFromNFT(body);
 
   if (!attributes.cipherText || !attributes.initializationVector) {
     log(

@@ -49,7 +49,7 @@ import type {
   Jurisdiction,
 } from "./types";
 import { makeTransaction } from "./tokens";
-import * as http from "../lib/http-client";
+import * as http from "fetch-unfucked";
 import { FEATURES } from "./features";
 import localforage from "localforage";
 import { getAttributesFromNFT } from "./solana-functions";
@@ -112,9 +112,8 @@ export const verifyWallet = async (
   const metadataForIdentityTokens = await asyncMap(
     identityTokens,
     async (identityTokens) => {
-      const metadata = (await http.get(identityTokens.uri)) as
-        | JsonMetadata
-        | OldNonStandardTokenMetaData;
+      const { body } = await http.get(identityTokens.uri);
+      const metadata = body as JsonMetadata | OldNonStandardTokenMetaData;
       return metadata;
     }
   );

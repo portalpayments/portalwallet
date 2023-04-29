@@ -14,7 +14,7 @@ import { DECAF_APP, MINUTE, SECONDS } from "./constants";
 const RECEIPT_DELAY = 15 * SECONDS;
 
 import { log, stringify } from "./functions";
-import * as http from "../lib/http-client";
+import * as http from "fetch-unfucked";
 import type { RawDecafReceipt } from "./types";
 import type { ReceiptSummary, SimpleTransaction } from "src/backend/types";
 import { receiptHTMLToObject } from "./html-extract";
@@ -66,9 +66,9 @@ export const getRawReceiptFromMessage = async (message: ThreadMessage) => {
     `http://localhost:8010/proxy`
   );
 
-  const html = await http.get(corsProxyURL, null, "text/html");
+  const { body } = await http.get(corsProxyURL, null, "text/html");
 
-  let receipt = receiptHTMLToObject(html);
+  let receipt = receiptHTMLToObject(body);
   return receipt;
 };
 

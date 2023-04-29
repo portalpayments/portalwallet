@@ -9,7 +9,6 @@
 import {
   Connection,
   Keypair,
-  LAMPORTS_PER_SOL,
   PublicKey,
   type SignaturesForAddressOptions,
 } from "@solana/web3.js";
@@ -17,32 +16,15 @@ import type { ParsedTransactionWithMeta } from "@solana/web3.js";
 
 import { log, sleep, stringify } from "./functions";
 import { mintToCurrencyMap } from "./mint-to-currency-map";
-import {
-  LATEST_IDENTITY_TOKEN_VERSION,
-  URLS,
-  SECOND,
-  SOLANA_DECIMALS,
-} from "./constants";
+import { URLS, SECOND, SOLANA_DECIMALS } from "./constants";
 import { getCurrencyBySymbol, getKeypairFromString } from "./solana-functions";
 import { asyncMap } from "./functions";
-import base58 from "bs58";
 import { AccountLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { getProfilePicture as getProfilePictureUsingSolanaPFPStandard } from "@solflare-wallet/pfp";
-import {
-  getIdentityTokensFromWallet,
-  getVerifiedClaimsFromNFTMetadata,
-  verifyWallet,
-} from "./identity-tokens";
-import type {
-  BasicTokenAccount,
-  OldNonStandardTokenMetaData,
-  ProfilePictureResponse,
-  VerifiedClaimsForIndividual,
-  VerifiedClaimsForOrganization,
-} from "./types";
+import { verifyWallet } from "./identity-tokens";
+import type { BasicTokenAccount, ProfilePictureResponse } from "./types";
 import { summarizeTransaction } from "./transactions";
 import { toUniqueStringArray } from "../lib/utils";
-import * as http from "../lib/http-client";
 import { HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE } from "../lib/frontend-constants";
 import type { AccountSummary, Contact, SimpleTransaction } from "./types";
 import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "../backend/constants";

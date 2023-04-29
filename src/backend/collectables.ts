@@ -9,7 +9,7 @@ import type {
 import { asyncMap, log, stringify } from "./functions";
 import { getAttributesFromNFT } from "./solana-functions";
 import type { Collectable } from "./types";
-import * as http from "../lib/http-client";
+import * as http from "fetch-unfucked";
 import mime from "mime";
 import type { ConnectionWithCompressedNFTSupport } from "../metaplex-read-api/ConnectionWithCompressedNFTSupport";
 import type { ReadApiAsset } from "src/metaplex-read-api/types";
@@ -38,11 +38,13 @@ export const nftToCollectable = async (
 ): Promise<Collectable> => {
   // We have to force content type as nftstorage.link returns incorrect types
   // See https://twitter.com/mikemaccana/status/1620140384302288896?s=20&t=gP3XffhtDkUiaYQvSph8vg
-  const rawNFTMetaData: JsonMetadata = await http.get(
+  const { body } = await http.get(
     nft.content.json_uri,
     null,
     http.CONTENT_TYPES.JSON
   );
+
+  const rawNFTMetaData: JsonMetadata = body;
 
   const coverImage = getCoverImage(rawNFTMetaData);
 
