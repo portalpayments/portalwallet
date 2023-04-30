@@ -75,13 +75,16 @@
 >
   <textarea class="debug">{stringify(transaction)}</textarea>
   {#if transaction.direction === Direction.swapped}
-    <div class="profile-pic">
-      <div>{swapCurrencyDetails.symbol}</div>
-    </div>
+    <img
+      class="swap-currency"
+      alt={swapCurrencyDetails.symbol}
+      src={getCurrencyBySymbol(swapCurrencyDetails.symbol).logo}
+    />
     <div class="name-and-memo">
       <div class="name">
         Swapped {swapCurrencyMajorAndMinor[0]}.{swapCurrencyMajorAndMinor[1]}
-        {swapCurrencyDetails.symbol}
+        {swapCurrencyDetails.symbol} for
+        {getCurrencyByMint(transaction.currency).symbol}
       </div>
     </div>
   {/if}
@@ -201,6 +204,12 @@
   .receipt-item-price {
     width: 100%;
     text-align: right;
+  }
+
+  .swap-currency {
+    width: 50%;
+    align-self: center;
+    justify-self: center;
   }
 
   .profile-pic.individual {
