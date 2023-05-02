@@ -37,8 +37,8 @@ Give things good names.
 That way the next person know if/when it's fixed:
 
 ```
-# TODO: add code to close sockets
-# See https://github.com/PLhery/node-twitter-api-v2/issues/326
+// TODO: add code to close sockets
+// See https://github.com/PLhery/node-twitter-api-v2/issues/326
 ```
 
 ## It's OK to hack things to move quickly, just add a TODO
@@ -46,7 +46,7 @@ That way the next person know if/when it's fixed:
 It's ideal to hack things, just let people know why:
 
 ```
-# TODO: we should check if the user has a banana here
+// TODO: we should check if the user has a banana here
 ```
 
 ## Favour readability and simplicity over speed
@@ -73,7 +73,7 @@ Having a single implementation of each function, style, or UI lets us refactor a
 
 We use prettier with the default rules.
 
-# JS specific guidelines
+# JS/TS specific guidelines
 
 ## Use `null` to indicate absense of a value
 
@@ -81,6 +81,23 @@ There's a difference between `score` of `0` (the score is zero) and `score` of `
 
 Using `null` is better than `undefined` as any unset variable, and any missing key, has the value `undefined` - let's keep `undefined` for bugs! Oddly a lot of TypeScript code uses `undefined` explicitly - that doesn't mean it's a good idea.
 
+## Only throw Errors, and assume rest of the code only throws errors
+
+JavaScript allows you to throw strings, array or any other type of item. We only throw Errors, and we assume all other code only throws errors - if it doesn't we'll stop using it.
+
+```
+throw new Error(`Some reasons`)
+```
+
+And
+
+```
+try {
+  ...
+} catch (thrownObject) {
+  const error = thrownObject as Error
+}
+```
 ## Use `async`/`await`, not `.then()` or callbacks.
 
 We use `async`/`await`. This means we can catch errors using `try {} catch() {}`
@@ -92,11 +109,20 @@ import { scrypt as scryptCallback } from "crypto";
 export const scrypt = promisify(scryptCallback);
 ```
 
-This way we can jump `import { script } from './functions'` and have a working `scrypt` we can use with `async/await`
+This way we can jump `import { scrypt } from './functions'` and have a working `scrypt` we can use with `async/await`
 
 There's a `sleep()` function you can use instead of timeouts. Just `await sleep(5 * SECONDS)` or similar.
 
 BTW, not every function provided as an argument to another function is a `callback`, since a `callback` is used to control the flow of the program. Again others disagree, but they're not using the term callback correctly. For example, `array.map(mapFunction)` or `array.sort(sortFunction)` don't take callbacks, they take a map function and sort a function. The flow of the program isn't being affected. 
+
+## Use `ts-expect-error` rarely, don't use `ts-ignore` at all
+
+Use technical debt sparingly. If you need to finish somehting and don't have time to fix a compiler issue, include the reason for the issue and then use `@ts-expect-error` to note there should be an error on the next line. This is better than `ts-ignore` because it will throw a warning if the error goes away.
+
+```
+// Note types may be missing, see https://github.com/briangonzalez/rgbaster.js/issues/66
+// @ts-expect-error
+```
 
 ## Use the SECONDS / MINUTES etc constants for times
 
