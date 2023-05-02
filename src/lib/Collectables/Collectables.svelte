@@ -20,7 +20,7 @@
 </script>
 
 <div class="heading">
-  <Heading theme="art">Gallery</Heading>
+  <Heading theme="art">Collectables</Heading>
 </div>
 {#if isLoading}
   <SkeletonGallery />
@@ -48,6 +48,9 @@
 <style lang="scss">
   @import "../../mixins.scss";
   .heading {
+    position: absolute;
+    height: 64px;
+    width: 100%;
     text-align: left;
     padding: 0 12px;
     display: grid;
@@ -56,6 +59,7 @@
     font-size: 1.2rem;
     font-weight: 600;
     color: var(--black);
+    @include acryllic;
   }
 
   .nfts {

@@ -153,6 +153,7 @@
     height: var(--wallet-height);
     overflow: hidden;
     grid-auto-flow: row;
-    grid-template-rows: 64px 1fr;
+    // We've decided headers are positioned absolutely.
+    grid-template-rows: 1fr;
   }
 </style>
