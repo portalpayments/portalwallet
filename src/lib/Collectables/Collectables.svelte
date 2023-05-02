@@ -5,6 +5,15 @@
   import SkeletonGallery from "../Shared/Skeletons/SkeletonGallery.svelte";
   import { Link } from "svelte-navigator";
   import { collectablesStore } from "../stores";
+  import analyze from "rgbaster";
+
+  const getDominantColor = async (imageURL) => {
+    const results = await analyze(imageURL);
+    if (results.length === 0) {
+      return null;
+    }
+    return results[0].color;
+  };
 
   let isLoading = false;
   let collectables: Array<Collectable> | null = null;
@@ -17,6 +26,12 @@
       isLoading = false;
     }
   });
+
+  const setBackgroundColor = async (event) => {
+    const imageElement = event.target;
+    const color = await getDominantColor(imageElement.src);
+    imageElement.style.backgroundColor = color;
+  };
 </script>
 
 <div class="heading">
@@ -32,6 +47,8 @@
           <img
             src={collectable.coverImage}
             alt={collectable.description}
+            crossOrigin="anonymous"
+            on:load={setBackgroundColor}
             class="shadow"
           />
           <div class="description">

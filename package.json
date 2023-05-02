@@ -105,6 +105,7 @@
     "lodash.uniqby": "^4.7.0",
     "nft.storage": "^7.0.3",
     "prettier": "^2.7.1",
+    "rgbaster": "^2.1.1",
     "scryptsy": "^2.1.0",
     "ts-node": "^10.9.1",
     "twitter-api-v2": "^1.14.2",
