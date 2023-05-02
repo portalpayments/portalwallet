@@ -5,20 +5,11 @@
   import SkeletonGallery from "../Shared/Skeletons/SkeletonGallery.svelte";
   import { Link } from "svelte-navigator";
   import { collectablesStore } from "../stores";
-  import analyze from "rgbaster";
-
-  const getDominantColor = async (imageURL) => {
-    const results = await analyze(imageURL);
-    if (results.length === 0) {
-      return null;
-    }
-    return results[0].color;
-  };
+  import { sortByName } from "../utils";
+  import { getBackgroundGradient } from "../get-background-gradient";
 
   let isLoading = false;
   let collectables: Array<Collectable> | null = null;
-
-  const sortByName = (a, b) => a.name.localeCompare(b.name);
 
   collectablesStore.subscribe((newValue) => {
     if (newValue !== null) {
@@ -29,8 +20,8 @@
 
   const setBackgroundColor = async (event) => {
     const imageElement = event.target;
-    const color = await getDominantColor(imageElement.src);
-    imageElement.style.backgroundColor = color;
+    const gradient = await getBackgroundGradient(imageElement.src);
+    imageElement.style["background-image"] = gradient;
   };
 </script>
 
@@ -100,6 +91,7 @@
   .description {
     text-align: left;
     font-size: 12px;
+    line-height: 16px;
     font-weight: 600;
   }
 </style>

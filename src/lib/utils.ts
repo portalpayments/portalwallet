@@ -28,6 +28,8 @@ export const getMultiplier = (digits = 2) => {
   return Number(`10e${digits - 1}`);
 };
 
+export const sortByName = (a, b) => a.name.localeCompare(b.name);
+
 export const toUniqueStringArray = (array: Array<string>): Array<string> => {
   return [...new Set(array)].filter(function (item) {
     return item !== null;
