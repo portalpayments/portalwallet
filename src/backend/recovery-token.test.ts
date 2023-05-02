@@ -134,7 +134,7 @@ describe(`recovery token`, () => {
 describe(`Finding recovery token in a real wallet`, () => {
   let connection: Connection;
   beforeAll(async () => {
-    connection = await connect("quickNodeMainNetBeta");
+    connection = await connect("heliusMainNet");
   });
 
   beforeAll(() => {

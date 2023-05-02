@@ -143,7 +143,7 @@ describe(`mainnet integration tests`, () => {
   );
 
   beforeAll(async () => {
-    mainNetConnection = await connect("quickNodeMainNetBeta");
+    mainNetConnection = await connect("heliusMainNet");
   });
 
   test(`We can get Vaheh's identity tokens from his wallet`, async () => {
@@ -370,7 +370,7 @@ describe(`getProfilePicture`, () => {
   let connection: Connection | null = null;
 
   beforeAll(async () => {
-    connection = await connect("mainNetBeta");
+    connection = await connect("heliusMainNet");
   });
 
   test(`getProfilePicture find a profile picture for Vidor from Solrise`, async () => {

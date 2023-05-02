@@ -13,7 +13,7 @@ import { log } from "console";
 import { getFromEnv, stringify } from "../src/backend/functions";
 import { getMetaplex } from "../src/backend/identity-tokens";
 
-const connection = await connect("quickNodeMainNetBeta");
+const connection = await connect("heliusMainNet");
 
 dotenv.config();
 

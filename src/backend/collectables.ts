@@ -81,7 +81,6 @@ export const getCollectables = async (
 
   const collectablesUnfiltered: Array<Collectable> = await asyncMap(
     allNftsFromAWallet,
-    // TODO: can we optimise this?
     async (nft) => {
       const collectable = await nftToCollectable(nft);
       return collectable;

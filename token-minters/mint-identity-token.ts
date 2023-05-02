@@ -30,7 +30,7 @@ const main = async () => {
 
   const identityTokenSecretKey = getFromEnv("IDENTITY_TOKEN_SECRET_KEY");
 
-  const connection: Connection = await connect("quickNodeMainNetBeta");
+  const connection: Connection = await connect("heliusMainNet");
 
   const walletAddress = new PublicKey(config.walletAddress);
 
