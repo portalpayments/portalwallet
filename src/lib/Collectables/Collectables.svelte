@@ -13,7 +13,20 @@
 
   collectablesStore.subscribe((newValue) => {
     if (newValue !== null) {
-      collectables = newValue.sort(sortByName);
+      collectables = newValue
+        .sort(sortByName)
+        // TODO: Remove this filter once we have a better way to handle stickers
+        // (eg folders or similar)
+        .filter((collectable) => {
+          const isSticker =
+            collectable.description.includes("Sticker Collection");
+          const isDripHaus =
+            collectable.attributes["presented_by"] === "@drip_haus";
+          const isSolanaSpaces =
+            collectable.attributes["presented_by"] === "@solanaspaces";
+          const isIgnored = isSticker || isDripHaus || isSolanaSpaces;
+          return !isIgnored;
+        });
       isLoading = false;
     }
   });
