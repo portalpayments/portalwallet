@@ -38,8 +38,8 @@ import {
 import base58 from "bs58";
 import { summarizeTransaction } from "../backend/transactions";
 import { HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE } from "./frontend-constants";
-import { getCollectables } from "src/backend/collectables";
-import type { ConnectionWithCompressedNFTSupport } from "src/metaplex-read-api/ConnectionWithCompressedNFTSupport";
+import { getCollectables } from "../backend/collectables";
+import type { ConnectionWithCompressedNFTSupport } from "../metaplex-read-api/ConnectionWithCompressedNFTSupport";
 
 let connection: ConnectionWithCompressedNFTSupport | null;
 let keyPair: Keypair | null;
