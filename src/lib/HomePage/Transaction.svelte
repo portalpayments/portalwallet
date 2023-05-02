@@ -10,7 +10,10 @@
   } from "../../backend/types";
   import { log, isEmpty, stringify } from "../../backend/functions";
   import { formatNumber } from "../utils";
-  import { getCurrencyByMint } from "../../backend/solana-functions";
+  import {
+    getCurrencyByMint,
+    getCurrencyBySymbol,
+  } from "../../backend/solana-functions";
   import { Direction } from "../../backend/types";
   import { getGradient } from "../../backend/deterministic-beautiful-gradient";
   import { contactsStore } from "../stores";
@@ -21,7 +24,6 @@
 
   export let transaction: SimpleTransaction | null;
   export let decimals: number;
-
 
   // Find the contact for this transaction
   //
