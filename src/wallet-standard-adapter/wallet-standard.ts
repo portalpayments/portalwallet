@@ -185,6 +185,7 @@ export const PortalWalletStandardImplementation: WalletStandard = {
 
         let signatureOrNull: unknown;
         try {
+          // TODO:
           // I think the 'as' is acually necessary below
           signatureOrNull = (await runWithTimeout(
             getWalletStandardSignMessageResponse(),
@@ -195,6 +196,7 @@ export const PortalWalletStandardImplementation: WalletStandard = {
           signatureOrNull = null;
         }
 
+        // TODO: signatureOrNull might need to be turned into a unit8array
         log(`!!! WOO RESULT IS`, signatureOrNull);
         log(
           `We should send a message clearing the notification now (since it's timed out)`

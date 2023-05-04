@@ -23,6 +23,7 @@
     connectionStore,
     authStore,
     pendingUserApprovalStore,
+    checkServiceWorkerForPendingUserApprovals,
   } from "./lib/stores";
   import { checkIfOnboarded } from "./lib/settings";
   import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "./backend/constants";
@@ -34,6 +35,8 @@
   let user: ContactType | null;
 
   let isOnboarded: null | Boolean = null;
+
+  let hasCheckedPendingUserApproval = false;
 
   let pendingUserApproval: null | PendingUserApproval = null;
 
@@ -49,16 +52,9 @@
     }
   });
 
-  pendingUserApprovalStore.subscribe((newValue) => {
-    if (pendingUserApproval) {
-      pendingUserApproval = newValue;
-      log(`⏹️ There is a pending user approval`);
-    }
-  });
-
   authStore.subscribe(async (newValue) => {
     // Connect to Solana
-    const newConnection = await connect("quickNodeMainNetBeta");
+    const newConnection = await connect("heliusMainNet");
     connectionStore.set(newConnection);
 
     if (newValue.keyPair) {
@@ -86,59 +82,84 @@
 
   (async () => {
     isOnboarded = await checkIfOnboarded();
+
+    pendingUserApprovalStore.subscribe((newValue) => {
+      log(`Store subscription updated!`, newValue);
+      if (newValue) {
+        pendingUserApproval = newValue;
+        log(`⏹️ There is a pending user approval`);
+        return;
+      }
+    });
+
+    // We can't just ask the pendingUserApprovalStore directly if it has a pending
+    // user approval, since the service worker has to ask the store
+    log(`in App, about to check service worker for pending user approvals`);
+    await checkServiceWorkerForPendingUserApprovals();
+    log(`in App, finished checking service worker for pending user approvals`);
+    hasCheckedPendingUserApproval = true;
   })();
 </script>
 
 <Router>
+  <textarea class="debug">pendingUserApproval is:{pendingUserApproval}</textarea
+  >
+
   <!-- isOnboarded is null when we haven't loaded localForage yet. After this isOnboarded will be true or false. -->
   {#if isOnboarded === null}
     Loading...
   {:else if !isOnboarded}
     <Onboarding />
   {:else if $authStore.isLoggedIn}
-    {#if pendingUserApproval}
-      {#if pendingUserApproval.type === "signature"}
-        There is a pending user approval Signature request (address of site) is
-        askin you to approve this message:
-        {pendingUserApproval.message}
-        <button
-          on:click={() => {
-            log(`Approving user approval`);
-            pendingUserApprovalStore.set(null);
-          }}>Approve</button
-        >
-        <button
-          on:click={() => {
-            log(`Approving user approval`);
-            pendingUserApprovalStore.set(null);
-          }}>Decline</button
-        >
-        <!-- <PendingUserApproval {pendingUserApproval} /> -->
+    {#if hasCheckedPendingUserApproval}
+      {#if pendingUserApproval}
+        {#if pendingUserApproval.topic === "walletStandardSignMessage"}
+          <!-- TODO: add address of site, maybe favicon -->
+          There is a pending user approval. Signature request (address of site) is
+          asking you to approve this message:
+          {pendingUserApproval.text}
+          <button
+            on:click={() => {
+              log(`Signing message request`);
+              pendingUserApprovalStore.set(null);
+            }}>Approve</button
+          >
+          <button
+            on:click={() => {
+              log(`Declining to sign message`);
+              pendingUserApprovalStore.set(null);
+            }}>Decline</button
+          >
+          <!-- <PendingUserApproval {pendingUserApproval} /> -->
+        {:else}
+          Some other type of approval
+          <textarea>{JSON.stringify(pendingUserApproval)}</textarea>
+        {/if}
       {:else}
-        Some other type of approval
+        <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
+        <Route path="sendMoney"><SendPage /></Route>
+        <Route path="myWalletAddress/:walletaddress"><WalletAddress /></Route>
+        <Route path="transactions">
+          <TransactionsPage />
+        </Route>
+        <Route path="settings"><Settings /></Route>
+        <Route path="contacts/:address"><ContactAndMessages /></Route>
+        <Route path="collectables/:index"><Collectable /></Route>
+        <Route primary={false}>
+          <div class="header-and-features">
+            {#if currentFeature === 0}
+              <HomeScreen {user} />
+            {:else if currentFeature === 1}
+              <ContactsPage />
+            {:else if currentFeature === 2}
+              <Collectables />
+            {/if}
+            <Navbar bind:currentFeature />
+          </div>
+        </Route>
       {/if}
     {:else}
-      <Route path="addMoneyToAccount"><AddMoneyPage /></Route>
-      <Route path="sendMoney"><SendPage /></Route>
-      <Route path="myWalletAddress/:walletaddress"><WalletAddress /></Route>
-      <Route path="transactions">
-        <TransactionsPage />
-      </Route>
-      <Route path="settings"><Settings /></Route>
-      <Route path="contacts/:address"><ContactAndMessages /></Route>
-      <Route path="collectables/:index"><Collectable /></Route>
-      <Route primary={false}>
-        <div class="header-and-features">
-          {#if currentFeature === 0}
-            <HomeScreen {user} />
-          {:else if currentFeature === 1}
-            <ContactsPage />
-          {:else if currentFeature === 2}
-            <Collectables />
-          {/if}
-          <Navbar bind:currentFeature />
-        </div>
-      </Route>
+      Checking for pending user approval...
     {/if}
   {:else}
     <Route>

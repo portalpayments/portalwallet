@@ -11,20 +11,28 @@ import { log } from "./backend/functions";
 export const setBadge = (text: string, backgroundColor: string) => {
   log(`Setting badge text and background color`);
 
-  chrome.action.setBadgeText({
-    text,
-  });
+  try {
+    chrome.action.setBadgeText({
+      text,
+    });
 
-  // Does not appear in docs, but does actually work!
-  // @ts-ignore
-  chrome.action.setBadgeTextColor({
-    color: "white",
-  });
+    // Does not appear in docs, but does actually work!
+    // @ts-ignore
+    chrome.action.setBadgeTextColor({
+      color: "white",
+    });
 
-  chrome.action.setBadgeBackgroundColor({
-    // mid-blue from app.scss
-    color: backgroundColor,
-  });
+    chrome.action.setBadgeBackgroundColor({
+      // mid-blue from app.scss
+      color: backgroundColor,
+    });
+  } catch (error) {
+    // May recieve something like: 'Error: No tab with id'...
+    log(error);
+    log(chrome.runtime.lastError.message);
+    debugger;
+    //
+  }
 
   log(`Finished setting badge text and background color`);
 };

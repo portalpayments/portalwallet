@@ -225,24 +225,28 @@ export const haveAccountsLoadedStore: Writable<boolean> = writable(false);
 
 export const pendingUserApprovalStore: Writable<PendingUserApproval | null> =
   writable(null);
-(async () => {
-  if (SERVICE_WORKER) {
+
+export const checkServiceWorkerForPendingUserApprovals = async () => {
+  if (SERVICE_WORKER && chrome.runtime) {
     log(`Store checking service worker for getPendingUserApproval`);
     const response = (await chrome.runtime.sendMessage({
       topic: "getPendingUserApproval",
     })) as PortalMessage;
+    log(`Store: RESPONSE from service worker: ${stringify(response)}`);
     if (response.topic === "replyPendingUserApproval") {
       log(`store got a response from service worker`),
         response.pendingUserApproval;
       pendingUserApprovalStore.set(response.pendingUserApproval);
+      log(`Store has set pendingUserApprovalStore`);
     }
   }
-})();
+};
 
 export const hasUSDCAccountStore: Writable<boolean | null> = writable(null);
 
-export const collectablesStore: Writable<Array<Collectable> | null> =
-  writable(null);
+export const collectablesStore: Writable<Array<Collectable> | null> = writable(
+  []
+);
 
 const getNativeAccountSummaryOrCached = async (): Promise<AccountSummary> => {
   let nativeAccountSummaryFromStore = getFromStore(nativeAccountStore);

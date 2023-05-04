@@ -40,6 +40,7 @@ export const mcBurgerNFTOnChainData: ReadApiAsset = {
     },
   ],
   royalty: {
+    // TODO: the types just need updating
     // @ts-expect-error
     royalty_model: "creators",
     target: null,

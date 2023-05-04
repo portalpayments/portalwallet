@@ -17,6 +17,7 @@
         .sort(sortByName)
         // TODO: Remove this filter once we have a better way to handle stickers
         // (eg folders or similar)
+        // https://docs.metaplex.com/programs/token-metadata/certified-collections
         .filter((collectable) => {
           const isSticker =
             collectable.description.includes("Sticker Collection");
