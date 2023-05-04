@@ -72,8 +72,17 @@ const handleMessage = async (
     // Make the Portal toolbar icon glow so users click the toolbar icon
     setBadge("i", RED);
 
+    if (!message.text) {
+      throw new Error(`walletStandardSignMessage is missing 'text' key`);
+    }
+
+    if (!message.url) {
+      throw new Error(`walletStandardSignMessage is missing 'url' key`);
+    }
+
     // Set something requiring approval
-    pendingUserApproval = message;
+    // 'as' because we've just checked it has the right properties
+    pendingUserApproval = message as PendingUserApproval;
 
     // We must reply immediately, otherwise the extension will hang
     // (nothing will be don with this message, it's just an acknowledgement)

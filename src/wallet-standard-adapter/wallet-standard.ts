@@ -89,6 +89,7 @@ const askUserToSignMessage = async (message: Uint8Array) => {
   // Send message to the content script
   sendMessageToContentScript({
     topic: "walletStandardSignMessage",
+    url: window.location.href,
     text,
   });
 };
@@ -177,16 +178,10 @@ export const PortalWalletStandardImplementation: WalletStandard = {
             });
           };
 
-        // if (!confirm("Do you want to sign this message?")) {
-        //   throw new Error("signature declined");
-        // }
-
         log(`Waiting for 'walletStandardSignMessageResponse' or a timeout...`);
 
-        let signatureOrNull: unknown;
+        let signatureOrNull: Uint8Array | null;
         try {
-          // TODO:
-          // I think the 'as' is acually necessary below
           signatureOrNull = (await runWithTimeout(
             getWalletStandardSignMessageResponse(),
             // TODO: this is very long because we're testing
@@ -198,14 +193,13 @@ export const PortalWalletStandardImplementation: WalletStandard = {
           signatureOrNull = null;
         }
 
-        // TODO: signatureOrNull might need to be turned into a unit8array
         log(`!!! WOO RESULT IS`, signatureOrNull);
         log(
-          `We should send a message clearing the notification now (since it's timed out)`
+          `We should send a message clearing the notification now (since it's timed out or the user has signed)`
         );
 
         if (signatureOrNull === null) {
-          return;
+          throw new Error("signature declined or timed out - TODO handle this");
         }
 
         await sleep(60 * SECONDS);

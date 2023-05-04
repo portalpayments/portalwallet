@@ -15,7 +15,7 @@
 
   .large {
     font-size: 24px;
-    line-height: 28px;
+    line-height: 32px;
     text-align: left;
   }
 
