@@ -21,6 +21,10 @@ Portal uses current generation web tech.
  
 See [coding guidelines](CODING_GUIDELINES.md).
 
+### Communication within the repo
+
+https://www.figma.com/file/qnNcNkZaGB7f2xFchlsDRx/Portal-Extension-Architecture?node-id=1-3&t=H2Us7E8fBFrF1NpU-0
+
 ### Tests
 
 Tests are in jest. Note that logging is disabled in tests - comment out `jest.mock("./functions");` at the top of your test file to re-enable logging during TDD.
