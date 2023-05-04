@@ -7,6 +7,7 @@
   import Onboarding from "./lib/Onboarding/Onboarding.svelte";
   import SendPage from "./lib/Send/SendPage.svelte";
   import AddMoneyPage from "./lib/AddMoney/AddMoneyPage.svelte";
+  import SignMessage from "./lib/Approval/SignMessage.svelte";
   import TransactionsPage from "./lib/TransactionsPage/TransactionsPage.svelte";
   import Settings from "./lib/Settings/Settings.svelte";
   import { Router, Route } from "svelte-navigator";
@@ -114,23 +115,7 @@
     {#if hasCheckedPendingUserApproval}
       {#if pendingUserApproval}
         {#if pendingUserApproval.topic === "walletStandardSignMessage"}
-          <!-- TODO: add address of site, maybe favicon -->
-          There is a pending user approval. Signature request (address of site) is
-          asking you to approve this message:
-          {pendingUserApproval.text}
-          <button
-            on:click={() => {
-              log(`Signing message request`);
-              pendingUserApprovalStore.set(null);
-            }}>Approve</button
-          >
-          <button
-            on:click={() => {
-              log(`Declining to sign message`);
-              pendingUserApprovalStore.set(null);
-            }}>Decline</button
-          >
-          <!-- <PendingUserApproval {pendingUserApproval} /> -->
+          <SignMessage {pendingUserApproval} />
         {:else}
           Some other type of approval
           <textarea>{JSON.stringify(pendingUserApproval)}</textarea>

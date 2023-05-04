@@ -23,7 +23,7 @@ import { SOLANA_CHAINS, SOLANA_MAINNET_CHAIN } from "./solana-chains";
 import { log, runWithTimeout, sleep } from "../backend/functions";
 import { Keypair, PublicKey } from "@solana/web3.js";
 import { sign as naclSign } from "tweetnacl";
-import { SECONDS } from "src/backend/constants";
+import { MINUTES, SECONDS } from "src/backend/constants";
 import { convertSolanaMessageToString } from "./util";
 const ANY_ORIGIN = "*";
 
@@ -189,7 +189,9 @@ export const PortalWalletStandardImplementation: WalletStandard = {
           // I think the 'as' is acually necessary below
           signatureOrNull = (await runWithTimeout(
             getWalletStandardSignMessageResponse(),
-            30 * SECONDS
+            // TODO: this is very long because we're testing
+            5 * MINUTES
+            // 30 * SECONDS
           )) as Uint8Array;
         } catch (error) {
           log(`The user did not sign the transaction in time`, error.message);
