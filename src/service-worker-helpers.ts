@@ -8,6 +8,7 @@
 //
 import { log } from "./backend/functions";
 
+// Make the Portal toolbar icon glow so users click the toolbar icon
 export const setBadge = (text: string, backgroundColor: string) => {
   log(`Setting badge text and background color`);
 

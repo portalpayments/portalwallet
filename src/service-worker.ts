@@ -64,13 +64,11 @@ const handleMessage = async (
   );
 
   if (message.topic === "walletStandardConnect") {
-    // Make the Portal toolbar icon glow so users click the toolbar icon
     setBadge("i", MID_BLUE);
   }
 
   if (message.topic === "walletStandardSignMessage") {
-    // Make the Portal toolbar icon glow so users click the toolbar icon
-    setBadge("i", RED);
+    setBadge("i", MID_BLUE);
 
     if (!message.text) {
       throw new Error(`walletStandardSignMessage is missing 'text' key`);
