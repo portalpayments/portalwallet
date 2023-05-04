@@ -293,9 +293,10 @@ export interface AccountSummary {
   lastUpdated: number;
 }
 
-export interface PendingUserApproval {
+export interface PendingUserApproval extends PortalMessage {
   topic: string;
-  [key: string]: any;
+  text: string;
+  url: string;
 }
 
 // TODO: 'Auth' is a silly name
