@@ -241,7 +241,7 @@ const handleMessage = async (
 };
 
 // https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/how-to/service-workers
-self.addEventListener("install", function (event) {
+self.addEventListener("install", function () {
   // From https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope/skipWaiting
   // 'forces the waiting service worker to become the active service worker.'
   // @ts-ignore see top of file
@@ -249,8 +249,8 @@ self.addEventListener("install", function (event) {
   log(`INSTALL service worker version: ${VERSION}`);
 });
 
-self.addEventListener("activate", (event) => {
-  log(`ACTIVATE service worker version: ${VERSION}`, event);
+self.addEventListener("activate", () => {
+  log(`ACTIVATE service worker version: ${VERSION}`);
 });
 
 // We use onMessage instead of self.addEventListener("message")
