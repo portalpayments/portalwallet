@@ -1,14 +1,15 @@
 <script lang="ts">
-  import { log, stringify, formatObjectKeys } from "../../backend/functions";
+  import { log, stringify } from "../../backend/functions";
   import Heading from "../Shared/Heading.svelte";
-  import type {
-    Contact as ContactType,
-    PendingUserApproval,
-  } from "../../backend/types";
+  import type { PendingUserApproval } from "../../backend/types";
 
   import { pendingUserApprovalStore } from "../../lib/stores";
 
   export let pendingUserApproval: PendingUserApproval;
+
+  const formatURL = (string: String) => {
+    return string.replace(/\/$/, "");
+  };
 </script>
 
 <div class="sign-message-screen">
@@ -19,8 +20,8 @@
   <div class="prompt">
     <!-- TODO: add favicon -->
     <p>
-      The site at <span class="url">{pendingUserApproval.url}</span> is asking you
-      to sign this message:
+      The site at <span class="url">{formatURL(pendingUserApproval.url)}</span> is
+      asking you to sign this message:
     </p>
 
     <q>
@@ -45,7 +46,7 @@
           on:click={() => {
             log(`Signing message request`);
             pendingUserApprovalStore.set(null);
-          }}>Agree</button
+          }}>Sign & agree</button
         >
       </div>
     </div>
