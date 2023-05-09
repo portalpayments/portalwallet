@@ -22,7 +22,7 @@ import type {
   PendingUserApproval,
 } from "./backend/types.js";
 import { log, isFresh, stringify } from "./backend/functions";
-import { addMessageListener, setBadge } from "./extension-helpers.js";
+import { addMessageListener, setBadge } from "./extension-helpers";
 import { cacheWebRequests } from "./service-worker-webcache";
 // See https://github.com/localForage/localForage/issues/831
 import localforage from "localforage/src/localforage.js";

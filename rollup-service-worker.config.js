@@ -19,7 +19,7 @@ export default {
       },
       include: [
         "src/service-worker.ts",
-        "src/service-worker-helpers.ts",
+        "src/extension-helpers.ts",
         "src/service-worker-webcache.ts",
         "src/backend/types.ts",
         "src/backend/functions.ts",

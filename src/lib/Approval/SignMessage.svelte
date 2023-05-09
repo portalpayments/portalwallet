@@ -38,6 +38,7 @@
           on:click={async () => {
             log(`Declining to sign message`);
             pendingUserApprovalStore.set(null);
+
             await chrome.runtime.sendMessage({
               topic: "walletStandardSignMessageResponse",
               isApproved: false,
