@@ -22,7 +22,7 @@ import type {
   PendingUserApproval,
 } from "./backend/types.js";
 import { log, isFresh, stringify } from "./backend/functions";
-import { addMessageListener, setBadge } from "./service-worker-helpers";
+import { addMessageListener, setBadge } from "./extension-helpers.js";
 import { cacheWebRequests } from "./service-worker-webcache";
 // See https://github.com/localForage/localForage/issues/831
 import localforage from "localforage/src/localforage.js";
@@ -85,20 +85,6 @@ addMessageListener(
       sendReply({
         topic: "replyWalletStandardSignMessage",
         secretKey,
-      });
-    }
-
-    if (message.topic === "walletStandardSignMessageResponse") {
-      log(
-        `😃 Service worker cache: the user has responded to the message signing UI...`
-      );
-
-      // TODO: communicate with the extension to show the user's response
-      // window.postMessage()
-
-      // Not important, but we do need to reply because sendMessage() awaits the result.
-      sendReply({
-        topic: "replyWalletStandardSignMessageResponse",
       });
     }
 
