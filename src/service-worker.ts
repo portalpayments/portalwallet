@@ -55,85 +55,54 @@ log(`Parsing service worker version: ${VERSION}`);
 
 let pendingUserApproval: null | PendingUserApproval = null;
 
-const handleMessage = async (
-  message: PortalMessage,
-  sendReply: (object: any) => void
-) => {
-  log(
-    `📩 Service worker got a message from elsewhere in the extension on this topic: '${message.topic}'`
-  );
-
-  if (message.topic === "walletStandardConnect") {
-    setBadge("i", MID_BLUE);
-  }
-
-  if (message.topic === "walletStandardSignMessage") {
-    setBadge("i", MID_BLUE);
-
-    if (!message.text) {
-      throw new Error(`walletStandardSignMessage is missing 'text' key`);
-    }
-
-    if (!message.url) {
-      throw new Error(`walletStandardSignMessage is missing 'url' key`);
-    }
-
-    // Set something requiring approval
-    // 'as' because we've just checked it has the right properties
-    pendingUserApproval = message as PendingUserApproval;
-
-    // We must reply immediately, otherwise the extension will hang
-    // (nothing will be done with this message, it's just an acknowledgement)
-    sendReply({
-      topic: "replyWalletStandardSignMessage",
-      secretKey,
-    });
-  }
-
-  if (message.topic === "walletStandardSignMessageResponse") {
+addMessageListener(
+  async (message: PortalMessage, sendReply: (object: any) => void) => {
     log(
-      `😃 Service worker cache: the user has responded to the message signing UI...`
+      `📩 Service worker got a message from elsewhere in the extension on this topic: '${message.topic}'`
     );
 
-    // TODO: communicate with the extension to show the user's response
-    // window.postMessage()
+    if (message.topic === "walletStandardConnect") {
+      setBadge("i", MID_BLUE);
+    }
 
-    // Not important, but we do need to reply because sendMessage() awaits the result.
-    sendReply({
-      topic: "replyWalletStandardSignMessageResponse",
-    });
-  }
+    if (message.topic === "walletStandardSignMessage") {
+      setBadge("i", MID_BLUE);
 
-  if (message.topic === "getPendingUserApproval") {
-    log(
-      `😃 Service worker cache: we have a pendingUserApproval, sending reply...`
-    );
+      if (!message.text) {
+        throw new Error(`walletStandardSignMessage is missing 'text' key`);
+      }
 
-    sendReply({
-      topic: "replyPendingUserApproval",
-      pendingUserApproval,
-    });
-  }
+      if (!message.url) {
+        throw new Error(`walletStandardSignMessage is missing 'url' key`);
+      }
 
-  if (message.topic === "getSecretKey") {
-    if (secretKey) {
-      log(`😃 Service worker cache: we have the secret key`);
+      // Set something requiring approval
+      // 'as' because we've just checked it has the right properties
+      pendingUserApproval = message as PendingUserApproval;
 
+      // We must reply immediately, otherwise the extension will hang
+      // (nothing will be done with this message, it's just an acknowledgement)
       sendReply({
-        topic: "replySecretKey",
+        topic: "replyWalletStandardSignMessage",
         secretKey,
       });
-    } else {
-      log(`☹️ Service worker does not have the secret key`);
     }
-  }
 
-  if (message.topic === "setSecretKey") {
-    secretKey = message.secretKey;
-  }
+    if (message.topic === "walletStandardSignMessageResponse") {
+      log(
+        `😃 Service worker cache: the user has responded to the message signing UI...`
+      );
 
-  if (message.topic === "getPendingUserApproval") {
-    if (pendingUserApproval) {
+      // TODO: communicate with the extension to show the user's response
+      // window.postMessage()
+
+      // Not important, but we do need to reply because sendMessage() awaits the result.
+      sendReply({
+        topic: "replyWalletStandardSignMessageResponse",
+      });
+    }
+
+    if (message.topic === "getPendingUserApproval") {
       log(
         `😃 Service worker cache: we have a pendingUserApproval, sending reply...`
       );
@@ -142,117 +111,150 @@ const handleMessage = async (
         topic: "replyPendingUserApproval",
         pendingUserApproval,
       });
-    } else {
-      log(`☹️ Service worker does not have a pendingUserApproval`);
     }
-  }
 
-  if (message.topic === "getNativeAccountSummary") {
-    if (nativeAccountSummary) {
-      log(
-        `😃 Service worker cache: we have the nativeAccountSummary in memory already`
-      );
+    if (message.topic === "getSecretKey") {
+      if (secretKey) {
+        log(`😃 Service worker cache: we have the secret key`);
 
-      sendReply({
-        topic: "replyNativeAccountSummary",
-        nativeAccountSummary,
-      });
-      return;
+        sendReply({
+          topic: "replySecretKey",
+          secretKey,
+        });
+      } else {
+        log(`☹️ Service worker does not have the secret key`);
+      }
     }
-    const nativeAccountSummaryFromLocalForage = (await localforage.getItem(
-      "NATIVE_ACCOUNT_SUMMARY"
-    )) as AccountSummary;
-    if (nativeAccountSummaryFromLocalForage) {
-      if (isFresh(nativeAccountSummaryFromLocalForage.lastUpdated)) {
+
+    if (message.topic === "setSecretKey") {
+      secretKey = message.secretKey;
+    }
+
+    if (message.topic === "getPendingUserApproval") {
+      if (pendingUserApproval) {
         log(
-          `😀 Service worker cache: we have the nativeAccountSummary in localforage and it's fresh!`
+          `😃 Service worker cache: we have a pendingUserApproval, sending reply...`
         );
+
+        sendReply({
+          topic: "replyPendingUserApproval",
+          pendingUserApproval,
+        });
+      } else {
+        log(`☹️ Service worker does not have a pendingUserApproval`);
+      }
+    }
+
+    if (message.topic === "getNativeAccountSummary") {
+      if (nativeAccountSummary) {
+        log(
+          `😃 Service worker cache: we have the nativeAccountSummary in memory already`
+        );
+
         sendReply({
           topic: "replyNativeAccountSummary",
-          nativeAccountSummary: nativeAccountSummaryFromLocalForage,
+          nativeAccountSummary,
+        });
+        return;
+      }
+      const nativeAccountSummaryFromLocalForage = (await localforage.getItem(
+        "NATIVE_ACCOUNT_SUMMARY"
+      )) as AccountSummary;
+      if (nativeAccountSummaryFromLocalForage) {
+        if (isFresh(nativeAccountSummaryFromLocalForage.lastUpdated)) {
+          log(
+            `😀 Service worker cache: we have the nativeAccountSummary in localforage and it's fresh!`
+          );
+          sendReply({
+            topic: "replyNativeAccountSummary",
+            nativeAccountSummary: nativeAccountSummaryFromLocalForage,
+          });
+          return;
+        } else {
+          log(
+            `☹️ Service worker cache: we have the nativeAccountSummary in localforage but it's not fresh`
+          );
+          return;
+        }
+      }
+      log(`☹️ Service worker does not have the nativeAccountSummary`);
+    }
+
+    if (message.topic === "setNativeAccountSummary") {
+      nativeAccountSummary = message.nativeAccountSummary;
+      nativeAccountSummary.lastUpdated = Date.now();
+      await localforage.setItem("NATIVE_ACCOUNT_SUMMARY", nativeAccountSummary);
+      log(`Saved NATIVE_ACCOUNT_SUMMARY to localForage`);
+    }
+
+    if (message.topic === "getTokenAccountSummaries") {
+      if (tokenAccountSummaries) {
+        log(`😃 Service worker cache: we have the tokenAccountSummaries`);
+
+        sendReply({
+          topic: "replyTokenAccountSummaries",
+          tokenAccountSummaries,
+        });
+        return;
+      }
+      const tokenAccountSummariesFromLocalForage = (await localforage.getItem(
+        "TOKEN_ACCOUNT_SUMMARIES"
+      )) as Array<AccountSummary>;
+
+      const allAreFresh =
+        tokenAccountSummariesFromLocalForage &&
+        tokenAccountSummariesFromLocalForage.every((accountSummary) =>
+          isFresh(accountSummary.lastUpdated)
+        );
+
+      if (allAreFresh) {
+        log(
+          `😀 Service worker cache: we have the tokenAccountSummaries in localforage and they're all fresh!`
+        );
+        sendReply({
+          topic: "replyTokenAccountSummaries",
+          tokenAccountSummaries: tokenAccountSummariesFromLocalForage,
         });
         return;
       } else {
         log(
-          `☹️ Service worker cache: we have the nativeAccountSummary in localforage but it's not fresh`
+          `☹️ Service worker cache: we have the tokenAccountSummaries in localforage but they're not all fresh`
         );
-        return;
+      }
+
+      log(`☹️ Service worker does not have the tokenAccountSummaries`);
+      return;
+    }
+
+    if (message.topic === "setTokenAccountSummaries") {
+      tokenAccountSummaries = message.tokenAccountSummaries;
+      tokenAccountSummaries.map((tokenAccountSummary) => {
+        tokenAccountSummary.lastUpdated = Date.now();
+      });
+      await localforage.setItem(
+        "TOKEN_ACCOUNT_SUMMARIES",
+        tokenAccountSummaries
+      );
+      log(`Saved TOKEN_ACCOUNT_SUMMARIES to localForage`);
+    }
+
+    if (message.topic === "getContacts") {
+      if (contacts) {
+        log(`😃 Service worker cache: we have the contacts`);
+        sendReply({
+          topic: "replyContacts",
+          contacts,
+        });
+      } else {
+        log(`☹️ Service worker does not have Contacts`);
       }
     }
-    log(`☹️ Service worker does not have the nativeAccountSummary`);
-  }
 
-  if (message.topic === "setNativeAccountSummary") {
-    nativeAccountSummary = message.nativeAccountSummary;
-    nativeAccountSummary.lastUpdated = Date.now();
-    await localforage.setItem("NATIVE_ACCOUNT_SUMMARY", nativeAccountSummary);
-    log(`Saved NATIVE_ACCOUNT_SUMMARY to localForage`);
-  }
-
-  if (message.topic === "getTokenAccountSummaries") {
-    if (tokenAccountSummaries) {
-      log(`😃 Service worker cache: we have the tokenAccountSummaries`);
-
-      sendReply({
-        topic: "replyTokenAccountSummaries",
-        tokenAccountSummaries,
-      });
-      return;
-    }
-    const tokenAccountSummariesFromLocalForage = (await localforage.getItem(
-      "TOKEN_ACCOUNT_SUMMARIES"
-    )) as Array<AccountSummary>;
-
-    const allAreFresh =
-      tokenAccountSummariesFromLocalForage &&
-      tokenAccountSummariesFromLocalForage.every((accountSummary) =>
-        isFresh(accountSummary.lastUpdated)
-      );
-
-    if (allAreFresh) {
-      log(
-        `😀 Service worker cache: we have the tokenAccountSummaries in localforage and they're all fresh!`
-      );
-      sendReply({
-        topic: "replyTokenAccountSummaries",
-        tokenAccountSummaries: tokenAccountSummariesFromLocalForage,
-      });
-      return;
-    } else {
-      log(
-        `☹️ Service worker cache: we have the tokenAccountSummaries in localforage but they're not all fresh`
-      );
-    }
-
-    log(`☹️ Service worker does not have the tokenAccountSummaries`);
-    return;
-  }
-
-  if (message.topic === "setTokenAccountSummaries") {
-    tokenAccountSummaries = message.tokenAccountSummaries;
-    tokenAccountSummaries.map((tokenAccountSummary) => {
-      tokenAccountSummary.lastUpdated = Date.now();
-    });
-    await localforage.setItem("TOKEN_ACCOUNT_SUMMARIES", tokenAccountSummaries);
-    log(`Saved TOKEN_ACCOUNT_SUMMARIES to localForage`);
-  }
-
-  if (message.topic === "getContacts") {
-    if (contacts) {
-      log(`😃 Service worker cache: we have the contacts`);
-      sendReply({
-        topic: "replyContacts",
-        contacts,
-      });
-    } else {
-      log(`☹️ Service worker does not have Contacts`);
+    if (message.topic === "setContacts") {
+      contacts = message.contacts;
     }
   }
-
-  if (message.topic === "setContacts") {
-    contacts = message.contacts;
-  }
-};
+);
 
 // https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/how-to/service-workers
 self.addEventListener("install", function () {
@@ -266,23 +268,6 @@ self.addEventListener("install", function () {
 self.addEventListener("activate", () => {
   log(`ACTIVATE service worker version: ${VERSION}`);
 });
-
-// We use onMessage instead of self.addEventListener("message")
-// See https://stackoverflow.com/questions/75824421/should-a-mv3-extension-use-chrome-runtime-sendmessage-or-serviceworker-control/75825039#75825039
-// chrome.runtime.onMessage.addListener((message, sender, sendReply) => {
-//   // See https://stackoverflow.com/a/70802055/123671
-//   (async () => {
-//     if (!message.topic) {
-//       throw new Error(`No topic in message`);
-//     }
-//     await handleMessage(message as PortalMessage, sendReply);
-//   })();
-//   // From https://developer.chrome.com/docs/extensions/mv3/messaging/#simple
-//   // If you want to asynchronously use sendResponse(), add return true; to the onMessage event handler.
-//   return true;
-// });
-
-addMessageListener(handleMessage);
 
 // Cache GET requests for images
 // Based on https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent
