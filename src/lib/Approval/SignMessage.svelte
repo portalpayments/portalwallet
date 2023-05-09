@@ -32,6 +32,8 @@
 
     <div class="choices">
       <div class="rounded-gradient-border-hack decline">
+        <!-- TODO: make Svelte handle chrome namespace properly -->
+        <!-- svelte-ignore missing-declaration -->
         <button
           on:click={async () => {
             log(`Declining to sign message`);
@@ -48,6 +50,8 @@
       </div>
 
       <div class="rounded-gradient-border-hack agree">
+        <!-- TODO: make Svelte handle chrome namespace properly -->
+        <!-- svelte-ignore missing-declaration -->
         <button
           on:click={async () => {
             log(`Signing message request`);
