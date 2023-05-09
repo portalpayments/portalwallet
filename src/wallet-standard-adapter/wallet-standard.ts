@@ -20,13 +20,29 @@ import {
 } from "@wallet-standard/features";
 import { icon } from "./icon";
 import { SOLANA_CHAINS, SOLANA_MAINNET_CHAIN } from "./solana-chains";
-import { log, runWithTimeout, sleep } from "../backend/functions";
+import { log, runWithTimeout, sleep, stringify } from "../backend/functions";
 import { Keypair, PublicKey } from "@solana/web3.js";
 import { sign as naclSign } from "tweetnacl";
 import { MINUTES, SECONDS } from "src/backend/constants";
 import { convertSolanaMessageToString } from "./util";
 const ANY_ORIGIN = "*";
-
+import {
+  // BaseWalletAdapter,
+  // isVersionedTransaction,
+  // WalletAccountError,
+  // WalletConfigError,
+  // WalletConnectionError,
+  // WalletDisconnectedError,
+  // WalletDisconnectionError,
+  // WalletError,
+  // WalletNotConnectedError,
+  // WalletNotReadyError,
+  // WalletPublicKeyError,
+  // WalletReadyState,
+  // WalletSendTransactionError,
+  WalletSignMessageError,
+  // WalletSignTransactionError,
+} from "@solana/wallet-adapter-base";
 // TODO: temp wallet address until we add the UI
 
 const keyPair = new Keypair();
@@ -189,17 +205,20 @@ export const PortalWalletStandardImplementation: WalletStandard = {
             // 30 * SECONDS
           )) as Uint8Array;
         } catch (error) {
-          log(`The user did not sign the transaction in time`, error.message);
+          // odd no error message
+          log(
+            `The user did not sign the transaction in time`,
+            stringify(error)
+          );
           signatureOrNull = null;
         }
 
-        log(`!!! WOO RESULT IS`, signatureOrNull);
+        log(`!!! WOO RESULT IS:`, signatureOrNull);
         log(
           `We should send a message clearing the notification now (since it's timed out or the user has signed)`
         );
-
         if (signatureOrNull === null) {
-          throw new Error("signature declined or timed out - TODO handle this");
+          throw new WalletSignMessageError("Signature was not approved");
         }
 
         await sleep(60 * SECONDS);

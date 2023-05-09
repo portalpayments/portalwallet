@@ -22,7 +22,7 @@ import type {
   PendingUserApproval,
 } from "./backend/types.js";
 import { log, isFresh, stringify } from "./backend/functions";
-import { setBadge } from "./service-worker-helpers";
+import { addMessageListener, setBadge } from "./service-worker-helpers";
 import { cacheWebRequests } from "./service-worker-webcache";
 // See https://github.com/localForage/localForage/issues/831
 import localforage from "localforage/src/localforage.js";
@@ -83,10 +83,24 @@ const handleMessage = async (
     pendingUserApproval = message as PendingUserApproval;
 
     // We must reply immediately, otherwise the extension will hang
-    // (nothing will be don with this message, it's just an acknowledgement)
+    // (nothing will be done with this message, it's just an acknowledgement)
     sendReply({
       topic: "replyWalletStandardSignMessage",
       secretKey,
+    });
+  }
+
+  if (message.topic === "walletStandardSignMessageResponse") {
+    log(
+      `😃 Service worker cache: the user has responded to the message signing UI...`
+    );
+
+    // TODO: communicate with the extension to show the user's response
+    // window.postMessage()
+
+    // Not important, but we do need to reply because sendMessage() awaits the result.
+    sendReply({
+      topic: "replyWalletStandardSignMessageResponse",
     });
   }
 
@@ -255,22 +269,20 @@ self.addEventListener("activate", () => {
 
 // We use onMessage instead of self.addEventListener("message")
 // See https://stackoverflow.com/questions/75824421/should-a-mv3-extension-use-chrome-runtime-sendmessage-or-serviceworker-control/75825039#75825039
-chrome.runtime.onMessage.addListener((message, sender, sendReply) => {
-  // See https://stackoverflow.com/a/70802055/123671
-  (async () => {
-    log(`Service worker got a message from elsewhere in the extension`);
-    if (!message.topic) {
-      throw new Error(`No topic in message`);
-    }
-    await handleMessage(message as PortalMessage, sendReply);
-    console.log(
-      `Service worker has finished handling the message from elsewhere in the extension`
-    );
-  })();
-  // From https://developer.chrome.com/docs/extensions/mv3/messaging/#simple
-  // If you want to asynchronously use sendResponse(), add return true; to the onMessage event handler.
-  return true;
-});
+// chrome.runtime.onMessage.addListener((message, sender, sendReply) => {
+//   // See https://stackoverflow.com/a/70802055/123671
+//   (async () => {
+//     if (!message.topic) {
+//       throw new Error(`No topic in message`);
+//     }
+//     await handleMessage(message as PortalMessage, sendReply);
+//   })();
+//   // From https://developer.chrome.com/docs/extensions/mv3/messaging/#simple
+//   // If you want to asynchronously use sendResponse(), add return true; to the onMessage event handler.
+//   return true;
+// });
+
+addMessageListener(handleMessage);
 
 // Cache GET requests for images
 // Based on https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent

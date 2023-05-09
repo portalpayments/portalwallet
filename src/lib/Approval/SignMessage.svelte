@@ -18,7 +18,7 @@
   </div>
 
   <div class="prompt">
-    <!-- TODO: add favicon -->
+    <!-- TODO: add favicon of site to message? -->
     <p>
       The site at <span class="url">{formatURL(pendingUserApproval.url)}</span> is
       asking you to sign this message:
@@ -28,12 +28,18 @@
       {pendingUserApproval.text}
     </q>
 
+    <p>This won't make any transactions on the blockchain or incur any fee.</p>
+
     <div class="choices">
       <div class="rounded-gradient-border-hack decline">
         <button
-          on:click={() => {
+          on:click={async () => {
             log(`Declining to sign message`);
             pendingUserApprovalStore.set(null);
+            await chrome.runtime.sendMessage({
+              topic: "walletStandardSignMessageResponse",
+              isApproved: false,
+            });
           }}
         >
           <!-- Since the previous hack needs a white background, we need another div to the 'background as gradient text' hack -->
@@ -43,9 +49,13 @@
 
       <div class="rounded-gradient-border-hack agree">
         <button
-          on:click={() => {
+          on:click={async () => {
             log(`Signing message request`);
             pendingUserApprovalStore.set(null);
+            await chrome.runtime.sendMessage({
+              topic: "walletStandardSignMessageResponse",
+              isApproved: true,
+            });
           }}>Sign & agree</button
         >
       </div>
