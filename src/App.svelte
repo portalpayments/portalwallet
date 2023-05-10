@@ -85,7 +85,7 @@
     isOnboarded = await checkIfOnboarded();
 
     pendingUserApprovalStore.subscribe((newValue) => {
-      log(`Store subscription updated!`, newValue);
+      log(`Pending user approval store subscription updated!`, newValue);
       if (newValue) {
         pendingUserApproval = newValue;
         log(`⏹️ There is a pending user approval`);
