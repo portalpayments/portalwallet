@@ -13,7 +13,7 @@ const main = async () => {
   window.addEventListener(
     "message",
     async (event) => {
-      log(`In the content script, recieved a message from the page's JS!`);
+      log(`In the content script, recieved a message from the page's JS`);
       // We only accept messages from our own window
       if (event.source !== window) {
         return;
@@ -73,6 +73,10 @@ const main = async () => {
       }
     }
   );
+
+  // Why isn't front end responding?
+
+  log("Completd content script setup");
 };
 
 main();
