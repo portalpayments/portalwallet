@@ -29,7 +29,7 @@
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@metaplex-foundation/js": "^0.18.3",
     "@rollup/plugin-typescript": "^11.0.0",
-    "@solana/web3.js": "^1.74.0",
+    "@solana/web3.js": "^1.76.0",
     "@sveltejs/adapter-static": "^1.0.0-next.39",
     "@sveltejs/vite-plugin-svelte": "^1.0.2",
     "@tsconfig/svelte": "^3.0.0",
