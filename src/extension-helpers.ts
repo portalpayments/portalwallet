@@ -59,6 +59,9 @@ type HandleMessage = (
   sendReply: SendReply
 ) => void;
 
+// From https://developer.chrome.com/docs/extensions/mv3/messaging/
+// If multiple pages are listening for onMessage events, only the first to call sendResponse() for a particular event will succeed in sending the response. All other responses to that event will be ignored.
+
 // We use onMessage.addListener() instead of self.addEventListener("message")
 // See https://stackoverflow.com/questions/75824421/should-a-mv3-extension-use-chrome-runtime-sendmessage-or-serviceworker-control/75825039#75825039
 export const addMessageListener = (handleMessage: HandleMessage) => {
