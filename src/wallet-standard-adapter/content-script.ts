@@ -37,10 +37,7 @@ const main = async () => {
         log(
           `We will forward the message on to the rest of the extension - we should see an indicator on the popup now`
         );
-        // Forward the message onto the service worker (we use the same format we got it from the injected wallet)
-        // TODO: fix types properly to avoid
-        // [vite-plugin-svelte] 'chrome' is not defined
-        // @ts-ignore
+        // Forward the message onto the service worker (we use the same format as the injected wallet)
         const reply = await chrome.runtime.sendMessage(message);
         log(`Content script recieved reply:`, reply);
       }

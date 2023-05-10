@@ -74,8 +74,5 @@ export const addMessageListener = (handleMessage: HandleMessage) => {
     // If you want to asynchronously use sendResponse(), add return true; to the onMessage event handler.
     return true;
   };
-  // TODO: use proper types for chrome to avoid
-  // "[vite-plugin-svelte] 'chrome' is not defined" message
-  // @ts-ignore
   chrome.runtime.onMessage.addListener(listener);
 };
