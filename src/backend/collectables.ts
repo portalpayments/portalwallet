@@ -66,13 +66,14 @@ export const nftToCollectable = async (
   };
 };
 
-// Replaced both getAllNftMetadatasFromAWallet and getCollectables
 export const getCollectables = async (
   connection: ConnectionWithCompressedNFTSupport,
   publicKey: PublicKey
 ): Promise<Array<Collectable>> => {
   log(`🎟️ Getting compressed NFTs for ${publicKey.toBase58()}...`);
 
+  // TODO: use metaplex instead? Maybe?
+  // See https://github.com/metaplex-foundation/js/issues/515
   const response = await connection.getAssetsByOwner({
     ownerAddress: publicKey.toBase58(),
   });
