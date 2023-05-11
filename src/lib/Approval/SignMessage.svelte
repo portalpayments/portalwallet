@@ -30,9 +30,12 @@
 
     <p>This won't make any transactions on the blockchain or incur any fee.</p>
 
-    <div class="choices">
+    <div class="choices">      
+      
       <div class="rounded-gradient-border-hack decline">
-        <!-- TODO: make Svelte handle chrome namespace properly -->
+        <!-- Fix warning during `npm run build`
+        TODO: make Svelte handle chrome namespace properly 
+        See https://stackoverflow.com/questions/75258357/how-to-access-chrome-runtime-from-svelte-project-->
         <!-- svelte-ignore missing-declaration -->
         <button
           on:click={async () => {
@@ -43,6 +46,7 @@
               topic: "walletStandardSignMessageResponse",
               isApproved: false,
             });
+            log(`Sent 'walletStandardSignMessageResponse' message`)
           }}
         >
           <!-- Since the previous hack needs a white background, we need another div to the 'background as gradient text' hack -->
@@ -51,7 +55,9 @@
       </div>
 
       <div class="rounded-gradient-border-hack agree">
-        <!-- TODO: make Svelte handle chrome namespace properly -->
+        <!-- Fix warning during `npm run build`
+        TODO: make Svelte handle chrome namespace properly 
+        See https://stackoverflow.com/questions/75258357/how-to-access-chrome-runtime-from-svelte-project-->
         <!-- svelte-ignore missing-declaration -->
         <button
           on:click={async () => {
@@ -61,6 +67,7 @@
               topic: "walletStandardSignMessageResponse",
               isApproved: true,
             });
+            log(`Sent 'walletStandardSignMessageResponse' message`)
           }}>Sign & agree</button
         >
       </div>
