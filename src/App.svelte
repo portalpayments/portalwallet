@@ -24,7 +24,6 @@
     connectionStore,
     authStore,
     pendingUserApprovalStore,
-    checkForPendingUserApproval,
   } from "./lib/stores";
   import { checkIfOnboarded } from "./lib/settings";
   import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "./backend/constants";
