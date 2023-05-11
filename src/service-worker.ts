@@ -79,15 +79,6 @@ addMessageListener("walletStandardSignMessage", async (message: PortalMessage, s
   });
 });
 
-addMessageListener("getPendingUserApproval", async (message: PortalMessage, sendReply: SendReply) => {
-  log(`😃 Service worker cache: we have a pendingUserApproval, sending reply...`);
-
-  sendReply({
-    topic: "replyPendingUserApproval",
-    pendingUserApproval,
-  });
-});
-
 addMessageListener("getSecretKey", async (message: PortalMessage, sendReply: SendReply) => {
   if (secretKey) {
     log(`😃 Service worker cache: we have the secret key`);
