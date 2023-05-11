@@ -31,14 +31,13 @@
     }
 
     if (settings) {
-      $authStore.isLoggedIn = true;
       $authStore.keyPair = keyPair;
       return;
     }
   };
 </script>
 
-{#if !$authStore.isLoggedIn}
+{#if !$authStore.keyPair}
   <div class="login">
     <img class="logo" src={PortalLogoSVG} alt="Portal Logo" />
     <span class="welcome-message">Welcome Back!</span>

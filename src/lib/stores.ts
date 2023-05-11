@@ -143,9 +143,7 @@ export const onChangeActiveAccount = (activeAccountHandler: ActiveAccountHandler
   });
 };
 
-// From https://svelte.dev/repl/cc54944f9c2f44209d6da7344ea4c101?version=3.17.2
 export const authStore: Writable<Auth> = writable({
-  isLoggedIn: false,
   keyPair: null,
 });
 
@@ -398,7 +396,6 @@ const setupServiceWorker = async () => {
       if (secretKey) {
         log(`we have a secret key! Setting it.`);
         authStore.set({
-          isLoggedIn: true,
           keyPair: getKeypairFromString(secretKey),
         });
       } else {

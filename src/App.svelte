@@ -106,7 +106,7 @@
     Loading...
   {:else if !isOnboarded}
     <Onboarding />
-  {:else if $authStore.isLoggedIn}
+  {:else if $authStore.keyPair}
     {#if hasCheckedPendingUserApproval}
       {#if pendingUserApproval}
         {#if pendingUserApproval.topic === "walletStandardSignMessage"}

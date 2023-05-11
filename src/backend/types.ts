@@ -302,8 +302,7 @@ export interface PendingUserApproval extends PortalMessage {
 
 // TODO: 'Auth' is a silly name
 export interface Auth {
-  // TODO: can we do without isLoggedIn? Just use keyPair?
-  isLoggedIn: boolean;
+  // null means we're not logged in
   keyPair: null | Keypair;
 }
 

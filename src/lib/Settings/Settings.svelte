@@ -16,7 +16,7 @@
   import { authStore } from "../../lib/stores";
 
   const logout = function () {
-    $authStore.isLoggedIn = false;
+    $authStore.keyPair = null;
     location.assign("/");
   };
 
