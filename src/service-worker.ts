@@ -223,22 +223,22 @@ self.addEventListener("fetch", (event) => {
 });
 
 // https://developer.mozilla.org/en-US/docs/mozilla/add-ons/webextensions/api/webnavigation/oncompleted
-chrome.webNavigation.onCompleted.addListener((event) => {
+chrome.webNavigation.onCompleted.addListener(async (event) => {
   if (!event.url.startsWith("http")) {
     return;
   }
   log(`The user has loaded ${event.url}! Time to inject the wallet!`);
   const tabId = event.tabId;
 
-  if (!event.tabId) {
-    log(`Odd, no tabId for URL ${event.url}`);
+  // Work around a silly error where ntp.msn.com would appear on new tab page then disappear as soon as loaded something
+  // throwing an error about missing tab IDs
+  if (event.url.includes("ntp.msn.com")) {
+    log(`Not injecting wallet into disappearing MSN NTP site`);
     return;
   }
 
-  log(`DEBUG:`, event.tabId);
-
   // https://developer.chrome.com/docs/extensions/reference/scripting/#method-executeScript
-  chrome.scripting.executeScript({
+  await chrome.scripting.executeScript({
     files: ["./injected.js"],
     target: { tabId },
     world: "MAIN",
