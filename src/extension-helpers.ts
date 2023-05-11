@@ -54,10 +54,10 @@ export const clearBadge = () => {
 };
 
 type SendReply = (response: unknown) => void;
-type HandleMessage = (
-  portalMessage: PortalMessage,
-  sendReply: SendReply
-) => void;
+type HandleMessage = (portalMessage: PortalMessage, sendReply: SendReply) => Promise<void>;
+
+// Check https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/Runtime/onMessage
+// for better docs but also note that Chrome doesn't support Promises in onMessage() yet.
 
 // From https://developer.chrome.com/docs/extensions/mv3/messaging/
 // If multiple pages are listening for onMessage events, only the first to call sendResponse() for a particular event will succeed in sending the response. All other responses to that event will be ignored.
@@ -66,15 +66,17 @@ type HandleMessage = (
 // See https://stackoverflow.com/questions/75824421/should-a-mv3-extension-use-chrome-runtime-sendmessage-or-serviceworker-control/75825039#75825039
 export const addMessageListener = (handleMessage: HandleMessage) => {
   const listener = (message, sender, sendReply) => {
-    // See https://stackoverflow.com/a/70802055/123671
-    (async () => {
-      if (!message.topic) {
-        throw new Error(`No topic in message`);
-      }
-      await handleMessage(message as PortalMessage, sendReply);
-    })();
+    if (!message.topic) {
+      throw new Error(`No topic in message`);
+    }
+    const resultPromise = handleMessage(message as PortalMessage, sendReply);
+    resultPromise.then((result) => {
+      sendReply(result);
+    });
     // From https://developer.chrome.com/docs/extensions/mv3/messaging/#simple
-    // If you want to asynchronously use sendResponse(), add return true; to the onMessage event handler.
+    // To asynchronously use sendResponse(), add return true; to the onMessage event handler.
+
+    // return true from the event listener to indicate you wish to send a response asynchronously (this will keep the message channel open to the other end until sendResponse is called).
     return true;
   };
   chrome.runtime.onMessage.addListener(listener);
