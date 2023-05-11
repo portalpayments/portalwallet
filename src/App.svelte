@@ -53,11 +53,12 @@
   });
 
   authStore.subscribe(async (newValue) => {
-    // Connect to Solana
-    const newConnection = await connect("heliusMainNet");
-    connectionStore.set(newConnection);
 
     if (newValue.keyPair) {
+      // Connect to Solana
+      const newConnection = await connect("heliusMainNet");
+      connectionStore.set(newConnection);
+
       log(`🔑Got keyPair.`);
 
       const keypair = newValue.keyPair;
