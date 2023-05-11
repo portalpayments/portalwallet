@@ -20,7 +20,9 @@ import { log, isFresh, stringify } from "./backend/functions";
 import { addMessageListener, setBadge } from "./extension-helpers";
 import { cacheWebRequests } from "./service-worker-webcache";
 // See https://github.com/localForage/localForage/issues/831
-import localforage from "localforage/src/localforage.js";
+import type LocalForageType from "localforage";
+import localForageImport from "localforage/src/localforage.js";
+const localforage: typeof LocalForageType = localForageImport;
 
 //  Cannot access chrome:// and edge:// URLs
 if (!window.location.protocol.startsWith("http")) {
