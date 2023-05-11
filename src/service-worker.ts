@@ -71,6 +71,10 @@ addMessageListener("walletStandardSignMessage", async (message: PortalMessage, s
   // Set something requiring approval
   // 'as' because we've just checked it has the right properties
   pendingUserApproval = message as PendingUserApproval;
+  log(`Saved pendingUserApproval in service worker.`);
+
+  // TODO - maybe we need to save this (with a timestamp) to localforage just in case the service worker is killed?
+  // search service worker licycle in manifest version 3
 
   // We must reply immediately, otherwise the extension will hang
   // (nothing will be done with this message, it's just an acknowledgement)
@@ -225,6 +229,13 @@ chrome.webNavigation.onCompleted.addListener((event) => {
   }
   log(`The user has loaded ${event.url}! Time to inject the wallet!`);
   const tabId = event.tabId;
+
+  if (!event.tabId) {
+    log(`Odd, no tabId for URL ${event.url}`);
+    return;
+  }
+
+  log(`DEBUG:`, event.tabId);
 
   // https://developer.chrome.com/docs/extensions/reference/scripting/#method-executeScript
   chrome.scripting.executeScript({

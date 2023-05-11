@@ -94,7 +94,8 @@
     });
 
     // We can't just ask the pendingUserApprovalStore directly if it has a pending
-    // user approval, since the service worker has to ask the store
+    // user approval, since the service worker is the source of truth for pendingUserApprovals
+    // (this function also updates the strore)
     log(`in App, about to check service worker for pending user approvals`);
     await checkServiceWorkerForPendingUserApprovals();
     log(`in App, finished checking service worker for pending user approvals`);
