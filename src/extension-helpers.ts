@@ -7,7 +7,7 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import { log } from "./backend/functions";
-import type { PortalMessage } from "./backend/types";
+import type { HandleMessage, PortalMessage } from "./backend/types";
 
 // Make the Portal toolbar icon glow so users click the toolbar icon
 export const setBadge = (text: string, backgroundColor: string) => {
@@ -53,9 +53,6 @@ export const clearBadge = () => {
   log(`Finished clearing badge text and background color`);
 };
 
-type SendReply = (response: unknown) => void;
-type HandleMessage = (portalMessage: PortalMessage, sendReply: SendReply) => Promise<void>;
-
 // Check https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/Runtime/onMessage
 // for better docs but also note that Chrome doesn't support Promises in onMessage() yet.
 
@@ -64,11 +61,14 @@ type HandleMessage = (portalMessage: PortalMessage, sendReply: SendReply) => Pro
 
 // We use onMessage.addListener() instead of self.addEventListener("message")
 // See https://stackoverflow.com/questions/75824421/should-a-mv3-extension-use-chrome-runtime-sendmessage-or-serviceworker-control/75825039#75825039
-export const addMessageListener = (handleMessage: HandleMessage) => {
+export const addMessageListener = (topic: string, handleMessage: HandleMessage) => {
   const listener = (message, sender, sendReply) => {
-    if (!message.topic) {
-      throw new Error(`No topic in message`);
+    const messageSender = sender?.tab?.url || sender?.origin || "unknown";
+    if (message.topic !== topic) {
+      // log(`DEBUG ignoring message from ${messageSender} on this topic: '${message.topic}'`);
+      return;
     }
+    log(`📩 Handling message from ${messageSender} on this topic: '${message.topic}'`);
     const resultPromise = handleMessage(message as PortalMessage, sendReply);
     resultPromise.then((result) => {
       sendReply(result);

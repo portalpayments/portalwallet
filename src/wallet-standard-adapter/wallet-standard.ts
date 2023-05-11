@@ -5,19 +5,9 @@ import {
   type SolanaSignMessageOutput,
   type SolanaSignMessageInput,
 } from "@solana/wallet-standard-features";
-import type {
-  Wallet as WalletStandard,
-  WalletAccount,
-} from "@wallet-standard/base";
-import type {
-  StandardConnectMethod,
-  StandardConnectOutput,
-} from "@wallet-standard/features";
-import {
-  StandardConnect,
-  StandardDisconnect,
-  StandardEvents,
-} from "@wallet-standard/features";
+import type { Wallet as WalletStandard, WalletAccount } from "@wallet-standard/base";
+import type { StandardConnectMethod, StandardConnectOutput } from "@wallet-standard/features";
+import { StandardConnect, StandardDisconnect, StandardEvents } from "@wallet-standard/features";
 import { icon } from "./icon";
 import { SOLANA_CHAINS, SOLANA_MAINNET_CHAIN } from "./solana-chains";
 import { log, runWithTimeout, sleep, stringify } from "../backend/functions";
@@ -54,11 +44,7 @@ const walletAccount = {
   address: publicKey.toBase58(),
   publicKey: publicKey.toBytes(),
   chains: [SOLANA_MAINNET_CHAIN],
-  features: [
-    SolanaSignAndSendTransaction,
-    SolanaSignTransaction,
-    SolanaSignMessage,
-  ],
+  features: [SolanaSignAndSendTransaction, SolanaSignTransaction, SolanaSignMessage],
   // Work around very odd typing with 'chains' property
   // TODO: fix properly
 } as WalletAccount;
@@ -94,9 +80,7 @@ const connect: StandardConnectMethod = async ({
 };
 
 const askUserToSignMessage = async (message: Uint8Array) => {
-  log(
-    "In askUserToSignMessage(). Sending 'walletStandardSignMessage' message to content script..."
-  );
+  log("In askUserToSignMessage(). Sending 'walletStandardSignMessage' message to content script...");
 
   // First, convert the Solana message to a string, but also 'message' is a confusing
   // variable name, since we already have window.postMessage() and 'message' is a different type of message
@@ -152,16 +136,14 @@ export const PortalWalletStandardImplementation: WalletStandard = {
       version: "1.0.0",
 
       signMessage: async (accountAndMessage: SolanaSignMessageInput) => {
-        log("Sign message", accountAndMessage);
+        // log("Sign message", accountAndMessage);
         const outputs: Array<SolanaSignMessageOutput> = [];
 
         // A little weird, but the wallet-adapter test page expects
         // - a single input
         // - multiple outputs
 
-        if (
-          !accountAndMessage.account.features.includes("solana:signMessage")
-        ) {
+        if (!accountAndMessage.account.features.includes("solana:signMessage")) {
           throw new Error("invalid feature");
         }
 
@@ -173,26 +155,22 @@ export const PortalWalletStandardImplementation: WalletStandard = {
         // Give the user some time to approve, decline or do nothing
         await askUserToSignMessage(accountAndMessage.message);
 
-        const getWalletStandardSignMessageResponse =
-          (): Promise<Uint8Array> => {
-            return new Promise((resolve, reject) => {
-              const handler = (event: MessageEvent) => {
-                const { topic, isApproved } = event.data;
-                if (topic === "walletStandardSignMessageResponse") {
-                  window.removeEventListener("message", handler);
-                  if (!isApproved) {
-                    resolve(null);
-                  }
-                  const signature = naclSign.detached(
-                    accountAndMessage.message,
-                    keyPair.secretKey
-                  );
-                  resolve(signature);
+        const getWalletStandardSignMessageResponse = (): Promise<Uint8Array> => {
+          return new Promise((resolve, reject) => {
+            const handler = (event: MessageEvent) => {
+              const { topic, isApproved } = event.data;
+              if (topic === "walletStandardSignMessageResponse") {
+                window.removeEventListener("message", handler);
+                if (!isApproved) {
+                  resolve(null);
                 }
-              };
-              window.addEventListener("message", handler);
-            });
-          };
+                const signature = naclSign.detached(accountAndMessage.message, keyPair.secretKey);
+                resolve(signature);
+              }
+            };
+            window.addEventListener("message", handler);
+          });
+        };
 
         log(`Waiting for 'walletStandardSignMessageResponse' or a timeout...`);
 
@@ -206,17 +184,12 @@ export const PortalWalletStandardImplementation: WalletStandard = {
           )) as Uint8Array;
         } catch (error) {
           // odd no error message
-          log(
-            `The user did not sign the transaction in time`,
-            stringify(error)
-          );
+          log(`The user did not sign the transaction in time`, stringify(error));
           signatureOrNull = null;
         }
 
         log(`!!! WOO RESULT IS:`, signatureOrNull);
-        log(
-          `We should send a message clearing the notification now (since it's timed out or the user has signed)`
-        );
+        log(`We should send a message clearing the notification now (since it's timed out or the user has signed)`);
         if (signatureOrNull === null) {
           throw new WalletSignMessageError("Signature was not approved");
         }

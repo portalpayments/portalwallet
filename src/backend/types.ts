@@ -372,4 +372,11 @@ export interface PortalMessage {
   [key: string]: any;
 }
 
+export type SendReply = (response: unknown) => void;
+
+export type HandleMessage = (
+  portalMessage: PortalMessage,
+  sendReply: SendReply
+) => Promise<void>;
+
 export type Jurisdiction = "State" | "Country";

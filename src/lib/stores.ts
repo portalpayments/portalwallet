@@ -7,20 +7,8 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import { get as getFromStore, writable, type Writable } from "svelte/store";
-import type {
-  PublicKey,
-  Connection,
-  Keypair,
-  ParsedTransactionWithMeta,
-} from "@solana/web3.js";
-import type {
-  AccountSummary,
-  Auth,
-  Collectable,
-  Contact,
-  PendingUserApproval,
-  PortalMessage,
-} from "../backend/types";
+import type { PublicKey, Connection, Keypair, ParsedTransactionWithMeta } from "@solana/web3.js";
+import type { AccountSummary, Auth, Collectable, Contact, PendingUserApproval, PortalMessage } from "../backend/types";
 import { asyncMap, log, sleep, stringify } from "../backend/functions";
 import uniqBy from "lodash.uniqby";
 import {
@@ -31,10 +19,7 @@ import {
   getTransactionSummariesForAddress,
 } from "../backend/wallet";
 import { MILLISECONDS, NOT_FOUND, SECONDS } from "../backend/constants";
-import {
-  getKeypairFromString,
-  getCurrencyBySymbol,
-} from "../backend/solana-functions";
+import { getKeypairFromString, getCurrencyBySymbol } from "../backend/solana-functions";
 import base58 from "bs58";
 import { summarizeTransaction } from "../backend/transactions";
 import { HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE } from "./frontend-constants";
@@ -46,8 +31,7 @@ let keyPair: Keypair | null;
 
 const SERVICE_WORKER = globalThis?.navigator?.serviceWorker || null;
 
-const IS_CHROME_EXTENSION =
-  globalThis?.location?.protocol === "chrome-extension:";
+const IS_CHROME_EXTENSION = globalThis?.location?.protocol === "chrome-extension:";
 
 // Right now let's only load our Chrome extension in the service worker
 // We may change our mind on this
@@ -84,13 +68,9 @@ export const updateActiveAccount = async () => {
     oldestTransactionID
   );
 
-  log(
-    `Before updating account ${activeAccountIndex}: ${activeAccount.transactionSummaries.length} transactions`
-  );
+  log(`Before updating account ${activeAccountIndex}: ${activeAccount.transactionSummaries.length} transactions`);
 
-  const joinedTransactions = activeAccount.transactionSummaries.concat(
-    newTransactionSummaries
-  );
+  const joinedTransactions = activeAccount.transactionSummaries.concat(newTransactionSummaries);
 
   const uniqueTransactionSummaries = uniqBy(joinedTransactions, "id");
 
@@ -98,9 +78,7 @@ export const updateActiveAccount = async () => {
 
   await updateContactsStoreForNewTransactions([activeAccount]);
 
-  log(
-    `After updating account ${activeAccountIndex}: ${activeAccount.transactionSummaries.length} transactions`
-  );
+  log(`After updating account ${activeAccountIndex}: ${activeAccount.transactionSummaries.length} transactions`);
 
   if (typeof activeAccountIndex === "number") {
     tokenAccounts[activeAccountIndex] = activeAccount;
@@ -125,8 +103,7 @@ const updateCollectables = async () => {
 };
 
 // Our connection to Solana
-export const connectionStore: Writable<null | ConnectionWithCompressedNFTSupport> =
-  writable(null);
+export const connectionStore: Writable<null | ConnectionWithCompressedNFTSupport> = writable(null);
 connectionStore.subscribe((newValue) => {
   connection = newValue;
   updateCollectables();
@@ -135,14 +112,11 @@ connectionStore.subscribe((newValue) => {
 export const contactsStore: Writable<null | Array<Contact>> = writable(null);
 
 // number for a numbered token account, "native" for Solana
-export const activeAccountIndexStore: Writable<number | "native" | null> =
-  writable(null);
+export const activeAccountIndexStore: Writable<number | "native" | null> = writable(null);
 
-export const nativeAccountStore: Writable<null | AccountSummary> =
-  writable(null);
+export const nativeAccountStore: Writable<null | AccountSummary> = writable(null);
 
-export const tokenAccountsStore: Writable<null | Array<AccountSummary>> =
-  writable(null);
+export const tokenAccountsStore: Writable<null | Array<AccountSummary>> = writable(null);
 
 export const getActiveAccount = () => {
   const activeAccountIndex = getFromStore(activeAccountIndexStore);
@@ -159,9 +133,7 @@ export const getActiveAccount = () => {
 
 type ActiveAccountHandler = (accountSummary: AccountSummary) => any;
 
-export const onChangeActiveAccount = (
-  activeAccountHandler: ActiveAccountHandler
-) => {
+export const onChangeActiveAccount = (activeAccountHandler: ActiveAccountHandler) => {
   activeAccountIndexStore.subscribe((newValue) => {
     if (newValue !== null) {
       const activeAccount = getActiveAccount();
@@ -176,14 +148,8 @@ export const authStore: Writable<Auth> = writable({
   keyPair: null,
 });
 
-export const updateAccountsForNewTransaction = async (
-  signature: string,
-  nativeOrTokenAccountAddress: PublicKey
-) => {
-  let rawTransaction = await getParsedTransactionAndCache(
-    connection,
-    signature
-  );
+export const updateAccountsForNewTransaction = async (signature: string, nativeOrTokenAccountAddress: PublicKey) => {
+  let rawTransaction = await getParsedTransactionAndCache(connection, signature);
   const simpleTransaction = await summarizeTransaction(
     rawTransaction,
     keyPair.publicKey,
@@ -213,9 +179,7 @@ export const updateAccountsForNewTransaction = async (
       `Couldn't find token account for transaction ${simpleTransaction.id} for account address ${nativeOrTokenAccountAddress}`
     );
   }
-  updatedTokenAccounts[tokenAccountIndex].transactionSummaries.push(
-    simpleTransaction
-  );
+  updatedTokenAccounts[tokenAccountIndex].transactionSummaries.push(simpleTransaction);
   tokenAccountsStore.set(updatedTokenAccounts);
 
   return;
@@ -223,8 +187,7 @@ export const updateAccountsForNewTransaction = async (
 
 export const haveAccountsLoadedStore: Writable<boolean> = writable(false);
 
-export const pendingUserApprovalStore: Writable<PendingUserApproval | null> =
-  writable(null);
+export const pendingUserApprovalStore: Writable<PendingUserApproval | null> = writable(null);
 
 export const checkServiceWorkerForPendingUserApprovals = async () => {
   if (SERVICE_WORKER && chrome.runtime) {
@@ -234,8 +197,7 @@ export const checkServiceWorkerForPendingUserApprovals = async () => {
     })) as PortalMessage;
     log(`Store: RESPONSE from service worker: ${stringify(response)}`);
     if (response.topic === "replyPendingUserApproval") {
-      log(`store got a response from service worker`),
-        response.pendingUserApproval;
+      log(`store got a response from service worker`), response.pendingUserApproval;
       pendingUserApprovalStore.set(response.pendingUserApproval);
       log(`Store has set pendingUserApprovalStore`);
     }
@@ -244,9 +206,7 @@ export const checkServiceWorkerForPendingUserApprovals = async () => {
 
 export const hasUSDCAccountStore: Writable<boolean | null> = writable(null);
 
-export const collectablesStore: Writable<Array<Collectable> | null> = writable(
-  []
-);
+export const collectablesStore: Writable<Array<Collectable> | null> = writable([]);
 
 const getNativeAccountSummaryOrCached = async (): Promise<AccountSummary> => {
   let nativeAccountSummaryFromStore = getFromStore(nativeAccountStore);
@@ -272,9 +232,7 @@ const getNativeAccountSummaryOrCached = async (): Promise<AccountSummary> => {
   return nativeAccountSummary;
 };
 
-const getTokenAccountSummariesOrCached = async (): Promise<
-  Array<AccountSummary>
-> => {
+const getTokenAccountSummariesOrCached = async (): Promise<Array<AccountSummary>> => {
   const tokenAccountSummariesFromStore = getFromStore(tokenAccountsStore);
 
   if (tokenAccountSummariesFromStore) {
@@ -282,10 +240,7 @@ const getTokenAccountSummariesOrCached = async (): Promise<
   }
   const date = new Date().valueOf();
   console.time(`Getting native accounts ${date}`);
-  let tokenAccountSummaries = await getTokenAccountSummaries(
-    connection,
-    keyPair
-  );
+  let tokenAccountSummaries = await getTokenAccountSummaries(connection, keyPair);
   console.timeEnd(`Getting native accounts ${date}`);
 
   if (HAS_SERVICE_WORKER) {
@@ -300,18 +255,12 @@ const getTokenAccountSummariesOrCached = async (): Promise<
   return tokenAccountSummaries;
 };
 
-const updateContactsStoreForNewTransactions = async (
-  accounts: Array<AccountSummary>
-) => {
+const updateContactsStoreForNewTransactions = async (accounts: Array<AccountSummary>) => {
   log(`Getting contacts used in transactions`);
   let contacts = getFromStore(contactsStore) || [];
 
   const beforeCount = contacts.length;
-  const newContacts = await getContactsFromTransactions(
-    connection,
-    keyPair,
-    accounts
-  );
+  const newContacts = await getContactsFromTransactions(connection, keyPair, accounts);
 
   if (!newContacts.length) {
     log(`No new contacts for recently loaded transactions.`);
@@ -324,11 +273,7 @@ const updateContactsStoreForNewTransactions = async (
 
   const afterCount = uniqueContacts.length;
 
-  log(
-    `Got contacts used in transactions, added ${
-      afterCount - beforeCount
-    } new contacts`
-  );
+  log(`Got contacts used in transactions, added ${afterCount - beforeCount} new contacts`);
 
   contactsStore.set(uniqueContacts);
 };
@@ -363,8 +308,7 @@ const updateAccounts = async () => {
   // We could add hasUSDCAccount to Service Worker but it's probably easier to just check
   log(`Finding USDC account...`);
   const usdcAccountIndex = tokenAccountSummaries.findIndex(
-    (accountSummary) =>
-      accountSummary.currency === getCurrencyBySymbol("USDC").mintAddress
+    (accountSummary) => accountSummary.currency === getCurrencyBySymbol("USDC").mintAddress
   );
   if (usdcAccountIndex === NOT_FOUND) {
     log(`No existing USDC account in this wallet`);
@@ -450,9 +394,7 @@ const setupServiceWorker = async () => {
     });
     if (pendingUserApprovalReply.topic === "replyPendingUserApproval") {
       if (pendingUserApprovalReply) {
-        log(
-          `we have received a replyPendingUserApproval from the service worker! Setting it.`
-        );
+        log(`we have received a replyPendingUserApproval from the service worker! Setting it.`);
         log(stringify(pendingUserApprovalReply));
         // Reply should be whether it was allowed or not
         // maybe some unique id
@@ -469,15 +411,12 @@ const setupServiceWorker = async () => {
       topic: "getNativeAccountSummary",
     });
     if (nativeAccountReply.topic === "replyNativeAccountSummary") {
-      const nativeAccountSummary =
-        nativeAccountReply.nativeAccountSummary as AccountSummary;
+      const nativeAccountSummary = nativeAccountReply.nativeAccountSummary as AccountSummary;
       log(
         `nativeAccountSummary reply from Service Worker with  ${nativeAccountSummary.transactionSummaries.length} transactions`
       );
       if (nativeAccountSummary) {
-        log(
-          `we have recieved a nativeAccountSummary from the service worker! Setting it.`
-        );
+        log(`we have recieved a nativeAccountSummary from the service worker! Setting it.`);
         nativeAccountStore.set(nativeAccountSummary);
       } else {
         log(`We don't have a nativeAccountSummary from the service worker`);
@@ -491,15 +430,10 @@ const setupServiceWorker = async () => {
       topic: "getTokenAccountSummaries",
     });
     if (tokenAccountSummariesReply.topic === "replyTokenAccountSummaries") {
-      const tokenAccountSummaries =
-        tokenAccountSummariesReply.tokenAccountSummaries as Array<AccountSummary>;
-      log(
-        `tokenAccountSummaries reply from Service Worker with  ${tokenAccountSummaries.length} token accounts`
-      );
+      const tokenAccountSummaries = tokenAccountSummariesReply.tokenAccountSummaries as Array<AccountSummary>;
+      log(`tokenAccountSummaries reply from Service Worker with  ${tokenAccountSummaries.length} token accounts`);
       if (tokenAccountSummaries) {
-        log(
-          `we have recieved tokenAccountSummaries from the service worker! Setting it.`
-        );
+        log(`we have recieved tokenAccountSummaries from the service worker! Setting it.`);
         tokenAccountsStore.set(tokenAccountSummaries);
       } else {
         log(`We don't have tokenAccountSummaries from the service worker`);
@@ -507,9 +441,7 @@ const setupServiceWorker = async () => {
     }
     console.timeEnd("getTokenAccountSummaries");
   } else {
-    log(
-      `Not contacting service worker as not loaded as an extension (or running in node)`
-    );
+    log(`Not contacting service worker as not loaded as an extension (or running in node)`);
   }
 };
 
