@@ -375,7 +375,6 @@ const setupServiceWorker = async () => {
     // Register ('install') a service worker hosted at the root of the
     // site using the default scope.
 
-    // DISABLED - SERVICE WORKER IS REGISTERING MULTIPLE TIMES
     log(`Registering service worker...`);
     let registration: ServiceWorkerRegistration | null = null;
     try {
