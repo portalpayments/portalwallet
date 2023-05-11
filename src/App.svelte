@@ -24,7 +24,7 @@
     connectionStore,
     authStore,
     pendingUserApprovalStore,
-    checkServiceWorkerForPendingUserApprovals,
+    checkForPendingUserApproval,
   } from "./lib/stores";
   import { checkIfOnboarded } from "./lib/settings";
   import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "./backend/constants";
@@ -88,18 +88,12 @@
       log(`Pending user approval store subscription updated!`, newValue);
       if (newValue) {
         pendingUserApproval = newValue;
-        log(`⏹️ There is a pending user approval`);
-        return;
+        log(`⏹️ There is a pending user approval`, newValue);
+      } else {
+        log(`⏹️ There is NOT a pending user approval`);
       }
-    });
-
-    // We can't just ask the pendingUserApprovalStore directly if it has a pending
-    // user approval, since the service worker is the source of truth for pendingUserApprovals
-    // (this function also updates the strore)
-    log(`in App, about to check service worker for pending user approvals`);
-    await checkServiceWorkerForPendingUserApprovals();
-    log(`in App, finished checking service worker for pending user approvals`);
-    hasCheckedPendingUserApproval = true;
+      hasCheckedPendingUserApproval = true;
+    });    
   })();
 </script>
 

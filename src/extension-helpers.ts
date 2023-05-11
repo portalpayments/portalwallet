@@ -65,7 +65,7 @@ export const addMessageListener = (topic: string, handleMessage: HandleMessage) 
   const listener = (message, sender, sendReply) => {
     const messageSender = sender?.tab?.url || sender?.origin || "unknown";
     if (message.topic !== topic) {
-      log(`DEBUG ignoring message from ${messageSender} on this topic: '${message.topic}' (expect many of these)`);
+      // log(`DEBUG ignoring message from ${messageSender} on this topic: '${message.topic}' (expect many of these)`);
       return;
     }
     log(`📩 Handling message from ${messageSender} on this topic: '${message.topic}'`);

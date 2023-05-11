@@ -7,9 +7,9 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import { get as getFromStore, writable, type Writable } from "svelte/store";
-import type { PublicKey, Connection, Keypair, ParsedTransactionWithMeta } from "@solana/web3.js";
-import type { AccountSummary, Auth, Collectable, Contact, PendingUserApproval, PortalMessage } from "../backend/types";
-import { asyncMap, log, sleep, stringify } from "../backend/functions";
+import type { PublicKey, Keypair } from "@solana/web3.js";
+import type { AccountSummary, Auth, Collectable, Contact, PendingUserApproval } from "../backend/types";
+import { asyncMap, isFresh, log, sleep, stringify } from "../backend/functions";
 import uniqBy from "lodash.uniqby";
 import {
   getContactsFromTransactions,
@@ -18,13 +18,14 @@ import {
   getTokenAccountSummaries,
   getTransactionSummariesForAddress,
 } from "../backend/wallet";
-import { MILLISECONDS, NOT_FOUND, SECONDS } from "../backend/constants";
+import { MILLISECONDS, MINUTES, NOT_FOUND, SECONDS } from "../backend/constants";
 import { getKeypairFromString, getCurrencyBySymbol } from "../backend/solana-functions";
 import base58 from "bs58";
 import { summarizeTransaction } from "../backend/transactions";
 import { HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE } from "./frontend-constants";
 import { getCollectables } from "../backend/collectables";
 import type { ConnectionWithCompressedNFTSupport } from "../metaplex-read-api/ConnectionWithCompressedNFTSupport";
+import localforage from "localforage";
 
 let connection: ConnectionWithCompressedNFTSupport | null;
 let keyPair: Keypair | null;
@@ -187,22 +188,40 @@ export const updateAccountsForNewTransaction = async (signature: string, nativeO
 
 export const haveAccountsLoadedStore: Writable<boolean> = writable(false);
 
+// We use a store for pendingUserApprovals, but also persist to localforage
 export const pendingUserApprovalStore: Writable<PendingUserApproval | null> = writable(null);
 
-export const checkServiceWorkerForPendingUserApprovals = async () => {
-  if (SERVICE_WORKER && chrome.runtime) {
-    log(`Store checking service worker for getPendingUserApproval`);
-    const response = (await chrome.runtime.sendMessage({
-      topic: "getPendingUserApproval",
-    })) as PortalMessage;
-    log(`Store: RESPONSE from service worker: ${stringify(response)}`);
-    if (response.topic === "replyPendingUserApproval") {
-      log(`store got a response from service worker`), response.pendingUserApproval;
-      pendingUserApprovalStore.set(response.pendingUserApproval);
-      log(`Store has set pendingUserApprovalStore`);
-    }
+// Set the initial value of pendingUserApprovalStore from localstorage
+const setupPendingUserApprovalStore = async () => {
+  const pendingUserApprovalOrNull = await localforage.getItem("PENDING_USER_APPROVAL");
+
+  if (!pendingUserApprovalOrNull) {
+    log(`⏹️ We don't have any PendingUserApprovals in storage`);
+    return;
+  }
+  const pendingUserApproval = pendingUserApprovalOrNull as PendingUserApproval;
+  if (!pendingUserApproval.time) {
+    throw new Error(`No date on stored pendingUserApproval, we can't know if it's fresh or not`);
+  }
+  if (isFresh(pendingUserApproval.time, 30 * SECONDS)) {
+    log(`⏹️ We have a fresh pendingUserApproval in localforage, saving it`);
+    pendingUserApprovalStore.set(pendingUserApproval);
+    log(`⏹️ Saved fresh pendingUserApproval to store`);
+  } else {
+    log(`⏹️ We have a pendingUserApproval in localforage but it is stale`);
   }
 };
+setupPendingUserApprovalStore();
+
+// Update the localstorage whenever this store gets a value
+// Note: hopefully this won't cause an infonite loop as an item from localforage makes the subscription update
+// which causes localforage to save
+pendingUserApprovalStore.subscribe(async (newValue) => {
+  if (newValue) {
+    newValue.time = Date.now();
+    await localforage.setItem("PENDING_USER_APPROVAL", newValue);
+  }
+});
 
 export const hasUSDCAccountStore: Writable<boolean | null> = writable(null);
 
@@ -355,6 +374,8 @@ const setupServiceWorker = async () => {
   if (HAS_SERVICE_WORKER) {
     // Register ('install') a service worker hosted at the root of the
     // site using the default scope.
+
+    // DISABLED - SERVICE WORKER IS REGISTERING MULTIPLE TIMES
     log(`Registering service worker...`);
     let registration: ServiceWorkerRegistration | null = null;
     try {
@@ -386,24 +407,6 @@ const setupServiceWorker = async () => {
       }
     }
     console.timeEnd("getSecretKey");
-
-    // Get pending user actions (eg, the we need to approve a transaction etc)
-    console.time("getPendingUserApproval");
-    const pendingUserApprovalReply = await chrome.runtime.sendMessage({
-      topic: "getPendingUserApproval",
-    });
-    if (pendingUserApprovalReply.topic === "replyPendingUserApproval") {
-      if (pendingUserApprovalReply) {
-        log(`we have received a replyPendingUserApproval from the service worker! Setting it.`);
-        log(stringify(pendingUserApprovalReply));
-        // Reply should be whether it was allowed or not
-        // maybe some unique id
-        pendingUserApprovalStore.set(null);
-      } else {
-        log(`We don't have a pending user action`);
-      }
-    }
-    console.timeEnd("getPendingUserApproval");
 
     // Get the native account summary
     console.time("getNativeAccountSummary");

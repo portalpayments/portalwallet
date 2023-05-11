@@ -32,6 +32,11 @@ if (!window.location.protocol.startsWith("http")) {
 const VERSION = 23;
 log(`VERSION IS ${VERSION}`);
 
+const MINUTES = 60 * 1000;
+const HOUR = 60 * MINUTES;
+
+const ACCOUNT_CACHE = 1 * HOUR;
+
 // From app
 const MID_BLUE = "#419cfd";
 const RED = "#ff0000";
@@ -73,7 +78,12 @@ addMessageListener("walletStandardSignMessage", async (message: PortalMessage, s
   // Set something requiring approval
   // 'as' because we've just checked it has the right properties
   pendingUserApproval = message as PendingUserApproval;
+
+  pendingUserApproval.time = Date.now();
   log(`Saved pendingUserApproval in service worker.`);
+
+  await localforage.setItem("PENDING_USER_APPROVAL", pendingUserApproval);
+  log(`Also saved to localforage, just in case the service worker is terminated`);
 
   // TODO - maybe we need to save this (with a timestamp) to localforage just in case the service worker is killed?
   // search service worker licycle in manifest version 3
@@ -101,18 +111,6 @@ addMessageListener("setSecretKey", async (message: PortalMessage, sendReply: Sen
   secretKey = message.secretKey;
 });
 
-addMessageListener("getPendingUserApproval", async (message: PortalMessage, sendReply: SendReply) => {
-  if (pendingUserApproval) {
-    log(`😃 Service worker cache: we have a pendingUserApproval, sending reply...`);
-  } else {
-    log(`☹️ Service worker does not have a pendingUserApproval`);
-  }
-  sendReply({
-    topic: "replyPendingUserApproval",
-    pendingUserApproval,
-  });
-});
-
 addMessageListener("getNativeAccountSummary", async (message: PortalMessage, sendReply: SendReply) => {
   if (nativeAccountSummary) {
     log(`😃 Service worker cache: we have the nativeAccountSummary in memory already`);
@@ -125,7 +123,7 @@ addMessageListener("getNativeAccountSummary", async (message: PortalMessage, sen
   }
   const nativeAccountSummaryFromLocalForage = (await localforage.getItem("NATIVE_ACCOUNT_SUMMARY")) as AccountSummary;
   if (nativeAccountSummaryFromLocalForage) {
-    if (isFresh(nativeAccountSummaryFromLocalForage.lastUpdated)) {
+    if (isFresh(nativeAccountSummaryFromLocalForage.lastUpdated, ACCOUNT_CACHE)) {
       log(`😀 Service worker cache: we have the nativeAccountSummary in localforage and it's fresh!`);
       sendReply({
         topic: "replyNativeAccountSummary",
@@ -163,7 +161,7 @@ addMessageListener("getTokenAccountSummaries", async (message: PortalMessage, se
 
   const allAreFresh =
     tokenAccountSummariesFromLocalForage &&
-    tokenAccountSummariesFromLocalForage.every((accountSummary) => isFresh(accountSummary.lastUpdated));
+    tokenAccountSummariesFromLocalForage.every((accountSummary) => isFresh(accountSummary.lastUpdated, ACCOUNT_CACHE));
 
   if (allAreFresh) {
     log(`😀 Service worker cache: we have the tokenAccountSummaries in localforage and they're all fresh!`);

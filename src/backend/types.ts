@@ -297,6 +297,7 @@ export interface PendingUserApproval extends PortalMessage {
   topic: string;
   text: string;
   url: string;
+  time: number;
 }
 
 // TODO: 'Auth' is a silly name
@@ -374,9 +375,6 @@ export interface PortalMessage {
 
 export type SendReply = (response: unknown) => void;
 
-export type HandleMessage = (
-  portalMessage: PortalMessage,
-  sendReply: SendReply
-) => Promise<void>;
+export type HandleMessage = (portalMessage: PortalMessage, sendReply: SendReply) => Promise<void>;
 
 export type Jurisdiction = "State" | "Country";

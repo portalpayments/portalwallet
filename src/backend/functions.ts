@@ -13,8 +13,6 @@
 const MINUTES = 60 * 1000;
 const HOUR = 60 * MINUTES;
 
-const ACCOUNT_CACHE = 1 * HOUR;
-
 export const getFromEnv = (variableName) => {
   const value = process.env[variableName];
   if (!value) {
@@ -27,10 +25,10 @@ export const toUnique = function <T>(array: Array<T>): Array<T> {
   return Array.from(new Set(array));
 };
 
-export const isFresh = (lastUpdated: number) => {
+export const isFresh = (lastUpdated: number, maximumAge: number) => {
   const now = Date.now();
   const difference = now - lastUpdated;
-  if (difference < ACCOUNT_CACHE) {
+  if (difference < maximumAge) {
     return true;
   }
   return false;
@@ -66,10 +64,7 @@ export const solanaBlocktimeToJSTime = (blockTime: number) => {
   return blockTime * 1000;
 };
 
-export const isIncludedCaseInsensitive = (
-  string: string,
-  substring: string
-) => {
+export const isIncludedCaseInsensitive = (string: string, substring: string) => {
   return string.toLowerCase().includes(substring.toLowerCase());
 };
 
@@ -171,18 +166,13 @@ export const asyncFilter = async <T>(
   array: Array<T>,
   filter: (value: T, index: number) => Promise<boolean>
 ): Promise<Array<T>> => {
-  const results: boolean[] = await Promise.all(
-    array.map((value, index) => filter(value, index))
-  );
+  const results: boolean[] = await Promise.all(array.map((value, index) => filter(value, index)));
   return array.filter((_, index) => results[index]);
 };
 
 export const asyncMap = async <ArrayItemType, IteratorReturnType>(
   array: Array<ArrayItemType>,
-  iterator: (
-    value: ArrayItemType,
-    index?: number
-  ) => Promise<IteratorReturnType>
+  iterator: (value: ArrayItemType, index?: number) => Promise<IteratorReturnType>
 ): Promise<Array<IteratorReturnType>> => {
   return Promise.all(array.map(iterator));
 };
@@ -200,11 +190,7 @@ export const runWithTimeout = <T>(
   // but reject returns void so I think it is
   const timeoutPromise: Promise<void> = new Promise((resolve, reject) => {
     setTimeout(() => {
-      reject(
-        message != null
-          ? message
-          : `Timeout! Operation did not complete within ${timeout} ms`
-      );
+      reject(message != null ? message : `Timeout! Operation did not complete within ${timeout} ms`);
     }, timeout);
   });
 
