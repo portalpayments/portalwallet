@@ -384,7 +384,7 @@ const setupServiceWorker = async () => {
       throw error;
     }
 
-    log("⚡Service worker registration succeeded:", registration);
+    log("⚙️ Service worker registration succeeded:", registration);
 
     // Post messaging asking for all the things we'd like to get from the cache
 
