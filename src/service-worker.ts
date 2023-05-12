@@ -224,6 +224,7 @@ self.addEventListener("fetch", (event) => {
 
 // https://developer.mozilla.org/en-US/docs/mozilla/add-ons/webextensions/api/webnavigation/oncompleted
 chrome.webNavigation.onCompleted.addListener(async (event) => {
+  log(`DEBUG: event.url`, event.url);
   if (!event.url.startsWith("http")) {
     return;
   }
