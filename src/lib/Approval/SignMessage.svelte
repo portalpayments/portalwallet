@@ -30,8 +30,7 @@
 
     <p>This won't make any transactions on the blockchain or incur any fee.</p>
 
-    <div class="choices">      
-      
+    <div class="choices">
       <div class="rounded-gradient-border-hack decline">
         <!-- Fix warning during `npm run build`
         TODO: make Svelte handle chrome namespace properly 
@@ -46,7 +45,8 @@
               topic: "walletStandardSignMessageResponse",
               isApproved: false,
             });
-            log(`Sent 'walletStandardSignMessageResponse' message`)
+            log(`Sent 'walletStandardSignMessageResponse' message`);
+            window.close();
           }}
         >
           <!-- Since the previous hack needs a white background, we need another div to the 'background as gradient text' hack -->
@@ -68,6 +68,7 @@
               isApproved: true,
             });
             log(`Sent 'walletStandardSignMessageResponse' message`)
+            window.close();
           }}>Sign & agree</button
         >
       </div>
