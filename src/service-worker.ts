@@ -238,6 +238,13 @@ chrome.webNavigation.onCompleted.addListener(async (event) => {
     return;
   }
 
+  // DevTools opens https://devtools.azureedge.net/serve_file/@7069649d605643a097c48b2aca67b600bc362a4f/third_party/webhint/worker_frame.html
+  // Fix "Extension manifest must request permission to access this host." error.
+  if (event.url.includes("https://devtools")) {
+    log(`Not injecting wallet into HTTPS site used in devtools`);
+    return;
+  }
+
   // https://developer.chrome.com/docs/extensions/reference/scripting/#method-executeScript
   await chrome.scripting.executeScript({
     files: ["./injected.js"],
