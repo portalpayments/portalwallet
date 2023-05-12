@@ -126,11 +126,9 @@ export const URLS = {
   // From https://dev.helius.xyz/rpcs/my
   heliusMainNet:
     "https://rpc.helius.xyz/?api-key=9e66be52-acf4-44a1-8bbe-a9852f8ab3c7",
-  // From https://www.quicknode.com/endpoints/49328
+  // From https://www.quicknode.com/endpoints/110566
   quickNodeMainNetBeta:
-    "https://orbital-polished-rain.solana-mainnet.quiknode.pro/aa92ba0b474b53f9ee8473aaa0a0370ef3dcfb0e/",
-  quickNodeMainNetBetaBackup:
-    "https://proportionate-greatest-needle.solana-mainnet.quiknode.pro/",
+    "https://orbital-polished-rain.solana-mainnet.discover.quiknode.pro/aa92ba0b474b53f9ee8473aaa0a0370ef3dcfb0e/",
 };
 
 export const DECAF_APP = "dcafKdWLATod3BLRngsqZ7CrQwcrUxrLjFWYJwYP1Fy";
