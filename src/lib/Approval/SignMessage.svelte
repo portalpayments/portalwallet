@@ -20,8 +20,7 @@
   <div class="prompt">
     <!-- TODO: add favicon of site to message? -->
     <p>
-      The site at <span class="url">{formatURL(pendingUserApproval.url)}</span> is
-      asking you to sign this message:
+      The site at <span class="url">{formatURL(pendingUserApproval.url)}</span> is asking you to sign this message:
     </p>
 
     <q>
