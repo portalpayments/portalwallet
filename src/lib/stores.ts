@@ -372,17 +372,23 @@ const setupServiceWorker = async () => {
   if (HAS_SERVICE_WORKER) {
     // Register ('install') a service worker hosted at the root of the
     // site using the default scope.
+    const SERVICE_WORKER_URL = "./service-worker.js";
 
-    log(`Registering service worker...`);
-    let registration: ServiceWorkerRegistration | null = null;
-    try {
-      // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer/register
-      registration = await SERVICE_WORKER.register("./service-worker.js");
-    } catch (error) {
-      throw error;
+    // Service worker may already be registered when the extension is installed
+    let registration = (await SERVICE_WORKER.getRegistration(SERVICE_WORKER_URL)) || null;
+
+    if (registration) {
+      log(`⚙️ Service worker is already registered.`);
+    } else {
+      try {
+        log(`⚙️ Registering service worker...`);
+        // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer/register
+        registration = await SERVICE_WORKER.register(SERVICE_WORKER_URL);
+        log("⚙️ Service worker registration succeeded:", registration);
+      } catch (error) {
+        throw error;
+      }
     }
-
-    log("⚙️ Service worker registration succeeded:", registration);
 
     // Post messaging asking for all the things we'd like to get from the cache
 
@@ -409,6 +415,11 @@ const setupServiceWorker = async () => {
     const nativeAccountReply = await chrome.runtime.sendMessage({
       topic: "getNativeAccountSummary",
     });
+
+    if (!nativeAccountReply) {
+      debugger;
+      throw new Error(`Could not get native accounts`);
+    }
     if (nativeAccountReply.topic === "replyNativeAccountSummary") {
       const nativeAccountSummary = nativeAccountReply.nativeAccountSummary as AccountSummary;
       log(
