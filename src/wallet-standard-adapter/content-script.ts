@@ -62,7 +62,7 @@ const main = async () => {
 
   // Why isn't front end responding?
 
-  log("Completd content script setup");
+  log("Completed content script setup");
 };
 
 main();
