@@ -38,7 +38,6 @@
 
     <div class="choices">
       <div class="rounded-gradient-border-hack decline">
-        <textarea>{stringify(pendingUserApproval)}</textarea>
         <button
           on:click={async () => {
             log(`Declining to sign message`);
