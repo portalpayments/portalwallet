@@ -416,10 +416,6 @@ const setupServiceWorker = async () => {
       topic: "getNativeAccountSummary",
     });
 
-    if (!nativeAccountReply) {
-      debugger;
-      throw new Error(`Could not get native accounts`);
-    }
     if (nativeAccountReply.topic === "replyNativeAccountSummary") {
       const nativeAccountSummary = nativeAccountReply.nativeAccountSummary as AccountSummary;
       log(
