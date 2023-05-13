@@ -1,7 +1,7 @@
 <script lang="ts">
   import { log, stringify } from "../../backend/functions";
   import Heading from "../Shared/Heading.svelte";
-  import type { PendingUserApproval } from "../../backend/types";
+  import type { PendingUserApproval, PortalMessage } from "../../backend/types";
 
   import { pendingUserApprovalStore } from "../../lib/stores";
 
@@ -9,6 +9,13 @@
 
   const formatURL = (string: String) => {
     return string.replace(/\/$/, "");
+  };
+
+  // We MUST use chrome.tabs.sendMessage (not chrome.runtime.sendMessage) to talk to a content script
+  // From https://developer.chrome.com/docs/extensions/reference/runtime/#method-sendMessage
+  // "Note that extensions cannot send messages to content scripts using chrome.runtime.sendMessage(). To send messages to content scripts, use tabs.sendMessage.""
+  const sendMessage = (tabId: number, message: PortalMessage) => {
+    chrome.tabs.sendMessage(tabId, message);
   };
 </script>
 
@@ -31,19 +38,18 @@
 
     <div class="choices">
       <div class="rounded-gradient-border-hack decline">
-        <!-- Fix warning during `npm run build`
-        TODO: make Svelte handle chrome namespace properly 
-        See https://stackoverflow.com/questions/75258357/how-to-access-chrome-runtime-from-svelte-project-->
-        <!-- svelte-ignore missing-declaration -->
+        <textarea>{stringify(pendingUserApproval)}</textarea>
         <button
           on:click={async () => {
             log(`Declining to sign message`);
-            pendingUserApprovalStore.set(null);
 
-            await chrome.runtime.sendMessage({
+            sendMessage(pendingUserApproval.tabId, {
               topic: "walletStandardSignMessageResponse",
               isApproved: false,
             });
+
+            pendingUserApprovalStore.set(null);
+
             log(`Sent 'walletStandardSignMessageResponse' message`);
             window.close();
           }}
@@ -54,19 +60,18 @@
       </div>
 
       <div class="rounded-gradient-border-hack agree">
-        <!-- Fix warning during `npm run build`
-        TODO: make Svelte handle chrome namespace properly 
-        See https://stackoverflow.com/questions/75258357/how-to-access-chrome-runtime-from-svelte-project-->
-        <!-- svelte-ignore missing-declaration -->
         <button
           on:click={async () => {
             log(`Signing message request`);
-            pendingUserApprovalStore.set(null);
-            await chrome.runtime.sendMessage({
+
+            sendMessage(pendingUserApproval.tabId, {
               topic: "walletStandardSignMessageResponse",
               isApproved: true,
             });
-            log(`Sent 'walletStandardSignMessageResponse' message`)
+
+            pendingUserApprovalStore.set(null);
+
+            log(`Sent 'walletStandardSignMessageResponse' message`);
             window.close();
           }}>Sign & agree</button
         >

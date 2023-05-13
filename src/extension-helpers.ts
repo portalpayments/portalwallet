@@ -68,7 +68,17 @@ export const addMessageListener = (topic: string, handleMessage: HandleMessage) 
       // log(`DEBUG ignoring message from ${messageSender} on this topic: '${message.topic}' (expect many of these)`);
       return;
     }
-    log(`📩 Handling message from ${messageSender} on this topic: '${message.topic}'`);
+
+    // Add tabId to the message if there is one since if we want to send another message in reply, we will
+    // need to know the tabId for chrome.tabs.sendMessage()
+    message.tabId = sender?.tab?.id || null;
+
+    if (message.tabId) {
+      log(`📩 Handling message from ${messageSender} on this topic: '${message.topic}' from tab ${message.tabId}`);
+    } else {
+      log(`📩 Handling message from ${messageSender} on this topic: '${message.topic}'`);
+    }
+
     const resultPromise = handleMessage(message as PortalMessage, sendReply);
     resultPromise.then((result) => {
       sendReply(result);
