@@ -110,6 +110,7 @@
     "scryptsy": "^2.1.0",
     "ts-node": "^10.9.1",
     "twitter-api-v2": "^1.14.2",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "uuid": "^9.0.0"
   }
 }

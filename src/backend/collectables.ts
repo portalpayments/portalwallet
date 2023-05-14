@@ -4,9 +4,11 @@ import { getAttributesFromNFT } from "./solana-functions";
 import type { Collectable } from "./types";
 import * as http from "fetch-unfucked";
 import mime from "mime";
-import type { ConnectionWithCompressedNFTSupport } from "../metaplex-read-api/ConnectionWithCompressedNFTSupport";
-import type { ReadApiAsset } from "src/metaplex-read-api/types";
 
+import type { ReadApiAsset } from "src/metaplex-read-api/types";
+import { URLS } from "./constants";
+import { v4 as makeUuidv4 } from "uuid";
+import type { Connection } from "@solana/web3.js";
 export const getCoverImage = (metadata: JsonMetadata) => {
   // Sometimes 'files' is an empty list, but 'image' still exists
   // See https://crossmint.myfilebase.com/ipfs/bafkreig5nuz3qswtnipclnhdw4kbdn5s6fpujtivyt4jf3diqm4ivpmv5u
@@ -50,19 +52,34 @@ export const nftToCollectable = async (nft: ReadApiAsset): Promise<Collectable> 
   };
 };
 
-export const getCollectables = async (
-  connection: ConnectionWithCompressedNFTSupport,
-  publicKey: PublicKey
-): Promise<Array<Collectable>> => {
+export const getCollectables = async (connection: Connection, publicKey: PublicKey): Promise<Array<Collectable>> => {
   log(`🎟️ Getting NFTs for ${publicKey.toBase58()}...`);
 
   // TODO: use metaplex instead? Maybe?
   // See https://github.com/metaplex-foundation/js/issues/515
-  const response = await connection.getAssetsByOwner({
-    ownerAddress: publicKey.toBase58(),
-  });
 
-  const allNftsFromAWallet = response.items || [];
+  // Just a unique identifier for the request, for logging purposes
+  const requestID = `portal-${makeUuidv4()}`;
+
+  const response = await http.post(
+    connection.rpcEndpoint,
+    {
+      "content-type": "application/json; charset=utf-8",
+    },
+    {
+      jsonrpc: "2.0",
+      id: requestID,
+      method: "getAssetsByOwner",
+      params: {
+        ownerAddress: publicKey.toBase58(),
+        page: 1,
+        limit: 2,
+      },
+    }
+  );
+
+  // @ts-ignore
+  const allNftsFromAWallet = (response?.body?.result?.items as Array<ReadApiAsset>) || [];
 
   const collectablesUnfiltered: Array<Collectable> = await asyncMap(allNftsFromAWallet, async (nft) => {
     const collectable = await nftToCollectable(nft);

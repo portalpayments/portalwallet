@@ -7,7 +7,7 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import { get as getFromStore, writable, type Writable } from "svelte/store";
-import type { PublicKey, Keypair } from "@solana/web3.js";
+import type { PublicKey, Keypair, Connection } from "@solana/web3.js";
 import type { AccountSummary, Auth, Collectable, Contact, PendingUserApproval } from "../backend/types";
 import { asyncMap, isFresh, log, sleep, stringify } from "../backend/functions";
 import uniqBy from "lodash.uniqby";
@@ -24,10 +24,10 @@ import base58 from "bs58";
 import { summarizeTransaction } from "../backend/transactions";
 import { HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE } from "./frontend-constants";
 import { getCollectables } from "../backend/collectables";
-import type { ConnectionWithCompressedNFTSupport } from "../metaplex-read-api/ConnectionWithCompressedNFTSupport";
+
 import localforage from "localforage";
 
-let connection: ConnectionWithCompressedNFTSupport | null;
+let connection: Connection | null;
 let keyPair: Keypair | null;
 
 const SERVICE_WORKER = globalThis?.navigator?.serviceWorker || null;
@@ -104,7 +104,7 @@ const updateCollectables = async () => {
 };
 
 // Our connection to Solana
-export const connectionStore: Writable<null | ConnectionWithCompressedNFTSupport> = writable(null);
+export const connectionStore: Writable<null | Connection> = writable(null);
 connectionStore.subscribe((newValue) => {
   connection = newValue;
   updateCollectables();

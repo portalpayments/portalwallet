@@ -6,12 +6,7 @@
 //
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
-import {
-  Connection,
-  Keypair,
-  PublicKey,
-  type SignaturesForAddressOptions,
-} from "@solana/web3.js";
+import { Connection, Keypair, PublicKey, type SignaturesForAddressOptions } from "@solana/web3.js";
 import type { ParsedTransactionWithMeta } from "@solana/web3.js";
 
 import { log, sleep, stringify } from "./functions";
@@ -28,24 +23,20 @@ import { toUniqueStringArray } from "../lib/utils";
 import { HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE } from "../lib/frontend-constants";
 import type { AccountSummary, Contact, SimpleTransaction } from "./types";
 import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "../backend/constants";
-import { ConnectionWithCompressedNFTSupport } from "../metaplex-read-api/ConnectionWithCompressedNFTSupport";
+
 import localforage from "localforage";
 
-const identityTokenIssuerPublicKey = new PublicKey(
-  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
-);
+const identityTokenIssuerPublicKey = new PublicKey(PORTAL_IDENTITY_TOKEN_ISSUER_WALLET);
 
 const IS_TRANSACTION_CACHE_ENABLED = true;
 
 const debug = (_unused) => {};
 
-export const connect = async (
-  networkName: keyof typeof URLS
-): Promise<ConnectionWithCompressedNFTSupport> => {
+export const connect = async (networkName: keyof typeof URLS): Promise<Connection> => {
   log(`⚡ Connecting to ${networkName}`);
   // Connection with added Metaplex Read API functionality
   // for compressed NFTs
-  const connection = new ConnectionWithCompressedNFTSupport(URLS[networkName], {
+  const connection = new Connection(URLS[networkName], {
     // Use 'finalized' as we often want to do things with items right after we make them
     // (like make a token account and then immediately transfer tokens to it)
     //
@@ -60,10 +51,7 @@ export const connect = async (
 };
 
 // See https://github.com/Bonfida/bonfida-utils/blob/main/js
-export const checkAccountExists = async (
-  connection: Connection,
-  publicKey: PublicKey
-): Promise<boolean> => {
+export const checkAccountExists = async (connection: Connection, publicKey: PublicKey): Promise<boolean> => {
   const accountInfo = await connection.getAccountInfo(publicKey);
   if (!accountInfo) {
     return false;
@@ -71,10 +59,7 @@ export const checkAccountExists = async (
   return true;
 };
 
-export const getAccountBalance = async (
-  connection: Connection,
-  publicKey: PublicKey
-) => {
+export const getAccountBalance = async (connection: Connection, publicKey: PublicKey) => {
   let accountInfo = await connection.getAccountInfo(publicKey);
   if (!accountInfo) {
     throw new Error(`Could not find account '${publicKey}'`);
@@ -83,16 +68,9 @@ export const getAccountBalance = async (
   return accountInfo.lamports;
 };
 
-export const putSolIntoWallet = async (
-  connection: Connection,
-  publicKey: PublicKey,
-  lamports: number
-) => {
+export const putSolIntoWallet = async (connection: Connection, publicKey: PublicKey, lamports: number) => {
   // Generate a new wallet keypair and airdrop SOL
-  var airdropTransactionSignature = await connection.requestAirdrop(
-    publicKey,
-    lamports
-  );
+  var airdropTransactionSignature = await connection.requestAirdrop(publicKey, lamports);
 
   const latestBlockHash = await connection.getLatestBlockhash();
 
@@ -108,9 +86,7 @@ export const getKeypairFromEnvFile = (envFileKey: string) => {
   // From https://yihau.github.io/solana-web3-demo/tour/create-keypair.html
   const secretKeyFromEnvFile = process.env[envFileKey];
   if (!secretKeyFromEnvFile) {
-    throw new Error(
-      `Please add '${envFileKey}' to your .env file with a private key extracted from Phantom etc.`
-    );
+    throw new Error(`Please add '${envFileKey}' to your .env file with a private key extracted from Phantom etc.`);
   }
   const keyPair = getKeypairFromString(secretKeyFromEnvFile);
   return keyPair;
@@ -121,28 +97,22 @@ export const getTokenAccountsByOwner = async (
   connection: Connection,
   publicKey: PublicKey
 ): Promise<Array<BasicTokenAccount>> => {
-  const rawTokenAccountsByOwner = await connection.getTokenAccountsByOwner(
-    publicKey,
-    {
-      programId: TOKEN_PROGRAM_ID,
-    }
-  );
+  const rawTokenAccountsByOwner = await connection.getTokenAccountsByOwner(publicKey, {
+    programId: TOKEN_PROGRAM_ID,
+  });
 
-  const tokenAccounts = await asyncMap(
-    rawTokenAccountsByOwner.value,
-    async (rawTokenAccount) => {
-      // A Partial since we don't add 'address' until the next line
-      const rawAccount = AccountLayout.decode(rawTokenAccount.account.data);
+  const tokenAccounts = await asyncMap(rawTokenAccountsByOwner.value, async (rawTokenAccount) => {
+    // A Partial since we don't add 'address' until the next line
+    const rawAccount = AccountLayout.decode(rawTokenAccount.account.data);
 
-      const rawAccountBasics = {
-        address: rawTokenAccount.pubkey,
-        amount: rawAccount.amount,
-        mint: rawAccount.mint,
-      };
+    const rawAccountBasics = {
+      address: rawTokenAccount.pubkey,
+      amount: rawAccount.amount,
+      mint: rawAccount.mint,
+    };
 
-      return rawAccountBasics;
-    }
-  );
+    return rawAccountBasics;
+  });
 
   return tokenAccounts;
 };
@@ -166,14 +136,9 @@ export const getTransactionsForAddress = async (
     options.until = until;
   }
 
-  const confirmedSignatureInfos = await connection.getSignaturesForAddress(
-    address,
-    options
-  );
+  const confirmedSignatureInfos = await connection.getSignaturesForAddress(address, options);
 
-  log(
-    `Got ${confirmedSignatureInfos.length} confirmedSignatureInfos with a limit of ${limit}`
-  );
+  log(`Got ${confirmedSignatureInfos.length} confirmedSignatureInfos with a limit of ${limit}`);
 
   let signatures: Array<string> = confirmedSignatureInfos.map(
     (confirmedSignatureInfo) => confirmedSignatureInfo.signature
@@ -181,8 +146,7 @@ export const getTransactionsForAddress = async (
 
   log(`Got ${signatures.length} signatures`);
 
-  const transactions: Array<ParsedTransactionWithMeta> =
-    await getParsedTransactionsAndCache(connection, signatures);
+  const transactions: Array<ParsedTransactionWithMeta> = await getParsedTransactionsAndCache(connection, signatures);
 
   return transactions;
 };
@@ -208,14 +172,9 @@ export const getParsedTransactionAndCache = async (
     "confirmed"
   );
   if (!rawTransaction) {
-    throw new Error(
-      `Could not find transaction id ${signature}. Wrong network?`
-    );
+    throw new Error(`Could not find transaction id ${signature}. Wrong network?`);
   }
-  log(
-    `got transaction ${signature} from the network`,
-    stringify(rawTransaction)
-  );
+  log(`got transaction ${signature} from the network`, stringify(rawTransaction));
   if (IS_TRANSACTION_CACHE_ENABLED) {
     log(`Caching transaction ${transactionCacheId}`);
     await localforage.setItem(transactionCacheId, rawTransaction);
@@ -226,10 +185,7 @@ export const getParsedTransactionAndCache = async (
 
 // Multiple transactions
 // Slightly complied, as some, all or none of the transactions can be cached.
-export const getParsedTransactionsAndCache = async (
-  connection: Connection,
-  signatures: Array<string>
-) => {
+export const getParsedTransactionsAndCache = async (connection: Connection, signatures: Array<string>) => {
   const options = {
     // NOTE: we can't use commitment: finalised in our localhost validator
     // (it's a limitation of the localhost validator)
@@ -249,15 +205,10 @@ export const getParsedTransactionsAndCache = async (
   const transactionSignaturesToGetFromNetwork: Array<string> = [];
 
   // First, get all the cached transactions
-  const cachedTransactionsBySignature: Record<
-    string,
-    ParsedTransactionWithMeta
-  > = {};
+  const cachedTransactionsBySignature: Record<string, ParsedTransactionWithMeta> = {};
   await asyncMap(signatures, async (signature: string) => {
     const transactionCacheId = `transaction-${signature}`;
-    const cachedTransaction = (await localforage.getItem(
-      transactionCacheId
-    )) as ParsedTransactionWithMeta;
+    const cachedTransaction = (await localforage.getItem(transactionCacheId)) as ParsedTransactionWithMeta;
     if (cachedTransaction) {
       cachedTransactionsBySignature[signature] = cachedTransaction;
     } else {
@@ -266,9 +217,9 @@ export const getParsedTransactionsAndCache = async (
   });
 
   log(
-    `We have ${
-      Object.keys(cachedTransactionsBySignature).length
-    } cached transactions out of ${signatures.length} total transactions.`
+    `We have ${Object.keys(cachedTransactionsBySignature).length} cached transactions out of ${
+      signatures.length
+    } total transactions.`
   );
 
   // Then, get all the transactions from the network
@@ -283,19 +234,14 @@ export const getParsedTransactionsAndCache = async (
     if (cachedTransaction) {
       return cachedTransaction;
     }
-    const transactionFromNetwork = transactionsFromNetwork.find(
-      (transactionFromNetwork) => {
-        const transactionSignature =
-          transactionFromNetwork?.transaction?.signatures?.[0];
-        return transactionSignature === signature;
-      }
-    );
+    const transactionFromNetwork = transactionsFromNetwork.find((transactionFromNetwork) => {
+      const transactionSignature = transactionFromNetwork?.transaction?.signatures?.[0];
+      return transactionSignature === signature;
+    });
     if (transactionFromNetwork) {
       return transactionFromNetwork;
     }
-    throw new Error(
-      `Could not find transaction id ${signature}. Wrong network?`
-    );
+    throw new Error(`Could not find transaction id ${signature}. Wrong network?`);
   });
 
   return allTransactions;
@@ -327,30 +273,17 @@ export const getTransactionSummariesForAddress = async (
     return [];
   }
 
-  let transactionSummaries = await asyncMap(
-    rawTransactions,
-    (rawTransaction) => {
-      return summarizeTransaction(
-        rawTransaction,
-        walletAddress,
-        null,
-        true,
-        secretKey
-      );
-    }
-  );
+  let transactionSummaries = await asyncMap(rawTransactions, (rawTransaction) => {
+    return summarizeTransaction(rawTransaction, walletAddress, null, true, secretKey);
+  });
 
   // We can't summarize all transactions yet
-  transactionSummaries = transactionSummaries.filter(
-    (simpleTransaction) => simpleTransaction !== null
-  );
+  transactionSummaries = transactionSummaries.filter((simpleTransaction) => simpleTransaction !== null);
 
   log(
     `In getTransactionSummariesForAddress, for wallet ${walletAddress.toBase58()} token account ${tokenAccount.toBase58()} limit was ${limit}, got ${
       rawTransactions.length
-    } rawTransactions, produced ${
-      transactionSummaries.length
-    } transactionSummaries`
+    } rawTransactions, produced ${transactionSummaries.length} transactionSummaries`
   );
 
   return transactionSummaries;
@@ -360,50 +293,42 @@ export const getTokenAccountSummaries = async (
   connection: Connection,
   keyPair: Keypair
 ): Promise<Array<AccountSummary>> => {
-  const tokenAccounts = await getTokenAccountsByOwner(
-    connection,
-    keyPair.publicKey
-  );
-  const accountSummariesOrNulls: Array<AccountSummary | null> = await asyncMap(
-    tokenAccounts,
-    async (tokenAccount) => {
-      const currencyInfo = mintToCurrencyMap[tokenAccount.mint.toBase58()];
+  const tokenAccounts = await getTokenAccountsByOwner(connection, keyPair.publicKey);
+  const accountSummariesOrNulls: Array<AccountSummary | null> = await asyncMap(tokenAccounts, async (tokenAccount) => {
+    const currencyInfo = mintToCurrencyMap[tokenAccount.mint.toBase58()];
 
-      if (!currencyInfo) {
-        debug(`Unknown currency for mint ${tokenAccount.mint}`);
-        return null;
-      }
-
-      const currencyName = currencyInfo.symbol;
-      log(`Getting transactions for ${currencyName} account`);
-      const transactionSummaries = await getTransactionSummariesForAddress(
-        connection,
-        keyPair.publicKey,
-        tokenAccount.address,
-        HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE,
-        keyPair.secretKey
-      );
-      const accountSummary: AccountSummary = {
-        address: tokenAccount.address,
-        currency: currencyInfo.mintAddress,
-        // TODO - converting BigInt to Number may be sketchy
-        balance: Number(tokenAccount.amount),
-        decimals: currencyInfo.decimals,
-        transactionSummaries,
-        lastUpdated: Date.now(),
-      };
-      return accountSummary;
+    if (!currencyInfo) {
+      debug(`Unknown currency for mint ${tokenAccount.mint}`);
+      return null;
     }
+
+    const currencyName = currencyInfo.symbol;
+    log(`Getting transactions for ${currencyName} account`);
+    const transactionSummaries = await getTransactionSummariesForAddress(
+      connection,
+      keyPair.publicKey,
+      tokenAccount.address,
+      HOW_MANY_TRANSACTIONS_TO_GET_AT_ONCE,
+      keyPair.secretKey
+    );
+    const accountSummary: AccountSummary = {
+      address: tokenAccount.address,
+      currency: currencyInfo.mintAddress,
+      // TODO - converting BigInt to Number may be sketchy
+      balance: Number(tokenAccount.amount),
+      decimals: currencyInfo.decimals,
+      transactionSummaries,
+      lastUpdated: Date.now(),
+    };
+    return accountSummary;
+  });
+  const accountSummaries: Array<AccountSummary> = accountSummariesOrNulls.filter(
+    (accountSummary) => accountSummary !== null
   );
-  const accountSummaries: Array<AccountSummary> =
-    accountSummariesOrNulls.filter((accountSummary) => accountSummary !== null);
   return accountSummaries;
 };
 
-export const getNativeAccountSummary = async (
-  connection: Connection,
-  keyPair: Keypair
-): Promise<AccountSummary> => {
+export const getNativeAccountSummary = async (connection: Connection, keyPair: Keypair): Promise<AccountSummary> => {
   log(`Getting transactions for native account`, new Date());
   let accountBalance = 0;
   let transactionSummaries: Array<SimpleTransaction> = [];
@@ -430,18 +355,11 @@ export const getNativeAccountSummary = async (
   return accountSummary;
 };
 
-export const getProfilePicture = async (
-  connection: Connection,
-  walletPubkey: PublicKey
-) => {
+export const getProfilePicture = async (connection: Connection, walletPubkey: PublicKey) => {
   // https://www.npmjs.com/package/@solflare-wallet/pfp
-  const response = (await getProfilePictureUsingSolanaPFPStandard(
-    connection,
-    walletPubkey,
-    {
-      fallback: false,
-    }
-  )) as ProfilePictureResponse;
+  const response = (await getProfilePictureUsingSolanaPFPStandard(connection, walletPubkey, {
+    fallback: false,
+  })) as ProfilePictureResponse;
 
   // This API returns the Netscape 'broken' image instead of null when 'fallback' is set to false.
   // (also if we turned 'fallback' on, fallback images are ugly gravatar style autogenerated images)
@@ -464,36 +382,24 @@ export const getContactsFromTransactions = async (
     });
   });
 
-  const uniqueTransactionCounterParties: Array<string> = toUniqueStringArray(
-    transactionCounterParties.flat()
-  );
-  log(
-    `We need to verify ${uniqueTransactionCounterParties.length} uniqueTransactionWalletAddresses:`
-  );
+  const uniqueTransactionCounterParties: Array<string> = toUniqueStringArray(transactionCounterParties.flat());
+  log(`We need to verify ${uniqueTransactionCounterParties.length} uniqueTransactionWalletAddresses:`);
 
-  const contacts = await asyncMap(
-    uniqueTransactionCounterParties,
-    async (counterParty): Promise<Contact> => {
-      const [verifiedClaims, profilePictureURL] = await Promise.all([
-        verifyWallet(
-          connection,
-          keyPair,
-          identityTokenIssuerPublicKey,
-          new PublicKey(counterParty)
-        ),
-        getProfilePicture(connection, new PublicKey(counterParty)),
-      ]);
+  const contacts = await asyncMap(uniqueTransactionCounterParties, async (counterParty): Promise<Contact> => {
+    const [verifiedClaims, profilePictureURL] = await Promise.all([
+      verifyWallet(connection, keyPair, identityTokenIssuerPublicKey, new PublicKey(counterParty)),
+      getProfilePicture(connection, new PublicKey(counterParty)),
+    ]);
 
-      const contact: Contact = {
-        walletAddress: counterParty,
-        isNew: false,
-        isPending: false,
-        verifiedClaims,
-        profilePictureURL,
-      };
-      return contact;
-    }
-  );
+    const contact: Contact = {
+      walletAddress: counterParty,
+      isNew: false,
+      isPending: false,
+      verifiedClaims,
+      profilePictureURL,
+    };
+    return contact;
+  });
 
   log(`Got ${contacts.length} contacts used in transactions`);
 

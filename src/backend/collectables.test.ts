@@ -6,6 +6,7 @@ import { connect } from "./wallet";
 import { MIKES_WALLET, SECONDS } from "./constants";
 import { getCollectables } from "./collectables";
 import { describe } from "node:test";
+import * as http from "fetch-unfucked";
 
 describe(`collectables`, () => {
   test(
