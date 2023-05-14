@@ -1,11 +1,4 @@
-import type {
-  FindNftsByOwnerOutput,
-  Metadata,
-  Nft,
-  Sft,
-  JsonMetadata,
-  PublicKey,
-} from "@metaplex-foundation/js";
+import type { FindNftsByOwnerOutput, Metadata, Nft, Sft, JsonMetadata, PublicKey } from "@metaplex-foundation/js";
 import { asyncMap, log, stringify } from "./functions";
 import { getAttributesFromNFT } from "./solana-functions";
 import type { Collectable } from "./types";
@@ -21,10 +14,7 @@ export const getCoverImage = (metadata: JsonMetadata) => {
   const files = metadata?.properties?.files || null;
   if (files?.length) {
     const firstImage = files.find(
-      (file) =>
-        file.type === "image/jpeg" ||
-        file.type === "image/png" ||
-        file.type === "image/svg+xml"
+      (file) => file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/svg+xml"
     );
     if (firstImage) {
       coverImage = firstImage.uri;
@@ -33,16 +23,10 @@ export const getCoverImage = (metadata: JsonMetadata) => {
   return coverImage;
 };
 
-export const nftToCollectable = async (
-  nft: ReadApiAsset
-): Promise<Collectable> => {
+export const nftToCollectable = async (nft: ReadApiAsset): Promise<Collectable> => {
   // We have to force content type as nftstorage.link returns incorrect types
   // See https://twitter.com/mikemaccana/status/1620140384302288896?s=20&t=gP3XffhtDkUiaYQvSph8vg
-  const { body } = await http.get(
-    nft.content.json_uri,
-    null,
-    http.CONTENT_TYPES.JSON
-  );
+  const { body } = await http.get(nft.content.json_uri, null, http.CONTENT_TYPES.JSON);
 
   const rawNFTMetaData: JsonMetadata = body;
 
@@ -80,13 +64,10 @@ export const getCollectables = async (
 
   const allNftsFromAWallet = response.items || [];
 
-  const collectablesUnfiltered: Array<Collectable> = await asyncMap(
-    allNftsFromAWallet,
-    async (nft) => {
-      const collectable = await nftToCollectable(nft);
-      return collectable;
-    }
-  );
+  const collectablesUnfiltered: Array<Collectable> = await asyncMap(allNftsFromAWallet, async (nft) => {
+    const collectable = await nftToCollectable(nft);
+    return collectable;
+  });
 
   // Filter out non-media NFTs
   const collectables = collectablesUnfiltered.filter((collectable) => {
@@ -97,9 +78,7 @@ export const getCollectables = async (
 };
 
 // Best means 'most fun' - video, then images.
-export const getBestMediaAndType = (
-  metadata: JsonMetadata
-): { file: string; type: string } | null => {
+export const getBestMediaAndType = (metadata: JsonMetadata): { file: string; type: string } | null => {
   // Sometimes 'files' is an empty list, but 'image' still exists
   // See https://crossmint.myfilebase.com/ipfs/bafkreig5nuz3qswtnipclnhdw4kbdn5s6fpujtivyt4jf3diqm4ivpmv5u
 
@@ -121,10 +100,7 @@ export const getBestMediaAndType = (
       };
     }
     const image = files.find(
-      (file) =>
-        file.type === "image/jpeg" ||
-        file.type === "image/png" ||
-        file.type === "image/svg+xml"
+      (file) => file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/svg+xml"
     );
     if (image) {
       return {

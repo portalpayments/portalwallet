@@ -1,8 +1,4 @@
-import {
-  getCoverImage,
-  getBestMediaAndType,
-  nftToCollectable,
-} from "./collectables";
+import { getCoverImage, getBestMediaAndType, nftToCollectable } from "./collectables";
 import { rawNFTOffChainData } from "./test-data/nft-off-chain-data";
 import { mcBurgerNFTOnChainData } from "./test-data/nft-on-chain-data";
 import { PublicKey } from "@solana/web3.js";
@@ -51,10 +47,8 @@ describe(`collectables`, () => {
       id: expect.any(String),
       name: "McBurger Demo",
       description: "Demo of composable loyalty. Not redeemable for a burger.",
-      coverImage:
-        "https://shdw-drive.genesysgo.net/52zh6ZjiUQ5UKCwLBwob2k1BC3KF2qhvsE7V4e8g2pmD/mcdonalds_nft.png",
-      media:
-        "https://shdw-drive.genesysgo.net/52zh6ZjiUQ5UKCwLBwob2k1BC3KF2qhvsE7V4e8g2pmD/mcdonalds_nft.png",
+      coverImage: "https://shdw-drive.genesysgo.net/52zh6ZjiUQ5UKCwLBwob2k1BC3KF2qhvsE7V4e8g2pmD/mcdonalds_nft.png",
+      media: "https://shdw-drive.genesysgo.net/52zh6ZjiUQ5UKCwLBwob2k1BC3KF2qhvsE7V4e8g2pmD/mcdonalds_nft.png",
       type: "image/png",
       attributes: {},
     });

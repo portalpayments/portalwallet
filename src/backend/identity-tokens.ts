@@ -27,12 +27,7 @@ import {
   type JsonMetadata,
 } from "@metaplex-foundation/js";
 import mime from "mime";
-import {
-  Connection,
-  Keypair,
-  PublicKey,
-  sendAndConfirmTransaction,
-} from "@solana/web3.js";
+import { Connection, Keypair, PublicKey, sendAndConfirmTransaction } from "@solana/web3.js";
 
 import { asyncMap, log, sleep, stringify } from "./functions";
 import {
@@ -54,27 +49,17 @@ import { FEATURES } from "./features";
 import localforage from "localforage";
 import { getAttributesFromNFT } from "./solana-functions";
 
-export const identityTokenIssuerPublicKey = new PublicKey(
-  PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
-);
+export const identityTokenIssuerPublicKey = new PublicKey(PORTAL_IDENTITY_TOKEN_ISSUER_WALLET);
 
 export const getAnonymousMetaplex = (connection: Connection) => {
   return Metaplex.make(connection);
 };
 
-export const getMetaplex = (
-  connection: Connection,
-  keypair: Keypair,
-  isProduction: boolean = false
-) => {
+export const getMetaplex = (connection: Connection, keypair: Keypair, isProduction: boolean = false) => {
   if (isProduction) {
-    return Metaplex.make(connection)
-      .use(keypairIdentity(keypair))
-      .use(bundlrStorage());
+    return Metaplex.make(connection).use(keypairIdentity(keypair)).use(bundlrStorage());
   }
-  return Metaplex.make(connection)
-    .use(keypairIdentity(keypair))
-    .use(mockStorage());
+  return Metaplex.make(connection).use(keypairIdentity(keypair)).use(mockStorage());
 };
 
 export const verifyWallet = async (
@@ -84,14 +69,12 @@ export const verifyWallet = async (
   wallet: PublicKey,
   useCache = true,
   allowOldIdentityToken = FEATURES.allowOldIdentityToken
-): Promise<
-  VerifiedClaimsForIndividual | VerifiedClaimsForOrganization | null
-> => {
+): Promise<VerifiedClaimsForIndividual | VerifiedClaimsForOrganization | null> => {
   const verifiedClaimsCacheId = `verifiedClaims-${wallet.toBase58()}`;
   if (useCache) {
-    const cachedVerifiedClaims = (await localforage.getItem(
-      verifiedClaimsCacheId
-    )) as VerifiedClaimsForIndividual | VerifiedClaimsForOrganization;
+    const cachedVerifiedClaims = (await localforage.getItem(verifiedClaimsCacheId)) as
+      | VerifiedClaimsForIndividual
+      | VerifiedClaimsForOrganization;
     if (cachedVerifiedClaims) {
       log(`Found verified claims for ${wallet.toBase58()} in cache`);
       return cachedVerifiedClaims;
@@ -109,14 +92,11 @@ export const verifyWallet = async (
     return null;
   }
 
-  const metadataForIdentityTokens = await asyncMap(
-    identityTokens,
-    async (identityTokens) => {
-      const { body } = await http.get(identityTokens.uri);
-      const metadata = body as JsonMetadata | OldNonStandardTokenMetaData;
-      return metadata;
-    }
-  );
+  const metadataForIdentityTokens = await asyncMap(identityTokens, async (identityTokens) => {
+    const { body } = await http.get(identityTokens.uri);
+    const metadata = body as JsonMetadata | OldNonStandardTokenMetaData;
+    return metadata;
+  });
 
   if (!metadataForIdentityTokens.length) {
     // TODO: this seems to fire even with verified wallets
@@ -126,9 +106,7 @@ export const verifyWallet = async (
 
   const latestTokenMetadata = metadataForIdentityTokens?.[0];
 
-  const verifiedClaims:
-    | VerifiedClaimsForIndividual
-    | VerifiedClaimsForOrganization = getVerifiedClaimsFromNFTMetadata(
+  const verifiedClaims: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization = getVerifiedClaimsFromNFTMetadata(
     latestTokenMetadata,
     wallet,
     allowOldIdentityToken
@@ -241,9 +219,7 @@ export const mintIdentityToken = async (
 
     // See https://github.com/metaplex-foundation/js/issues/148
     if (error.message.includes("Failed to pack instruction data")) {
-      throw new Error(
-        `Increase Sol balance of wallet for token issuer ${identityTokenIssuer.publicKey.toBase58()}`
-      );
+      throw new Error(`Increase Sol balance of wallet for token issuer ${identityTokenIssuer.publicKey.toBase58()}`);
     }
 
     if (error.message.includes("insufficient lamports")) {
@@ -267,9 +243,7 @@ export const mintIdentityToken = async (
 
   log(
     `🎟️ The token for ${
-      tokenClaims.type === "INDIVIDUAL"
-        ? tokenClaims.givenName
-        : tokenClaims.legalName
+      tokenClaims.type === "INDIVIDUAL" ? tokenClaims.givenName : tokenClaims.legalName
     } has been created, senderTokenAccount is ${createdNFT.address}.`
   );
 
@@ -299,15 +273,10 @@ export const transferIdentityToken = async (
       null
     );
 
-    signature = await sendAndConfirmTransaction(
-      connection,
-      transaction,
-      [identityTokenIssuer],
-      {
-        // https://solanacookbook.com/guides/retrying-transactions.html#facts
-        maxRetries: 6,
-      }
-    );
+    signature = await sendAndConfirmTransaction(connection, transaction, [identityTokenIssuer], {
+      // https://solanacookbook.com/guides/retrying-transactions.html#facts
+      maxRetries: 6,
+    });
 
     log(`Transferred token to final destination!`, signature);
   } catch (thrownObject) {
@@ -330,8 +299,7 @@ export const makeTokenMetaDataForIndividual = (
   const coverImageContentType = mime.getType(tokenCoverImageUrl);
   return {
     name: IDENTITY_TOKEN_NAME,
-    description:
-      "Verification of real-world identity for Solana payments and apps",
+    description: "Verification of real-world identity for Solana payments and apps",
     image: tokenCoverImageUrl,
     external_url: "https://getportal.app",
     attributes: [
@@ -392,8 +360,7 @@ export const makeTokenMetaDataForOrganization = (
   const companyImageContentType = mime.getType(tokenCoverImageUrl);
   return {
     name: IDENTITY_TOKEN_NAME,
-    description:
-      "Verification of real-world identity for Solana payments and apps",
+    description: "Verification of real-world identity for Solana payments and apps",
     image: tokenCoverImageUrl,
     external_url: "https://getportal.app",
     attributes: [
@@ -470,9 +437,7 @@ export const getIdentityTokensFromWallet = async (
   return identityTokens;
 };
 
-const isOldIdentityToken = (
-  object: object
-): object is OldNonStandardTokenMetaData => {
+const isOldIdentityToken = (object: object): object is OldNonStandardTokenMetaData => {
   // This isn't a standard NFT metadata key, was used by an old version of portal identity token
   return Object.hasOwn(object, "version");
 };
@@ -484,15 +449,11 @@ export const getVerifiedClaimsFromNFTMetadata = (
 ): VerifiedClaimsForIndividual | VerifiedClaimsForOrganization | null => {
   if (isOldIdentityToken(nftMetadata)) {
     if (!allowOldIdentityToken) {
-      log(
-        `Old identity token detected, but we have disabled support for the old identity token`
-      );
+      log(`Old identity token detected, but we have disabled support for the old identity token`);
       return null;
     }
     if (nftMetadata.claims.type === "ORGANIZATION") {
-      log(
-        `Old identity token detected, but we do not support using the old identity token for organisations`
-      );
+      log(`Old identity token detected, but we do not support using the old identity token for organisations`);
       return null;
     }
     if (Number(nftMetadata.version) < MINIMUM_IDENTITY_TOKEN_VERSION) {
