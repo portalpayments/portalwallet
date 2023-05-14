@@ -70,7 +70,7 @@ export const getCollectables = async (
   connection: ConnectionWithCompressedNFTSupport,
   publicKey: PublicKey
 ): Promise<Array<Collectable>> => {
-  log(`🎟️ Getting compressed NFTs for ${publicKey.toBase58()}...`);
+  log(`🎟️ Getting NFTs for ${publicKey.toBase58()}...`);
 
   // TODO: use metaplex instead? Maybe?
   // See https://github.com/metaplex-foundation/js/issues/515

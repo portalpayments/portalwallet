@@ -192,9 +192,7 @@ export const mintIdentityToken = async (
       );
     }
     if (offChainMetaData === null) {
-      throw new Error(
-        `COuld not work out why type of token metadata to create.`
-      );
+      throw new Error(`Could not work out what type of token metadata to create.`);
     }
   }
 
