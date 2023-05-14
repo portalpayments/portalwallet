@@ -49,15 +49,9 @@ const main = async () => {
   addMessageListener("walletStandardSignMessageResponse", async (message: PortalMessage, sendReply: SendReply) => {
     log(`😃😃😃 Content script: the user has responded to the message signing UI...`);
 
-    clearBadge();
-
     // Send the user's response to the injected wallet
     window.postMessage(message);
 
-    // Not important, but we do need to reply because sendMessage() awaits the result.
-    sendReply({
-      topic: "replyWalletStandardSignMessageResponse",
-    });
   });
 
   // Why isn't front end responding?

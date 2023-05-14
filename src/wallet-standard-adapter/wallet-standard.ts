@@ -188,14 +188,13 @@ export const PortalWalletStandardImplementation: WalletStandard = {
           signatureOrNull = null;
         }
 
-        log(`!!! WOO RESULT IS:`, signatureOrNull);
-        log(`We should send a message clearing the notification now (since it's timed out or the user has signed)`);
-        if (signatureOrNull === null) {
+        if (!signatureOrNull) {
+          log(`🤔 User didn't sign.`);
+          // Wallet Standard behaviour is to throw an error for this
           throw new WalletSignMessageError("Signature was not approved");
         }
 
-        await sleep(60 * SECONDS);
-        log(`Finished sleeping. Approving signature...`);
+        log(`😀 Woo, we have a signature!`);
 
         const output: SolanaSignMessageOutput = {
           signedMessage: accountAndMessage.message,
