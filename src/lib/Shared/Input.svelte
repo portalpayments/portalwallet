@@ -224,13 +224,19 @@
 
   button.clear {
     position: absolute;
-    right: 0;
+    right: 12px;
     height: 100%;
     width: 23px;
     display: grid;
     background: transparent;
     align-content: center;
     color: var(--black);
+  }
+
+  // The square theme can have the button a little closer to the right
+  // it just looks more natural
+  .square button.clear {
+    right: 0;
   }
 
   button.submit-button {
