@@ -52,8 +52,13 @@ export const nftToCollectable = async (nft: ReadApiAsset): Promise<Collectable> 
   };
 };
 
-export const getCollectables = async (connection: Connection, publicKey: PublicKey): Promise<Array<Collectable>> => {
-  log(`🎟️ Getting NFTs for ${publicKey.toBase58()}...`);
+export const getCollectables = async (
+  connection: Connection,
+  publicKey: PublicKey,
+  page: number = 1,
+  limit: number = 100
+): Promise<Array<Collectable>> => {
+  log(`🎟️ Getting Collectables for ${publicKey.toBase58()}...`);
 
   // TODO: use metaplex instead? Maybe?
   // See https://github.com/metaplex-foundation/js/issues/515
@@ -72,8 +77,8 @@ export const getCollectables = async (connection: Connection, publicKey: PublicK
       method: "getAssetsByOwner",
       params: {
         ownerAddress: publicKey.toBase58(),
-        page: 1,
-        limit: 2,
+        page,
+        limit,
       },
     }
   );
@@ -90,6 +95,8 @@ export const getCollectables = async (connection: Connection, publicKey: PublicK
   const collectables = collectablesUnfiltered.filter((collectable) => {
     return Boolean(collectable.media);
   });
+
+  log(`🎟️ Got ${collectables.length} collectables (${collectablesUnfiltered.length} before filtering)`);
 
   return collectables;
 };
