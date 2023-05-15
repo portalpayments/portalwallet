@@ -16,6 +16,8 @@
 
   export let shape: "square" | "round" = "round";
 
+  export let theme: "finance" | "art" = "finance";
+
   export let currency: CurrencyDetails | null = null;
 
   export let showClearButton = false;
@@ -78,7 +80,7 @@
 </script>
 
 <div class="input-and-label">
-  <div class="border {shape === 'square' ? 'square' : ''} ">
+  <div class="border {shape === 'square' ? 'square' : ''} {theme === 'finance' ? 'finance' : 'art'}">
     <div class="big-white-area {hasButton ? 'with-submit-button' : ''} {shape === 'square' ? 'square' : ''}">
       <input
         bind:value
@@ -145,8 +147,12 @@
 
   /* Enable a gradient border when the input inside is focused
   CSS doesn't currently let us use borders for gradients */
-  .border:has(input:focus) {
+  .border.finance:has(input:focus) {
     background: var(--blue-green-gradient);
+  }
+
+  .border.art:has(input:focus) {
+    background: var(--purple-orange-gradient);
   }
 
   .border.square {
