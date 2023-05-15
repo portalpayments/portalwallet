@@ -12,8 +12,7 @@
   export let isSpellChecked: boolean = false;
 
   export let onTypingPause: svelte.JSX.KeyboardEventHandler<HTMLInputElement> | null;
-  export let onClear: svelte.JSX.MouseEventHandler<HTMLButtonElement> | null =
-    null;
+  export let onClear: svelte.JSX.MouseEventHandler<HTMLButtonElement> | null = null;
 
   export let theme: "square" | "round" = "round";
 
@@ -23,8 +22,7 @@
 
   export let hasButton = false;
 
-  export let onButtonSubmit: svelte.JSX.MouseEventHandler<HTMLButtonElement> | null =
-    null;
+  export let onButtonSubmit: svelte.JSX.MouseEventHandler<HTMLButtonElement> | null = null;
 
   const EMPTY = "";
 
@@ -62,10 +60,7 @@
     // 'event.data' is what the user just typed
 
     // Stop a user from doing 123.45.67
-    const ALREADY_HAS_DECIMAL_PLACE =
-      filterField === "numbers" &&
-      String(value).includes(".") &&
-      event?.data === ".";
+    const ALREADY_HAS_DECIMAL_PLACE = filterField === "numbers" && String(value).includes(".") && event?.data === ".";
     if (ALREADY_HAS_DECIMAL_PLACE) {
       log(`Already has an existing decimal place`);
       target.value = target.value.replace(/.$/gi, "");
@@ -73,10 +68,7 @@
 
     // Make typing '.69' look like '0.69'
     const SENDING_MINOR_CURRENCY =
-      filterField === "numbers" &&
-      value === null &&
-      event.data &&
-      event.data.startsWith(".");
+      filterField === "numbers" && value === null && event.data && event.data.startsWith(".");
 
     if (SENDING_MINOR_CURRENCY) {
       log(`Typed a dot without any characters before it, adding leading zero`);
@@ -87,12 +79,7 @@
 
 <div class="input-and-label">
   <div class="border {theme === 'square' ? 'square' : ''} ">
-    <div
-      class="big-white-area {hasButton ? 'with-submit-button' : ''} {theme ===
-      'square'
-        ? 'square'
-        : ''}"
-    >
+    <div class="big-white-area {hasButton ? 'with-submit-button' : ''} {theme === 'square' ? 'square' : ''}">
       <input
         bind:value
         type="text"
