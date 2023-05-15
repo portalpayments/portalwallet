@@ -53,11 +53,7 @@
             <source src={collectable.media} type="video/mp4" />
           </video>
         {:else if collectable.type === "image/png" || collectable.type === "image/jpeg" || collectable.type === "image/svg+xml" || collectable.type === null}
-          <img
-            src={collectable.media}
-            alt={collectable.description}
-            class="media"
-          />
+          <img src={collectable.media} alt={collectable.description} class="media" />
         {/if}
       </a>
 
@@ -73,9 +69,7 @@
             {#if getTwitterUsername(attributeValue)}
               <a
                 class="twitter-link"
-                href={`https://twitter.com/${getTwitterUsername(
-                  attributeValue
-                )}`}
+                href={`https://twitter.com/${getTwitterUsername(attributeValue)}`}
                 target="_blank"
               >
                 <img class="twitter-logo" src={Twitter} alt="Twitter logo" />
@@ -99,7 +93,8 @@
   .collectable-screen {
     align-content: start;
     display: grid;
-    padding: 12px;
+    // Nothing at bottom as we want to scroll down
+    padding: 12px 12px 0 12px;
     gap: 12px;
     grid-template-columns: 1fr;
     background: radial-gradient(at 50% 50%, #ffe7dd 0, #fff 80%, #fff 100%);

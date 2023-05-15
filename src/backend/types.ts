@@ -383,4 +383,4 @@ export interface Folder {
   collectables: Array<Collectable>;
 }
 
-export type CollectablesAndFolders = Array<Collectable | Folder>;
+export type CollectablesInFolders = Array<Collectable | Folder>;

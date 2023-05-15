@@ -1,13 +1,14 @@
 <script lang="ts">
   import { log, stringify, isIncludedCaseInsensitive } from "../../backend/functions";
   import Heading from "../Shared/Heading.svelte";
-  import type { Collectable } from "../../backend/types";
+  import CollectableThumb from "./CollectableThumb.svelte";
+  import FolderThumb from "./FolderThumb.svelte";
+  import type { Collectable, Folder } from "../../backend/types";
   import SkeletonGallery from "../Shared/Skeletons/SkeletonGallery.svelte";
-  import { Link } from "svelte-navigator";
   import { collectablesStore } from "../stores";
   import { sortByName } from "../utils";
-  import { getBackgroundGradient } from "../get-background-gradient";
-  import FolderSVG from "../../assets/FOLDER.svg";
+  import { getCollectablesInFolders } from "../../backend/collectables";
+  import type { CollectablesInFolders } from "../../backend/types";
 
   import Input from "../Shared/Input.svelte";
 
@@ -19,25 +20,14 @@
 
   let filterValue: string = EMPTY;
 
-  let activeFolder: string | null = null;
-
-  let heading = "Collectables";
+  let activeFolderName: string | null = null;
+  let collectablesInFolders: CollectablesInFolders = [];
+  let collectablesInActiveFolder: Array<Collectable> = [];
 
   const clearCollectablesFilter = () => {
     log(`Clearing filterValue...`);
     filterValue = EMPTY;
     filterCollectables(collectables, filterValue);
-  };
-
-  const isIncluded = (collectable) => {
-    // TODO: Remove this filter once we have a better way to handle stickers
-    // (eg folders or similar)
-    // https://docs.metaplex.com/programs/token-metadata/certified-collections
-    const isSticker = collectable.description.includes("Sticker Collection");
-    const isDripHaus = collectable.attributes["presented_by"] === "@drip_haus";
-    const isSolanaSpaces = collectable.attributes["presented_by"] === "@solanaspaces";
-    const isIgnored = isSticker || isDripHaus || isSolanaSpaces;
-    return !isIgnored;
   };
 
   const makeFilter = (filterValue) => {
@@ -56,46 +46,63 @@
 
   const filterCollectables = (collectables: Array<Collectable>, filterValue: string) => {
     log(`in filterCollectables`);
+
+    // TODO: we clear the active folder and make search go across all our NFTS
+    // In future we may want to search only in the current folder
+    activeFolderName = null;
+
     if (!collectables?.length) {
       log(`we have no collectables, not bothering to filter`);
       return;
     }
 
     if (filterValue === EMPTY) {
-      filteredCollectables = collectables.sort(sortByName).filter(isIncluded);
+      filteredCollectables = collectables.sort(sortByName);
       isLoading = false;
       log(`Filter value is empty, so just sorted and displayed all collectables`);
       return;
     }
     const matchesFilterValue = makeFilter(filterValue);
-    filteredCollectables = collectables.sort(sortByName).filter(isIncluded).filter(matchesFilterValue);
-    log(`Updated filteredCollectables based on fitler ${filterValue}`);
+    filteredCollectables = collectables.sort(sortByName).filter(matchesFilterValue);
+    log(`Updated filteredCollectables based on filter ${filterValue}`);
     isLoading = false;
-  };
-
-  const setBackgroundColor = async (event) => {
-    const imageElement = event.target;
-    const gradient = await getBackgroundGradient(imageElement.src);
-    imageElement.style["background-image"] = gradient;
   };
 
   collectablesStore.subscribe((newValue) => {
     collectables = newValue;
+    collectablesInFolders = getCollectablesInFolders(collectables);
     if (newValue) {
       filterCollectables(collectables, filterValue);
     }
   });
 
-  $: filterValue && filterCollectables(collectables, filterValue);
+  $: filterValue, filterCollectables(collectables, filterValue);
+
+  const isAFolder = (collectableOrFolder: Collectable | Folder): collectableOrFolder is Folder => {
+    return Object.hasOwn(collectableOrFolder, "folderName");
+  };
+
+  const setFolder = (folderName: string) => {
+    log(`Setting active folder`);
+    activeFolderName = folderName;
+    const activeFolder = collectablesInFolders.find((collectableOrFolder) => {
+      if (!isAFolder(collectableOrFolder)) {
+        return false;
+      }
+      return collectableOrFolder.folderName === activeFolderName;
+    });
+    collectablesInActiveFolder = (activeFolder as Folder).collectables;
+  };
 </script>
 
 <div class="heading">
-  <Heading theme="art">{collectables}</Heading>
+  <Heading theme="art">{activeFolderName || "Collectables"}</Heading>
   <Input
     value={filterValue}
     isFocused={false}
     label="Search names and attributes"
     onTypingPause={(event) => {
+      // TODO: fix the ignore. Not sure why an input event wouldn't have a value.
       // @ts-ignore
       const newFilterValue = event.target.value;
       log(`Setting filter value to `, newFilterValue);
@@ -109,30 +116,34 @@
 </div>
 {#if isLoading}
   <SkeletonGallery />
-{:else if filteredCollectables?.length}
+{:else if collectables?.length}
   <div class="collectables">
-    {#each filteredCollectables as collectable}
-      <Link to={`/collectables/${collectable.id}`}>
-        <div class="collectable">
-          <img
-            src={collectable.coverImage}
-            alt={collectable.description}
-            crossOrigin="anonymous"
-            on:load={setBackgroundColor}
-            class="shadow"
-          />
-          <div class="description">
-            <div class="name">{collectable.name}</div>
-          </div>
-        </div>
-      </Link>
-    {/each}
+    {#if activeFolderName}
+      <!-- Show the collectables in a single folder -->
+      {#each collectablesInActiveFolder as collectable}
+        <CollectableThumb {collectable} />
+      {/each}
+    {:else if filterValue?.length}
+      <!-- Show all collectables that match the filter -->
+      {#each filteredCollectables as collectable}
+        <CollectableThumb {collectable} />
+      {/each}
+      {#if filteredCollectables.length === 0}
+        <div class="no-collectables">No matching collectables.</div>
+      {/if}
+    {:else}
+      <!-- Show all collectables, as a collection of individual collectables as well as folders containing multiple collectables -->
+      {#each collectablesInFolders as collectableOrFolder}
+        {#if isAFolder(collectableOrFolder)}
+          <FolderThumb folder={collectableOrFolder} onClick={setFolder} />
+        {:else}
+          <CollectableThumb collectable={collectableOrFolder} />
+        {/if}
+      {/each}
+    {/if}
   </div>
 {:else}
-  <div class="no-collectables">No {filterValue === EMPTY ? "matching " : ""}collectables.</div>
-
-  {collectables?.length}
-  {filteredCollectables?.length}
+  <div class="no-collectables">No collectables.</div>
 {/if}
 
 <style lang="scss">
@@ -159,6 +170,10 @@
     padding: 108px 12px 12px 12px;
   }
 
+  .no-collectables {
+    grid-column: span 2;
+  }
+
   .collectables {
     display: grid;
     gap: 12px;
@@ -167,19 +182,5 @@
     background: radial-gradient(at 50% 50%, #ffe7dd 0, #fff 80%, #fff 100%);
     overflow-y: scroll;
     padding-bottom: var(--padding-for-nav-button);
-  }
-  img {
-    width: 100%;
-    height: 172px;
-    border-radius: 10px;
-    object-fit: cover;
-    background-color: var(--light-grey);
-  }
-
-  .description {
-    text-align: left;
-    font-size: 12px;
-    line-height: 16px;
-    font-weight: 600;
   }
 </style>

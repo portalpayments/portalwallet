@@ -1,4 +1,4 @@
-import { getCoverImage, getBestMediaAndType, nftToCollectable, sortByFolder } from "./collectables";
+import { getCoverImage, getBestMediaAndType, nftToCollectable, getCollectablesInFolders } from "./collectables";
 import { rawNFTOffChainData } from "./test-data/nft-off-chain-data";
 import { mcBurgerNFTOnChainData } from "./test-data/nft-on-chain-data";
 import { PublicKey } from "@solana/web3.js";
@@ -57,9 +57,9 @@ describe(`collectables`, () => {
   });
 
   test(
-    `sortByFolder`,
+    `getCollectablesInFolders`,
     async () => {
-      const collectablesAndFolders = sortByFolder(collectables);
+      const collectablesAndFolders = getCollectablesInFolders(collectables);
       expect(collectablesAndFolders).toMatchSnapshot();
     },
     // Can be slow

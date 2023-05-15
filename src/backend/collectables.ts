@@ -1,7 +1,7 @@
 import type { FindNftsByOwnerOutput, Metadata, Nft, Sft, JsonMetadata, PublicKey } from "@metaplex-foundation/js";
 import { asyncMap, log, stringify } from "./functions";
 import { getAttributesFromNFT } from "./solana-functions";
-import type { Collectable, CollectablesAndFolders } from "./types";
+import type { Collectable, CollectablesInFolders as CollectablesInFolders } from "./types";
 import * as http from "fetch-unfucked";
 import mime from "mime";
 
@@ -142,7 +142,7 @@ export const getBestMediaAndType = (metadata: JsonMetadata): { file: string; typ
   return null;
 };
 
-export const sortByFolder = (collectables: Array<Collectable>): CollectablesAndFolders => {
+export const getCollectablesInFolders = (collectables: Array<Collectable>): CollectablesInFolders => {
   // First put everything in a folder (even if there's just one item)
   // Note there might be a folder called "null" in the results if we can't find any name at all
   const allCollectablesByFolders: Record<string, Array<Collectable>> = {
@@ -169,24 +169,24 @@ export const sortByFolder = (collectables: Array<Collectable>): CollectablesAndF
   });
 
   // Then return a CollectablesAndFolders list - unique collectables and folders at the top, folders containing grouped collectable
-  let collectablesAndFolders: CollectablesAndFolders = [];
+  let collectablesInFolders: CollectablesInFolders = [];
   Object.keys(allCollectablesByFolders).forEach((folderName) => {
     const collectablesInFolder = allCollectablesByFolders[folderName];
 
     if (folderName === "noFolder") {
-      collectablesAndFolders = collectablesAndFolders.concat(collectablesInFolder);
+      collectablesInFolders = collectablesInFolders.concat(collectablesInFolder);
       return;
     }
 
     if (collectablesInFolder.length === 1) {
-      collectablesAndFolders.push(collectablesInFolder[0]);
+      collectablesInFolders.push(collectablesInFolder[0]);
       return;
     }
-    collectablesAndFolders.push({
+    collectablesInFolders.push({
       folderName,
       collectables: collectablesInFolder,
     });
   });
 
-  return collectablesAndFolders;
+  return collectablesInFolders;
 };
