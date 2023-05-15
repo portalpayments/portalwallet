@@ -7,7 +7,6 @@
 
   export let value: string | number;
   export let isFocused: boolean;
-  export let showGasFee: boolean = false;
   export let label: string;
   export let filterField: "numbers" | "walletAddress" | null = null;
   export let isSpellChecked: boolean = false;
@@ -102,13 +101,6 @@
         required
         spellcheck={isSpellChecked}
         on:keyup|preventDefault={debounce((event) => {
-          if (currency) {
-            if (value > 0) {
-              showGasFee = true;
-            } else {
-              showGasFee = false;
-            }
-          }
           if (onTypingPause) {
             onTypingPause(event);
           }
