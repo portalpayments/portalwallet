@@ -19,12 +19,9 @@
         // (eg folders or similar)
         // https://docs.metaplex.com/programs/token-metadata/certified-collections
         .filter((collectable) => {
-          const isSticker =
-            collectable.description.includes("Sticker Collection");
-          const isDripHaus =
-            collectable.attributes["presented_by"] === "@drip_haus";
-          const isSolanaSpaces =
-            collectable.attributes["presented_by"] === "@solanaspaces";
+          const isSticker = collectable.description.includes("Sticker Collection");
+          const isDripHaus = collectable.attributes["presented_by"] === "@drip_haus";
+          const isSolanaSpaces = collectable.attributes["presented_by"] === "@solanaspaces";
           const isIgnored = isSticker || isDripHaus || isSolanaSpaces;
           return !isIgnored;
         });
