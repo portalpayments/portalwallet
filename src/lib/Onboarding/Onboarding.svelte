@@ -14,17 +14,10 @@
   import { log } from "../../backend/functions";
   import { SECONDS } from "../../backend/constants";
   import { secretKeyToHex } from "../../backend/solana-functions";
-  import {
-    mnemonicToKeypairs,
-    checkIfSecretKeyIsValid,
-    checkIfMnemonicPhraseIsValid,
-  } from "../../backend/recovery";
+  import { mnemonicToKeypairs, checkIfSecretKeyIsValid, checkIfMnemonicPhraseIsValid } from "../../backend/recovery";
   import base58 from "bs58";
   import { saveSettings, checkIfOnboarded } from "../settings";
-  import {
-    getRecoveryTokenFromWallet,
-    recoverFromToken,
-  } from "../../backend/recovery-token";
+  import { getRecoveryTokenFromWallet, recoverFromToken } from "../../backend/recovery-token";
   import debounce from "lodash.debounce";
   import Heading from "../Shared/Heading.svelte";
 
@@ -64,8 +57,7 @@
 
   let recoveryTokenUserEnteredWallet: string | null = null;
   let isRecoveryTokenNameOrAddressValid: Boolean | null = null;
-  let recoveryTokenPayload: CipherTextAndInitializationVectorSerialized | null =
-    null;
+  let recoveryTokenPayload: CipherTextAndInitializationVectorSerialized | null = null;
   let recoveryTokenPersonalPhrase: string | null = null;
   let recoveryTokenWalletUnlockPassword: string | null = null;
 
@@ -108,8 +100,7 @@
     isPersonalPhraseSecure = null;
     const suggestedPersonalPhrase = event.target.value;
 
-    isPersonalPhraseSecure =
-      suggestedPersonalPhrase.length > MINIMUM_PERSONAL_PHRASE_LENGTH;
+    isPersonalPhraseSecure = suggestedPersonalPhrase.length > MINIMUM_PERSONAL_PHRASE_LENGTH;
     log(`Finished checking, isPersonalPhraseSecure:`, isPersonalPhraseSecure);
     if (isPersonalPhraseSecure) {
       personalPhraseToUse = suggestedPersonalPhrase;
@@ -226,8 +217,7 @@
   <!-- All the steps, beside each other in a columnn -->
   <div
     class="steps"
-    style="width:{stepCount *
-      WALLET_WIDTH}px; transform: translateX(-{currentStep * WALLET_WIDTH}px);"
+    style="width:{stepCount * WALLET_WIDTH}px; transform: translateX(-{currentStep * WALLET_WIDTH}px);"
   >
     {#each steps as stepName, stepNumber}
       <div class="step {stepName}">
@@ -243,7 +233,7 @@
                 restoringOrMakingNewWallet = "makingNewWallet";
                 move(true);
               }}
-              class="next ">Make a new wallet</button
+              class="next">Make a new wallet</button
             >
 
             <button
@@ -268,7 +258,7 @@
                 <p>Use a recovery token</p>
                 <Input
                   value={recoveryTokenUserEnteredWallet}
-                  theme="round"
+                  shape="round"
                   isFocused={false}
                   label="Wallet name or address"
                   onTypingPause={async (event) => {
@@ -281,18 +271,16 @@
                       throw new Error(`No connection`);
                     }
 
-                    const walletNameCheckResult =
-                      await checkWalletAddressOrName(
-                        connection,
-                        recoveryTokenUserEnteredWallet
-                      );
+                    const walletNameCheckResult = await checkWalletAddressOrName(
+                      connection,
+                      recoveryTokenUserEnteredWallet
+                    );
                     if (!walletNameCheckResult) {
                       log(`Wallet name check failed`);
                       isRecoveryTokenNameOrAddressValid = false;
                       return;
                     }
-                    recoveryTokenWalletAddress =
-                      walletNameCheckResult.destinationWalletAddress;
+                    recoveryTokenWalletAddress = walletNameCheckResult.destinationWalletAddress;
                     // Check for presence of recovery token
                     recoveryTokenPayload = await getRecoveryTokenFromWallet(
                       connection,
@@ -301,22 +289,15 @@
                   }}
                 />
 
-                <button
-                  class="toggle-recovery-method"
-                  on:click={toggleRecoveryMethod}
+                <button class="toggle-recovery-method" on:click={toggleRecoveryMethod}
                   >Use a secret key or mnemonic instead</button
                 >
               {:else}
                 <p>Paste your secret key or mnemonic phrase below.</p>
                 <div class="fancy-border">
-                  <TextArea
-                    placeholder="Secret key or mnemonic phrase"
-                    onInputDelay={checkSecretKeyOrMnemonicPhrase}
-                  />
+                  <TextArea placeholder="Secret key or mnemonic phrase" onInputDelay={checkSecretKeyOrMnemonicPhrase} />
                 </div>
-                <button
-                  class="toggle-recovery-method"
-                  on:click={toggleRecoveryMethod}
+                <button class="toggle-recovery-method" on:click={toggleRecoveryMethod}
                   >Use a recovery token instead</button
                 >
 
@@ -324,9 +305,7 @@
                   {#if isSuggestedSecretOrMnemonicPhraseValid === true}
                     <p class="subtle">✅ {walletImportedFrom} is valid!</p>
                   {:else}
-                    <p class="subtle">
-                      🤔 This is not a valid secret key or mnemonic phrase!
-                    </p>
+                    <p class="subtle">🤔 This is not a valid secret key or mnemonic phrase!</p>
                   {/if}
                 {/if}
               {/if}
@@ -335,17 +314,12 @@
             <button
               type="button"
               on:click={() => {
-                if (
-                  isSuggestedSecretOrMnemonicPhraseValid ||
-                  recoveryTokenPayload
-                ) {
+                if (isSuggestedSecretOrMnemonicPhraseValid || recoveryTokenPayload) {
                   move(true);
                 }
               }}
-              class="next  {isSuggestedSecretOrMnemonicPhraseValid ||
-              recoveryTokenPayload
-                ? ''
-                : 'disabled'}">Next</button
+              class="next {isSuggestedSecretOrMnemonicPhraseValid || recoveryTokenPayload ? '' : 'disabled'}"
+              >Next</button
             >
           {:else}
             <ProgressBar steps={steps.length} currentStep={stepNumber} />
@@ -353,10 +327,7 @@
               <Heading>Set a password</Heading>
 
               <div class="fancy-border">
-                <Password
-                  bind:value={passwordToUse}
-                  onInputDelay={checkPassword}
-                />
+                <Password bind:value={passwordToUse} onInputDelay={checkPassword} />
               </div>
 
               {#if isPasswordSecure !== null}
@@ -372,7 +343,7 @@
               on:click={async () => {
                 move(true);
               }}
-              class="next  {isPasswordSecure ? '' : 'disabled'}">Next</button
+              class="next {isPasswordSecure ? '' : 'disabled'}">Next</button
             >
           {/if}
         {/if}
@@ -395,18 +366,12 @@
                   />
                 </div>
                 <div class="fancy-border">
-                  <Password
-                    bind:value={recoveryTokenWalletUnlockPassword}
-                    placeHolder="Unlock password"
-                  />
+                  <Password bind:value={recoveryTokenWalletUnlockPassword} placeHolder="Unlock password" />
                 </div>
               {:else}
                 <Heading>Set a password</Heading>
                 <div class="fancy-border">
-                  <Password
-                    bind:value={passwordToUse}
-                    onInputDelay={checkPassword}
-                  />
+                  <Password bind:value={passwordToUse} onInputDelay={checkPassword} />
                 </div>
 
                 {#if isPasswordSecure !== null}
@@ -423,19 +388,14 @@
             <button
               type="button"
               on:click={() => makeWallet()}
-              class="next  {passwordToUse?.length ||
-              recoveryTokenWalletUnlockPassword?.length
-                ? ''
-                : 'disabled'}">Open wallet</button
+              class="next {passwordToUse?.length || recoveryTokenWalletUnlockPassword?.length ? '' : 'disabled'}"
+              >Open wallet</button
             >
           {:else}
             <ProgressBar steps={steps.length} currentStep={stepNumber} />
             <div class="content">
               <Heading>Set Recovery Phrase</Heading>
-              <p>
-                If you lose your devices, you can access your wallet using this
-                phrase.
-              </p>
+              <p>If you lose your devices, you can access your wallet using this phrase.</p>
               <div class="fancy-border">
                 <TextArea
                   placeholder="When I was six my brother Finian got a train set for Christmas."
@@ -446,8 +406,7 @@
               {#if isPersonalPhraseSecure !== null}
                 {#if isPersonalPhraseSecure === true}
                   <p class="subtle">
-                    ✅ Excellent. We'll test you occasionally to help you
-                    remember the recovery phrase.
+                    ✅ Excellent. We'll test you occasionally to help you remember the recovery phrase.
                   </p>
                 {/if}
                 {#if isPersonalPhraseSecure === false}
@@ -460,8 +419,8 @@
               type="button"
               disabled={!isPersonalPhraseSecure || isBuildingWallet}
               on:click={() => makeWallet()}
-              class="next  {(!isPersonalPhraseSecure || isBuildingWallet) &&
-                'disabled'} {isBuildingWallet && 'building-wallet'}"
+              class="next {(!isPersonalPhraseSecure || isBuildingWallet) && 'disabled'} {isBuildingWallet &&
+                'building-wallet'}"
             >
               {#if isBuildingWallet}
                 Making wallet <Circle color="var(--white)" size={12} />
@@ -475,11 +434,7 @@
         {#if stepName === "final"}
           <BackButton clickHandler={() => move(false)} />
           <Heading>You're now ready to use Portal.</Heading>
-          <button
-            type="button"
-            on:click={() => window.location.reload()}
-            class="next ">Log in and go!</button
-          >
+          <button type="button" on:click={() => window.location.reload()} class="next">Log in and go!</button>
         {/if}
       </div>
     {/each}

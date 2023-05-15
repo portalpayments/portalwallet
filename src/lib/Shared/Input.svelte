@@ -14,7 +14,7 @@
   export let onTypingPause: svelte.JSX.KeyboardEventHandler<HTMLInputElement> | null;
   export let onClear: svelte.JSX.MouseEventHandler<HTMLButtonElement> | null = null;
 
-  export let theme: "square" | "round" = "round";
+  export let shape: "square" | "round" = "round";
 
   export let currency: CurrencyDetails | null = null;
 
@@ -78,8 +78,8 @@
 </script>
 
 <div class="input-and-label">
-  <div class="border {theme === 'square' ? 'square' : ''} ">
-    <div class="big-white-area {hasButton ? 'with-submit-button' : ''} {theme === 'square' ? 'square' : ''}">
+  <div class="border {shape === 'square' ? 'square' : ''} ">
+    <div class="big-white-area {hasButton ? 'with-submit-button' : ''} {shape === 'square' ? 'square' : ''}">
       <input
         bind:value
         type="text"

@@ -19,19 +19,14 @@
   import { checkWalletAddressOrName } from "../../backend/check-wallet-address-or-name";
   import { SECOND } from "../../backend/constants";
 
-  import type {
-    VerifiedClaimsForIndividual,
-    VerifiedClaimsForOrganization,
-  } from "../../backend/types";
+  import type { VerifiedClaimsForIndividual, VerifiedClaimsForOrganization } from "../../backend/types";
   import type { Contact } from "../../backend/types";
   import { updateAccountsForNewTransaction, getActiveAccount } from "../stores";
   import { SECONDS } from "../../backend/constants";
   import { getCurrencyByMint } from "../../backend/solana-functions";
   import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "../../backend/constants";
 
-  const identityTokenIssuerPublicKey = new PublicKey(
-    PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
-  );
+  const identityTokenIssuerPublicKey = new PublicKey(PORTAL_IDENTITY_TOKEN_ISSUER_WALLET);
 
   let destinationWalletAddress: string | null = null;
   let transferAmount: number | null = null;
@@ -43,10 +38,7 @@
   let hasLoadedVerificationStateFromNetwork = false;
   let isCurrentlyLoadingVerificationStateFromNetwork = false;
 
-  let verifiedClaims:
-    | VerifiedClaimsForIndividual
-    | VerifiedClaimsForOrganization
-    | null = null;
+  let verifiedClaims: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization | null = null;
 
   let isSendButtonDisabled = true;
 
@@ -80,9 +72,7 @@
 
   const activeAccount = getActiveAccount();
 
-  const currency = activeAccount
-    ? getCurrencyByMint(activeAccount.currency)
-    : null;
+  const currency = activeAccount ? getCurrencyByMint(activeAccount.currency) : null;
 
   const updateFee = async () => {
     // TODO: estimate fee based on destinationWalletAddress and memo
@@ -92,10 +82,7 @@
   };
 
   // Convert UI displayed major units into minor units
-  export const getAmountInMinorUnits = (
-    transferAmount: number,
-    decimals: number
-  ) => {
+  export const getAmountInMinorUnits = (transferAmount: number, decimals: number) => {
     const multiplier = 10 ** decimals;
     const transferAmountInMinorUnits = Number(transferAmount) * multiplier;
     return transferAmountInMinorUnits;
@@ -104,10 +91,7 @@
   const doTransfer = async () => {
     try {
       // Convert UI displayed major units into minor units
-      const transferAmountInMinorUnits = getAmountInMinorUnits(
-        transferAmount,
-        activeAccount.decimals
-      );
+      const transferAmountInMinorUnits = getAmountInMinorUnits(transferAmount, activeAccount.decimals);
 
       log(`Doing transfer, will send ${transferAmountInMinorUnits} cents`);
 
@@ -158,16 +142,11 @@
     isCurrentlyLoadingVerificationStateFromNetwork = true;
     isSendButtonDisabled = true;
 
-    const walletNameCheckResults = await checkWalletAddressOrName(
-      connection,
-      walletNameEnteredByUser
-    );
+    const walletNameCheckResults = await checkWalletAddressOrName(connection, walletNameEnteredByUser);
 
     if (!walletNameCheckResults.destinationWalletAddress) {
       // TODO: handle invalid wallet addresses better
-      log(
-        `The name or addresss '${walletNameEnteredByUser}' is not a valid wallet name or address`
-      );
+      log(`The name or addresss '${walletNameEnteredByUser}' is not a valid wallet name or address`);
       verifiedClaims = null;
       isAskingWalletOwnerToGetVerified = false;
       isSendingAnyway = false;
@@ -177,11 +156,7 @@
       return;
     }
 
-    log(
-      `This is a valid wallet ${
-        walletNameCheckResults.isUsingWalletname ? "name" : "address"
-      }}`
-    );
+    log(`This is a valid wallet ${walletNameCheckResults.isUsingWalletname ? "name" : "address"}}`);
     destinationWalletAddress = walletNameCheckResults.destinationWalletAddress;
     contact.profilePictureURL = walletNameCheckResults.profilePictureURL;
 
@@ -205,11 +180,7 @@
 </script>
 
 <div class="send-screen">
-  <SendHeading
-    {contact}
-    {hasLoadedVerificationStateFromNetwork}
-    {walletNameEnteredByUser}
-  />
+  <SendHeading {contact} {hasLoadedVerificationStateFromNetwork} {walletNameEnteredByUser} />
 
   <div class="inputs">
     <FocusContext>
@@ -219,7 +190,7 @@
         isFocused={true}
         filterField={null}
         onTypingPause={resolveInputWalletNameOrAddress}
-        theme="square"
+        shape="square"
       />
 
       <Input
@@ -229,7 +200,7 @@
         {currency}
         filterField={"numbers"}
         onTypingPause={null}
-        theme="square"
+        shape="square"
       />
 
       <Input
@@ -238,7 +209,7 @@
         isFocused={false}
         filterField={null}
         onTypingPause={null}
-        theme="square"
+        shape="square"
       />
 
       <Fee amount={fee} />
@@ -263,11 +234,8 @@
         {#if !isTransactionComplete}
           Sending money...
         {:else}
-          <img
-            class="currency-symbol {currency.symbol}"
-            src={currency.logo}
-            alt={currency.symbol}
-          />{transferAmount} recieved by<br />
+          <img class="currency-symbol {currency.symbol}" src={currency.logo} alt={currency.symbol} />{transferAmount} recieved
+          by<br />
           {#if verifiedClaims}
             {#if verifiedClaims.type === "INDIVIDUAL"}
               {verifiedClaims.givenName} {verifiedClaims.familyName}!
@@ -290,13 +258,7 @@
 
   {#if transactionFailed}
     <Modal>
-      <TransactionFailed
-        {errorMessage}
-        {destinationWalletAddress}
-        {transferAmount}
-        {currency}
-        {verifiedClaims}
-      />
+      <TransactionFailed {errorMessage} {destinationWalletAddress} {transferAmount} {currency} {verifiedClaims} />
     </Modal>
   {/if}
 
@@ -344,7 +306,6 @@
     transform: translateY(2px);
     // Change color.
     // Made with https://codepen.io/sosuke/pen/Pjoqqp
-    filter: invert(50%) sepia(98%) saturate(2025%) hue-rotate(172deg)
-      brightness(100%) contrast(102%);
+    filter: invert(50%) sepia(98%) saturate(2025%) hue-rotate(172deg) brightness(100%) contrast(102%);
   }
 </style>

@@ -32,7 +32,7 @@
     label="Search people, days and purchases."
     onTypingPause={filterTransactions}
     onClear={clearTransactionFilter}
-    theme="square"
+    shape="square"
     showClearButton={true}
   />
 
