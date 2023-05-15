@@ -1,4 +1,4 @@
-import { getCoverImage, getBestMediaAndType, nftToCollectable } from "./collectables";
+import { getCoverImage, getBestMediaAndType, nftToCollectable, sortByFolder } from "./collectables";
 import { rawNFTOffChainData } from "./test-data/nft-off-chain-data";
 import { mcBurgerNFTOnChainData } from "./test-data/nft-on-chain-data";
 import { PublicKey } from "@solana/web3.js";
@@ -6,7 +6,8 @@ import { connect } from "./wallet";
 import { MIKES_WALLET, SECONDS } from "./constants";
 import { getCollectables } from "./collectables";
 import { describe } from "node:test";
-import * as http from "fetch-unfucked";
+import { log, stringify } from "./functions";
+import { collectables } from "./test-data/collectables";
 
 describe(`collectables`, () => {
   test(
@@ -54,4 +55,15 @@ describe(`collectables`, () => {
       attributes: {},
     });
   });
+
+  test(
+    `sortByFolder`,
+    async () => {
+      const collectablesAndFolders = sortByFolder(collectables);
+      expect(collectablesAndFolders).toMatchSnapshot();
+    },
+    // Can be slow
+    // TODO: we could add some kind of on-demand metadata loading
+    10 * SECONDS
+  );
 });

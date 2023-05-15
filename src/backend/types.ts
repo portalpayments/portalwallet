@@ -377,3 +377,10 @@ export type SendReply = (response: unknown) => void;
 export type HandleMessage = (portalMessage: PortalMessage, sendReply: SendReply) => Promise<void>;
 
 export type Jurisdiction = "State" | "Country";
+
+export interface Folder {
+  folderName: string;
+  collectables: Array<Collectable>;
+}
+
+export type CollectablesAndFolders = Array<Collectable | Folder>;

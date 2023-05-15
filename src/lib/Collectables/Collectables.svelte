@@ -7,6 +7,8 @@
   import { collectablesStore } from "../stores";
   import { sortByName } from "../utils";
   import { getBackgroundGradient } from "../get-background-gradient";
+  import FolderSVG from "../../assets/FOLDER.svg";
+
   import Input from "../Shared/Input.svelte";
 
   let isLoading = false;
@@ -16,6 +18,10 @@
   const EMPTY = "";
 
   let filterValue: string = EMPTY;
+
+  let activeFolder: string | null = null;
+
+  let heading = "Collectables";
 
   const clearCollectablesFilter = () => {
     log(`Clearing filterValue...`);
@@ -84,7 +90,7 @@
 </script>
 
 <div class="heading">
-  <Heading theme="art">Collectables</Heading>
+  <Heading theme="art">{collectables}</Heading>
   <Input
     value={filterValue}
     isFocused={false}

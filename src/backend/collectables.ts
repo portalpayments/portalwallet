@@ -1,7 +1,7 @@
 import type { FindNftsByOwnerOutput, Metadata, Nft, Sft, JsonMetadata, PublicKey } from "@metaplex-foundation/js";
 import { asyncMap, log, stringify } from "./functions";
 import { getAttributesFromNFT } from "./solana-functions";
-import type { Collectable } from "./types";
+import type { Collectable, CollectablesAndFolders } from "./types";
 import * as http from "fetch-unfucked";
 import mime from "mime";
 
@@ -140,4 +140,53 @@ export const getBestMediaAndType = (metadata: JsonMetadata): { file: string; typ
     };
   }
   return null;
+};
+
+export const sortByFolder = (collectables: Array<Collectable>): CollectablesAndFolders => {
+  // First put everything in a folder (even if there's just one item)
+  // Note there might be a folder called "null" in the results if we can't find any name at all
+  const allCollectablesByFolders: Record<string, Array<Collectable>> = {
+    noFolder: [],
+  };
+  collectables.forEach((collectable) => {
+    let folderName = (collectable.attributes["presented_by"] as string) || null;
+    if (!folderName) {
+      if (collectable.description.includes("Sticker Collection")) {
+        folderName = "Stickers";
+      }
+    }
+
+    if (!folderName) {
+      allCollectablesByFolders.noFolder.push(collectable);
+      return;
+    }
+
+    if (Object.hasOwn(allCollectablesByFolders, folderName)) {
+      allCollectablesByFolders[folderName].push(collectable);
+    } else {
+      allCollectablesByFolders[folderName] = [collectable];
+    }
+  });
+
+  // Then return a CollectablesAndFolders list - unique collectables and folders at the top, folders containing grouped collectable
+  let collectablesAndFolders: CollectablesAndFolders = [];
+  Object.keys(allCollectablesByFolders).forEach((folderName) => {
+    const collectablesInFolder = allCollectablesByFolders[folderName];
+
+    if (folderName === "noFolder") {
+      collectablesAndFolders = collectablesAndFolders.concat(collectablesInFolder);
+      return;
+    }
+
+    if (collectablesInFolder.length === 1) {
+      collectablesAndFolders.push(collectablesInFolder[0]);
+      return;
+    }
+    collectablesAndFolders.push({
+      folderName,
+      collectables: collectablesInFolder,
+    });
+  });
+
+  return collectablesAndFolders;
 };
