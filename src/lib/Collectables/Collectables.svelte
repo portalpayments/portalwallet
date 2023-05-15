@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { log, stringify } from "../../backend/functions";
+  import { log, stringify, isIncludedCaseInsensitive } from "../../backend/functions";
   import Heading from "../Shared/Heading.svelte";
   import type { Collectable } from "../../backend/types";
   import SkeletonGallery from "../Shared/Skeletons/SkeletonGallery.svelte";
@@ -7,43 +7,105 @@
   import { collectablesStore } from "../stores";
   import { sortByName } from "../utils";
   import { getBackgroundGradient } from "../get-background-gradient";
+  import Input from "../Shared/Input.svelte";
 
   let isLoading = false;
   let collectables: Array<Collectable> | null = null;
+  let filteredCollectables: Array<Collectable> | null = null;
 
-  collectablesStore.subscribe((newValue) => {
-    if (newValue !== null) {
-      collectables = newValue
-        .sort(sortByName)
-        // TODO: Remove this filter once we have a better way to handle stickers
-        // (eg folders or similar)
-        // https://docs.metaplex.com/programs/token-metadata/certified-collections
-        .filter((collectable) => {
-          const isSticker = collectable.description.includes("Sticker Collection");
-          const isDripHaus = collectable.attributes["presented_by"] === "@drip_haus";
-          const isSolanaSpaces = collectable.attributes["presented_by"] === "@solanaspaces";
-          const isIgnored = isSticker || isDripHaus || isSolanaSpaces;
-          return !isIgnored;
-        });
-      isLoading = false;
+  const EMPTY = "";
+
+  let filterValue: string = EMPTY;
+
+  const clearCollectablesFilter = () => {
+    log(`Clearing filterValue...`);
+    filterValue = EMPTY;
+    filterCollectables(collectables, filterValue);
+  };
+
+  const isIncluded = (collectable) => {
+    // TODO: Remove this filter once we have a better way to handle stickers
+    // (eg folders or similar)
+    // https://docs.metaplex.com/programs/token-metadata/certified-collections
+    const isSticker = collectable.description.includes("Sticker Collection");
+    const isDripHaus = collectable.attributes["presented_by"] === "@drip_haus";
+    const isSolanaSpaces = collectable.attributes["presented_by"] === "@solanaspaces";
+    const isIgnored = isSticker || isDripHaus || isSolanaSpaces;
+    return !isIgnored;
+  };
+
+  const makeFilter = (filterValue) => {
+    const matchesFilter = (collectable) => {
+      const isNameMatch = isIncludedCaseInsensitive(collectable.name, filterValue);
+      const isAttributeValue = Object.values(collectable.attributes).some((attributeValue) => {
+        if (typeof attributeValue !== "string") {
+          return false;
+        }
+        return isIncludedCaseInsensitive(attributeValue, filterValue);
+      });
+      return isNameMatch || isAttributeValue;
+    };
+    return matchesFilter;
+  };
+
+  const filterCollectables = (collectables: Array<Collectable>, filterValue: string) => {
+    log(`in filterCollectables`);
+    if (!collectables?.length) {
+      log(`we have no collectables, not bothering to filter`);
+      return;
     }
-  });
+
+    if (filterValue === EMPTY) {
+      filteredCollectables = collectables.sort(sortByName).filter(isIncluded);
+      isLoading = false;
+      log(`Filter value is empty, so just sorted and displayed all collectables`);
+      return;
+    }
+    const matchesFilterValue = makeFilter(filterValue);
+    filteredCollectables = collectables.sort(sortByName).filter(isIncluded).filter(matchesFilterValue);
+    log(`Updated filteredCollectables based on fitler ${filterValue}`);
+    isLoading = false;
+  };
 
   const setBackgroundColor = async (event) => {
     const imageElement = event.target;
     const gradient = await getBackgroundGradient(imageElement.src);
     imageElement.style["background-image"] = gradient;
   };
+
+  collectablesStore.subscribe((newValue) => {
+    collectables = newValue;
+    if (newValue) {
+      filterCollectables(collectables, filterValue);
+    }
+  });
+
+  $: filterValue && filterCollectables(collectables, filterValue);
 </script>
 
 <div class="heading">
   <Heading theme="art">Collectables</Heading>
+  <Input
+    value={filterValue}
+    isFocused={false}
+    label="Search names and attributes"
+    onTypingPause={(event) => {
+      // @ts-ignore
+      const newFilterValue = event.target.value;
+      log(`Setting filter value to `, newFilterValue);
+      filterValue = newFilterValue;
+    }}
+    onClear={clearCollectablesFilter}
+    shape="round"
+    theme="art"
+    showClearButton={true}
+  />
 </div>
 {#if isLoading}
   <SkeletonGallery />
-{:else if collectables?.length}
-  <div class="nfts">
-    {#each collectables as collectable}
+{:else if filteredCollectables?.length}
+  <div class="collectables">
+    {#each filteredCollectables as collectable}
       <Link to={`/collectables/${collectable.id}`}>
         <div class="collectable">
           <img
@@ -61,29 +123,38 @@
     {/each}
   </div>
 {:else}
-  <div>No collectables.</div>
+  <div class="no-collectables">No {filterValue === EMPTY ? "matching " : ""}collectables.</div>
+
+  {collectables?.length}
+  {filteredCollectables?.length}
 {/if}
 
 <style lang="scss">
   @import "../../mixins.scss";
   .heading {
     position: absolute;
-    height: 64px;
+    grid-template-rows: 48px 48px;
     width: 100%;
     text-align: left;
-    padding: 0 12px;
+    padding: 0 12px 12px 12px;
     display: grid;
-    grid-auto-flow: column;
+    grid-auto-flow: row;
     align-items: center;
     font-size: 1.2rem;
     font-weight: 600;
     color: var(--black);
+    // background: linear-gradient(180deg, white 0%, white 30%, #ffffffe3 40%, transparent 100%);
     @include acryllic;
   }
 
-  .nfts {
+  .no-collectables,
+  .collectables {
+    // Extra padding  = 48 + 48 + 12
+    padding: 108px 12px 12px 12px;
+  }
+
+  .collectables {
     display: grid;
-    padding: 12px;
     gap: 12px;
     grid-template-columns: 1fr 1fr;
     grid-auto-rows: 192px;
