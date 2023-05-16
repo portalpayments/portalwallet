@@ -12,7 +12,6 @@ import { icon } from "./icon";
 import { SOLANA_CHAINS, SOLANA_MAINNET_CHAIN } from "./solana-chains";
 import { log, runWithTimeout, sleep, stringify } from "../backend/functions";
 import { Keypair, PublicKey } from "@solana/web3.js";
-import { sign as naclSign } from "tweetnacl";
 import { MINUTES, SECONDS } from "src/backend/constants";
 import { convertSolanaMessageToString } from "./util";
 const ANY_ORIGIN = "*";
@@ -158,13 +157,12 @@ export const PortalWalletStandardImplementation: WalletStandard = {
         const getWalletStandardSignMessageReply = (): Promise<Uint8Array> => {
           return new Promise((resolve, reject) => {
             const handler = (event: MessageEvent) => {
-              const { topic, isApproved } = event.data;
+              const { topic, isApproved, signature } = event.data;
               if (topic === "replyWalletStandardSignMessage") {
                 window.removeEventListener("message", handler);
                 if (!isApproved) {
                   resolve(null);
                 }
-                const signature = naclSign.detached(accountAndMessage.message, keyPair.secretKey);
                 resolve(signature);
               }
             };

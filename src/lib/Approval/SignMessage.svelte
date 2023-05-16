@@ -1,14 +1,50 @@
 <script lang="ts">
   import { log, stringify } from "../../backend/functions";
+  import { getSignature } from "../../backend/solana-functions";
   import Heading from "../Shared/Heading.svelte";
   import type { PendingUserApproval, PortalMessage } from "../../backend/types";
-
-  import { pendingUserApprovalStore } from "../../lib/stores";
+  import { pendingUserApprovalStore, authStore } from "../../lib/stores";
+  import { get as getFromStore } from "svelte/store";
 
   export let pendingUserApproval: PendingUserApproval;
 
   const formatURL = (string: String) => {
     return string.replace(/\/$/, "");
+  };
+
+  const declineToSignMessage = async () => {
+    log(`Declining to sign message`);
+
+    sendMessage(pendingUserApproval.tabId, {
+      topic: "replyWalletStandardSignMessage",
+      isApproved: false,
+    });
+
+    pendingUserApprovalStore.set(null);
+
+    log(`Sent 'replyWalletStandardSignMessage' message`);
+    window.close();
+  };
+
+  const approveSigningMessage = async () => {
+    async () => {
+      log(`Approving signing message`);
+
+      const auth = getFromStore(authStore);
+
+      const signature = getSignature(pendingUserApproval.text, auth.keyPair.secretKey);
+
+      sendMessage(pendingUserApproval.tabId, {
+        topic: "replyWalletStandardSignMessage",
+        isApproved: true,
+        signature,
+      });
+
+      pendingUserApprovalStore.set(null);
+
+      log(`Sent 'replyWalletStandardSignMessage' message`);
+      window.close();
+    };
   };
 
   // We MUST use chrome.tabs.sendMessage (not chrome.runtime.sendMessage) to talk to a content script
@@ -38,42 +74,14 @@
 
     <div class="choices">
       <div class="rounded-gradient-border-hack decline">
-        <button
-          on:click={async () => {
-            log(`Declining to sign message`);
-
-            sendMessage(pendingUserApproval.tabId, {
-              topic: "replyWalletStandardSignMessage",
-              isApproved: false,
-            });
-
-            pendingUserApprovalStore.set(null);
-
-            log(`Sent 'replyWalletStandardSignMessage' message`);
-            window.close();
-          }}
-        >
+        <button on:click={declineToSignMessage}>
           <!-- Since the previous hack needs a white background, we need another div to the 'background as gradient text' hack -->
           <div class="gradient-text-hack">Decline</div></button
         >
       </div>
 
       <div class="rounded-gradient-border-hack agree">
-        <button
-          on:click={async () => {
-            log(`Signing message request`);
-
-            sendMessage(pendingUserApproval.tabId, {
-              topic: "replyWalletStandardSignMessage",
-              isApproved: true,
-            });
-
-            pendingUserApprovalStore.set(null);
-
-            log(`Sent 'replyWalletStandardSignMessage' message`);
-            window.close();
-          }}>Sign & agree</button
-        >
+        <button on:click={approveSigningMessage}>Sign & agree</button>
       </div>
     </div>
   </div>
