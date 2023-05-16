@@ -397,7 +397,7 @@ const setupServiceWorker = async () => {
     const secretKeyReply = await chrome.runtime.sendMessage({
       topic: "getSecretKey",
     });
-    if (secretKeyReply.topic === "replySecretKey") {
+    if (secretKeyReply.topic === "replyGetSecretKey") {
       const secretKey = secretKeyReply.secretKey;
       if (secretKey) {
         log(`we have a secret key! Setting it.`);

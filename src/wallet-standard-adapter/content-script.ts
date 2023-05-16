@@ -37,7 +37,7 @@ const main = async () => {
         // Forward the message onto the service worker (we use the same format as the injected wallet)
         const reply = await chrome.runtime.sendMessage(message);
 
-        // Note: this is just an acknowledgement. When the user clicks deny / allow we'll get a real result via walletStandardSignMessageResponse
+        // Note: this is just an acknowledgement. When the user clicks deny / allow we'll get a real result via replyWalletStandardSignMessage
         log(`Content script recieved an acknowlegement reply`, stringify(reply));
       }
     },
@@ -46,12 +46,11 @@ const main = async () => {
 
   // Part 2 - wait for messages from the rest of the extension
   // and send them to the page's own JavaScript
-  addMessageListener("walletStandardSignMessageResponse", async (message: PortalMessage, sendReply: SendReply) => {
+  addMessageListener("replyWalletStandardSignMessage", async (message: PortalMessage, sendReply: SendReply) => {
     log(`😃😃😃 Content script: the user has responded to the message signing UI...`);
 
     // Send the user's response to the injected wallet
     window.postMessage(message);
-
   });
 
   // Why isn't front end responding?

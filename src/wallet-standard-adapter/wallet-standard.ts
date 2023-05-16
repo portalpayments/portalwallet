@@ -155,11 +155,11 @@ export const PortalWalletStandardImplementation: WalletStandard = {
         // Give the user some time to approve, decline or do nothing
         await askUserToSignMessage(accountAndMessage.message);
 
-        const getWalletStandardSignMessageResponse = (): Promise<Uint8Array> => {
+        const getWalletStandardSignMessageReply = (): Promise<Uint8Array> => {
           return new Promise((resolve, reject) => {
             const handler = (event: MessageEvent) => {
               const { topic, isApproved } = event.data;
-              if (topic === "walletStandardSignMessageResponse") {
+              if (topic === "replyWalletStandardSignMessage") {
                 window.removeEventListener("message", handler);
                 if (!isApproved) {
                   resolve(null);
@@ -172,11 +172,11 @@ export const PortalWalletStandardImplementation: WalletStandard = {
           });
         };
 
-        log(`Waiting for 'walletStandardSignMessageResponse' or a timeout...`);
+        log(`Waiting for 'replyWalletStandardSignMessage' or a timeout...`);
 
         let signatureOrNull: Uint8Array | null;
         try {
-          signatureOrNull = (await runWithTimeout(getWalletStandardSignMessageResponse(), 30 * SECONDS)) as Uint8Array;
+          signatureOrNull = (await runWithTimeout(getWalletStandardSignMessageReply(), 30 * SECONDS)) as Uint8Array;
         } catch (error) {
           // odd no error message
           log(`The user did not sign the transaction in time`, stringify(error));

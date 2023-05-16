@@ -43,13 +43,13 @@
             log(`Declining to sign message`);
 
             sendMessage(pendingUserApproval.tabId, {
-              topic: "walletStandardSignMessageResponse",
+              topic: "replyWalletStandardSignMessage",
               isApproved: false,
             });
 
             pendingUserApprovalStore.set(null);
 
-            log(`Sent 'walletStandardSignMessageResponse' message`);
+            log(`Sent 'replyWalletStandardSignMessage' message`);
             window.close();
           }}
         >
@@ -64,13 +64,13 @@
             log(`Signing message request`);
 
             sendMessage(pendingUserApproval.tabId, {
-              topic: "walletStandardSignMessageResponse",
+              topic: "replyWalletStandardSignMessage",
               isApproved: true,
             });
 
             pendingUserApprovalStore.set(null);
 
-            log(`Sent 'walletStandardSignMessageResponse' message`);
+            log(`Sent 'replyWalletStandardSignMessage' message`);
             window.close();
           }}>Sign & agree</button
         >

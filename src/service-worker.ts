@@ -102,7 +102,7 @@ addMessageListener("getSecretKey", async (message: PortalMessage, sendReply: Sen
     log(`☹️ Service worker does not have the secret key`);
   }
   sendReply({
-    topic: "replySecretKey",
+    topic: "replyGetSecretKey",
     secretKey,
   });
 });
