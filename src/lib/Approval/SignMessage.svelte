@@ -27,24 +27,22 @@
   };
 
   const approveSigningMessage = async () => {
-    async () => {
-      log(`Approving signing message`);
+    log(`Approving signing message`);
 
-      const auth = getFromStore(authStore);
+    const auth = getFromStore(authStore);
 
-      const signature = getSignature(pendingUserApproval.text, auth.keyPair.secretKey);
+    const signature = getSignature(pendingUserApproval.text, auth.keyPair.secretKey);
 
-      sendMessage(pendingUserApproval.tabId, {
-        topic: "replyWalletStandardSignMessage",
-        isApproved: true,
-        signature,
-      });
+    sendMessage(pendingUserApproval.tabId, {
+      topic: "replyWalletStandardSignMessage",
+      isApproved: true,
+      signature,
+    });
 
-      pendingUserApprovalStore.set(null);
+    pendingUserApprovalStore.set(null);
 
-      log(`Sent 'replyWalletStandardSignMessage' message`);
-      window.close();
-    };
+    log(`Sent 'replyWalletStandardSignMessage' message`);
+    window.close();
   };
 
   // We MUST use chrome.tabs.sendMessage (not chrome.runtime.sendMessage) to talk to a content script
