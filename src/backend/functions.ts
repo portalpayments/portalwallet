@@ -186,11 +186,9 @@ export const runWithTimeout = <T>(
   timeout: number,
   message: string | null = null
 ): Promise<T | void> => {
-  // TODO: not entirely sure the Promise<void> is correct
-  // but reject returns void so I think it is
   const timeoutPromise: Promise<void> = new Promise((resolve, reject) => {
     setTimeout(() => {
-      reject(message != null ? message : `Timeout! Operation did not complete within ${timeout} ms`);
+      reject(message !== null ? message : `Timeout! Operation did not complete within ${timeout} ms`);
     }, timeout);
   });
 
