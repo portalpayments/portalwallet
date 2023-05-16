@@ -12,7 +12,7 @@ import { icon } from "./icon";
 import { SOLANA_CHAINS, SOLANA_MAINNET_CHAIN } from "./solana-chains";
 import { log, runWithTimeout, sleep, stringify } from "../backend/functions";
 import { Keypair, PublicKey } from "@solana/web3.js";
-import { MINUTES, SECONDS } from "src/backend/constants";
+import { MIKES_WALLET, MINUTES, SECONDS } from "src/backend/constants";
 import { convertSolanaMessageToString } from "./util";
 const ANY_ORIGIN = "*";
 import {
@@ -34,9 +34,7 @@ import {
 } from "@solana/wallet-adapter-base";
 // TODO: temp wallet address until we add the UI
 
-const keyPair = new Keypair();
-
-const publicKey = keyPair.publicKey;
+const publicKey = new PublicKey(MIKES_WALLET);
 
 // See constructor() in https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
 const walletAccount = {
@@ -146,7 +144,7 @@ export const PortalWalletStandardImplementation: WalletStandard = {
           throw new Error("invalid feature");
         }
 
-        if (!keyPair) {
+        if (!publicKey) {
           throw new Error("invalid account");
         }
 

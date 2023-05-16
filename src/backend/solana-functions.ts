@@ -73,8 +73,16 @@ export const getCurrencySymbolByMint = (mint: string) => {
   return currency.symbol;
 };
 
+// Convert a Solana string (like "Accept our terms of service") back to 'solana message' format used for signing
+export const convertStringToSolanaMessage = (string: string) => {
+  // First, convert the Solana message to a string, but also 'message' is a confusing
+  // variable name, since we already have window.postMessage() and 'message' is a different type of message
+  const solanaMessage = new TextEncoder().encode(string);
+  return solanaMessage;
+};
+
 export const getSignature = (message: string, secretKey: Uint8Array) => {
-  const messageDecoded = base58.decode(message);
+  const messageDecoded = convertStringToSolanaMessage(message);
   const signature = naclSign.detached(messageDecoded, secretKey);
   return signature;
 };
