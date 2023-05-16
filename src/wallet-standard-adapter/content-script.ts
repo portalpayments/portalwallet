@@ -35,10 +35,7 @@ const main = async () => {
           `We will forward the message on to the rest of the extension - we should see an indicator on the popup now`
         );
         // Forward the message onto the service worker (we use the same format as the injected wallet)
-        const reply = await chrome.runtime.sendMessage(message);
-
-        // Note: this is just an acknowledgement. When the user clicks deny / allow we'll get a real result via replyWalletStandardSignMessage
-        log(`Content script recieved an acknowlegement reply`, stringify(reply));
+        await chrome.runtime.sendMessage(message);
       }
     },
     false
