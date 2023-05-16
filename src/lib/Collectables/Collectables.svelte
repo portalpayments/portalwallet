@@ -160,7 +160,6 @@
     font-size: 1.2rem;
     font-weight: 600;
     color: var(--black);
-    // background: linear-gradient(180deg, white 0%, white 30%, #ffffffe3 40%, transparent 100%);
     @include acryllic;
   }
 
