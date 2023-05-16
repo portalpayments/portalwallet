@@ -22,11 +22,7 @@ import { sign as naclSign } from "tweetnacl";
 
 // We could also use 'bs58' but have to convert string to bytes first
 export const cleanPhrase = (phrase: string) => {
-  return phrase
-    .toLowerCase()
-    .trim()
-    .replace(WHITESPACE, SINGLE_SPACE)
-    .replace(NON_ALPHA_NUMERIC, NOTHING);
+  return phrase.toLowerCase().trim().replace(WHITESPACE, SINGLE_SPACE).replace(NON_ALPHA_NUMERIC, NOTHING);
 };
 
 export const secretKeyToHex = (secretKey: Uint8Array) => {
@@ -54,11 +50,9 @@ export const getKeypairFromString = (secretKeyString: string) => {
 
 export const getCurrencyBySymbol = (symbol: string) => {
   return (
-    Object.values(mintToCurrencyMap).find(
-      (currencyDetails: CurrencyDetails) => {
-        return currencyDetails.symbol === symbol;
-      }
-    ) || null
+    Object.values(mintToCurrencyMap).find((currencyDetails: CurrencyDetails) => {
+      return currencyDetails.symbol === symbol;
+    }) || null
   );
 };
 
@@ -84,10 +78,9 @@ export const getSignature = (message: string, secretKey: Uint8Array) => {
   const signature = naclSign.detached(messageDecoded, secretKey);
   return signature;
 };
+
 // NFT metadata has arrays of trait_type/value objects instead of a single object with keys and values
-export const getAttributesFromNFT = (
-  metadata: JsonMetadata
-): Record<string, string | boolean | number> => {
+export const getAttributesFromNFT = (metadata: JsonMetadata): Record<string, string | boolean | number> => {
   if (!metadata.attributes) {
     return {};
   }
