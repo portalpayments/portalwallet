@@ -176,12 +176,7 @@ export const PortalWalletStandardImplementation: WalletStandard = {
 
         let signatureOrNull: Uint8Array | null;
         try {
-          signatureOrNull = (await runWithTimeout(
-            getWalletStandardSignMessageResponse(),
-            // TODO: this is very long because we're testing
-            5 * MINUTES
-            // 30 * SECONDS
-          )) as Uint8Array;
+          signatureOrNull = (await runWithTimeout(getWalletStandardSignMessageResponse(), 30 * SECONDS)) as Uint8Array;
         } catch (error) {
           // odd no error message
           log(`The user did not sign the transaction in time`, stringify(error));
