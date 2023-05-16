@@ -50,8 +50,6 @@ const main = async () => {
     window.postMessage(message);
   });
 
-  // Why isn't front end responding?
-
   log("Completed content script setup");
 };
 
