@@ -5,7 +5,7 @@
   import type { PendingUserApproval, PortalMessage } from "../../backend/types";
   import { pendingUserApprovalStore, authStore } from "../../lib/stores";
   import { get as getFromStore } from "svelte/store";
-
+  import base58 from "bs58";
   export let pendingUserApproval: PendingUserApproval;
 
   const formatURL = (string: String) => {
@@ -36,13 +36,13 @@
     sendMessage(pendingUserApproval.tabId, {
       topic: "replyWalletStandardSignMessage",
       isApproved: true,
-      signature,
+      signature: base58.encode(signature),
     });
 
     pendingUserApprovalStore.set(null);
 
     log(`Sent 'replyWalletStandardSignMessage' message`);
-    window.close();
+    // window.close();
   };
 
   // We MUST use chrome.tabs.sendMessage (not chrome.runtime.sendMessage) to talk to a content script

@@ -15,6 +15,7 @@ import { Keypair, PublicKey } from "@solana/web3.js";
 import { MIKES_WALLET, MINUTES, SECONDS } from "src/backend/constants";
 import { convertSolanaMessageToString } from "./util";
 const ANY_ORIGIN = "*";
+import base58 from "bs58";
 import {
   // BaseWalletAdapter,
   // isVersionedTransaction,
@@ -35,6 +36,8 @@ import {
 // TODO: temp wallet address until we add the UI
 
 const publicKey = new PublicKey(MIKES_WALLET);
+
+// Check also /home/mike/Code/portal/wallet-adapter/node_modules/.pnpm/@solana+wallet-standard-wallet-adapter-base@1.0.2_@solana+web3.js@1.74.0_bs58@4.0.1/node_modules/@solana/wallet-standard-wallet-adapter-base/lib/esm/adapter.js
 
 // See constructor() in https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
 const walletAccount = {
@@ -161,7 +164,8 @@ export const PortalWalletStandardImplementation: WalletStandard = {
                 if (!isApproved) {
                   resolve(null);
                 }
-                resolve(signature);
+                const signatureDecoded = base58.decode(signature);
+                resolve(signatureDecoded);
               }
             };
             window.addEventListener("message", handler);
