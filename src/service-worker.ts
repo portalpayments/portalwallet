@@ -62,6 +62,10 @@ addMessageListener("walletStandardConnect", async (message: PortalMessage, sendR
   setBadge("i", MID_BLUE);
 
   // TODO - implement connection with real keys
+  sendReply({
+    // TODO: add public key here
+    topic: "replyWalletStandardConnect",
+  });
 });
 
 addMessageListener("walletStandardSignMessage", async (message: PortalMessage, sendReply: SendReply) => {

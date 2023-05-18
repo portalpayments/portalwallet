@@ -50,6 +50,13 @@ const main = async () => {
     window.postMessage(message);
   });
 
+  addMessageListener("replyWalletStandardConnect", async (message: PortalMessage, sendReply: SendReply) => {
+    log(`😃😃😃 Content script: the service worker has sent us the public key`);
+
+    // Send the user's response to the injected wallet
+    window.postMessage(message);
+  });
+
   log("Completed content script setup");
 };
 
