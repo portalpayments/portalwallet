@@ -29,7 +29,11 @@ const main = async () => {
         throw new Error(`No message.topic in event from wallet`);
       }
 
-      if (message.topic === "walletStandardConnect" || message.topic === "walletStandardSignMessage") {
+      if (
+        message.topic === "walletStandardConnect" ||
+        message.topic === "walletStandardSignMessage" ||
+        message.topic === "getPublicKey"
+      ) {
         log(`The content script received: ${stringify(message)}`);
         log(
           `We will forward the message on to the rest of the extension - we should see an indicator on the popup now`

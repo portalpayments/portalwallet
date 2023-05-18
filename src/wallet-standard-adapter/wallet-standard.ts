@@ -33,21 +33,23 @@ import {
   WalletSignMessageError,
   // WalletSignTransactionError,
 } from "@solana/wallet-adapter-base";
-// TODO: temp wallet address until we add the UI
 
-const publicKey = new PublicKey(MIKES_WALLET);
+// TODO: temp wallet address until we add the UI
+const TEMP_PUBLIC_KEY = new PublicKey(MIKES_WALLET);
 
 // Check also /home/mike/Code/portal/wallet-adapter/node_modules/.pnpm/@solana+wallet-standard-wallet-adapter-base@1.0.2_@solana+web3.js@1.74.0_bs58@4.0.1/node_modules/@solana/wallet-standard-wallet-adapter-base/lib/esm/adapter.js
 
+const makeWalletAccount = (publicKey: PublicKey): WalletAccount => {
+  return {
+    address: publicKey.toBase58(),
+    publicKey: publicKey.toBytes(),
+    chains: [SOLANA_MAINNET_CHAIN],
+    features: [SolanaSignAndSendTransaction, SolanaSignTransaction, SolanaSignMessage],
+  };
+};
+
 // See constructor() in https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
-const walletAccount = {
-  address: publicKey.toBase58(),
-  publicKey: publicKey.toBytes(),
-  chains: [SOLANA_MAINNET_CHAIN],
-  features: [SolanaSignAndSendTransaction, SolanaSignTransaction, SolanaSignMessage],
-  // Work around very odd typing with 'chains' property
-  // TODO: fix properly
-} as WalletAccount;
+const activeWalletAccount = makeWalletAccount(TEMP_PUBLIC_KEY);
 
 // The instructions at https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md
 // https://github.com/wallet-standard/wallet-standard
@@ -62,21 +64,34 @@ const sendMessageToContentScript = (message: any) => {
   window.postMessage(message, ANY_ORIGIN);
 };
 
+// TODO: not sure if neccessary, but somehow this script needs to get
+// active public key and Ghost example doesn't show how
+export const getPublicKey = () => {
+  log(`Running getPublicKey....`);
+  sendMessageToContentScript({
+    topic: "getPublicKey",
+  });
+};
+
 const connect: StandardConnectMethod = async ({
   // From typescript definition:
   // "request accounts that have already been authorized without prompting"
   silent,
 } = {}): Promise<StandardConnectOutput> => {
-  log("Connect. Sending message to content script...");
+  log("⚡ Connect. Sending message to content script...");
   sendMessageToContentScript({
     topic: "walletStandardConnect",
     isSilent: silent,
   });
 
-  const accounts: Array<WalletAccount> = [walletAccount];
+  const accounts: Array<WalletAccount> = [activeWalletAccount];
 
   log(`Returning accounts`, accounts);
   return { accounts };
+};
+
+const disconnect = async () => {
+  log("🔌 Disconnect");
 };
 
 const askUserToSignMessage = async (message: Uint8Array) => {
@@ -106,7 +121,7 @@ const signMessage = async (accountAndMessage: SolanaSignMessageInput) => {
     throw new Error("invalid feature");
   }
 
-  if (!publicKey) {
+  if (!TEMP_PUBLIC_KEY) {
     throw new Error("invalid account");
   }
 
@@ -174,9 +189,7 @@ export const PortalWalletStandardImplementation: WalletStandard = {
     },
     [StandardDisconnect]: {
       version: "1.0.0",
-      disconnect: async () => {
-        log("Disconnect");
-      },
+      disconnect,
     },
     [StandardEvents]: {
       version: "1.0.0",
@@ -204,5 +217,5 @@ export const PortalWalletStandardImplementation: WalletStandard = {
     },
     // We can also add a 'portal:' name space if we want, but there's no need right now
   },
-  accounts: [walletAccount],
+  accounts: [activeWalletAccount],
 };
