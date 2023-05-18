@@ -94,6 +94,72 @@ const askUserToSignMessage = async (message: Uint8Array) => {
   });
 };
 
+const signMessage = async (accountAndMessage: SolanaSignMessageInput) => {
+  // log("Sign message", accountAndMessage);
+  const outputs: Array<SolanaSignMessageOutput> = [];
+
+  // A little weird, but the wallet-adapter test page expects
+  // - a single input
+  // - multiple outputs
+
+  if (!accountAndMessage.account.features.includes("solana:signMessage")) {
+    throw new Error("invalid feature");
+  }
+
+  if (!publicKey) {
+    throw new Error("invalid account");
+  }
+
+  // Make the wallet popup show an icon so the users clicks on it.
+  // Give the user some time to approve, decline or do nothing
+  await askUserToSignMessage(accountAndMessage.message);
+
+  const getWalletStandardSignMessageReply = (): Promise<Uint8Array> => {
+    return new Promise((resolve, reject) => {
+      const handler = (event: MessageEvent) => {
+        const { topic, isApproved, signature } = event.data;
+        if (topic === "replyWalletStandardSignMessage") {
+          window.removeEventListener("message", handler);
+          if (!isApproved) {
+            resolve(null);
+          }
+          const signatureDecoded = base58.decode(signature);
+          resolve(signatureDecoded);
+        }
+      };
+      window.addEventListener("message", handler);
+    });
+  };
+
+  log(`Waiting for 'replyWalletStandardSignMessage' or a timeout...`);
+
+  let signatureOrNull: Uint8Array | null;
+  try {
+    signatureOrNull = (await runWithTimeout(getWalletStandardSignMessageReply(), 30 * SECONDS)) as Uint8Array;
+  } catch (error) {
+    // odd no error message
+    log(`The user did not sign the transaction in time`, stringify(error));
+    signatureOrNull = null;
+  }
+
+  if (!signatureOrNull) {
+    log(`🤔 User didn't sign.`);
+    // Wallet Standard behaviour is to throw an error for this
+    throw new WalletSignMessageError("Signature was not approved");
+  }
+
+  log(`😀 Woo, we have a signature!`);
+
+  const output: SolanaSignMessageOutput = {
+    signedMessage: accountAndMessage.message,
+    signature: signatureOrNull,
+  };
+
+  outputs.push(output);
+
+  return outputs;
+};
+
 // Portal's implementation of the wallet standard
 export const PortalWalletStandardImplementation: WalletStandard = {
   version: "1.0.0",
@@ -134,72 +200,7 @@ export const PortalWalletStandardImplementation: WalletStandard = {
     },
     [SolanaSignMessage]: {
       version: "1.0.0",
-
-      signMessage: async (accountAndMessage: SolanaSignMessageInput) => {
-        // log("Sign message", accountAndMessage);
-        const outputs: Array<SolanaSignMessageOutput> = [];
-
-        // A little weird, but the wallet-adapter test page expects
-        // - a single input
-        // - multiple outputs
-
-        if (!accountAndMessage.account.features.includes("solana:signMessage")) {
-          throw new Error("invalid feature");
-        }
-
-        if (!publicKey) {
-          throw new Error("invalid account");
-        }
-
-        // Make the wallet popup show an icon so the users clicks on it.
-        // Give the user some time to approve, decline or do nothing
-        await askUserToSignMessage(accountAndMessage.message);
-
-        const getWalletStandardSignMessageReply = (): Promise<Uint8Array> => {
-          return new Promise((resolve, reject) => {
-            const handler = (event: MessageEvent) => {
-              const { topic, isApproved, signature } = event.data;
-              if (topic === "replyWalletStandardSignMessage") {
-                window.removeEventListener("message", handler);
-                if (!isApproved) {
-                  resolve(null);
-                }
-                const signatureDecoded = base58.decode(signature);
-                resolve(signatureDecoded);
-              }
-            };
-            window.addEventListener("message", handler);
-          });
-        };
-
-        log(`Waiting for 'replyWalletStandardSignMessage' or a timeout...`);
-
-        let signatureOrNull: Uint8Array | null;
-        try {
-          signatureOrNull = (await runWithTimeout(getWalletStandardSignMessageReply(), 30 * SECONDS)) as Uint8Array;
-        } catch (error) {
-          // odd no error message
-          log(`The user did not sign the transaction in time`, stringify(error));
-          signatureOrNull = null;
-        }
-
-        if (!signatureOrNull) {
-          log(`🤔 User didn't sign.`);
-          // Wallet Standard behaviour is to throw an error for this
-          throw new WalletSignMessageError("Signature was not approved");
-        }
-
-        log(`😀 Woo, we have a signature!`);
-
-        const output: SolanaSignMessageOutput = {
-          signedMessage: accountAndMessage.message,
-          signature: signatureOrNull,
-        };
-
-        outputs.push(output);
-
-        return outputs;
-      },
+      signMessage,
     },
     // We can also add a 'portal:' name space if we want, but there's no need right now
   },
