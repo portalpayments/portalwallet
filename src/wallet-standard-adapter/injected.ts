@@ -10,9 +10,9 @@ const main = async () => {
     registerWallet(PortalWalletStandardImplementation);
     log("✅ success registering wallet implementation");
 
-    const publicKey = await getPublicKey();
+    // const publicKey = await getPublicKey();
 
-    log(`Public key is`, publicKey);
+    // log(`Public key is`, publicKey);
 
     log("Attached Portal wallet implementation to window");
     Object.defineProperty(window, "portal", {
