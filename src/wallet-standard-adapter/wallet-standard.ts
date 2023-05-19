@@ -4,14 +4,16 @@ import {
   SolanaSignTransaction,
   type SolanaSignMessageOutput,
   type SolanaSignMessageInput,
+  type SolanaSignTransactionMethod,
+  type SolanaSignTransactionOutput,
 } from "@solana/wallet-standard-features";
 import type { Wallet as WalletStandard, WalletAccount } from "@wallet-standard/base";
 import type { StandardConnectMethod, StandardConnectOutput } from "@wallet-standard/features";
 import { StandardConnect, StandardDisconnect, StandardEvents } from "@wallet-standard/features";
-import { icon } from "./icon";
+import { icon as ICON } from "./icon";
 import { SOLANA_CHAINS, SOLANA_MAINNET_CHAIN } from "./solana-chains";
 import { log, runWithTimeout, sleep, stringify } from "../backend/functions";
-import { Keypair, PublicKey } from "@solana/web3.js";
+import { Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import { MIKES_WALLET, MINUTES, SECONDS } from "src/backend/constants";
 import { convertSolanaMessageToString } from "./util";
 const ANY_ORIGIN = "*";
@@ -33,6 +35,10 @@ import {
   WalletSignMessageError,
   // WalletSignTransactionError,
 } from "@solana/wallet-adapter-base";
+import type { SolanaChain } from "./types";
+
+const NAME = "Portal";
+const VERSION = "1.0.0";
 
 // TODO: temp wallet address until we add the UI
 const TEMP_PUBLIC_KEY = new PublicKey(MIKES_WALLET);
@@ -197,11 +203,41 @@ const signMessage = async (accountAndMessage: SolanaSignMessageInput) => {
   return outputs;
 };
 
+const signTransaction: SolanaSignTransactionMethod = async (...inputs) => {
+  log("Sign transaction arguments:", ...inputs);
+  const outputs: SolanaSignTransactionOutput[] = [];
+  for (const { transaction, account, chain } of inputs) {
+    if (!account.features.includes("solana:signTransaction")) {
+      throw new Error("invalid feature");
+    }
+
+    if (chain && !SOLANA_CHAINS.includes(chain as SolanaChain)) {
+      throw new Error("invalid chain");
+    }
+
+    const parsedTransaction = Transaction.from(transaction);
+
+    // if (!keyPair) {
+    //   throw new Error("invalid account");
+    // }
+
+    // if (!confirm("Do you want to sign this transaction?")) throw new Error("signature declined");
+
+    // parsedTransaction.partialSign(keypair);
+
+    // outputs.push({
+    //   signedTransaction: new Uint8Array(parsedTransaction.serialize({ requireAllSignatures: false })),
+    // });
+  }
+
+  return outputs;
+};
+
 // Portal's implementation of the wallet standard
 export const PortalWalletStandardImplementation: WalletStandard = {
-  version: "1.0.0",
-  name: "Portal",
-  icon,
+  name: NAME,
+  version: VERSION,
+  icon: ICON,
   // Copied from https://github.com/solana-labs/wallet-standard
   chains: SOLANA_CHAINS.slice(),
   features: {
@@ -217,6 +253,13 @@ export const PortalWalletStandardImplementation: WalletStandard = {
       version: "1.0.0",
       on: async (eventName) => {
         log("On", eventName);
+        // oddly the first time we connect the page triggers 'change'
+        if (eventName === "connect" || eventName === "change") {
+          await connect();
+          return;
+        }
+        log(`No event handler implemented for ${eventName}`);
+        // TODO: add other events
       },
     },
     [SolanaSignAndSendTransaction]: {
@@ -229,9 +272,7 @@ export const PortalWalletStandardImplementation: WalletStandard = {
     [SolanaSignTransaction]: {
       version: "1.0.0",
       supportedTransactionVersions: ["legacy", 0],
-      signTransaction: async (args) => {
-        log("Sign transaction arguments:", ...args);
-      },
+      signTransaction,
     },
     [SolanaSignMessage]: {
       version: "1.0.0",
