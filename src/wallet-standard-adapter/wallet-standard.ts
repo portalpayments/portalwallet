@@ -40,15 +40,11 @@ import type { SolanaChain } from "./types";
 const NAME = "Portal";
 const VERSION = "1.0.0";
 
-// TODO: temp wallet address until we add the UI
-const TEMP_PUBLIC_KEY = new PublicKey(MIKES_WALLET);
-
-// Questions: how doI make the 'Connect' event run? It doesn't ever seem to run.
-//
+const activeAccounts: Array<WalletAccount> = [];
 
 // Check also /home/mike/Code/portal/wallet-adapter/node_modules/.pnpm/@solana+wallet-standard-wallet-adapter-base@1.0.2_@solana+web3.js@1.74.0_bs58@4.0.1/node_modules/@solana/wallet-standard-wallet-adapter-base/lib/esm/adapter.js
 
-const makeWalletAccount = (publicKey: PublicKey): WalletAccount => {
+const makeAccount = (publicKey: PublicKey): WalletAccount => {
   return {
     address: publicKey.toBase58(),
     publicKey: publicKey.toBytes(),
@@ -58,7 +54,6 @@ const makeWalletAccount = (publicKey: PublicKey): WalletAccount => {
 };
 
 // See constructor() in https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
-const activeWalletAccount = makeWalletAccount(TEMP_PUBLIC_KEY);
 
 // The instructions at https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md
 // https://github.com/wallet-standard/wallet-standard
@@ -102,20 +97,21 @@ export const getPublicKey = (): Promise<Uint8Array | null> => {
 };
 
 const connect: StandardConnectMethod = async ({
-  // From typescript definition:
-  // "request accounts that have already been authorized without prompting"
+  // From type definition
+  // "If this flag is used by the Wallet, the Wallet should not prompt the user, and should return only the accounts that the app is authorized to use.""
   silent,
 } = {}): Promise<StandardConnectOutput> => {
-  log("⚡ Connect. Sending message to content script...");
-  sendMessageToContentScript({
-    topic: "walletStandardConnect",
-    isSilent: silent,
-  });
+  log("⚡ Connect. ");
 
-  const accounts: Array<WalletAccount> = [activeWalletAccount];
-
-  log(`Returning accounts`, accounts);
-  return { accounts };
+  const TEMP_PUB_KEY = new PublicKey(MIKES_WALLET);
+  activeAccounts.push(makeAccount(TEMP_PUB_KEY));
+  // log("⚡ Connect. Sending message to content script...");
+  // sendMessageToContentScript({
+  //   topic: "walletStandardConnect",
+  //   isSilent: silent,
+  // });
+  log(`Returning accounts`, activeAccounts);
+  return { accounts: activeAccounts };
 };
 
 const disconnect = async () => {
@@ -149,7 +145,7 @@ const signMessage = async (accountAndMessage: SolanaSignMessageInput) => {
     throw new Error("invalid feature");
   }
 
-  if (!TEMP_PUBLIC_KEY) {
+  if (!accountAndMessage.account.publicKey) {
     throw new Error("invalid account");
   }
 
@@ -157,7 +153,7 @@ const signMessage = async (accountAndMessage: SolanaSignMessageInput) => {
   // Give the user some time to approve, decline or do nothing
   await askUserToSignMessage(accountAndMessage.message);
 
-  const getWalletStandardSignMessageReply = (): Promise<Uint8Array> => {
+  const getWalletStandardSignMessageReply = (): Promise<Uint8Array | null> => {
     return new Promise((resolve, reject) => {
       const handler = (event: MessageEvent) => {
         const { topic, isApproved, signature } = event.data;
@@ -234,51 +230,59 @@ const signTransaction: SolanaSignTransactionMethod = async (...inputs) => {
 };
 
 // Portal's implementation of the wallet standard
-export const PortalWalletStandardImplementation: WalletStandard = {
-  name: NAME,
-  version: VERSION,
-  icon: ICON,
-  // Copied from https://github.com/solana-labs/wallet-standard
-  chains: SOLANA_CHAINS.slice(),
-  features: {
-    [StandardConnect]: {
-      version: "1.0.0",
-      connect,
-    },
-    [StandardDisconnect]: {
-      version: "1.0.0",
-      disconnect,
-    },
-    [StandardEvents]: {
-      version: "1.0.0",
-      on: async (eventName) => {
-        log("On", eventName);
-        // oddly the first time we connect the page triggers 'change'
-        if (eventName === "connect" || eventName === "change") {
-          await connect();
-          return;
-        }
-        log(`No event handler implemented for ${eventName}`);
-        // TODO: add other events
+// We use functional programming because 90-s style OOP is garbage.
+export const makePortalWalletStandardImplementation = () => {
+  const portalWalletStandardImplementation: WalletStandard = {
+    name: NAME,
+    version: VERSION,
+    icon: ICON,
+    // Copied from https://github.com/solana-labs/wallet-standard
+    chains: SOLANA_CHAINS,
+    features: {
+      [StandardConnect]: {
+        version: "1.0.0",
+        connect,
       },
-    },
-    [SolanaSignAndSendTransaction]: {
-      version: "1.0.0",
-      supportedTransactionVersions: ["legacy", 0],
-      signAndSendTransaction: async () => {
-        log("Sign and send transaction");
+      [StandardDisconnect]: {
+        version: "1.0.0",
+        disconnect,
       },
+      [StandardEvents]: {
+        version: "1.0.0",
+        on: async (eventName) => {
+          log("On", eventName);
+          // oddly the first time we connect the page triggers 'change'
+          if (eventName === "connect" || eventName === "change") {
+            await connect();
+            return;
+          }
+          log(`No event handler implemented for ${eventName}`);
+          // TODO: add other events
+        },
+      },
+      [SolanaSignAndSendTransaction]: {
+        version: "1.0.0",
+        supportedTransactionVersions: ["legacy", 0],
+        signAndSendTransaction: async () => {
+          log("Sign and send transaction");
+        },
+      },
+      [SolanaSignTransaction]: {
+        version: "1.0.0",
+        supportedTransactionVersions: ["legacy", 0],
+        signTransaction,
+      },
+      [SolanaSignMessage]: {
+        version: "1.0.0",
+        signMessage,
+      },
+      // We can also add a 'portal:' name space if we want, but there's no need right now
     },
-    [SolanaSignTransaction]: {
-      version: "1.0.0",
-      supportedTransactionVersions: ["legacy", 0],
-      signTransaction,
-    },
-    [SolanaSignMessage]: {
-      version: "1.0.0",
-      signMessage,
-    },
-    // We can also add a 'portal:' name space if we want, but there's no need right now
-  },
-  accounts: [activeWalletAccount],
+    accounts: activeAccounts,
+  };
+
+  // @ts-ignore
+  window.portalWalletStandardImplementation = portalWalletStandardImplementation;
+
+  return portalWalletStandardImplementation;
 };

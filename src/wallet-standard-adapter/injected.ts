@@ -2,12 +2,14 @@
 // From https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md
 import { log, stringify } from "../backend/functions";
 import { registerWallet } from "./register";
-import { PortalWalletStandardImplementation, getPublicKey } from "./wallet-standard";
+import { makePortalWalletStandardImplementation, getPublicKey } from "./wallet-standard";
+
+const portalWalletStandardImplementation = makePortalWalletStandardImplementation();
 
 const main = async () => {
   try {
     log("Registering wallet implementation...");
-    registerWallet(PortalWalletStandardImplementation);
+    registerWallet(portalWalletStandardImplementation);
     log("✅ success registering wallet implementation");
 
     // const publicKey = await getPublicKey();
@@ -16,7 +18,7 @@ const main = async () => {
 
     log("Attached Portal wallet implementation to window");
     Object.defineProperty(window, "portal", {
-      value: PortalWalletStandardImplementation,
+      value: portalWalletStandardImplementation,
     });
     log("✅ success attaching Portal wallet implementation to window");
   } catch (thrownObject) {
