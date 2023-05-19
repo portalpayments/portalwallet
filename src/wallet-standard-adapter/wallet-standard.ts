@@ -37,6 +37,9 @@ import {
 // TODO: temp wallet address until we add the UI
 const TEMP_PUBLIC_KEY = new PublicKey(MIKES_WALLET);
 
+// Questions: how doI make the 'Connect' event run? It doesn't ever seem to run.
+//
+
 // Check also /home/mike/Code/portal/wallet-adapter/node_modules/.pnpm/@solana+wallet-standard-wallet-adapter-base@1.0.2_@solana+web3.js@1.74.0_bs58@4.0.1/node_modules/@solana/wallet-standard-wallet-adapter-base/lib/esm/adapter.js
 
 const makeWalletAccount = (publicKey: PublicKey): WalletAccount => {
@@ -66,10 +69,29 @@ const sendMessageToContentScript = (message: any) => {
 
 // TODO: not sure if neccessary, but somehow this script needs to get
 // active public key and Ghost example doesn't show how
-export const getPublicKey = () => {
+export const getPublicKey = (): Promise<Uint8Array | null> => {
   log(`Running getPublicKey....`);
-  sendMessageToContentScript({
-    topic: "getPublicKey",
+
+  return new Promise((resolve, reject) => {
+    // Be ready to handle replies
+    const handler = (event: MessageEvent) => {
+      const { topic, publicKey } = event.data;
+      if (topic === "replyGetPublicKey") {
+        window.removeEventListener("message", handler);
+        if (!publicKey) {
+          resolve(null);
+        }
+        const publicKeyDecoded = base58.decode(publicKey);
+        resolve(publicKeyDecoded);
+      }
+    };
+    window.addEventListener("message", handler);
+
+    // Now send out the message that will hopefully get a reply
+    sendMessageToContentScript({
+      topic: "getPublicKey",
+      url: window.location.href,
+    });
   });
 };
 

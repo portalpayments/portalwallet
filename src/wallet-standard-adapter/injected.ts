@@ -4,20 +4,26 @@ import { log, stringify } from "../backend/functions";
 import { registerWallet } from "./register";
 import { PortalWalletStandardImplementation, getPublicKey } from "./wallet-standard";
 
-try {
-  log("Registering wallet implementation...");
-  registerWallet(PortalWalletStandardImplementation);
-  log("✅ success registering wallet implementation");
+const main = async () => {
+  try {
+    log("Registering wallet implementation...");
+    registerWallet(PortalWalletStandardImplementation);
+    log("✅ success registering wallet implementation");
 
-  getPublicKey();
+    const publicKey = await getPublicKey();
 
-  log("Attached Portal wallet implementation to window");
-  Object.defineProperty(window, "portal", {
-    value: PortalWalletStandardImplementation,
-  });
-  log("✅ success attaching Portal wallet implementation to window");
-} catch (thrownObject) {
-  const error = thrownObject as Error;
-  console.error(error);
-  log(`🛑 Failed to attach wallet implementation to window: ${stringify(error)}`);
-}
+    log(`Public key is`, publicKey);
+
+    log("Attached Portal wallet implementation to window");
+    Object.defineProperty(window, "portal", {
+      value: PortalWalletStandardImplementation,
+    });
+    log("✅ success attaching Portal wallet implementation to window");
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    console.error(error);
+    log(`🛑 Failed to attach wallet implementation to window: ${stringify(error)}`);
+  }
+};
+
+main();

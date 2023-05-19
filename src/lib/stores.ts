@@ -354,8 +354,9 @@ authStore.subscribe(async (newValue) => {
       log(`Setting secret key on service worker`);
       await chrome.runtime.sendMessage({
         // Post a message telling the serviceWorker about the secretKey
-        topic: "setSecretKey",
+        topic: "setKeypair",
         secretKey: base58.encode(newValue.keyPair.secretKey),
+        publicKey: base58.encode(newValue.keyPair.secretKey),
       });
     }
 

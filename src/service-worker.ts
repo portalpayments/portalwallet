@@ -41,7 +41,13 @@ const ACCOUNT_CACHE = 1 * HOUR;
 const MID_BLUE = "#419cfd";
 const RED = "#ff0000";
 
+// In base58
+// TODO: we could simply derive publicKey from secretKey
+// (to not be redundant) however because service workers fail
+// in odd ways and are difficult to debug, we try and keep the
+// service worker minimal.
 let secretKey: string | null = null;
+let publicKey: string | null = null;
 
 let nativeAccountSummary: AccountSummary | null = null;
 let tokenAccountSummaries: Array<AccountSummary> | null = null;
@@ -58,13 +64,40 @@ let pendingUserApproval: null | PendingUserApproval = null;
 // https://developer.chrome.com/docs/extensions/reference/runtime/#event-onMessage
 type SendReply = (object: any) => void;
 
-addMessageListener("walletStandardConnect", async (message: PortalMessage, sendReply: SendReply) => {
+const setPendingUserApproval = async (message: PortalMessage) => {
   setBadge("i", MID_BLUE);
 
-  // TODO - implement connection with real keys
+  const newPendingUserApproval: Partial<PendingUserApproval> = structuredClone(message);
+  newPendingUserApproval.time = Date.now();
+
+  // Set something requiring approval
+  pendingUserApproval = newPendingUserApproval as PendingUserApproval;
+
+  log(`Saved pendingUserApproval in service worker.`);
+
+  await localforage.setItem("PENDING_USER_APPROVAL", pendingUserApproval);
+  log(`Also saved to localforage, just in case the service worker is terminated`);
+};
+
+addMessageListener("walletStandardConnect", async (message: PortalMessage, sendReply: SendReply) => {
+  setBadge("i", MID_BLUE);
+  // TODO: maybe pulse it for a bit on animation etc.
+});
+
+addMessageListener("getPublicKey", async (message: PortalMessage, sendReply: SendReply) => {
+  if (!publicKey) {
+    log(`Service worker doesn't know the public key (we are probably not logged in recently)`);
+    sendReply({
+      topic: "replyGetPublicKey",
+      publicKey: null,
+    });
+    await setPendingUserApproval(message);
+    return;
+  }
+  log(`Service worker knows the public key, sending it`);
   sendReply({
-    // TODO: add public key here
-    topic: "replyWalletStandardConnect",
+    topic: "replyGetPublicKey",
+    publicKey,
   });
 });
 
@@ -79,18 +112,7 @@ addMessageListener("walletStandardSignMessage", async (message: PortalMessage, s
     throw new Error(`walletStandardSignMessage is missing 'url' key`);
   }
 
-  // Set something requiring approval
-  // 'as' because we've just checked it has the right properties
-  pendingUserApproval = message as PendingUserApproval;
-
-  pendingUserApproval.time = Date.now();
-  log(`Saved pendingUserApproval in service worker.`);
-
-  await localforage.setItem("PENDING_USER_APPROVAL", pendingUserApproval);
-  log(`Also saved to localforage, just in case the service worker is terminated`);
-
-  // TODO - maybe we need to save this (with a timestamp) to localforage just in case the service worker is killed?
-  // search service worker licycle in manifest version 3
+  await setPendingUserApproval(message);
 
   // We must reply immediately, otherwise the extension will hang
   // (nothing will be done with this message, it's just an acknowledgement)
@@ -111,8 +133,9 @@ addMessageListener("getSecretKey", async (message: PortalMessage, sendReply: Sen
   });
 });
 
-addMessageListener("setSecretKey", async (message: PortalMessage, sendReply: SendReply) => {
+addMessageListener("setKeypair", async (message: PortalMessage, sendReply: SendReply) => {
   secretKey = message.secretKey;
+  publicKey = message.publicKey;
 });
 
 addMessageListener("getNativeAccountSummary", async (message: PortalMessage, sendReply: SendReply) => {

@@ -295,9 +295,9 @@ export interface AccountSummary {
 
 export interface PendingUserApproval extends PortalMessage {
   topic: string;
-  text: string;
   url: string;
   time: number;
+  [key: string]: unknown;
 }
 
 // TODO: 'Auth' is a silly name
