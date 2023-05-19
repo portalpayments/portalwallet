@@ -8,23 +8,17 @@
   import SendPage from "./lib/Send/SendPage.svelte";
   import AddMoneyPage from "./lib/AddMoney/AddMoneyPage.svelte";
   import SignMessage from "./lib/Approval/SignMessage.svelte";
+  import Connect from "./lib/Approval/Connect.svelte";
   import TransactionsPage from "./lib/TransactionsPage/TransactionsPage.svelte";
   import Settings from "./lib/Settings/Settings.svelte";
   import { Router, Route } from "svelte-navigator";
   import { connect } from "./backend/wallet";
   import { verifyWallet } from "./backend/identity-tokens";
   import { log } from "./backend/functions";
-  import type {
-    Contact as ContactType,
-    PendingUserApproval,
-  } from "./backend/types";
+  import type { Contact as ContactType, PendingUserApproval } from "./backend/types";
   import Lock from "./lib/Lock/Lock.svelte";
   import ContactAndMessages from "./lib/Contacts/Contact/ContactAndMessages.svelte";
-  import {
-    connectionStore,
-    authStore,
-    pendingUserApprovalStore,
-  } from "./lib/stores";
+  import { connectionStore, authStore, pendingUserApprovalStore } from "./lib/stores";
   import { checkIfOnboarded } from "./lib/settings";
   import { PORTAL_IDENTITY_TOKEN_ISSUER_WALLET } from "./backend/constants";
   import WalletAddress from "./lib/MyWalletAddress/MyWalletAddress.svelte";
@@ -42,9 +36,7 @@
 
   let currentFeature: number = 0;
 
-  const identityTokenIssuerPublicKey = new PublicKey(
-    PORTAL_IDENTITY_TOKEN_ISSUER_WALLET
-  );
+  const identityTokenIssuerPublicKey = new PublicKey(PORTAL_IDENTITY_TOKEN_ISSUER_WALLET);
 
   connectionStore.subscribe((newValue) => {
     if (newValue) {
@@ -53,7 +45,6 @@
   });
 
   authStore.subscribe(async (newValue) => {
-
     if (newValue.keyPair) {
       // Connect to Solana
       const newConnection = await connect("heliusMainNet");
@@ -93,13 +84,12 @@
         log(`⏹️ There is NOT a pending user approval`);
       }
       hasCheckedPendingUserApproval = true;
-    });    
+    });
   })();
 </script>
 
 <Router>
-  <textarea class="debug">pendingUserApproval is:{pendingUserApproval}</textarea
-  >
+  <textarea class="debug">pendingUserApproval is:{pendingUserApproval}</textarea>
 
   <!-- isOnboarded is null when we haven't loaded localForage yet. After this isOnboarded will be true or false. -->
   {#if isOnboarded === null}
@@ -111,6 +101,8 @@
       {#if pendingUserApproval}
         {#if pendingUserApproval.topic === "walletStandardSignMessage"}
           <SignMessage {pendingUserApproval} />
+        {:else if pendingUserApproval.topic === "getPublicKey"}
+          <Connect {pendingUserApproval} />
         {:else}
           Some other type of approval
           <textarea>{JSON.stringify(pendingUserApproval)}</textarea>
