@@ -70,7 +70,7 @@ const sendMessageToContentScript = (message: any) => {
 
 // TODO: not sure if neccessary, but somehow this script needs to get
 // active public key and Ghost example doesn't show how
-export const getPublicKey = (): Promise<Uint8Array | null> => {
+export const getPublicKey = (): Promise<PublicKey | null> => {
   log(`Running getPublicKey....`);
 
   return new Promise((resolve, reject) => {
@@ -78,12 +78,14 @@ export const getPublicKey = (): Promise<Uint8Array | null> => {
     const handler = (event: MessageEvent) => {
       const { topic, publicKey } = event.data;
       if (topic === "replyGetPublicKey") {
+        debugger;
         window.removeEventListener("message", handler);
         if (!publicKey) {
           resolve(null);
         }
         const publicKeyDecoded = base58.decode(publicKey);
-        resolve(publicKeyDecoded);
+        const publicKeyObject = new PublicKey(publicKeyDecoded);
+        resolve(publicKeyObject);
       }
     };
     window.addEventListener("message", handler);
@@ -101,15 +103,19 @@ const connect: StandardConnectMethod = async ({
   // "If this flag is used by the Wallet, the Wallet should not prompt the user, and should return only the accounts that the app is authorized to use.""
   silent,
 } = {}): Promise<StandardConnectOutput> => {
-  log("⚡ Connect. ");
+  log(`⚡ Connect. Is silient is: ${silent}`);
 
-  const TEMP_PUB_KEY = new PublicKey(MIKES_WALLET);
-  activeAccounts.push(makeAccount(TEMP_PUB_KEY));
-  // log("⚡ Connect. Sending message to content script...");
-  // sendMessageToContentScript({
-  //   topic: "walletStandardConnect",
-  //   isSilent: silent,
-  // });
+  // const TEMP_PUB_KEY = new PublicKey(MIKES_WALLET);
+  log("⚡ Sending message to content script asking for public key...");
+  const publicKey = await getPublicKey();
+
+  if (!publicKey) {
+    log(`Didn't get a public key from the front end`);
+    return { accounts: activeAccounts };
+  }
+
+  activeAccounts.push(makeAccount(publicKey));
+
   log(`Returning accounts`, activeAccounts);
   return { accounts: activeAccounts };
 };
