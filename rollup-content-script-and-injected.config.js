@@ -4,6 +4,8 @@ import typescript from "@rollup/plugin-typescript";
 import alias from "@rollup/plugin-alias";
 import nodePolyfills from "rollup-plugin-polyfill-node";
 
+const log = console.log;
+
 // Config came from https://www.thisdot.co/blog/how-to-setup-a-typescript-project-using-rollup-js
 export default [
   // This script run on the page
@@ -51,6 +53,17 @@ export default [
       // Default format creates a file that inclines "@solana/web3.js",
       // which in turn obliterates window.URL, setting it to '6ba7b811-9dad-11d1-80b4-00c04fd430c8'
       format: "iife",
+    },
+    onwarn: (warning, warn) => {
+      if (warning.code === "CIRCULAR_DEPENDENCY") {
+        // A few of the node polyfills has a circular dependency and we need them to fix it
+        return;
+      }
+      if (warning.code === "EVAL" && warning.id.includes("@solana/web3.js")) {
+        // A few of the node polyfills has a circular dependency and we need them to fix it
+        return;
+      }
+      warn(warning);
     },
     // Used to include modules like localforage in our service worker bundle
     plugins: [
