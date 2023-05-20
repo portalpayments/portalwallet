@@ -182,14 +182,6 @@ input:focus {
   height: var(--wallet-height);
 }
 
-.fancy-border {
-  @include gradient-border;
-  @include shadow;
-  & input {
-    min-height: 44px;
-  }
-}
-
 .smooth-scrolling {
   scroll-behavior: smooth;
 }

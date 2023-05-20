@@ -20,35 +20,31 @@
 </script>
 
 <div class="header">
-  <div class="fancy-border">
-    <button class="menu" on:click={onClick}>
-      {#if isEmpty(user?.verifiedClaims)}
-        <div class="profile-pic" style={gradient} />
-      {:else}
-        {#if user.verifiedClaims.type === "INDIVIDUAL"}
-          <img
-            class="profile-pic"
-            src={user.verifiedClaims.imageUrl}
-            alt="{user.verifiedClaims.givenName} {user.verifiedClaims
-              .familyName}"
-          />
-          {user.verifiedClaims.givenName}
-          <img class="verified" src={verifiedIndividualIcon} alt="Verified" />
-        {/if}
-        {#if user.verifiedClaims.type === "ORGANIZATION"}
-          <img
-            class="profile-pic"
-            src={user.verifiedClaims.imageUrl}
-            alt="{user.verifiedClaims.legalName} ({user.verifiedClaims
-              .country})"
-          />
-          {user.verifiedClaims.legalName}
-          ({user.verifiedClaims.country})
-          <img class="verified" src={verifiedOrganizationIcon} alt="Verified" />
-        {/if}
+  <button class="menu" on:click={onClick}>
+    {#if isEmpty(user?.verifiedClaims)}
+      <div class="profile-pic" style={gradient} />
+    {:else}
+      {#if user.verifiedClaims.type === "INDIVIDUAL"}
+        <img
+          class="profile-pic"
+          src={user.verifiedClaims.imageUrl}
+          alt="{user.verifiedClaims.givenName} {user.verifiedClaims.familyName}"
+        />
+        {user.verifiedClaims.givenName}
+        <img class="verified" src={verifiedIndividualIcon} alt="Verified" />
       {/if}
-    </button>
-  </div>
+      {#if user.verifiedClaims.type === "ORGANIZATION"}
+        <img
+          class="profile-pic"
+          src={user.verifiedClaims.imageUrl}
+          alt="{user.verifiedClaims.legalName} ({user.verifiedClaims.country})"
+        />
+        {user.verifiedClaims.legalName}
+        ({user.verifiedClaims.country})
+        <img class="verified" src={verifiedOrganizationIcon} alt="Verified" />
+      {/if}
+    {/if}
+  </button>
 </div>
 
 <style lang="scss">
@@ -71,11 +67,7 @@
     font-weight: 600;
     border: 0;
     font-size: 14px;
-  }
-
-  .fancy-border {
-    height: 36px;
-    border-radius: 18px;
+    @include gradient-border(1px);
   }
 
   button img {

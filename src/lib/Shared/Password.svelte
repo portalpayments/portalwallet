@@ -45,14 +45,16 @@
 />
 
 <style lang="scss">
+  @import "../../mixins.scss";
   .password {
+    border-radius: 24px;
     width: 100%;
     transition: all 200ms ease-out;
     height: 100%;
-    border-radius: 22px;
-    background-color: white;
-    border: none;
     padding: 0 12px;
+    border-radius: 24px;
+    min-height: 48px;
+    @include gradient-border;
   }
 
   .bad-password {

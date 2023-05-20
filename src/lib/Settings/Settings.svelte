@@ -26,11 +26,9 @@
   // thisis why we don't use (window.location.href)
   const HOME_PAGE = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/index.html`;
 
-  const MOCK_MNEMONIC_FOR_BLURRING =
-    "some words that look like they might be a mnemonic but arent";
+  const MOCK_MNEMONIC_FOR_BLURRING = "some words that look like they might be a mnemonic but arent";
 
-  const MOCK_SECRET_KEY_FOR_BLURRING =
-    "iamamocksecretkeywithasimilarlengthtoarealsecretkeybutactuallyihavenorealvalue";
+  const MOCK_SECRET_KEY_FOR_BLURRING = "iamamocksecretkeywithasimilarlengthtoarealsecretkeybutactuallyihavenorealvalue";
 
   let enteredPassword: string | null = null;
   let isMnemonicShown = false;
@@ -47,10 +45,7 @@
     itemToConfirm = newItemToConfirm;
   };
 
-  const checkPasswordAndShowItem = async (
-    suppliedPassword: string,
-    newItemToConfirm: typeof itemToConfirm
-  ) => {
+  const checkPasswordAndShowItem = async (suppliedPassword: string, newItemToConfirm: typeof itemToConfirm) => {
     log(`Trying to get settings...`);
     const settings = await getSettings(suppliedPassword);
 
@@ -84,12 +79,10 @@
       </p>
       <p>Portal Support will never ask for your {itemToConfirm}.</p>
       <p>
-        Only enter your {itemToConfirm} into a wallet application that you trust.
-        Regular DeFi, web3 and crypto apps don't need your {itemToConfirm} to work.
+        Only enter your {itemToConfirm} into a wallet application that you trust. Regular DeFi, web3 and crypto apps don't
+        need your {itemToConfirm} to work.
       </p>
-      <div class="fancy-border">
-        <Password bind:value={enteredPassword} />
-      </div>
+      <Password bind:value={enteredPassword} />
 
       <div class="buttons">
         <button
@@ -102,8 +95,7 @@
         </button>
         <button
           class="enter-password-button"
-          on:click={async () =>
-            await checkPasswordAndShowItem(enteredPassword, itemToConfirm)}
+          on:click={async () => await checkPasswordAndShowItem(enteredPassword, itemToConfirm)}
         >
           View {itemToConfirm}
         </button>
@@ -116,10 +108,7 @@
     <Heading>Settings</Heading>
   </div>
 
-  <Link
-    class="button with-icon"
-    to={`/contacts/${PORTAL_IDENTITY_TOKEN_ISSUER_WALLET}`}
-  >
+  <Link class="button with-icon" to={`/contacts/${PORTAL_IDENTITY_TOKEN_ISSUER_WALLET}`}>
     <img src={helpIconURL} alt="Help" />
     Get help from the Portal team
   </Link>
@@ -134,11 +123,7 @@
     Follow @portalpayments on Twitter
   </a>
 
-  <button
-    type="button"
-    class="logout with-icon"
-    on:click|preventDefault={logout}
-  >
+  <button type="button" class="logout with-icon" on:click|preventDefault={logout}>
     <img src={logoutIconURL} alt="Log out" />
     Lock wallet
   </button>

@@ -294,9 +294,7 @@
                 >
               {:else}
                 <p>Paste your secret key or mnemonic phrase below.</p>
-                <div class="fancy-border">
-                  <TextArea placeholder="Secret key or mnemonic phrase" onInputDelay={checkSecretKeyOrMnemonicPhrase} />
-                </div>
+                <TextArea placeholder="Secret key or mnemonic phrase" onInputDelay={checkSecretKeyOrMnemonicPhrase} />
                 <button class="toggle-recovery-method" on:click={toggleRecoveryMethod}
                   >Use a recovery token instead</button
                 >
@@ -326,9 +324,7 @@
             <div class="content">
               <Heading>Set a password</Heading>
 
-              <div class="fancy-border">
-                <Password bind:value={passwordToUse} onInputDelay={checkPassword} />
-              </div>
+              <Password bind:value={passwordToUse} onInputDelay={checkPassword} />
 
               {#if isPasswordSecure !== null}
                 {#if isPasswordSecure === true}
@@ -355,24 +351,18 @@
             <div class="content">
               {#if isUsingRecoveryToken}
                 <Heading>Enter your personal phrase</Heading>
-                <div class="fancy-border">
-                  <TextArea
-                    placeholder="Personal phrase"
-                    onInputDelay={(event) => {
-                      // TODO: not sure why this is necessary
-                      // @ts-ignore
-                      recoveryTokenPersonalPhrase = event.target.value;
-                    }}
-                  />
-                </div>
-                <div class="fancy-border">
-                  <Password bind:value={recoveryTokenWalletUnlockPassword} placeHolder="Unlock password" />
-                </div>
+                <TextArea
+                  placeholder="Personal phrase"
+                  onInputDelay={(event) => {
+                    // TODO: not sure why this is necessary
+                    // @ts-ignore
+                    recoveryTokenPersonalPhrase = event.target.value;
+                  }}
+                />
+                <Password bind:value={recoveryTokenWalletUnlockPassword} placeHolder="Unlock password" />
               {:else}
                 <Heading>Set a password</Heading>
-                <div class="fancy-border">
-                  <Password bind:value={passwordToUse} onInputDelay={checkPassword} />
-                </div>
+                <Password bind:value={passwordToUse} onInputDelay={checkPassword} />
 
                 {#if isPasswordSecure !== null}
                   {#if isPasswordSecure === true}
@@ -396,12 +386,10 @@
             <div class="content">
               <Heading>Set Recovery Phrase</Heading>
               <p>If you lose your devices, you can access your wallet using this phrase.</p>
-              <div class="fancy-border">
-                <TextArea
-                  placeholder="When I was six my brother Finian got a train set for Christmas."
-                  onInputDelay={checkNewPersonalPhrase}
-                />
-              </div>
+              <TextArea
+                placeholder="When I was six my brother Finian got a train set for Christmas."
+                onInputDelay={checkNewPersonalPhrase}
+              />
 
               {#if isPersonalPhraseSecure !== null}
                 {#if isPersonalPhraseSecure === true}

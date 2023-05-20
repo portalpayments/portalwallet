@@ -4,10 +4,8 @@
 
   export let placeholder: string;
   // https://stackoverflow.com/questions/74069649/how-do-i-set-the-correct-type-for-a-click-handler-when-using-svelte-with-typescr/74070095#74070095
-  export let onInputDelay: svelte.JSX.FormEventHandler<HTMLTextAreaElement> | null =
-    null;
-  export let onKeyUpDelay: svelte.JSX.KeyboardEventHandler<HTMLTextAreaElement> | null =
-    null;
+  export let onInputDelay: svelte.JSX.FormEventHandler<HTMLTextAreaElement> | null = null;
+  export let onKeyUpDelay: svelte.JSX.KeyboardEventHandler<HTMLTextAreaElement> | null = null;
 
   const runInputDelayIfExists = (event) => {
     // log(`Running input delay event`);
@@ -32,6 +30,8 @@
 />
 
 <style lang="scss">
+  @import "../../mixins.scss";
+
   textarea {
     border-radius: 22px;
     border: none;
@@ -41,11 +41,7 @@
     height: 160px;
     resize: none;
     color: var(--dark-grey);
-  }
-
-  textarea:focus {
-    outline: none;
-    box-shadow: 0 0 2px rgb(65 156 253 / 30%);
+    @include gradient-border(2px);
   }
 
   textarea::placeholder {

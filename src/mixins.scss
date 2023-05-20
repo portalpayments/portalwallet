@@ -14,12 +14,6 @@
   background-image: var(--purple-orange-gradient);
 }
 
-@mixin gradient-border {
-  background-image: var(--blue-green-gradient);
-  padding: 1px;
-  border-radius: 24px;
-}
-
 @mixin small-caps {
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -35,6 +29,22 @@
   backdrop-filter: blur(24px);
 }
 
+@mixin gradient-border ($width: 2px) {
+  // Fill with the gradient
+  background-image: var(--blue-green-gradient);
+  background-origin: border-box;
+  // Fill the inside with white (then do normal shadow, copied from @shadow)
+  box-shadow: inset 0 1000px white, rgb(37 206 232 / 24%) 0px 8px 16px 0px;
+  // A transaprent border, so the very edge of the button shows through 
+  border: $width solid transparent;
+
+  // Other unrelated stuff
+  &:focus {
+    outline: none;
+    // Stop browser focus from messing with our gradient border effect
+    border: 2px solid transparent;
+  }
+}
 
 @mixin shadow {
   box-shadow: rgb(37 206 232 / 24%) 0px 8px 16px 0px;

@@ -45,23 +45,17 @@
     <div class="password-container">
       <!-- Form only to prevent annoying 'Password field is not contained in a form' message in devtools -->
       <form on:submit={(event) => event.preventDefault()}>
-        <div class="fancy-border">
-          <!-- Only to prevent annoying 'Use hidden fields for implicit information' message in devtools -->
-          <input
-            class="fake-username-input"
-            type="text"
-            autocomplete="username"
-          />
-          <Password
-            bind:value={password}
-            onEnter={() => login(password)}
-            bind:isBadPassword
-            isNewPassword={false}
-            onMount={(element) => {
-              element.focus();
-            }}
-          />
-        </div>
+        <!-- Only to prevent annoying 'Use hidden fields for implicit information' message in devtools -->
+        <input class="fake-username-input" type="text" autocomplete="username" />
+        <Password
+          bind:value={password}
+          onEnter={() => login(password)}
+          bind:isBadPassword
+          isNewPassword={false}
+          onMount={(element) => {
+            element.focus();
+          }}
+        />
       </form>
 
       <button
@@ -97,11 +91,6 @@
   .login-button {
     @include small-caps;
     @include shadow;
-  }
-
-  .fancy-border {
-    height: 48px;
-    border-radius: 24px;
   }
 
   .logo {
