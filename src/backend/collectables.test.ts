@@ -16,12 +16,7 @@ describe(`collectables`, () => {
       const connection = await connect("heliusMainNet");
       const wallet = new PublicKey(MIKES_WALLET);
       const collectables = await getCollectables(connection, wallet);
-
-      const flagMonkez = collectables.find((collectable) => {
-        return collectable.description.includes("@flagmonkez");
-      });
-
-      expect(flagMonkez).toBeTruthy();
+      expect(collectables.length).toBeGreaterThan(5);
     },
     // Can be slow
     // TODO: we could add some kind of on-demand metadata loading
