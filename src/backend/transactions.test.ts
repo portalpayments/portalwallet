@@ -7,10 +7,7 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import { getTransactionsByDays, summarizeTransaction } from "./transactions";
-import {
-  MOCK_SENDER_PUBLIC_KEY,
-  MOCK_RECIPIENT_PUBLIC_KEY,
-} from "./test-data/transactions/mocks";
+import { MOCK_SENDER_PUBLIC_KEY, MOCK_RECIPIENT_PUBLIC_KEY } from "./test-data/transactions/mocks";
 import { PublicKey, type ParsedTransactionWithMeta } from "@solana/web3.js";
 import {
   sendToExistingTokenAccountSenderComesFirst,
@@ -29,20 +26,12 @@ import {
   VAHEHS_WALLET,
   YCOMBINATOR_DEMO_WALLET_FOR_JARED,
 } from "./constants";
-import {
-  type SimpleTransaction,
-  Direction,
-  type Contact,
-} from "../backend/types";
+import { type SimpleTransaction, Direction, type Contact } from "../backend/types";
 import { hexToUtf8, log, stringify } from "./functions";
 import { sendFiveUSDC } from "./test-data/transactions/sendFiveUSDC";
-import { swapSolWithUSDCOnJupiter } from "./test-data/transactions/swapSolWithUSDC";
+import { swapSolForUSDCOnJupiter } from "./test-data/transactions/swapSolForUSDC";
 import { sendingMoneyToSelf } from "./test-data/transactions/sendingMoneyToSelf";
-import {
-  sendingSol,
-  sendingSolWithMemo,
-  sendingSolWithNote,
-} from "./test-data/transactions/sendingSol";
+import { sendingSol, sendingSolWithMemo, sendingSolWithNote } from "./test-data/transactions/sendingSol";
 import { sendingUSDH } from "./test-data/transactions/sendingUSDH";
 import { makingLightShieldAccount } from "./test-data/transactions/makingLightShieldAccount";
 import { getCurrencyBySymbol } from "./solana-functions";
@@ -60,8 +49,7 @@ const contacts: Array<Contact> = [
       type: "INDIVIDUAL" as "INDIVIDUAL",
       givenName: "Jared",
       familyName: "Friedman",
-      imageUrl:
-        "https://arweave.net/wthKTNtIJezFDl3uevmGfGLiYdZ-5IN5LlfvLJNWc9U",
+      imageUrl: "https://arweave.net/wthKTNtIJezFDl3uevmGfGLiYdZ-5IN5LlfvLJNWc9U",
     },
     profilePictureURL: null,
   },
@@ -277,7 +265,7 @@ describe(`transaction summaries`, () => {
       // TODO: fix 'transaction.message.accountKeys' (is a string, should be something else)
       // in the demo transaction below
       // @ts-ignore
-      swapSolWithUSDCOnJupiter,
+      swapSolForUSDCOnJupiter,
       new PublicKey(MIKES_WALLET),
       null,
       false
@@ -392,9 +380,7 @@ describe(`transaction summaries`, () => {
   });
 
   // 'USDC' on our local environment is just a token mint account we make
-  const getFakeMintToCurrencyMapFromTestTransaction = (
-    rawTransaction: ParsedTransactionWithMeta
-  ) => {
+  const getFakeMintToCurrencyMapFromTestTransaction = (rawTransaction: ParsedTransactionWithMeta) => {
     const fakeUSDCTokenAccount = rawTransaction.meta.preTokenBalances[0].mint;
     const fakeMintToCurrencyMap = {
       [fakeUSDCTokenAccount]: {
@@ -511,10 +497,7 @@ describe(`transaction summaries`, () => {
   test(`We ignore a transaction of Mike sending himself some money`, async () => {
     const portalSimpleTransaction =
       // TODO: 'as' shouldn't be necessary, we should tweak our test data
-      await summarizeTransaction(
-        sendingMoneyToSelf as ParsedTransactionWithMeta,
-        new PublicKey(MIKES_WALLET)
-      );
+      await summarizeTransaction(sendingMoneyToSelf as ParsedTransactionWithMeta, new PublicKey(MIKES_WALLET));
 
     expect(portalSimpleTransaction).toEqual(null);
   });
@@ -522,10 +505,7 @@ describe(`transaction summaries`, () => {
   test(`Mike sending Jared some lamports`, async () => {
     const portalSimpleTransaction =
       // TODO: 'as' shouldn't be necessary, we should tweak our test data
-      await summarizeTransaction(
-        sendingSol as ParsedTransactionWithMeta,
-        new PublicKey(MIKES_WALLET)
-      );
+      await summarizeTransaction(sendingSol as ParsedTransactionWithMeta, new PublicKey(MIKES_WALLET));
 
     expect(portalSimpleTransaction).toEqual({
       id: "5KKQASDKTxoViRWYzN7Rf8X9n3wiiNVztpgpNG1oyyZbkNiai1JVcD4rAV2XYzFPgRP4dXQv7A3Bku68UT4j2FZk",
@@ -948,9 +928,7 @@ describe(`memos and notes`, () => {
 
   test(`We can read a raw note`, () => {
     // Copied from https://explorer.solana.com/tx/PdX96DWpeMRqjxP7tQHU7aVMkjongnQz7mmkLPmvtezvWoJzqnVfJpYu3xxmRWSTngKDQ9A7a4UP4s4Tj463jr4
-    const note = hexToUtf8(
-      `54657374206e6f746520746f20726563697069656e742066726f6d204d696b65`
-    );
+    const note = hexToUtf8(`54657374206e6f746520746f20726563697069656e742066726f6d204d696b65`);
     expect(note).toEqual("Test note to recipient from Mike");
   });
 

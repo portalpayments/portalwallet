@@ -19,7 +19,9 @@ import {
   WRAPPED_SOL_MAINNET_MINT_ACCOUNT,
 } from "../../constants";
 
-export const swapSolWithUSDCOnJupiter = {
+// https://xray.helius.xyz/tx/4SBiyR6rrie4M78S2dLQjkcb8Ja1mFmuAL4furw5NcpKZkYjsC31EWtycLY3WdatngkiLPEqGwTPncAg41fQATFW
+// "swapped 2 SOL for 32.904 USDC"
+export const swapSolForUSDCOnJupiter = {
   blockTime: 1673260796,
   meta: {
     err: null,
@@ -84,7 +86,7 @@ export const swapSolWithUSDCOnJupiter = {
             accounts: [
               SPL_TOKEN_PROGRAM,
               MIKES_WALLET,
-              "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
+              ORCA_SOL_USDC,
               "3rkvt7CX3DcPqAcnU7w6eoruaYLLUp1gh3ZFaVKVDsBS",
               "9RfZwn2Prux6QesG1Noo4HzMEBv3rPndJ2bN2Wwd6a7p",
               MIKES_USDC_ACCOUNT,
@@ -114,7 +116,7 @@ export const swapSolWithUSDCOnJupiter = {
             parsed: {
               info: {
                 amount: "32903572",
-                authority: "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
+                authority: ORCA_SOL_USDC,
                 destination: MIKES_USDC_ACCOUNT,
                 source: "BVNo8ftg2LkkssnWT4ZWdtoFaevnfD6ExYeramwM27pe",
               },
@@ -178,9 +180,51 @@ export const swapSolWithUSDCOnJupiter = {
       "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 2915 of 1298609 compute units",
       "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success",
     ],
+    preBalances: [
+      148923836864, 0, 2039280, 70407360, 1, 731913600, 159369370341, 1, 934087680, 1141440, 5435760, 7742680236820,
+      2039280, 1141440, 0,
+    ],
+    preTokenBalances: [
+      {
+        accountIndex: 2,
+        mint: USDC_MAINNET_MINT_ACCOUNT,
+        owner: MIKES_WALLET,
+        programId: new PublicKey(SPL_TOKEN_PROGRAM),
+        uiTokenAmount: {
+          amount: "12183485",
+          decimals: 6,
+          uiAmount: 12.183485,
+          uiAmountString: "12.183485",
+        },
+      },
+      {
+        accountIndex: 11,
+        mint: WRAPPED_SOL_MAINNET_MINT_ACCOUNT,
+        owner: ORCA_SOL_USDC,
+        programId: new PublicKey(SPL_TOKEN_PROGRAM),
+        uiTokenAmount: {
+          amount: "7742678197540",
+          decimals: 9,
+          uiAmount: 7742.67819754,
+          uiAmountString: "7742.67819754",
+        },
+      },
+      {
+        accountIndex: 12,
+        mint: USDC_MAINNET_MINT_ACCOUNT,
+        owner: ORCA_SOL_USDC,
+        programId: new PublicKey(SPL_TOKEN_PROGRAM),
+        uiTokenAmount: {
+          amount: "476814880218",
+          decimals: 6,
+          uiAmount: 476814.880218,
+          uiAmountString: "476814.880218",
+        },
+      },
+    ],
     postBalances: [
-      146923831864, 0, 2039280, 70407360, 1, 731913600, 159369370341, 1,
-      934087680, 1141440, 5435760, 7744680236820, 2039280, 1141440, 0,
+      146923831864, 0, 2039280, 70407360, 1, 731913600, 159369370341, 1, 934087680, 1141440, 5435760, 7744680236820,
+      2039280, 1141440, 0,
     ],
     postTokenBalances: [
       {
@@ -199,7 +243,7 @@ export const swapSolWithUSDCOnJupiter = {
       {
         accountIndex: 11,
         mint: WRAPPED_SOL_MAINNET_MINT_ACCOUNT,
-        owner: "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
+        owner: ORCA_SOL_USDC,
         programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "7744678197540",
@@ -211,7 +255,7 @@ export const swapSolWithUSDCOnJupiter = {
       {
         accountIndex: 12,
         mint: USDC_MAINNET_MINT_ACCOUNT,
-        owner: "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
+        owner: ORCA_SOL_USDC,
         programId: new PublicKey(SPL_TOKEN_PROGRAM),
         uiTokenAmount: {
           amount: "476781976646",
@@ -221,48 +265,7 @@ export const swapSolWithUSDCOnJupiter = {
         },
       },
     ],
-    preBalances: [
-      148923836864, 0, 2039280, 70407360, 1, 731913600, 159369370341, 1,
-      934087680, 1141440, 5435760, 7742680236820, 2039280, 1141440, 0,
-    ],
-    preTokenBalances: [
-      {
-        accountIndex: 2,
-        mint: USDC_MAINNET_MINT_ACCOUNT,
-        owner: MIKES_WALLET,
-        programId: new PublicKey(SPL_TOKEN_PROGRAM),
-        uiTokenAmount: {
-          amount: "12183485",
-          decimals: 6,
-          uiAmount: 12.183485,
-          uiAmountString: "12.183485",
-        },
-      },
-      {
-        accountIndex: 11,
-        mint: WRAPPED_SOL_MAINNET_MINT_ACCOUNT,
-        owner: "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
-        programId: new PublicKey(SPL_TOKEN_PROGRAM),
-        uiTokenAmount: {
-          amount: "7742678197540",
-          decimals: 9,
-          uiAmount: 7742.67819754,
-          uiAmountString: "7742.67819754",
-        },
-      },
-      {
-        accountIndex: 12,
-        mint: USDC_MAINNET_MINT_ACCOUNT,
-        owner: "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
-        programId: new PublicKey(SPL_TOKEN_PROGRAM),
-        uiTokenAmount: {
-          amount: "476814880218",
-          decimals: 6,
-          uiAmount: 476814.880218,
-          uiAmountString: "476814.880218",
-        },
-      },
-    ],
+
     rewards: [],
     status: {
       Ok: null,
@@ -333,7 +336,7 @@ export const swapSolWithUSDCOnJupiter = {
           writable: false,
         },
         {
-          pubkey: new PublicKey("7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm"),
+          pubkey: new PublicKey(ORCA_SOL_USDC),
           signer: false,
           source: "lookupTable",
           writable: true,
@@ -365,9 +368,7 @@ export const swapSolWithUSDCOnJupiter = {
       ],
       addressTableLookups: [
         {
-          accountKey: new PublicKey(
-            "HEHy7kNR3W8fHnA1a7jMBwHEZH3z2MKjaL8Xo69PrNAM"
-          ),
+          accountKey: new PublicKey("HEHy7kNR3W8fHnA1a7jMBwHEZH3z2MKjaL8Xo69PrNAM"),
           readonlyIndexes: [0, 152],
           writableIndexes: [146, 147, 148],
         },
@@ -376,9 +377,7 @@ export const swapSolWithUSDCOnJupiter = {
         {
           accounts: [],
           data: "K1FDJ7",
-          programId: new PublicKey(
-            "ComputeBudget111111111111111111111111111111"
-          ),
+          programId: new PublicKey("ComputeBudget111111111111111111111111111111"),
         },
         {
           parsed: {
@@ -425,7 +424,7 @@ export const swapSolWithUSDCOnJupiter = {
             ORCA_WHIRLPOOL_MAINNET_ACCOUNT,
             SPL_TOKEN_PROGRAM,
             MIKES_WALLET,
-            "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
+            ORCA_SOL_USDC,
             "3rkvt7CX3DcPqAcnU7w6eoruaYLLUp1gh3ZFaVKVDsBS",
             "9RfZwn2Prux6QesG1Noo4HzMEBv3rPndJ2bN2Wwd6a7p",
             MIKES_USDC_ACCOUNT,
@@ -453,9 +452,7 @@ export const swapSolWithUSDCOnJupiter = {
       ],
       recentBlockhash: "BpthFfBG1JBJCMQLf8eRjWETKHM3KjwWDoNuoHVsSAf",
     },
-    signatures: [
-      "4SBiyR6rrie4M78S2dLQjkcb8Ja1mFmuAL4furw5NcpKZkYjsC31EWtycLY3WdatngkiLPEqGwTPncAg41fQATFW",
-    ],
+    signatures: ["4SBiyR6rrie4M78S2dLQjkcb8Ja1mFmuAL4furw5NcpKZkYjsC31EWtycLY3WdatngkiLPEqGwTPncAg41fQATFW"],
   },
   version: 0,
 };
