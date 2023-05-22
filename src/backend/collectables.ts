@@ -44,7 +44,7 @@ export const nftToCollectable = async (nft: ReadApiAsset): Promise<Collectable> 
   return {
     id: nft.id,
     name: rawNFTMetaData.name,
-    description: rawNFTMetaData.description,
+    description: rawNFTMetaData.description || null,
     coverImage,
     media,
     type,
@@ -151,7 +151,7 @@ export const getCollectablesInFolders = (collectables: Array<Collectable>): Coll
   collectables.forEach((collectable) => {
     let folderName = (collectable.attributes["presented_by"] as string) || null;
     if (!folderName) {
-      if (collectable.description.includes("Sticker Collection")) {
+      if (collectable.description?.includes("Sticker Collection")) {
         folderName = "Stickers";
       }
     }
