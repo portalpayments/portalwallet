@@ -8,6 +8,7 @@
 //
 import { PublicKey } from "@solana/web3.js";
 import {
+  COMPUTE_BUDGET_PROGRAM,
   JUPITER,
   MIKES_USDC_ACCOUNT,
   MIKES_WALLET,
@@ -300,7 +301,7 @@ export const swapSolForUSDCOnJupiter = {
           writable: true,
         },
         {
-          pubkey: new PublicKey("ComputeBudget111111111111111111111111111111"),
+          pubkey: new PublicKey(COMPUTE_BUDGET_PROGRAM),
           signer: false,
           source: "transaction",
           writable: false,
@@ -377,7 +378,7 @@ export const swapSolForUSDCOnJupiter = {
         {
           accounts: [],
           data: "K1FDJ7",
-          programId: new PublicKey("ComputeBudget111111111111111111111111111111"),
+          programId: new PublicKey(COMPUTE_BUDGET_PROGRAM),
         },
         {
           parsed: {
