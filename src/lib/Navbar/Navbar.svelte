@@ -40,6 +40,7 @@
     /* Position the navbar over the features at the bottom on header-and-features*/
     position: absolute;
     bottom: 0;
+    left: 0;
     z-index: 1;
   }
   buttongroup {
