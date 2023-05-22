@@ -146,16 +146,13 @@ export const getTransactionsForAddress = async (
 
   log(`Got ${signatures.length} signatures`);
 
-  const transactions: Array<ParsedTransactionWithMeta> = await getParsedTransactionsAndCache(connection, signatures);
+  const transactions: Array<ParsedTransactionWithMeta> = await getTransactions(connection, signatures);
 
   return transactions;
 };
 
 // A single transaction
-export const getParsedTransactionAndCache = async (
-  connection: Connection,
-  signature: string
-): Promise<ParsedTransactionWithMeta> => {
+export const getTransaction = async (connection: Connection, signature: string): Promise<ParsedTransactionWithMeta> => {
   let rawTransaction: ParsedTransactionWithMeta | null = null;
   const transactionCacheId = `transaction-${signature}`;
   if (IS_TRANSACTION_CACHE_ENABLED) {
@@ -166,11 +163,12 @@ export const getParsedTransactionAndCache = async (
     return rawTransaction;
   }
   log(`Getting transaction ${signature} from the network`);
-  rawTransaction = await connection.getParsedTransaction(
-    signature,
+  rawTransaction = await connection.getParsedTransaction(signature, {
+    // See https://www.quicknode.com/guides/solana-development/transactions/how-to-update-your-solana-client-to-handle-versioned-transactions/
+    maxSupportedTransactionVersion: 0,
     // Only wait for confirmed so we can show transaction in list immediately
-    "confirmed"
-  );
+    commitment: "confirmed",
+  });
   if (!rawTransaction) {
     throw new Error(`Could not find transaction id ${signature}. Wrong network?`);
   }
@@ -185,7 +183,7 @@ export const getParsedTransactionAndCache = async (
 
 // Multiple transactions
 // Slightly complied, as some, all or none of the transactions can be cached.
-export const getParsedTransactionsAndCache = async (connection: Connection, signatures: Array<string>) => {
+export const getTransactions = async (connection: Connection, signatures: Array<string>) => {
   const options = {
     // NOTE: we can't use commitment: finalised in our localhost validator
     // (it's a limitation of the localhost validator)

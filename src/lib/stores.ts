@@ -14,7 +14,7 @@ import uniqBy from "lodash.uniqby";
 import {
   getContactsFromTransactions,
   getNativeAccountSummary,
-  getParsedTransactionAndCache,
+  getTransaction,
   getTokenAccountSummaries,
   getTransactionSummariesForAddress,
 } from "../backend/wallet";
@@ -148,7 +148,7 @@ export const authStore: Writable<Auth> = writable({
 });
 
 export const updateAccountsForNewTransaction = async (signature: string, nativeOrTokenAccountAddress: PublicKey) => {
-  let rawTransaction = await getParsedTransactionAndCache(connection, signature);
+  let rawTransaction = await getTransaction(connection, signature);
   const simpleTransaction = await summarizeTransaction(
     rawTransaction,
     keyPair.publicKey,

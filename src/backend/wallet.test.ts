@@ -7,10 +7,7 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
-import {
-  getOrCreateAssociatedTokenAccount,
-  TOKEN_PROGRAM_ID,
-} from "@solana/spl-token";
+import { getOrCreateAssociatedTokenAccount, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import {
   connect,
   getAccountBalance,
@@ -18,6 +15,7 @@ import {
   putSolIntoWallet,
   getTokenAccountSummaries,
   getProfilePicture,
+  getTransaction,
 } from "./wallet";
 import { getKeypairFromString } from "./solana-functions";
 import base58 from "bs58";
@@ -44,7 +42,6 @@ import {
 } from "./constants";
 import { getCurrencyBySymbol } from "./solana-functions";
 import { getIdentityTokensFromWallet, verifyWallet } from "./identity-tokens";
-import { Pda } from "@metaplex-foundation/js";
 import * as dotenv from "dotenv";
 import { getTransactionSummariesForAddress } from "./wallet";
 import { log, stringify } from "./functions";
@@ -80,16 +77,10 @@ describe(`basic wallet functionality on local validator`, () => {
   test(`wallets can be deposited into`, async () => {
     const firstWallet = new Keypair();
     await putSolIntoWallet(connection, firstWallet.publicKey, DEPOSIT);
-    const balanceBefore = await getAccountBalance(
-      connection,
-      firstWallet.publicKey
-    );
+    const balanceBefore = await getAccountBalance(connection, firstWallet.publicKey);
 
     await putSolIntoWallet(connection, firstWallet.publicKey, DEPOSIT);
-    const balanceAfter = await getAccountBalance(
-      connection,
-      firstWallet.publicKey
-    );
+    const balanceAfter = await getAccountBalance(connection, firstWallet.publicKey);
 
     const difference = balanceAfter - balanceBefore;
 
@@ -105,11 +96,7 @@ describe(`basic wallet functionality on local validator`, () => {
 
   test(`produces a good error when not enough funds to make a new token`, async () => {
     const testUSDCAuthority = new Keypair();
-    await putSolIntoWallet(
-      connection,
-      testUSDCAuthority.publicKey,
-      NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN
-    );
+    await putSolIntoWallet(connection, testUSDCAuthority.publicKey, NOT_ENOUGH_TO_MAKE_A_NEW_TOKEN);
 
     expect(
       createMintAccount(
@@ -138,9 +125,7 @@ describe(`mainnet integration tests`, () => {
   const mikeKeypair = getKeypairFromEnvFile("MIKES_SECRET_KEY");
   const mikePublicKey = mikeKeypair.publicKey;
 
-  const identityTokenIssuerKeypair = getKeypairFromEnvFile(
-    "IDENTITY_TOKEN_SECRET_KEY"
-  );
+  const identityTokenIssuerKeypair = getKeypairFromEnvFile("IDENTITY_TOKEN_SECRET_KEY");
 
   beforeAll(async () => {
     mainNetConnection = await connect("heliusMainNet");
@@ -241,10 +226,7 @@ describe(`mainnet integration tests`, () => {
     if (!mainNetConnection) {
       throw new Error(`Couldn't get a connection, can't continue`);
     }
-    const accountBalance = await getAccountBalance(
-      mainNetConnection,
-      mikePublicKey
-    );
+    const accountBalance = await getAccountBalance(mainNetConnection, mikePublicKey);
     expect(accountBalance).toEqual(expect.any(Number));
   });
 
@@ -348,10 +330,7 @@ describe(`mainnet integration tests`, () => {
   test(
     `We can get account summaries`,
     async () => {
-      const accountSummaries = await getTokenAccountSummaries(
-        mainNetConnection,
-        getKeypairFromString(mikesSecretKey)
-      );
+      const accountSummaries = await getTokenAccountSummaries(mainNetConnection, getKeypairFromString(mikesSecretKey));
 
       expect(accountSummaries[0]).toEqual({
         address: expect.any(PublicKey),
@@ -364,6 +343,14 @@ describe(`mainnet integration tests`, () => {
     },
     1 * MINUTE
   );
+
+  test(`We can get a transaction by signature`, async () => {
+    const transaction = await getTransaction(
+      mainNetConnection,
+      "MhCq7mFUvyAXt1tG262pjt8t5iSknm93yxAShKKaRjCNuKKcH7T1fMMwDqbsZyuAnET93m9hahatzVgq6ZGf9tu"
+    );
+    expect(transaction.blockTime);
+  });
 });
 
 describe(`getProfilePicture`, () => {
@@ -374,20 +361,14 @@ describe(`getProfilePicture`, () => {
   });
 
   test(`getProfilePicture find a profile picture for Vidor from Solrise`, async () => {
-    const profilePicture = await getProfilePicture(
-      connection,
-      new PublicKey(VIDOR_SOLRISE_WALLET)
-    );
+    const profilePicture = await getProfilePicture(connection, new PublicKey(VIDOR_SOLRISE_WALLET));
     expect(profilePicture).toEqual(
       "https://solana-cdn.com/cdn-cgi/image/width=100/https://arweave.net/i1I1GXelcZaEe5n0_TcVbVEEdz4mQR5lMWR2f6OplTs"
     );
   });
 
   test(`getProfilePicture returns null for people that don't have Solana PFPs`, async () => {
-    const profilePicture = await getProfilePicture(
-      connection,
-      new PublicKey(SHAQS_WALLET)
-    );
+    const profilePicture = await getProfilePicture(connection, new PublicKey(SHAQS_WALLET));
     expect(profilePicture).toEqual(null);
   });
 });
