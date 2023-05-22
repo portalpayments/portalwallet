@@ -28,13 +28,7 @@ import {
   type Contact,
 } from "../backend/types";
 import { mintToCurrencyMap } from "../backend/mint-to-currency-map";
-import {
-  JUPITER,
-  MEMO_PROGRAM,
-  NOTE_PROGRAM,
-  NOT_FOUND,
-  SQUADS_ADDRESS,
-} from "./constants";
+import { JUPITER, MEMO_PROGRAM, NOTE_PROGRAM, NOT_FOUND, SQUADS_ADDRESS } from "./constants";
 
 // Dialect (used by the receipts module)
 // Causes problems with identity token minter when running under 'tsx' (without vite doing all the transforms)
@@ -52,12 +46,7 @@ import {
 // DISABLE BELOW FOR COMMAND LINE TS
 import { getReceiptForSimpleTransaction } from "./receipts";
 
-import {
-  type ParsedInstruction,
-  type ParsedTransactionWithMeta,
-  type PublicKey,
-  Keypair,
-} from "@solana/web3.js";
+import { type ParsedInstruction, type ParsedTransactionWithMeta, type PublicKey, Keypair } from "@solana/web3.js";
 import { formatNumber } from "../lib/utils";
 
 import { recognizeDateTime } from "@microsoft/recognizers-text-date-time";
@@ -76,9 +65,7 @@ export const instructionDataToNote = (string: string) => {
 };
 
 // See constants.ts for details re: notes vs memos
-const getNoteOrMemo = (
-  rawTransaction: ParsedTransactionWithMeta
-): string | null => {
+const getNoteOrMemo = (rawTransaction: ParsedTransactionWithMeta): string | null => {
   const instructions = rawTransaction.transaction.message.instructions;
 
   const memoInstruction = instructions.find((instruction) => {
@@ -116,13 +103,8 @@ const getCounterParty = (direction: Direction, from: string, to: string) => {
   return null;
 };
 
-const getWalletDifference = (
-  rawTransaction: ParsedTransactionWithMeta,
-  wallet: string
-) => {
-  const ownerBefore = rawTransaction.meta.preTokenBalances.find(
-    (preTokenBalance) => preTokenBalance.owner === wallet
-  );
+const getWalletDifference = (rawTransaction: ParsedTransactionWithMeta, wallet: string) => {
+  const ownerBefore = rawTransaction.meta.preTokenBalances.find((preTokenBalance) => preTokenBalance.owner === wallet);
 
   const ownerAfter = rawTransaction.meta.postTokenBalances.find(
     (postTokenBalance) => postTokenBalance.owner === wallet
@@ -137,15 +119,11 @@ const getWalletDifference = (
   return difference;
 };
 
-const getInnerInstructionsForProgram = (
-  rawTransaction: ParsedTransactionWithMeta,
-  programAddress: string
-) => {
+const getInnerInstructionsForProgram = (rawTransaction: ParsedTransactionWithMeta, programAddress: string) => {
   // See https://solana.stackexchange.com/questions/2825/correlate-the-instructions-of-the-innerinstructions
-  const programInstructionIndex =
-    rawTransaction.transaction.message.instructions.findIndex(
-      (instruction) => instruction.programId.toBase58() === programAddress
-    );
+  const programInstructionIndex = rawTransaction.transaction.message.instructions.findIndex(
+    (instruction) => instruction.programId.toBase58() === programAddress
+  );
 
   if (programInstructionIndex === NOT_FOUND) {
     return null;
@@ -187,8 +165,7 @@ export const summarizeTransaction = async (
   // ie, Sol native currency, not a token account
   const isSolTransaction = rawTransaction.meta.preTokenBalances.length === 0;
 
-  const instructions = rawTransaction.transaction.message
-    .instructions as Array<ParsedInstruction>;
+  const instructions = rawTransaction.transaction.message.instructions as Array<ParsedInstruction>;
 
   const firstInstruction = instructions[0];
 
@@ -197,13 +174,8 @@ export const summarizeTransaction = async (
     // Check 'parsed' exists explicitly .....
     if (firstInstruction?.parsed) {
       // ...so we don't compare undefined and undefined in this test.
-      if (
-        firstInstruction.parsed?.info?.source ===
-        firstInstruction.parsed.info.destination
-      ) {
-        log(
-          `Ignoring transaction sending money to self (probably a user mistake)`
-        );
+      if (firstInstruction.parsed?.info?.source === firstInstruction.parsed.info.destination) {
+        log(`Ignoring transaction sending money to self (probably a user mistake)`);
         return null;
       }
     }
@@ -213,9 +185,7 @@ export const summarizeTransaction = async (
     if (isSolTransaction) {
       const solTransactionFirstInstruction = instructions[0];
 
-      if (
-        solTransactionFirstInstruction?.parsed?.type === "createAccountWithSeed"
-      ) {
+      if (solTransactionFirstInstruction?.parsed?.type === "createAccountWithSeed") {
         const simpleTransaction = {
           id,
           date,
@@ -238,8 +208,7 @@ export const summarizeTransaction = async (
       }
 
       const direction =
-        solTransactionFirstInstruction.parsed.info.source ===
-        walletAccount.toBase58()
+        solTransactionFirstInstruction.parsed.info.source === walletAccount.toBase58()
           ? Direction.sent
           : Direction.recieved;
 
@@ -280,18 +249,13 @@ export const summarizeTransaction = async (
       return simpleTransaction;
     }
 
-    let walletDifference = getWalletDifference(
-      rawTransaction,
-      walletAccount.toBase58()
-    );
+    let walletDifference = getWalletDifference(rawTransaction, walletAccount.toBase58());
 
     const mintAccount = rawTransaction.meta.postTokenBalances.find(
       (postTokenBalance) => postTokenBalance.owner !== walletAccount.toBase58()
     ).mint;
 
-    const currencyDetails = fakeMintToCurrencyMap
-      ? fakeMintToCurrencyMap[mintAccount]
-      : mintToCurrencyMap[mintAccount];
+    const currencyDetails = fakeMintToCurrencyMap ? fakeMintToCurrencyMap[mintAccount] : mintToCurrencyMap[mintAccount];
 
     if (!currencyDetails) {
       throw new Error(`Unknown currency for mint '${mintAccount}'`);
@@ -303,15 +267,10 @@ export const summarizeTransaction = async (
     let swapAmount: number | null = null;
     let swapCurrency: Currency | null = null;
 
-    const isMultisig = instructions.some(
-      (instruction) => instruction.programId.toBase58() === SQUADS_ADDRESS
-    );
+    const isMultisig = instructions.some((instruction) => instruction.programId.toBase58() === SQUADS_ADDRESS);
 
     // TODO: look at swaps outside Jupiter
-    const innerInstructionsForJupiter = getInnerInstructionsForProgram(
-      rawTransaction,
-      JUPITER
-    );
+    const innerInstructionsForJupiter = getInnerInstructionsForProgram(rawTransaction, JUPITER);
 
     let counterParty: string | null = null;
 
@@ -322,8 +281,7 @@ export const summarizeTransaction = async (
             // TODO: web3.js types don't include 'parsed' keys
             // upgrade and remove once they've fixed the bug
             // @ts-ignore
-            jupiterInnerInstruction?.parsed?.info?.authority ===
-            walletAccount.toBase58()
+            jupiterInnerInstruction?.parsed?.info?.authority === walletAccount.toBase58()
           );
         }) || null;
 
@@ -359,9 +317,7 @@ export const summarizeTransaction = async (
     // Use postTokenBalances to work out the wallet addresses that were actually involved in the transaction
     // Note we can't use preTokenBalances, as the token accounts may not exist yet
 
-    let direction: Direction = isPositive(walletDifference)
-      ? Direction.recieved
-      : Direction.sent;
+    let direction: Direction = isPositive(walletDifference) ? Direction.recieved : Direction.sent;
 
     let from: string;
     let to: string;
@@ -422,10 +378,7 @@ export const summarizeTransaction = async (
   }
 };
 
-export const findContactByAddress = (
-  contacts: Array<Contact>,
-  walletAddress: string
-) => {
+export const findContactByAddress = (contacts: Array<Contact>, walletAddress: string) => {
   return contacts.find((contact) => contact.walletAddress === walletAddress);
 };
 
@@ -435,17 +388,11 @@ export const getContactMatch = (contact: Contact, filterValue: string) => {
   }
   if (contact.verifiedClaims.type === "INDIVIDUAL") {
     return (
-      isIncludedCaseInsensitive(
-        contact.verifiedClaims.givenName,
-        filterValue
-      ) ||
+      isIncludedCaseInsensitive(contact.verifiedClaims.givenName, filterValue) ||
       isIncludedCaseInsensitive(contact.verifiedClaims.familyName, filterValue)
     );
   }
-  return isIncludedCaseInsensitive(
-    contact.verifiedClaims.legalName,
-    filterValue
-  );
+  return isIncludedCaseInsensitive(contact.verifiedClaims.legalName, filterValue);
 };
 
 export const getTransactionsByDays = (
@@ -506,27 +453,16 @@ export const getTransactionsByDays = (
         const fromContact = findContactByAddress(contacts, transaction.from);
         const toContact = findContactByAddress(contacts, transaction.to);
 
-        isContactMatch =
-          getContactMatch(fromContact, filterValue) ||
-          getContactMatch(toContact, filterValue);
+        isContactMatch = getContactMatch(fromContact, filterValue) || getContactMatch(toContact, filterValue);
 
-        let isMemoMatch = transaction?.memo
-          ? isIncludedCaseInsensitive(transaction.memo, filterValue)
-          : false;
+        let isMemoMatch = transaction?.memo ? isIncludedCaseInsensitive(transaction.memo, filterValue) : false;
 
         let isReceiptMatch =
           (transaction?.receipt?.items &&
-            transaction.receipt.items.find((item) =>
-              isIncludedCaseInsensitive(item.name, filterValue)
-            )) ||
+            transaction.receipt.items.find((item) => isIncludedCaseInsensitive(item.name, filterValue))) ||
           false;
 
-        return (
-          isWalletAddressMatch ||
-          isContactMatch ||
-          isMemoMatch ||
-          isReceiptMatch
-        );
+        return isWalletAddressMatch || isContactMatch || isMemoMatch || isReceiptMatch;
       });
     }
   }
@@ -570,12 +506,7 @@ export const getTransactionsByDays = (
 
       let totalSpendingDisplay = null;
       if (totalSpending) {
-        totalSpendingDisplay = formatNumber(
-          false,
-          totalSpending,
-          decimals,
-          true
-        );
+        totalSpendingDisplay = formatNumber(false, totalSpending, decimals, true);
       }
 
       transactionsByDays.push({
