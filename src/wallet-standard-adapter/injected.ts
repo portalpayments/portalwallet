@@ -2,9 +2,7 @@
 // From https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md
 import { log, stringify } from "../backend/functions";
 import { registerWallet } from "./register";
-import { makePortalWalletStandardImplementation, getPublicKey } from "./wallet-standard";
-
-const portalWalletStandardImplementation = makePortalWalletStandardImplementation();
+import { portalWalletStandardImplementation, getPublicKey } from "./wallet-standard";
 
 const main = async () => {
   try {

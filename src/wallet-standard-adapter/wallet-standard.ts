@@ -236,58 +236,51 @@ const signTransaction: SolanaSignTransactionMethod = async (...inputs) => {
 
 // Portal's implementation of the wallet standard
 // We use functional programming because 90-s style OOP is garbage.
-export const makePortalWalletStandardImplementation = () => {
-  const portalWalletStandardImplementation: WalletStandard = {
-    name: NAME,
-    version: VERSION,
-    icon: ICON,
-    // Copied from https://github.com/solana-labs/wallet-standard
-    chains: SOLANA_CHAINS,
-    features: {
-      [StandardConnect]: {
-        version: "1.0.0",
-        connect,
-      },
-      [StandardDisconnect]: {
-        version: "1.0.0",
-        disconnect,
-      },
-      [StandardEvents]: {
-        version: "1.0.0",
-        on: async (eventName) => {
-          log("On", eventName);
-          // oddly the first time we connect the page triggers 'change'
-          if (eventName === "connect" || eventName === "change") {
-            await connect();
-            return;
-          }
-          log(`No event handler implemented for ${eventName}`);
-          // TODO: add other events
-        },
-      },
-      [SolanaSignAndSendTransaction]: {
-        version: "1.0.0",
-        supportedTransactionVersions: ["legacy", 0],
-        signAndSendTransaction: async () => {
-          log("Sign and send transaction");
-        },
-      },
-      [SolanaSignTransaction]: {
-        version: "1.0.0",
-        supportedTransactionVersions: ["legacy", 0],
-        signTransaction,
-      },
-      [SolanaSignMessage]: {
-        version: "1.0.0",
-        signMessage,
-      },
-      // We can also add a 'portal:' name space if we want, but there's no need right now
+export const portalWalletStandardImplementation: WalletStandard = {
+  name: NAME,
+  version: VERSION,
+  icon: ICON,
+  // Copied from https://github.com/solana-labs/wallet-standard
+  chains: SOLANA_CHAINS,
+  features: {
+    [StandardConnect]: {
+      version: "1.0.0",
+      connect,
     },
-    accounts: activeAccounts,
-  };
-
-  // @ts-ignore
-  window.portalWalletStandardImplementation = portalWalletStandardImplementation;
-
-  return portalWalletStandardImplementation;
+    [StandardDisconnect]: {
+      version: "1.0.0",
+      disconnect,
+    },
+    [StandardEvents]: {
+      version: "1.0.0",
+      on: async (eventName) => {
+        log("On", eventName);
+        // oddly the first time we connect the page triggers 'change'
+        if (eventName === "connect" || eventName === "change") {
+          await connect();
+          return;
+        }
+        log(`No event handler implemented for ${eventName}`);
+        // TODO: add other events
+      },
+    },
+    [SolanaSignAndSendTransaction]: {
+      version: "1.0.0",
+      supportedTransactionVersions: ["legacy", 0],
+      signAndSendTransaction: async () => {
+        log("Sign and send transaction");
+      },
+    },
+    [SolanaSignTransaction]: {
+      version: "1.0.0",
+      supportedTransactionVersions: ["legacy", 0],
+      signTransaction,
+    },
+    [SolanaSignMessage]: {
+      version: "1.0.0",
+      signMessage,
+    },
+    // We can also add a 'portal:' name space if we want, but there's no need right now
+  },
+  accounts: activeAccounts,
 };
