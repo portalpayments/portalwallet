@@ -275,6 +275,10 @@ export const summarizeTransaction = async (
     let counterParty: string | null = null;
 
     if (innerInstructionsForJupiter) {
+      // TODO: we really need a map of the users accounts, even just as
+      // mint: address
+      // accountsByMint: Record<String, String>
+      // This way we can see mint addresses in a transaction and know they belong to us.
       const jupiterInnerInstructionForSwappedToken =
         innerInstructionsForJupiter.find((jupiterInnerInstruction) => {
           return (
