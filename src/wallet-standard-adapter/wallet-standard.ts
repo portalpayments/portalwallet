@@ -78,7 +78,6 @@ export const getPublicKey = (): Promise<PublicKey | null> => {
     const handler = (event: MessageEvent) => {
       const { topic, publicKey } = event.data;
       if (topic === "replyGetPublicKey") {
-        debugger;
         window.removeEventListener("message", handler);
         if (!publicKey) {
           resolve(null);

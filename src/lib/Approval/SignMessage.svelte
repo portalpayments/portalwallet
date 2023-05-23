@@ -42,7 +42,7 @@
     pendingUserApprovalStore.set(null);
 
     log(`Sent 'replyWalletStandardSignMessage' message`);
-    // window.close();
+    window.close();
   };
 
   // We MUST use chrome.tabs.sendMessage (not chrome.runtime.sendMessage) to talk to a content script
