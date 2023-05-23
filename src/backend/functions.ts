@@ -256,3 +256,7 @@ export const stringToBase64 = (string: string): string => {
 export const base64ToString = (base64: string): string => {
   return Buffer.from(base64, "base64").toString();
 };
+
+export const formatURL = (string: String) => {
+  return string.replace(/\/$/, "");
+};
