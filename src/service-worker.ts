@@ -113,12 +113,8 @@ addMessageListener("walletStandardSignMessage", async (message: PortalMessage, s
   }
 
   await setPendingUserApproval(message);
+  // No need to reply
 
-  // We must reply immediately, otherwise the extension will hang
-  // (nothing will be done with this message, it's just an acknowledgement)
-  sendReply({
-    topic: "replyWalletStandardSignMessage",
-  });
 });
 
 addMessageListener("getSecretKey", async (message: PortalMessage, sendReply: SendReply) => {
