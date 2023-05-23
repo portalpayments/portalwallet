@@ -2,11 +2,11 @@
   import { log, stringify } from "../../backend/functions";
   import { getSignature } from "../../backend/solana-functions";
   import Heading from "../Shared/Heading.svelte";
-  import type { PendingUserApproval, PortalMessage } from "../../backend/types";
+  import type { PendingUserApproval, PortalMessage, PendingUserApprovalSignMessage } from "../../backend/types";
   import { pendingUserApprovalStore, authStore } from "../../lib/stores";
   import { get as getFromStore } from "svelte/store";
   import base58 from "bs58";
-  export let pendingUserApproval: PendingUserApproval;
+  export let pendingUserApproval: PendingUserApprovalSignMessage;
 
   const formatURL = (string: String) => {
     return string.replace(/\/$/, "");

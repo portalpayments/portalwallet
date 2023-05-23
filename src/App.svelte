@@ -15,7 +15,12 @@
   import { connect } from "./backend/wallet";
   import { verifyWallet } from "./backend/identity-tokens";
   import { log } from "./backend/functions";
-  import type { Contact as ContactType, PendingUserApproval } from "./backend/types";
+  import type {
+    Contact as ContactType,
+    PendingUserApproval,
+    PendingUserApprovalSignMessage,
+    PendingUserApprovalGetPublicKey,
+  } from "./backend/types";
   import Lock from "./lib/Lock/Lock.svelte";
   import ContactAndMessages from "./lib/Contacts/Contact/ContactAndMessages.svelte";
   import { connectionStore, authStore, pendingUserApprovalStore } from "./lib/stores";
@@ -72,6 +77,18 @@
     }
   });
 
+  const isPendingUserApprovalSignMessage = (
+    pendingUserApproval: PendingUserApproval
+  ): pendingUserApproval is PendingUserApprovalSignMessage => {
+    return pendingUserApproval.topic === "walletStandardSignMessage";
+  };
+
+  const isPendingUserApprovalGetPublicKey = (
+    pendingUserApproval: PendingUserApproval
+  ): pendingUserApproval is PendingUserApprovalGetPublicKey => {
+    return pendingUserApproval.topic === "getPublicKey";
+  };
+
   (async () => {
     isOnboarded = await checkIfOnboarded();
 
@@ -99,9 +116,9 @@
   {:else if $authStore.keyPair}
     {#if hasCheckedPendingUserApproval}
       {#if pendingUserApproval}
-        {#if pendingUserApproval.topic === "walletStandardSignMessage"}
+        {#if isPendingUserApprovalSignMessage(pendingUserApproval)}
           <SignMessage {pendingUserApproval} />
-        {:else if pendingUserApproval.topic === "getPublicKey"}
+        {:else if isPendingUserApprovalGetPublicKey(pendingUserApproval)}
           <Connect {pendingUserApproval} />
         {:else}
           Some other type of approval

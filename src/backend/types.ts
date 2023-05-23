@@ -300,6 +300,15 @@ export interface PendingUserApproval extends PortalMessage {
   [key: string]: unknown;
 }
 
+export interface PendingUserApprovalGetPublicKey extends PendingUserApproval {
+  tabId: number;
+}
+
+export interface PendingUserApprovalSignMessage extends PendingUserApproval {
+  tabId: number;
+  text: string;
+}
+
 // TODO: 'Auth' is a silly name
 export interface Auth {
   // null means we're not logged in

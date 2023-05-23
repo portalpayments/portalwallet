@@ -1,13 +1,11 @@
 <script lang="ts">
   import { log, stringify } from "../../backend/functions";
-  import { getSignature } from "../../backend/solana-functions";
   import Heading from "../Shared/Heading.svelte";
-  import type { PendingUserApproval, PortalMessage } from "../../backend/types";
+  import type { PendingUserApprovalGetPublicKey, PortalMessage } from "../../backend/types";
   import { pendingUserApprovalStore, authStore } from "../../lib/stores";
   import { get as getFromStore } from "svelte/store";
-  import base58 from "bs58";
 
-  export let pendingUserApproval: PendingUserApproval;
+  export let pendingUserApproval: PendingUserApprovalGetPublicKey;
 
   const formatURL = (string: String) => {
     return string.replace(/\/$/, "");
@@ -16,8 +14,7 @@
   const declineToConnect = async () => {
     log(`Declining to connect`);
 
-    // TODO: maybe have more types?
-    sendMessage(pendingUserApproval.tabId as number, {
+    sendMessage(pendingUserApproval.tabId, {
       topic: "replyGetPublicKey",
       isApproved: false,
     });
@@ -35,7 +32,7 @@
 
     const publicKey = auth.keyPair.publicKey.toBase58();
 
-    sendMessage(pendingUserApproval.tabId as number, {
+    sendMessage(pendingUserApproval.tabId, {
       topic: "replyGetPublicKey",
       isApproved: true,
       publicKey,
