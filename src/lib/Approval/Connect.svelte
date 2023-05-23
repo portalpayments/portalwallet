@@ -62,7 +62,7 @@
       The site at <span class="url">{formatURL(pendingUserApproval.url)}</span> is asking you to connect:
     </p>
 
-    <p>The site will be able to see your wallet address and name.</p>
+    <p>ℹ️ The site will be able to see your wallet address and name.</p>
 
     <div class="choices">
       <div class="rounded-gradient-border-hack decline">

@@ -68,7 +68,7 @@
       {pendingUserApproval.text}
     </q>
 
-    <p>This won't make any transactions on the blockchain or incur any fee.</p>
+    <p>ℹ️ This won't make any transactions on the blockchain or incur any fee.</p>
 
     <div class="choices">
       <div class="rounded-gradient-border-hack decline">
