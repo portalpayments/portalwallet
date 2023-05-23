@@ -297,7 +297,6 @@ export interface PendingUserApproval extends PortalMessage {
   topic: string;
   url: string;
   time: number;
-  [key: string]: unknown;
 }
 
 export interface PendingUserApprovalGetPublicKey extends PendingUserApproval {
