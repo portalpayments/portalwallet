@@ -46,18 +46,15 @@ const main = async () => {
   );
 
   // Part 2 - wait for messages from the rest of the extension
-  // and send them to the page's own JavaScript
+  // and send them to injected wallet on the page's own JavaScript
   addMessageListener("replyWalletStandardSignMessage", async (message: PortalMessage, sendReply: SendReply) => {
     log(`😃😃😃 Content script: the user has responded to the message signing UI...`);
-
-    // Send the user's response to the injected wallet
     window.postMessage(message);
   });
 
   addMessageListener("replyGetPublicKey", async (message: PortalMessage, sendReply: SendReply) => {
     log(`😃😃😃 Content script: the service worker has sent us the public key`);
 
-    // Send the user's response to the injected wallet
     window.postMessage(message);
   });
 
