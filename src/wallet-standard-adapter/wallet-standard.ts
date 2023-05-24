@@ -12,11 +12,9 @@ import type { StandardConnectMethod, StandardConnectOutput } from "@wallet-stand
 import { StandardConnect, StandardDisconnect, StandardEvents } from "@wallet-standard/features";
 import { icon as ICON } from "./icon";
 import { SOLANA_CHAINS, SOLANA_MAINNET_CHAIN } from "./solana-chains";
-import { log, runWithTimeout, sleep, stringify } from "../backend/functions";
-import { Keypair, PublicKey, Transaction } from "@solana/web3.js";
-import { MIKES_WALLET, MINUTES, SECONDS } from "src/backend/constants";
+import { log } from "../backend/functions";
+import { PublicKey } from "@solana/web3.js";
 import { convertSolanaMessageToString } from "./util";
-const ANY_ORIGIN = "*";
 import base58 from "bs58";
 import {
   // BaseWalletAdapter,
@@ -36,12 +34,21 @@ import {
   // WalletSignTransactionError,
 } from "@solana/wallet-adapter-base";
 import type { SolanaChain } from "./types";
+import { sendMessageAndMaybeGetReply, sendMessageAndMaybeGetReplyOrTimeout } from "./messaging-helpers";
 
 const NAME = "Portal";
 const VERSION = "1.0.0";
 
-const activeAccounts: Array<WalletAccount> = [];
+let activeAccounts: Array<WalletAccount> = [];
 
+// See constructor() in https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
+// The instructions at https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md
+// https://github.com/wallet-standard/wallet-standard
+// Methods borrowed from window.solana since the docs are non-existent:
+// https://github.com/solana-labs/wallet-standard/issues/17
+// See /home/mike/Code/portal/portal-standard-wallet/src/window.ts
+// (which is not our code but rather a clone of https://github.com/solana-labs/wallet-standard)
+// https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
 // Check also /home/mike/Code/portal/wallet-adapter/node_modules/.pnpm/@solana+wallet-standard-wallet-adapter-base@1.0.2_@solana+web3.js@1.74.0_bs58@4.0.1/node_modules/@solana/wallet-standard-wallet-adapter-base/lib/esm/adapter.js
 
 const makeAccount = (publicKey: PublicKey): WalletAccount => {
@@ -53,65 +60,26 @@ const makeAccount = (publicKey: PublicKey): WalletAccount => {
   };
 };
 
-// See constructor() in https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
-
-// The instructions at https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md
-// https://github.com/wallet-standard/wallet-standard
-// Methods borrowed from window.solana since the docs are non-existent:
-// https://github.com/solana-labs/wallet-standard/issues/17
-// See /home/mike/Code/portal/portal-standard-wallet/src/window.ts
-// (which is not our code but rather a clone of https://github.com/solana-labs/wallet-standard)
-// https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
-
-const sendMessageToContentScript = (message: any) => {
-  // Send message to the content script
-  window.postMessage(message, ANY_ORIGIN);
-};
-
-// TODO: not sure if neccessary, but somehow this script needs to get
-// active public key and Ghost example doesn't show how
-export const getPublicKey = (): Promise<PublicKey | null> => {
-  log(`Running getPublicKey....`);
-
-  return new Promise((resolve, reject) => {
-    // Be ready to handle replies
-    const handler = (event: MessageEvent) => {
-      const { topic, publicKey } = event.data;
-      if (topic === "replyGetPublicKey") {
-        window.removeEventListener("message", handler);
-        if (!publicKey) {
-          resolve(null);
-        }
-        const publicKeyDecoded = base58.decode(publicKey);
-        const publicKeyObject = new PublicKey(publicKeyDecoded);
-        resolve(publicKeyObject);
-      }
-    };
-    window.addEventListener("message", handler);
-
-    // Now send out the message that will hopefully get a reply
-    sendMessageToContentScript({
-      topic: "getPublicKey",
-      url: window.location.href,
-    });
-  });
-};
-
 const connect: StandardConnectMethod = async ({
   // From type definition
   // "If this flag is used by the Wallet, the Wallet should not prompt the user, and should return only the accounts that the app is authorized to use.""
   silent,
 } = {}): Promise<StandardConnectOutput> => {
-  log(`⚡ Connect. Is silient is: ${silent}`);
+  log(`⚡ Connect. Is silent is: ${silent}`);
+  const reply = await sendMessageAndMaybeGetReply(
+    {
+      topic: "getPublicKey",
+      url: window.location.href,
+    },
+    "replyGetPublicKey"
+  );
 
-  // const TEMP_PUB_KEY = new PublicKey(MIKES_WALLET);
-  log("⚡ Sending message to content script asking for public key...");
-  const publicKey = await getPublicKey();
-
-  if (!publicKey) {
+  if (!reply.publicKey) {
     log(`Didn't get a public key from the front end`);
     return { accounts: activeAccounts };
   }
+  const publicKeyDecoded = base58.decode(reply.publicKey);
+  const publicKey = new PublicKey(publicKeyDecoded);
 
   activeAccounts.push(makeAccount(publicKey));
 
@@ -121,32 +89,10 @@ const connect: StandardConnectMethod = async ({
 
 const disconnect = async () => {
   log("🔌 Disconnect");
-};
-
-const askUserToSignMessage = async (message: Uint8Array) => {
-  log("In askUserToSignMessage(). Sending 'walletStandardSignMessage' message to content script...");
-
-  // First, convert the Solana message to a string, but also 'message' is a confusing
-  // variable name, since we already have window.postMessage() and 'message' is a different type of message
-  const text = convertSolanaMessageToString(message);
-
-  // Send message to the content script
-  sendMessageToContentScript({
-    topic: "walletStandardSignMessage",
-    url: window.location.href,
-    text,
-  });
-};
-
-const askUserToApproveTransaction = async (transaction: Uint8Array) => {
-  log("In askUserToApproveTransaction(). Sending 'walletStandardApproveTransaction' message to content script...");
-
-  // Send message to the content script
-  sendMessageToContentScript({
-    topic: "walletStandardApproveTransaction",
-    url: window.location.href,
-    transaction: base58.encode(transaction),
-  });
+  // TODO - double check (I don't have internet right now and guessed the code below)
+  // look in the wallet adapter demo wallets to confirm
+  activeAccounts = [];
+  return { accounts: activeAccounts };
 };
 
 const signMessage = async (accountAndMessage: SolanaSignMessageInput) => {
@@ -165,49 +111,33 @@ const signMessage = async (accountAndMessage: SolanaSignMessageInput) => {
     throw new Error("invalid account");
   }
 
-  // Make the wallet popup show an icon so the users clicks on it.
-  // Give the user some time to approve, decline or do nothing
-  await askUserToSignMessage(accountAndMessage.message);
+  // First, convert the Solana message to a string, but also 'message' is a confusing
+  // variable name, since we already have window.postMessage() and 'message' is a different type of message
+  const text = convertSolanaMessageToString(accountAndMessage.message);
 
-  const getWalletStandardSignMessageReply = (): Promise<Uint8Array | null> => {
-    return new Promise((resolve, reject) => {
-      const handler = (event: MessageEvent) => {
-        const { topic, isApproved, signature } = event.data;
-        if (topic === "replyWalletStandardSignMessage") {
-          window.removeEventListener("message", handler);
-          if (!isApproved) {
-            resolve(null);
-          }
-          const signatureDecoded = base58.decode(signature);
-          resolve(signatureDecoded);
-        }
-      };
-      window.addEventListener("message", handler);
-    });
-  };
-
-  log(`Waiting for 'replyWalletStandardSignMessage' or a timeout...`);
+  // Send message to the content script
+  const reply = await sendMessageAndMaybeGetReplyOrTimeout(
+    {
+      topic: "walletStandardSignMessage",
+      url: window.location.href,
+      text,
+    },
+    "replyWalletStandardSignMessage"
+  );
 
   let signatureOrNull: Uint8Array | null;
-  try {
-    signatureOrNull = (await runWithTimeout(getWalletStandardSignMessageReply(), 30 * SECONDS)) as Uint8Array;
-  } catch (error) {
-    // odd no error message
-    log(`The user did not sign the message in time`, stringify(error));
-    signatureOrNull = null;
-  }
 
-  if (!signatureOrNull) {
+  if (!reply.isApproved) {
     log(`🤔 User didn't sign.`);
     // Wallet Standard behaviour is to throw an error for this
     throw new WalletSignMessageError("Signature was not approved");
   }
-
+  const signature = base58.decode(reply.signature);
   log(`😀 Woo, we have a signature!`);
 
   const output: SolanaSignMessageOutput = {
     signedMessage: accountAndMessage.message,
-    signature: signatureOrNull,
+    signature: signature,
   };
 
   outputs.push(output);
@@ -215,7 +145,11 @@ const signMessage = async (accountAndMessage: SolanaSignMessageInput) => {
   return outputs;
 };
 
-const signTransaction: SolanaSignTransactionMethod = async (...inputs) => {
+// Could also be called 'signTransaction'
+// but I think that puts the emphasis on signing,
+// whereas from a user and infosec point of view, you're approving
+// (or declining) a transaction where you may lose money.
+const approveTransaction: SolanaSignTransactionMethod = async (...inputs) => {
   log("Sign transaction arguments:", ...inputs);
   const outputs: SolanaSignTransactionOutput[] = [];
   for (const { transaction, account, chain } of inputs) {
@@ -229,21 +163,24 @@ const signTransaction: SolanaSignTransactionMethod = async (...inputs) => {
 
     // Make the wallet popup show an icon so the users clicks on it.
     // Give the user some time to approve, decline or do nothing
-    await askUserToApproveTransaction(transaction);
+    const reply = await sendMessageAndMaybeGetReplyOrTimeout(
+      {
+        topic: "walletStandardApproveTransaction",
+        url: window.location.href,
+        transaction: base58.encode(transaction),
+      },
+      "replyWalletStandardApproveTransaction"
+    );
 
-    const parsedTransaction = Transaction.from(transaction);
+    if (!reply.isApproved) {
+      throw new Error("signature declined");
+    }
 
-    // if (!keyPair) {
-    //   throw new Error("invalid account");
-    // }
+    const signedTransaction = base58.decode(reply.signedTransaction);
 
-    // if (!confirm("Do you want to sign this transaction?")) throw new Error("signature declined");
-
-    // parsedTransaction.partialSign(keypair);
-
-    // outputs.push({
-    //   signedTransaction: new Uint8Array(parsedTransaction.serialize({ requireAllSignatures: false })),
-    // });
+    outputs.push({
+      signedTransaction: signedTransaction,
+    });
   }
 
   return outputs;
@@ -289,7 +226,7 @@ export const portalWalletStandardImplementation: WalletStandard = {
     [SolanaSignTransaction]: {
       version: "1.0.0",
       supportedTransactionVersions: ["legacy", 0],
-      signTransaction,
+      signTransaction: approveTransaction,
     },
     [SolanaSignMessage]: {
       version: "1.0.0",
