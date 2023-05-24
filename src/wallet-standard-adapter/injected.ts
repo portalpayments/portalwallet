@@ -2,19 +2,17 @@
 // From https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md
 import { log, stringify } from "../backend/functions";
 import { registerWallet } from "./register";
-import { portalWalletStandardImplementation, getPublicKey } from "./wallet-standard";
+import { portalWalletStandardImplementation } from "./wallet-standard";
 
 const main = async () => {
   try {
     log("Registering wallet implementation...");
     registerWallet(portalWalletStandardImplementation);
     log("✅ success registering wallet implementation");
-
-    // const publicKey = await getPublicKey();
-
-    // log(`Public key is`, publicKey);
-
-    log("Attached Portal wallet implementation to window");
+    // TODO: do we actually need this?
+    // check at docs link above
+    // it seems a bad idea to create arbitrary window globals
+    log("Attaching Portal wallet implementation to window...");
     Object.defineProperty(window, "portal", {
       value: portalWalletStandardImplementation,
     });
