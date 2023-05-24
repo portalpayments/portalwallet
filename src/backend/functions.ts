@@ -181,14 +181,10 @@ export const sleep = async (timeInMs: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, timeInMs));
 };
 
-export const runWithTimeout = <T>(
-  promise: Promise<T>,
-  timeout: number,
-  message: string | null = null
-): Promise<T | void> => {
+export const runWithTimeout = <T>(promise: Promise<T>, timeout: number): Promise<T | void> => {
   const timeoutPromise: Promise<void> = new Promise((resolve, reject) => {
     setTimeout(() => {
-      reject(message !== null ? message : `Timeout! Operation did not complete within ${timeout} ms`);
+      reject(`Timeout! Operation did not complete within ${timeout} ms`);
     }, timeout);
   });
 
