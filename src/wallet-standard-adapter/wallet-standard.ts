@@ -138,6 +138,17 @@ const askUserToSignMessage = async (message: Uint8Array) => {
   });
 };
 
+const askUserToApproveTransaction = async (transaction: Uint8Array) => {
+  log("In askUserToApproveTransaction(). Sending 'walletStandardApproveTransaction' message to content script...");
+
+  // Send message to the content script
+  sendMessageToContentScript({
+    topic: "walletStandardApproveTransaction",
+    url: window.location.href,
+    transaction: base58.encode(transaction),
+  });
+};
+
 const signMessage = async (accountAndMessage: SolanaSignMessageInput) => {
   // log("Sign message", accountAndMessage);
   const outputs: Array<SolanaSignMessageOutput> = [];
@@ -182,7 +193,7 @@ const signMessage = async (accountAndMessage: SolanaSignMessageInput) => {
     signatureOrNull = (await runWithTimeout(getWalletStandardSignMessageReply(), 30 * SECONDS)) as Uint8Array;
   } catch (error) {
     // odd no error message
-    log(`The user did not sign the transaction in time`, stringify(error));
+    log(`The user did not sign the message in time`, stringify(error));
     signatureOrNull = null;
   }
 
@@ -215,6 +226,10 @@ const signTransaction: SolanaSignTransactionMethod = async (...inputs) => {
     if (chain && !SOLANA_CHAINS.includes(chain as SolanaChain)) {
       throw new Error("invalid chain");
     }
+
+    // Make the wallet popup show an icon so the users clicks on it.
+    // Give the user some time to approve, decline or do nothing
+    await askUserToApproveTransaction(transaction);
 
     const parsedTransaction = Transaction.from(transaction);
 

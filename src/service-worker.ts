@@ -114,7 +114,20 @@ addMessageListener("walletStandardSignMessage", async (message: PortalMessage, s
 
   await setPendingUserApproval(message);
   // No need to reply
+});
 
+addMessageListener("walletStandardApproveTransaction", async (message: PortalMessage, sendReply: SendReply) => {
+  setBadge("i", MID_BLUE);
+
+  if (!message.transaction) {
+    throw new Error(`walletStandardApproveTransaction is missing 'transaction' key`);
+  }
+
+  if (!message.url) {
+    throw new Error(`walletStandardApproveTransaction is missing 'url' key`);
+  }
+
+  await setPendingUserApproval(message);
 });
 
 addMessageListener("getSecretKey", async (message: PortalMessage, sendReply: SendReply) => {

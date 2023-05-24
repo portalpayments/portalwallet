@@ -32,6 +32,7 @@ const main = async () => {
       if (
         message.topic === "walletStandardConnect" ||
         message.topic === "walletStandardSignMessage" ||
+        message.topic === "walletStandardApproveTransaction" ||
         message.topic === "getPublicKey"
       ) {
         log(`The content script received: ${stringify(message)}`);
@@ -54,7 +55,11 @@ const main = async () => {
 
   addMessageListener("replyGetPublicKey", async (message: PortalMessage, sendReply: SendReply) => {
     log(`😃😃😃 Content script: the service worker has sent us the public key`);
+    window.postMessage(message);
+  });
 
+  addMessageListener("replyWalletStandardApproveTransaction", async (message: PortalMessage, sendReply: SendReply) => {
+    log(`😃😃😃 Content script: the user has responded to the transaction approval UI...`);
     window.postMessage(message);
   });
 

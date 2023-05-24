@@ -308,6 +308,11 @@ export interface PendingUserApprovalSignMessage extends PendingUserApproval {
   text: string;
 }
 
+export interface PendingUserApprovalApproveTransaction extends PendingUserApproval {
+  tabId: number;
+  transaction: string;
+}
+
 // TODO: 'Auth' is a silly name
 export interface Auth {
   // null means we're not logged in
