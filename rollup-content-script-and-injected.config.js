@@ -76,12 +76,7 @@ export default [
         },
         include: [
           // Yes we have to include the input file itself
-          "src/wallet-standard-adapter/injected.ts",
-          "src/wallet-standard-adapter/wallet-standard.ts",
-          "src/wallet-standard-adapter/register.ts",
-          "src/wallet-standard-adapter/icon.ts",
-          "src/wallet-standard-adapter/util.ts",
-          "src/wallet-standard-adapter/solana-chains.ts",
+          "src/wallet-standard-adapter/*",
           "src/backend/functions.ts",
           "src/backend/constants.ts",
           "src/backend/types.ts",
