@@ -17,7 +17,7 @@ self.window = self;
 // https://stackoverflow.com/questions/62619058/appending-js-extension-on-relative-import-statements-during-typescript-compilat
 import type { AccountSummary, Contact, PortalMessage, PendingUserApproval } from "./backend/types.js";
 import { log, isFresh, stringify } from "./backend/functions";
-import { addMessageListener, checkIsBlocked, setBadge } from "./extension-helpers";
+import { addMessageListener, checkIsBlocked, makeIconShine } from "./extension-helpers";
 import { cacheWebRequests } from "./service-worker-webcache";
 // See https://github.com/localForage/localForage/issues/831
 import type LocalForageType from "localforage";
@@ -36,10 +36,6 @@ const MINUTES = 60 * 1000;
 const HOUR = 60 * MINUTES;
 
 const ACCOUNT_CACHE = 1 * HOUR;
-
-// From app
-const MID_BLUE = "#419cfd";
-const RED = "#ff0000";
 
 // In base58
 // TODO: we could simply derive publicKey from secretKey
@@ -65,7 +61,7 @@ let pendingUserApproval: null | PendingUserApproval = null;
 type SendReply = (object: any) => void;
 
 const setPendingUserApproval = async (message: PortalMessage) => {
-  setBadge("i", MID_BLUE);
+  makeIconShine();
 
   const newPendingUserApproval: Partial<PendingUserApproval> = structuredClone(message);
   newPendingUserApproval.time = Date.now();
@@ -80,7 +76,7 @@ const setPendingUserApproval = async (message: PortalMessage) => {
 };
 
 addMessageListener("walletStandardConnect", async (message: PortalMessage, sendReply: SendReply) => {
-  setBadge("i", MID_BLUE);
+  makeIconShine();
   // TODO: maybe pulse it for a bit on animation etc.
 });
 
@@ -102,7 +98,7 @@ addMessageListener("getPublicKey", async (message: PortalMessage, sendReply: Sen
 });
 
 addMessageListener("walletStandardSignMessage", async (message: PortalMessage, sendReply: SendReply) => {
-  setBadge("i", MID_BLUE);
+  makeIconShine();
 
   if (!message.text) {
     throw new Error(`walletStandardSignMessage is missing 'text' key`);
@@ -117,7 +113,7 @@ addMessageListener("walletStandardSignMessage", async (message: PortalMessage, s
 });
 
 addMessageListener("walletStandardApproveTransaction", async (message: PortalMessage, sendReply: SendReply) => {
-  setBadge("i", MID_BLUE);
+  makeIconShine();
 
   if (!message.transaction) {
     throw new Error(`walletStandardApproveTransaction is missing 'transaction' key`);

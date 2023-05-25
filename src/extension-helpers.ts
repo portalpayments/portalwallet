@@ -6,6 +6,9 @@
 //
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
+
+import type { text } from "svelte/internal";
+import { MILLISECONDS, SECONDS } from "./backend/constants";
 import { log } from "./backend/functions";
 import type { HandleMessage, PortalMessage } from "./backend/types";
 
@@ -18,26 +21,45 @@ const BLOCK_LIST = [
   "https://devtools",
 ];
 
-// Make the Portal toolbar icon glow so users click the toolbar icon
-export const setBadge = (text: string, backgroundColor: string) => {
-  log(`Setting badge text and background color`);
+// 30 FPS = 1 frame every 33 ms (we could do 60 but I can't be bothered doing more image exports)
+const FRAME_INTERVAL = 33;
+// Animation goes for 25 frames.
+const FRAMES_IN_ANIMATION = 25;
 
-  chrome.action.setBadgeText({
-    text,
-  });
+const MID_BLUE = "#419cfd";
 
-  // Does not appear in docs, but does actually work!
-  // @ts-ignore
-  chrome.action.setBadgeTextColor({
-    color: "white",
-  });
+export const makeIconShine = () => {
+  log(`Making toolbar icon active`);
 
-  chrome.action.setBadgeBackgroundColor({
-    // mid-blue from app.scss
-    color: backgroundColor,
-  });
+  let currentFrame = 0;
 
-  log(`Finished setting badge text and background color`);
+  const startDate = Date.now();
+
+  let interval: NodeJS.Timer;
+
+  interval = setInterval(() => {
+    chrome.action.setIcon({ path: `/assets/toolbar/portal-icon-shining-${currentFrame}.png` });
+    // Zero indexed
+    if (currentFrame + 1 === FRAMES_IN_ANIMATION) {
+      const now = Date.now();
+      const elapsed = Math.abs(now - startDate);
+      // After nimating for 3 secons total, stop
+      if (elapsed > 10 * SECONDS) {
+        log(`Finished animating icon.`);
+        clearInterval(interval);
+        chrome.action.setIcon({ path: `/assets/toolbar/portal-icon.png` });
+        chrome.action.setBadgeText({ text: "i" });
+        chrome.action.setBadgeBackgroundColor({
+          // mid-blue from app.scss
+          color: MID_BLUE,
+        });
+      }
+      currentFrame = 0;
+      return;
+    }
+    currentFrame++;
+  }, FRAME_INTERVAL);
+  log(`Has started animating icon`);
 };
 
 export const clearBadge = () => {
