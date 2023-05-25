@@ -19,11 +19,7 @@ process.env.PORTAL_VERSION = GIT_VERSION;
 
 const isMinifiying = Boolean(process.env.ZIP_FILE_NAME);
 
-log(
-  `Git version is: '${GIT_VERSION}', ${
-    isMinifiying ? "producing minified build to send externally." : ""
-  } `
-);
+log(`Git version is: '${GIT_VERSION}', ${isMinifiying ? "producing minified build to send externally." : ""} `);
 
 export default defineConfig({
   plugins: [svelte()],
