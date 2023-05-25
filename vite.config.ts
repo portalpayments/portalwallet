@@ -4,10 +4,9 @@ import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfil
 import nodePolyfills from "rollup-plugin-node-polyfills";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { getGitVersion } from "./build-tools";
+import { log, stringify } from "./src/backend/functions";
 
 const GIT_VERSION = getGitVersion();
-
-const log = console.log;
 
 // Config is based on metaplex + vite example from:
 // https://github.com/metaplex-foundation/js-examples/tree/main/getting-started-vite
@@ -43,6 +42,14 @@ export default defineConfig({
       plugins: [nodePolyfills({ crypto: true })],
       output: {
         globals: ["chrome"],
+      },
+      onwarn: (warning, warn) => {
+        // A few of the node polyfills use eval
+        // Disable warnings as this is third party code
+        if (warning.code === "EVAL" && warning?.frame?.includes('eval("require')) {
+          return;
+        }
+        warn(warning);
       },
     },
     // From https://github.com/vitejs/vite/issues/9703#issuecomment-1216662109
