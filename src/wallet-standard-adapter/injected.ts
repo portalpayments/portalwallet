@@ -8,9 +8,8 @@ const main = async () => {
   try {
     registerWallet(portalWalletStandardImplementation);
     log("✅ Registered Portal wallet standard implementation");
-    // https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md
-    // says we should make a global underneath window but that seems gross
-    //
+    // Docs saw we should make a wallet global too, but that's gross
+    // See https://github.com/solana-labs/wallet-standard/issues/18
   } catch (thrownObject) {
     const error = thrownObject as Error;
     console.error(error);

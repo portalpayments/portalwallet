@@ -63,7 +63,7 @@ const makeAccount = (publicKey: PublicKey): WalletAccount => {
 const connect: StandardConnectMethod = async ({
   // From type definition
   // "If this flag is used by the Wallet, the Wallet should not prompt the user, and should return only the accounts that the app is authorized to use.""
-  silent,
+  silent = false,
 } = {}): Promise<StandardConnectOutput> => {
   log(`⚡ Connect. Is silent is: ${silent}`);
   const reply = await sendMessageAndMaybeGetReply(
