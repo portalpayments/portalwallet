@@ -17,7 +17,7 @@ self.window = self;
 // https://stackoverflow.com/questions/62619058/appending-js-extension-on-relative-import-statements-during-typescript-compilat
 import type { AccountSummary, Contact, PortalMessage, PendingUserApproval } from "./backend/types.js";
 import { log, isFresh, stringify } from "./backend/functions";
-import { addMessageListener, setBadge } from "./extension-helpers";
+import { addMessageListener, checkIsBlocked, setBadge } from "./extension-helpers";
 import { cacheWebRequests } from "./service-worker-webcache";
 // See https://github.com/localForage/localForage/issues/831
 import type LocalForageType from "localforage";
@@ -260,26 +260,12 @@ self.addEventListener("fetch", (event) => {
 
 // https://developer.mozilla.org/en-US/docs/mozilla/add-ons/webextensions/api/webnavigation/oncompleted
 chrome.webNavigation.onCompleted.addListener(async (event) => {
-  log(`DEBUG: event.url`, event.url);
-  if (!event.url.startsWith("http")) {
+  if (checkIsBlocked(event.url)) {
     return;
   }
-  log(`The user has loaded ${event.url}! Time to inject the wallet!`);
+
+  log(`The user has loaded ${event.url}! Injecting the wallet...`);
   const tabId = event.tabId;
-
-  // Work around a silly error where ntp.msn.com would appear on new tab page then disappear as soon as loaded something
-  // throwing an error about missing tab IDs
-  if (event.url.includes("ntp.msn.com")) {
-    log(`Not injecting wallet into disappearing MSN NTP site`);
-    return;
-  }
-
-  // DevTools opens https://devtools.azureedge.net/serve_file/@7069649d605643a097c48b2aca67b600bc362a4f/third_party/webhint/worker_frame.html
-  // Fix "Extension manifest must request permission to access this host." error.
-  if (event.url.includes("https://devtools")) {
-    log(`Not injecting wallet into HTTPS site used in devtools`);
-    return;
-  }
 
   // https://developer.chrome.com/docs/extensions/reference/scripting/#method-executeScript
   await chrome.scripting.executeScript({
@@ -287,4 +273,5 @@ chrome.webNavigation.onCompleted.addListener(async (event) => {
     target: { tabId },
     world: "MAIN",
   });
+  log(`✅ Wallet injected successfully`);
 });

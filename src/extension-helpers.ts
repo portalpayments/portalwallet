@@ -9,6 +9,15 @@
 import { log } from "./backend/functions";
 import type { HandleMessage, PortalMessage } from "./backend/types";
 
+const BLOCK_LIST = [
+  // Work around a silly error where ntp.msn.com would appear on new tab page then disappear as soon as loaded
+  "ntp.msn.com",
+  // DevTools opens https://devtools.azureedge.net/serve_file/@7069649d605643a097c48b2aca67b600bc362a4f/third_party/webhint/worker_frame.html
+  // Seems to be part of devtools but not loaded via devtools://
+  // Blocking it fixes "Extension manifest must request permission to access this host." error.
+  "https://devtools",
+];
+
 // Make the Portal toolbar icon glow so users click the toolbar icon
 export const setBadge = (text: string, backgroundColor: string) => {
   log(`Setting badge text and background color`);
@@ -43,6 +52,19 @@ export const clearBadge = () => {
   });
 
   log(`Finished clearing badge text and background color`);
+};
+
+export const checkIsBlocked = (url: string): boolean => {
+  const isLocalhost = url.startsWith("http://localhost");
+  const isEncrypted = url.startsWith("https");
+  if (!(isLocalhost || isEncrypted)) {
+    return true;
+  }
+  const isBlocked =
+    BLOCK_LIST.some((string: string) => {
+      return url.includes(string);
+    }) || false;
+  return isBlocked;
 };
 
 // Check https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/Runtime/onMessage
