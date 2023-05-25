@@ -57,10 +57,12 @@ export default [
     onwarn: (warning, warn) => {
       if (warning.code === "CIRCULAR_DEPENDENCY") {
         // A few of the node polyfills has a circular dependency and we need them to fix it
+        // TODO: update the polyfills when they fix this
         return;
       }
       if (warning.code === "EVAL" && warning.id.includes("@solana/web3.js")) {
-        // A few of the node polyfills has a circular dependency and we need them to fix it
+        // Solana web3.js uses eval for debugging. We don't control it.
+        // TODO: upgrade solana-web3.js when this is fixed and remove the warning.
         return;
       }
       warn(warning);
