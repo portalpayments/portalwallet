@@ -6,8 +6,9 @@
 //
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
-import { clusterApiUrl, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
-import { BN as BigNumber } from "bn.js";
+
+// This file has zero dependencies, so we can load it from the service worker etc.
+const LAMPORTS_PER_SOL = 1_000_000_000;
 
 export const IDENTITY_TOKEN_NAME = "Portal Identity Token";
 export const RECOVERY_TOKEN_NAME = "Portal Recovery Token";
@@ -56,7 +57,7 @@ export const SOLANA_SPACES_WALLET = "4iDRFnp2N4UAsZEePHAxs7ozBanQcGtLYd12HG2HJm4
 export const DECAF_PROMO_WALLET = "AAB98aGddTYoprM78e5i3fxYwCr98fAToDH19WU6vJQ3";
 
 // Artist that made Agiza and Kimzo
-export const ARTIST = new PublicKey("9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX");
+export const ARTIST = "9z8XUe1ak38Pg6MBnHgKB2riUN3sUSgyNL1Dzw179hTX";
 
 // From https://docs.solana.com/integrations/exchange
 export const SOLANA_WALLET_REGEX = "[1-9A-HJ-NP-Za-km-z]{32,44}";
@@ -64,11 +65,11 @@ export const SOLANA_WALLET_REGEX = "[1-9A-HJ-NP-Za-km-z]{32,44}";
 // https://solscan.io/account/HxunVfDmoeAKmNVxt36jjcBq9p3Zy1Bmocx9sVwJNXdP
 export const AGIZA_NFT_ASSOCIATED_TOKEN_ACCOUNT = "HxunVfDmoeAKmNVxt36jjcBq9p3Zy1Bmocx9sVwJNXdP";
 // Solscan calls this the 'SPL Token Address'
-export const AGIZA_NFT_ADDRESS = new PublicKey("8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk");
+export const AGIZA_NFT_ADDRESS = "8ZLr4qQuKbkoYtU8mWJszEXF9juWMycmcysQwZRb89Pk";
 
 // https://solscan.io/account/6YDDeYLruEUeeJ1Y2GDXQ1wSrr4wJvZZefiVEtcsnpCp
 export const KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT = "6YDDeYLruEUeeJ1Y2GDXQ1wSrr4wJvZZefiVEtcsnpCp";
-export const KIMZO_NFT_ADDRESS = new PublicKey("C5veJJL3hUq9s3aUymWjREGYoqbWSzX8aNRaZ9STSCNM");
+export const KIMZO_NFT_ADDRESS = "C5veJJL3hUq9s3aUymWjREGYoqbWSzX8aNRaZ9STSCNM";
 
 export const WRAPPED_SOL_MAINNET_MINT_ACCOUNT = "So11111111111111111111111111111111111111112";
 
@@ -95,10 +96,6 @@ export const JUPITER = "JUP4Fb2cqiRUcaTHdrPC8h2gNsA2ETXiPDD33WcGuJB";
 export const URLS = {
   // From https://solanacookbook.com/references/local-development.html#connecting-to-environments
   localhost: "http://127.0.0.1:8899",
-  // From https://solanacookbook.com/references/local-development.html#starting-a-local-validator
-  devNet: clusterApiUrl("devnet"),
-  mainNetBeta: clusterApiUrl("mainnet-beta"),
-  testNet: clusterApiUrl("testnet"),
   // From https://dev.helius.xyz/rpcs/my
   heliusMainNet: "https://rpc.helius.xyz/?api-key=9e66be52-acf4-44a1-8bbe-a9852f8ab3c7",
   // From https://www.quicknode.com/endpoints/110566
@@ -108,7 +105,7 @@ export const URLS = {
 
 export const DECAF_APP = "dcafKdWLATod3BLRngsqZ7CrQwcrUxrLjFWYJwYP1Fy";
 
-export const SOLANA_DECIMALS = Math.log10(LAMPORTS_PER_SOL);
+export const SOLANA_DECIMALS = Math.log10(1_000_000_000);
 
 export const SOL = LAMPORTS_PER_SOL;
 
@@ -155,13 +152,8 @@ export const SECONDS = SECOND;
 export const MINUTE = 60 * SECONDS;
 export const MINUTES = MINUTE;
 
-// Make zero and one work
-// Hopefully one day BigNumber will be replaced by BigInt (which is native to JS)
-export const ZERO = new BigNumber(0);
-export const ONE = new BigNumber(1);
-
 // https://solscan.io/account/11111111111111111111111111111111
-export const SOLANA_SYSTEM_PROGRAM = new PublicKey("11111111111111111111111111111111");
+export const SOLANA_SYSTEM_PROGRAM = "11111111111111111111111111111111";
 
 // The standard Solana SPL MEMO program
 export const MEMO_PROGRAM = "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr";

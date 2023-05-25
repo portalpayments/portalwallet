@@ -14,21 +14,10 @@ import {
   makeTokenMetaDataForIndividual,
   mintIdentityToken,
 } from "./identity-tokens";
-import {
-  Connection,
-  Keypair,
-  PublicKey,
-  sendAndConfirmTransaction,
-} from "@solana/web3.js";
+import { Connection, Keypair, PublicKey, sendAndConfirmTransaction } from "@solana/web3.js";
 import { connect, getTokenAccountsByOwner, putSolIntoWallet } from "./wallet";
 import { log, sleep, stringify } from "./functions";
-import {
-  IDENTITY_TOKEN_NAME,
-  ONE,
-  SOLANA_SYSTEM_PROGRAM,
-  SECONDS,
-  ZERO,
-} from "./constants";
+import { IDENTITY_TOKEN_NAME, SOLANA_SYSTEM_PROGRAM, SECONDS } from "./constants";
 import base58 from "bs58";
 import { BN as BigNumber } from "bn.js";
 import { makeTokenAccount, makeTransaction } from "./tokens";
@@ -39,6 +28,11 @@ import { uploadImageToPinata } from "./pinata";
 
 // We don't want to waste Pinata tokens unecessarily
 const testPinataIfAskedSpecfically = process.env.TEST_PINATA ? test : test.skip;
+
+// Make zero and one work
+// Hopefully one day BigNumber will be replaced by BigInt (which is native to JS)
+export const ZERO = new BigNumber(0);
+export const ONE = new BigNumber(1);
 
 jest.mock("./functions");
 
@@ -64,11 +58,7 @@ describe(`identity tokens`, () => {
 
   beforeAll(async () => {
     connection = await connect("localhost");
-    await putSolIntoWallet(
-      connection,
-      testIdentityTokenIssuer.publicKey,
-      1_000_000_000
-    );
+    await putSolIntoWallet(connection, testIdentityTokenIssuer.publicKey, 1_000_000_000);
   });
 
   test(`we can save Alice's secret key as a string`, async () => {
@@ -136,8 +126,7 @@ describe(`identity tokens`, () => {
               value: alicePublicKey.toBase58(),
             },
           ],
-          description:
-            "Verification of real-world identity for Solana payments and apps",
+          description: "Verification of real-world identity for Solana payments and apps",
           external_url: "https://getportal.app",
           image: "https://arweave.net/fakeImageForUnitTests.png",
           name: "Portal Identity Token",
@@ -192,8 +181,7 @@ describe(`identity tokens`, () => {
   test(`we can extract claims from token metadata`, () => {
     const nftMetadata = {
       name: "Portal Identity Token",
-      description:
-        "Verification of real-world identity for Solana payments and apps",
+      description: "Verification of real-world identity for Solana payments and apps",
       image: "https://i.imgur.com/GSCtECV.png",
       external_url: "https://getportal.app",
       attributes: [
@@ -318,10 +306,7 @@ describe(`identity tokens`, () => {
       },
     });
 
-    const tokenAccountsByOwner = await getTokenAccountsByOwner(
-      connection,
-      testIdentityTokenIssuer.publicKey
-    );
+    const tokenAccountsByOwner = await getTokenAccountsByOwner(connection, testIdentityTokenIssuer.publicKey);
 
     // See the Associated Token Account for the Portal Identity Token at the testIdentityTokenIssuer
     expect(tokenAccountsByOwner).toEqual([
@@ -352,10 +337,7 @@ describe(`identity tokens`, () => {
       mint: mintAddress,
     });
 
-    const tokenAccountsByOwner = await getTokenAccountsByOwner(
-      connection,
-      alice.publicKey
-    );
+    const tokenAccountsByOwner = await getTokenAccountsByOwner(connection, alice.publicKey);
 
     expect(tokenAccountsByOwner).toEqual([
       {
@@ -386,22 +368,14 @@ describe(`identity tokens`, () => {
       null
     );
 
-    const signature = await sendAndConfirmTransaction(
-      connection,
-      transaction,
-      [testIdentityTokenIssuer],
-      {
-        // https://solanacookbook.com/guides/retrying-transactions.html#facts
-        maxRetries: 6,
-      }
-    );
+    const signature = await sendAndConfirmTransaction(connection, transaction, [testIdentityTokenIssuer], {
+      // https://solanacookbook.com/guides/retrying-transactions.html#facts
+      maxRetries: 6,
+    });
 
     expect(signature).toEqual(expect.any(String));
 
-    const tokenAccountsByOwner = await getTokenAccountsByOwner(
-      connection,
-      alice.publicKey
-    );
+    const tokenAccountsByOwner = await getTokenAccountsByOwner(connection, alice.publicKey);
 
     expect(tokenAccountsByOwner).toEqual([
       {

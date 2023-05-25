@@ -203,7 +203,7 @@ describe(`mainnet integration tests`, () => {
     const firstNFTOwner = agizaAssociatedTokenAccount.owner.toBase58();
 
     expect(firstNFTAddress).toEqual(AGIZA_NFT_ASSOCIATED_TOKEN_ACCOUNT);
-    expect(firstNFTMint).toEqual(AGIZA_NFT_ADDRESS.toBase58());
+    expect(firstNFTMint).toEqual(AGIZA_NFT_ADDRESS);
     expect(firstNFTOwner).toEqual(mikePublicKey.toBase58());
 
     const kimzoAssociatedTokenAccount = await getOrCreateAssociatedTokenAccount(
@@ -218,7 +218,7 @@ describe(`mainnet integration tests`, () => {
     const secondNFTOwner = kimzoAssociatedTokenAccount.owner.toBase58();
 
     expect(secondNFTAddress).toEqual(KIMZO_NFT_ASSOCIATED_TOKEN_ACCOUNT);
-    expect(secondNFTMint).toEqual(KIMZO_NFT_ADDRESS.toBase58());
+    expect(secondNFTMint).toEqual(KIMZO_NFT_ADDRESS);
     expect(secondNFTOwner).toEqual(mikePublicKey.toBase58());
   });
 
