@@ -83,7 +83,6 @@ export const getCollectables = async (
     }
   );
 
-  // @ts-ignore
   const allNftsFromAWallet = (response?.body?.result?.items as Array<ReadApiAsset>) || [];
 
   const collectablesUnfiltered: Array<Collectable> = await asyncMap(allNftsFromAWallet, async (nft) => {
@@ -108,6 +107,14 @@ export const getBestMediaAndType = (metadata: JsonMetadata): { file: string; typ
 
   const files = metadata?.properties?.files || null;
   if (files?.length) {
+    const threeDimensionalModel = files.find((file) => file.type === "model/gltf-binary");
+    if (threeDimensionalModel) {
+      return {
+        file: threeDimensionalModel.uri,
+        type: threeDimensionalModel.type,
+      };
+    }
+
     const video = files.find((file) => file.type === "video/mp4");
     if (video) {
       return {

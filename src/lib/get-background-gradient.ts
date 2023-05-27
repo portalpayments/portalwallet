@@ -23,9 +23,7 @@ export const getBackgroundGradient = async (imageUrl) => {
   const colorRGBString = await getDominantColor(imageUrl);
   const color = colorsea(colorRGBString);
   const topColor = color;
-  const bottomColor = color.darken(10);
-  const gradient = `linear-gradient(180deg, ${colorToString(
-    topColor
-  )}, ${colorToString(bottomColor)})`;
+  const bottomColor = color.darken(30);
+  const gradient = `linear-gradient(180deg, ${colorToString(topColor)}, ${colorToString(bottomColor)})`;
   return gradient;
 };

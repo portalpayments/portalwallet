@@ -6,6 +6,9 @@
   import BackButton from "../Shared/BackButton.svelte";
   import Twitter from "../../assets/twitter.svg";
   import { collectablesStore } from "../stores";
+  import { getBackgroundGradient } from "../get-background-gradient";
+
+  import "@google/model-viewer";
 
   let isLoading = false;
 
@@ -22,6 +25,11 @@
       return value.split("@")[1];
     }
     return null;
+  };
+
+  const setBackgroundColor = async (modelViewerElement, imageURL) => {
+    const gradient = await getBackgroundGradient(imageURL);
+    modelViewerElement.style["background-image"] = gradient;
   };
 
   collectablesStore.subscribe((newValue) => {
@@ -47,7 +55,20 @@
 
     <div class="scrollable">
       <a href={collectable.media} target="_blank">
-        {#if collectable.type === "video/mp4"}
+        {#if collectable.type === "model/gltf-binary"}
+          <!-- See https://modelviewer.dev/ -->
+          <model-viewer
+            class="media"
+            on:load={(event) => setBackgroundColor(event.target, collectable.coverImage)}
+            src={collectable.media}
+            alt={collectable.description}
+            poster={collectable.coverImage}
+            shadow-intensity="1"
+            camera-controls
+            auto-rotate
+            ar
+          />
+        {:else if collectable.type === "video/mp4"}
           <!-- svelte-ignore a11y-media-has-caption -->
           <video controls autoPlay={true} class="media">
             <source src={collectable.media} type="video/mp4" />
@@ -118,6 +139,10 @@
     border-radius: 8px;
     object-fit: cover;
     background-color: var(--light-grey);
+  }
+
+  model-viewer.media {
+    min-height: 300px;
   }
 
   .scrollable {
