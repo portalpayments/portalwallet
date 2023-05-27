@@ -1,13 +1,8 @@
 // Run with 'npm run mint-recovery-token'
 
-import { Connection, Keypair } from "@solana/web3.js";
 import { connect } from "../src/backend/wallet";
 import { getKeypairFromString } from "../src/backend/solana-functions";
-import {
-  makeRecoveryTokenCiphertextAndInitializationVector,
-  makeRecoveryTokenOffChainMetadata,
-  mintRecoveryToken,
-} from "../src/backend/recovery-token";
+import { makeRecoveryTokenOffChainMetadata, mintRecoveryToken } from "../src/backend/recovery-token";
 import dotenv from "dotenv";
 import { log } from "console";
 import { getFromEnv, stringify } from "../src/backend/functions";
@@ -35,16 +30,10 @@ const recoveryTokenOffChainMetadata = await makeRecoveryTokenOffChainMetadata(
   walletUnlockPassword
 );
 
-const metadataUploadResponse = await metaplexNFTs.uploadMetadata(
-  recoveryTokenOffChainMetadata
-);
+const metadataUploadResponse = await metaplexNFTs.uploadMetadata(recoveryTokenOffChainMetadata);
 
 const externalMetadataUri = metadataUploadResponse.uri;
 
-const recoveryToken = await mintRecoveryToken(
-  connection,
-  user,
-  externalMetadataUri
-);
+const recoveryToken = await mintRecoveryToken(connection, user, externalMetadataUri);
 
 log(stringify(recoveryToken));

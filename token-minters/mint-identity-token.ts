@@ -1,19 +1,12 @@
 // Run with 'npm run mint-identity-token'
 
 import { getFromEnv, log, sleep, stringify } from "../src/backend/functions";
-import {
-  transferIdentityToken,
-  mintIdentityToken,
-} from "../src/backend/identity-tokens";
+import { transferIdentityToken, mintIdentityToken } from "../src/backend/identity-tokens";
 import { uploadImageToPinata } from "../src/backend/pinata";
 import dotenv from "dotenv";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
-import base58 from "bs58";
 import { getKeypairFromString } from "../src/backend/solana-functions";
-import type {
-  VerifiedClaimsForIndividual,
-  VerifiedClaimsForOrganization,
-} from "../src/backend/types";
+import type { VerifiedClaimsForIndividual, VerifiedClaimsForOrganization } from "../src/backend/types";
 import { connect } from "../src/backend/wallet";
 
 dotenv.config();
@@ -22,9 +15,7 @@ import { config } from "../mint-identity-token-config";
 import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 
 const main = async () => {
-  log(
-    `'\n\nMake sure to fix the ENABLE BELOW FOR TOKEN MINTER code (search for it) otherwise this will fail\n\n`
-  );
+  log(`'\n\nMake sure to fix the ENABLE BELOW FOR TOKEN MINTER code (search for it) otherwise this will fail\n\n`);
 
   log(`🎟️ Running Portal Identity token minter ...`);
 
@@ -37,22 +28,13 @@ const main = async () => {
   const identityTokenIssuer = getKeypairFromString(identityTokenSecretKey);
 
   // Step 1a. Upload individual image if necessary
-  let uploadedIndividualOrOrganizationImageUrl: string | null =
-    config.alreadyUploadedIndividualOrOrganizationImage;
+  let uploadedIndividualOrOrganizationImageUrl: string | null = config.alreadyUploadedIndividualOrOrganizationImage;
 
   if (uploadedIndividualOrOrganizationImageUrl) {
-    log(
-      `🖼️ Using already-uploaded individual image`,
-      uploadedIndividualOrOrganizationImageUrl
-    );
+    log(`🖼️ Using already-uploaded individual image`, uploadedIndividualOrOrganizationImageUrl);
   } else {
-    uploadedIndividualOrOrganizationImageUrl = await uploadImageToPinata(
-      config.individualOrOrganizationImageFile
-    );
-    log(
-      `🖼️ Uploaded individual image`,
-      uploadedIndividualOrOrganizationImageUrl
-    );
+    uploadedIndividualOrOrganizationImageUrl = await uploadImageToPinata(config.individualOrOrganizationImageFile);
+    log(`🖼️ Uploaded individual image`, uploadedIndividualOrOrganizationImageUrl);
   }
 
   // Step 1b. Upload cover image if necessary
@@ -65,9 +47,7 @@ const main = async () => {
     log(`🖼️ Uploaded cover image`, uploadedCoverImageUrl);
   }
 
-  const tokenClaims:
-    | VerifiedClaimsForIndividual
-    | VerifiedClaimsForOrganization = {
+  const tokenClaims: VerifiedClaimsForIndividual | VerifiedClaimsForOrganization = {
     ...config.tokenClaimsNoImageUrl,
     imageUrl: uploadedIndividualOrOrganizationImageUrl,
   };
