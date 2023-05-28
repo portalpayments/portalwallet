@@ -129,15 +129,4 @@
   .url {
     font-weight: 600;
   }
-
-  // The quote needs to look *not* like Portal's UI
-  // because it might be a bunch of deceptive bullshit from someone's website
-  q {
-    font-style: italic;
-    background-color: var(--black);
-    color: var(--white);
-    text-align: center;
-    padding: 24px 12px;
-    min-height: 128px;
-  }
 </style>
