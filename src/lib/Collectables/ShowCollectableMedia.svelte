@@ -3,8 +3,9 @@
   import type { Collectable } from "../../backend/types";
   import "@google/model-viewer";
 
-  const mediaTypesByMimeType: Record<string, string> = {
+  const mediaCategoryByMediaType: Record<string, string> = {
     "model/gltf-binary": "THREE_DIMENSIONAL_MODEL",
+    "model/gltf+json": "THREE_DIMENSIONAL_MODEL",
     "video/mp4": "VIDEO",
     "image/png": "IMAGE",
     "image/jpeg": "IMAGE",
@@ -19,7 +20,7 @@
   };
 </script>
 
-{#if mediaTypesByMimeType[collectable.type] === "THREE_DIMENSIONAL_MODEL"}
+{#if mediaCategoryByMediaType[collectable.type] === "THREE_DIMENSIONAL_MODEL"}
   <!-- See https://modelviewer.dev/ -->
   <model-viewer
     class="media"
@@ -32,7 +33,7 @@
     auto-rotate
     ar
   />
-{:else if mediaTypesByMimeType[collectable.type] === "VIDEO"}
+{:else if mediaCategoryByMediaType[collectable.type] === "VIDEO"}
   <!-- svelte-ignore a11y-media-has-caption -->
   <video controls autoPlay={true} class="media">
     <source src={collectable.media} type="video/mp4" />
