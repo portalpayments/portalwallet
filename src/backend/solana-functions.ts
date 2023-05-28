@@ -18,7 +18,7 @@ import { log } from "./functions";
 import { mintToCurrencyMap } from "./mint-to-currency-map";
 import type { CurrencyDetails } from "./types";
 import type { JsonMetadata } from "@metaplex-foundation/js";
-import { sign as naclSign } from "tweetnacl";
+import tweetnacl from "tweetnacl";
 
 // We could also use 'bs58' but have to convert string to bytes first
 export const cleanPhrase = (phrase: string) => {
@@ -83,7 +83,7 @@ export const convertStringToSolanaMessage = (string: string) => {
 
 export const getSignature = (message: string, secretKey: Uint8Array) => {
   const messageDecoded = convertStringToSolanaMessage(message);
-  const signature = naclSign.detached(messageDecoded, secretKey);
+  const signature = tweetnacl.sign.detached(messageDecoded, secretKey);
   return signature;
 };
 
