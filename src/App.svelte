@@ -8,6 +8,7 @@
   import SendPage from "./lib/Send/SendPage.svelte";
   import AddMoneyPage from "./lib/AddMoney/AddMoneyPage.svelte";
   import SignMessage from "./lib/Approval/SignMessage.svelte";
+  import ApproveTransaction from "./lib/Approval/ApproveTransaction.svelte";
   import Connect from "./lib/Approval/Connect.svelte";
   import TransactionsPage from "./lib/TransactionsPage/TransactionsPage.svelte";
   import Settings from "./lib/Settings/Settings.svelte";
@@ -20,6 +21,7 @@
     PendingUserApproval,
     PendingUserApprovalSignMessage,
     PendingUserApprovalGetPublicKey,
+    PendingUserApprovalTransaction,
   } from "./backend/types";
   import Lock from "./lib/Lock/Lock.svelte";
   import ContactAndMessages from "./lib/Contacts/Contact/ContactAndMessages.svelte";
@@ -77,16 +79,22 @@
     }
   });
 
+  const isPendingUserApprovalGetPublicKey = (
+    pendingUserApproval: PendingUserApproval
+  ): pendingUserApproval is PendingUserApprovalGetPublicKey => {
+    return pendingUserApproval.topic === "getPublicKey";
+  };
+
   const isPendingUserApprovalSignMessage = (
     pendingUserApproval: PendingUserApproval
   ): pendingUserApproval is PendingUserApprovalSignMessage => {
     return pendingUserApproval.topic === "walletStandardSignMessage";
   };
 
-  const isPendingUserApprovalGetPublicKey = (
+  const isPendingUserApprovalTransaction = (
     pendingUserApproval: PendingUserApproval
-  ): pendingUserApproval is PendingUserApprovalGetPublicKey => {
-    return pendingUserApproval.topic === "getPublicKey";
+  ): pendingUserApproval is PendingUserApprovalTransaction => {
+    return pendingUserApproval.topic === "walletStandardApproveTransaction";
   };
 
   (async () => {
@@ -108,7 +116,10 @@
 <Router>
   <textarea class="debug">pendingUserApproval is:{pendingUserApproval}</textarea>
 
-  <!-- isOnboarded is null when we haven't loaded localForage yet. After this isOnboarded will be true or false. -->
+  <!-- isOnboarded is null when we haven't loaded localForage yet. After this isOnboarded will be true or false. 
+  
+  {"topic":"walletStandardApproveTransaction","url":"http://localhost:3000/","transaction":"K84KMXBdjhWVVWLbRuJ6HHD6kBNcyCbrWDoXssrmZLEKc55UvCVnohYdxSZ5tce2tXFFspnDGssxdMtNV9p2Cpe3jT39sNTH3EaH1oCrq9Coa2QoawbnPiZXAadZgi86b9pCRPWqSox9m4A1zjv33pTWYCv5wqcHDgm5TQoDAd7Gd5yLYHexMAAK5JLSRwUrDLpaTc9moRdKrgwxanPCKnU55N1HpuPfrJX77vfKcReAqNUiMEUxXU44KVeSfvyWdGZ2ufwWW26UNBbjXsGuvqrEXgDfiQwG2CyqcHrKEY","tabId":1855725410,"time":1685271289718}
+-->
   {#if isOnboarded === null}
     Loading...
   {:else if !isOnboarded}
@@ -116,10 +127,12 @@
   {:else if $authStore.keyPair}
     {#if hasCheckedPendingUserApproval}
       {#if pendingUserApproval}
-        {#if isPendingUserApprovalSignMessage(pendingUserApproval)}
-          <SignMessage {pendingUserApproval} />
-        {:else if isPendingUserApprovalGetPublicKey(pendingUserApproval)}
+        {#if isPendingUserApprovalGetPublicKey(pendingUserApproval)}
           <Connect {pendingUserApproval} />
+        {:else if isPendingUserApprovalSignMessage(pendingUserApproval)}
+          <SignMessage {pendingUserApproval} />
+        {:else if isPendingUserApprovalTransaction(pendingUserApproval)}
+          <ApproveTransaction {pendingUserApproval} />
         {:else}
           Some other type of approval
           <textarea>{JSON.stringify(pendingUserApproval)}</textarea>

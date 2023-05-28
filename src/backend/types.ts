@@ -308,7 +308,7 @@ export interface PendingUserApprovalSignMessage extends PendingUserApproval {
   text: string;
 }
 
-export interface PendingUserApprovalApproveTransaction extends PendingUserApproval {
+export interface PendingUserApprovalTransaction extends PendingUserApproval {
   tabId: number;
   transaction: string;
 }

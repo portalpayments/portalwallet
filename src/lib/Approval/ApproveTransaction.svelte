@@ -2,13 +2,14 @@
   import { log, formatURL } from "../../backend/functions";
   import { getSignature } from "../../backend/solana-functions";
   import Heading from "../Shared/Heading.svelte";
-  import type { PendingUserApproval, PortalMessage, PendingUserApprovalApproveTransaction } from "../../backend/types";
+  import type { PortalMessage, PendingUserApprovalTransaction } from "../../backend/types";
   import Choices from "./Choices.svelte";
   import { pendingUserApprovalStore, authStore } from "../../lib/stores";
   import { get as getFromStore } from "svelte/store";
   import base58 from "bs58";
   import { Keypair, PublicKey, Transaction } from "@solana/web3.js";
-  export let pendingUserApproval: PendingUserApprovalApproveTransaction;
+
+  export let pendingUserApproval: PendingUserApprovalTransaction;
 
   const declineToSignTransaction = async () => {
     log(`Declining to sign transaction`);
@@ -68,12 +69,8 @@
   <div class="prompt">
     <!-- TODO: add favicon of site to message? -->
     <p>
-      The site at <span class="url">{formatURL(pendingUserApproval.url)}</span> is asking you to approve a transaction:
+      The site at <span class="url">{formatURL(pendingUserApproval.url)}</span> is asking you to approve a transaction.
     </p>
-
-    <q>
-      {pendingUserApproval.text}
-    </q>
 
     <p>
       ⚠️ This transaction may incur fees. Please <strong>make sure you trust the site</strong> at {formatURL(
@@ -84,7 +81,7 @@
     <Choices
       declineLabel="Decline"
       onDecline={declineToSignTransaction}
-      approveLabel={"Approve transaction"}
+      approveLabel={"Approve"}
       onApprove={signTransaction}
     />
   </div>
