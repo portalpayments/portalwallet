@@ -117,8 +117,6 @@
   <textarea class="debug">pendingUserApproval is:{pendingUserApproval}</textarea>
 
   <!-- isOnboarded is null when we haven't loaded localForage yet. After this isOnboarded will be true or false. 
-  
-  {"topic":"walletStandardApproveTransaction","url":"http://localhost:3000/","transaction":"K84KMXBdjhWVVWLbRuJ6HHD6kBNcyCbrWDoXssrmZLEKc55UvCVnohYdxSZ5tce2tXFFspnDGssxdMtNV9p2Cpe3jT39sNTH3EaH1oCrq9Coa2QoawbnPiZXAadZgi86b9pCRPWqSox9m4A1zjv33pTWYCv5wqcHDgm5TQoDAd7Gd5yLYHexMAAK5JLSRwUrDLpaTc9moRdKrgwxanPCKnU55N1HpuPfrJX77vfKcReAqNUiMEUxXU44KVeSfvyWdGZ2ufwWW26UNBbjXsGuvqrEXgDfiQwG2CyqcHrKEY","tabId":1855725410,"time":1685271289718}
 -->
   {#if isOnboarded === null}
     Loading...
