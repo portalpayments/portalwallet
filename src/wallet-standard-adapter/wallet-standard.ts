@@ -21,7 +21,7 @@ import {
   // isVersionedTransaction,
   // WalletAccountError,
   // WalletConfigError,
-  // WalletConnectionError,
+  WalletConnectionError,
   // WalletDisconnectedError,
   // WalletDisconnectionError,
   // WalletError,
@@ -66,7 +66,7 @@ const connect: StandardConnectMethod = async ({
   silent = false,
 } = {}): Promise<StandardConnectOutput> => {
   log(`⚡ Connect. Is silent is: ${silent}`);
-  const reply = await sendMessageAndMaybeGetReply(
+  const reply = await sendMessageAndMaybeGetReplyOrTimeout(
     {
       topic: "getPublicKey",
       url: window.location.href,
@@ -74,9 +74,11 @@ const connect: StandardConnectMethod = async ({
     "replyGetPublicKey"
   );
 
-  if (!reply.publicKey) {
+  if (!reply?.publicKey) {
     log(`Didn't get a public key from the front end`);
-    return { accounts: activeAccounts };
+    // Wallet standard is to throw errors
+    throw new WalletConnectionError(`Did not accept connection`);
+    // return { accounts: activeAccounts };
   }
   const publicKeyDecoded = base58.decode(reply.publicKey);
   const publicKey = new PublicKey(publicKeyDecoded);

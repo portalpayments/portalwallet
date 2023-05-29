@@ -17,7 +17,7 @@ self.window = self;
 // https://stackoverflow.com/questions/62619058/appending-js-extension-on-relative-import-statements-during-typescript-compilat
 import type { AccountSummary, Contact, PortalMessage, PendingUserApproval } from "./backend/types.js";
 import { log, isFresh, stringify } from "./backend/functions";
-import { addMessageListener, checkIsBlocked, makeIconShine } from "./extension-helpers";
+import { addMessageListener, checkIsBlocked, stopIconShine, makeIconShine } from "./extension-helpers";
 import { cacheWebRequests } from "./service-worker-webcache";
 // See https://github.com/localForage/localForage/issues/831
 import type LocalForageType from "localforage";
@@ -75,6 +75,13 @@ const setPendingUserApproval = async (message: PortalMessage) => {
   await localforage.setItem("PENDING_USER_APPROVAL", pendingUserApproval);
   log(`Also saved to localforage, just in case the service worker is terminated`);
 };
+
+addMessageListener("clearPendingUserApproval", async (message: PortalMessage) => {
+  log(`Clearing pending user approvals`);
+  stopIconShine();
+  pendingUserApproval = null;
+  await localforage.setItem("PENDING_USER_APPROVAL", null);
+});
 
 addMessageListener("walletStandardConnect", async (message: PortalMessage, sendReply: SendReply) => {
   makeIconShine();

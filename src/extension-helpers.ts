@@ -33,12 +33,6 @@ let shineInterval: NodeJS.Timer | null = null;
 export const makeIconShine = () => {
   log(`Making toolbar icon active`);
 
-  chrome.action.setBadgeText({ text: "i" });
-  chrome.action.setBadgeBackgroundColor({
-    // mid-blue from app.scss
-    color: MID_BLUE,
-  });
-
   let currentFrame = 0;
 
   shineInterval = setInterval(() => {
@@ -53,22 +47,13 @@ export const makeIconShine = () => {
   log(`Has started animating icon`);
 };
 
-export const clearBadge = () => {
-  log(`Clearing badge text and background color`);
-
+export const stopIconShine = () => {
+  if (shineInterval) {
+    clearInterval(shineInterval);
+    shineInterval = null;
+  }
   chrome.action.setIcon({ path: `/assets/toolbar/portal-icon.png` });
-
-  clearInterval(shineInterval);
-
-  chrome.action.setBadgeText({
-    text: "",
-  });
-
-  chrome.action.setBadgeBackgroundColor({
-    color: "transparent",
-  });
-
-  log(`Finished clearing badge text and background color`);
+  log(`Stopping icon shine`);
 };
 
 export const checkIsBlocked = (url: string): boolean => {

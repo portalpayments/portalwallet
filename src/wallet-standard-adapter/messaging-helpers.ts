@@ -30,13 +30,19 @@ export const sendMessageAndMaybeGetReply = (message: PortalMessage, replyTopic: 
 export const sendMessageAndMaybeGetReplyOrTimeout = async (
   message: PortalMessage,
   replyTopic: string,
-  timeout: number = 30 * SECONDS
+  timeout: number = 20 * SECONDS
 ) => {
   let reply: PortalMessage = null;
   try {
     reply = (await runWithTimeout(sendMessageAndMaybeGetReply(message, replyTopic), timeout)) || null;
-  } catch (error) {
-    log(`The user did not reply in time`, stringify(error));
+  } catch (thrownObject) {
+    const error = thrownObject as Error;
+    if (error.message.includes("Timeout")) {
+      log(`The user did not reply in time, clearing user approval`);
+    } else {
+      log(`Unexpected error`, error.message);
+    }
+    sendMessageToContentScript({ topic: "clearPendingUserApproval" });
     return null;
   }
   log(`We got a reply from the user.`);

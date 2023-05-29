@@ -3,7 +3,7 @@
 
 import type { PendingUserApproval, PortalMessage, SendReply } from "src/backend/types";
 import { log, stringify } from "../backend/functions";
-import { addMessageListener, clearBadge } from "src/extension-helpers";
+import { addMessageListener, stopIconShine } from "src/extension-helpers";
 
 const main = async () => {
   log(`In content script`);
@@ -29,19 +29,14 @@ const main = async () => {
         throw new Error(`No message.topic in event from wallet`);
       }
 
-      if (
-        message.topic === "walletStandardConnect" ||
-        message.topic === "walletStandardSignMessage" ||
-        message.topic === "walletStandardApproveTransaction" ||
-        message.topic === "getPublicKey"
-      ) {
-        log(`The content script received: ${stringify(message)}`);
-        log(
-          `We will forward the message on to the rest of the extension - we should see an indicator on the popup now`
-        );
-        // Forward the message onto the service worker (we use the same format as the injected wallet)
-        await chrome.runtime.sendMessage(message);
-      }
+      // Everything else gets passed to rest of extension
+      log(
+        `The content script received: ${stringify(
+          message
+        )} from the page, we will forward the message on to the rest of the extension`
+      );
+      // Forward the message onto the service worker (we use the same format as the injected wallet)
+      await chrome.runtime.sendMessage(message);
     },
     false
   );
