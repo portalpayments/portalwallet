@@ -31,6 +31,12 @@ const MID_BLUE = "#419cfd";
 export const makeIconShine = () => {
   log(`Making toolbar icon active`);
 
+  chrome.action.setBadgeText({ text: "i" });
+  chrome.action.setBadgeBackgroundColor({
+    // mid-blue from app.scss
+    color: MID_BLUE,
+  });
+
   let currentFrame = 0;
 
   const startDate = Date.now();
@@ -47,12 +53,7 @@ export const makeIconShine = () => {
       if (elapsed > 10 * SECONDS) {
         log(`Finished animating icon.`);
         clearInterval(interval);
-        chrome.action.setIcon({ path: `/assets/toolbar/portal-icon.png` });
-        chrome.action.setBadgeText({ text: "i" });
-        chrome.action.setBadgeBackgroundColor({
-          // mid-blue from app.scss
-          color: MID_BLUE,
-        });
+        clearBadge();
       }
       currentFrame = 0;
       return;
@@ -64,6 +65,8 @@ export const makeIconShine = () => {
 
 export const clearBadge = () => {
   log(`Clearing badge text and background color`);
+
+  chrome.action.setIcon({ path: `/assets/toolbar/portal-icon.png` });
 
   chrome.action.setBadgeText({
     text: "",
