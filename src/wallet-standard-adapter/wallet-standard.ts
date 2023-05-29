@@ -30,15 +30,15 @@ const VERSION = "1.0.0";
 
 let activeAccounts: Array<WalletAccount> = [];
 
-// See constructor() in https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
-// The instructions at https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md
-// https://github.com/wallet-standard/wallet-standard
-// Methods borrowed from window.solana since the docs are non-existent:
-// https://github.com/solana-labs/wallet-standard/issues/17
-// See /home/mike/Code/portal/portal-standard-wallet/src/window.ts
-// (which is not our code but rather a clone of https://github.com/solana-labs/wallet-standard)
-// https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
-// Check also /home/mike/Code/portal/wallet-adapter/node_modules/.pnpm/@solana+wallet-standard-wallet-adapter-base@1.0.2_@solana+web3.js@1.74.0_bs58@4.0.1/node_modules/@solana/wallet-standard-wallet-adapter-base/lib/esm/adapter.js
+// An implementation of Wallet Standard, which connects to DApps that use Wallet Adapter.
+
+// Wallet Standard docs are not good: https://github.com/solana-labs/wallet-standard/issues/17
+// - The instructions at https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md
+// - Best guide is the actual code of the demo wallet https://github.com/wallet-standard/wallet-standard/blob/master/packages/example/wallets/src/solanaWallet.ts
+
+// Use wallet-adapter/packages/starter/example to test
+// Inside that project @solana/wallet-standard-wallet-adapter-base/lib/esm/adapter.js
+// is the file most of this connects to.
 
 const makeAccount = (publicKey: PublicKey): WalletAccount => {
   return {
