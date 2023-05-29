@@ -125,8 +125,6 @@ const signMessage = async (accountAndMessage: SolanaSignMessageInput) => {
     "replyWalletStandardSignMessage"
   );
 
-  let signatureOrNull: Uint8Array | null;
-
   if (!reply.isApproved) {
     log(`🤔 User didn't sign.`);
     // Wallet Standard behaviour is to throw an error for this

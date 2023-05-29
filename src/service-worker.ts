@@ -55,6 +55,7 @@ let contacts: Array<Contact> | null = null;
 
 log(`Parsing service worker version: ${VERSION}`);
 
+// TODO: we're always saving this to localstorage. Maybe we should just delete the variable?
 let pendingUserApproval: null | PendingUserApproval = null;
 
 // https://developer.chrome.com/docs/extensions/reference/runtime/#event-onMessage

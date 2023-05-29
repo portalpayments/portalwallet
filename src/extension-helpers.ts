@@ -41,10 +41,6 @@ export const makeIconShine = () => {
 
   let currentFrame = 0;
 
-  const startDate = Date.now();
-
-  let interval: NodeJS.Timer;
-
   shineInterval = setInterval(() => {
     chrome.action.setIcon({ path: `/assets/toolbar/portal-icon-shining-${currentFrame}.png` });
     // Zero indexed

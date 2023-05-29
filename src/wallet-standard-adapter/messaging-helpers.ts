@@ -1,4 +1,3 @@
-import { PublicKey } from "@solana/web3.js";
 import { SECONDS } from "src/backend/constants";
 import { runWithTimeout, stringify, log } from "src/backend/functions";
 import type { PortalMessage } from "src/backend/types";
@@ -26,7 +25,7 @@ export const sendMessageAndMaybeGetReply = (message: PortalMessage, replyTopic: 
   });
 };
 
-// Make the wallet popup show an icon so the users clicks on it.
+// Make the wallet popup shine so the users clicks on it.
 // Give the user some time to approve, decline or do nothing
 export const sendMessageAndMaybeGetReplyOrTimeout = async (
   message: PortalMessage,
@@ -40,5 +39,6 @@ export const sendMessageAndMaybeGetReplyOrTimeout = async (
     log(`The user did not reply in time`, stringify(error));
     return null;
   }
+  log(`We got a reply from the user.`);
   return reply;
 };
