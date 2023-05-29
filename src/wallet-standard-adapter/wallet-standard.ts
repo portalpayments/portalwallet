@@ -17,21 +17,19 @@ import { PublicKey } from "@solana/web3.js";
 import { convertSolanaMessageToString } from "./util";
 import base58 from "bs58";
 import {
-  // BaseWalletAdapter,
-  // isVersionedTransaction,
   // WalletAccountError,
   // WalletConfigError,
   WalletConnectionError,
   // WalletDisconnectedError,
   // WalletDisconnectionError,
-  // WalletError,
+  WalletError,
   // WalletNotConnectedError,
   // WalletNotReadyError,
   // WalletPublicKeyError,
   // WalletReadyState,
   // WalletSendTransactionError,
   WalletSignMessageError,
-  // WalletSignTransactionError,
+  WalletSignTransactionError,
 } from "@solana/wallet-adapter-base";
 import type { SolanaChain } from "./types";
 import { sendMessageAndMaybeGetReply, sendMessageAndMaybeGetReplyOrTimeout } from "./messaging-helpers";
@@ -111,11 +109,11 @@ const signMessage = async (accountAndMessage: SolanaSignMessageInput) => {
   // - multiple outputs
 
   if (!accountAndMessage.account.features.includes("solana:signMessage")) {
-    throw new Error("invalid feature");
+    throw new WalletError("invalid feature");
   }
 
   if (!accountAndMessage.account.publicKey) {
-    throw new Error("invalid account");
+    throw new WalletError("invalid account");
   }
 
   // First, convert the Solana message to a string, but also 'message' is a confusing
@@ -159,11 +157,11 @@ const approveTransaction: SolanaSignTransactionMethod = async (...inputs) => {
   const outputs: SolanaSignTransactionOutput[] = [];
   for (const { transaction, account, chain } of inputs) {
     if (!account.features.includes("solana:signTransaction")) {
-      throw new Error("invalid feature");
+      throw new WalletError("invalid feature");
     }
 
     if (chain && !SOLANA_CHAINS.includes(chain as SolanaChain)) {
-      throw new Error("invalid chain");
+      throw new WalletError("invalid chain");
     }
 
     // Make the wallet popup show an icon so the users clicks on it.
@@ -178,7 +176,7 @@ const approveTransaction: SolanaSignTransactionMethod = async (...inputs) => {
     );
 
     if (!reply.isApproved) {
-      throw new Error("signature declined");
+      throw new WalletSignTransactionError("Signature declined");
     }
 
     const signedTransaction = base58.decode(reply.signedTransaction);
