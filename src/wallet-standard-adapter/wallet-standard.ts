@@ -58,6 +58,16 @@ const makeAccount = (publicKey: PublicKey): WalletAccount => {
   };
 };
 
+const checkChainsAndFeature = (account: WalletAccount, feature: `${string}:${string}`) => {
+  if (!account.features.includes(feature)) {
+    throw new WalletError("invalid feature");
+  }
+
+  if (!account.publicKey) {
+    throw new WalletError("invalid account");
+  }
+};
+
 const connect: StandardConnectMethod = async ({
   // From type definition
   // "If this flag is used by the Wallet, the Wallet should not prompt the user, and should return only the accounts that the app is authorized to use.""
@@ -108,13 +118,7 @@ const signMessage = async (accountAndMessage: SolanaSignMessageInput) => {
   // - a single input
   // - multiple outputs
 
-  if (!accountAndMessage.account.features.includes("solana:signMessage")) {
-    throw new WalletError("invalid feature");
-  }
-
-  if (!accountAndMessage.account.publicKey) {
-    throw new WalletError("invalid account");
-  }
+  checkChainsAndFeature(accountAndMessage.account, "solana:signMessage");
 
   // First, convert the Solana message to a string, but also 'message' is a confusing
   // variable name, since we already have window.postMessage() and 'message' is a different type of message
@@ -156,13 +160,7 @@ const approveTransaction: SolanaSignTransactionMethod = async (...inputs) => {
   log("Sign transaction arguments:", ...inputs);
   const outputs: SolanaSignTransactionOutput[] = [];
   for (const { transaction, account, chain } of inputs) {
-    if (!account.features.includes("solana:signTransaction")) {
-      throw new WalletError("invalid feature");
-    }
-
-    if (chain && !SOLANA_CHAINS.includes(chain as SolanaChain)) {
-      throw new WalletError("invalid chain");
-    }
+    checkChainsAndFeature(account, "solana:signTransaction");
 
     // Make the wallet popup show an icon so the users clicks on it.
     // Give the user some time to approve, decline or do nothing
