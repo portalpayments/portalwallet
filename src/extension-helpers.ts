@@ -28,6 +28,8 @@ const FRAMES_IN_ANIMATION = 25;
 
 const MID_BLUE = "#419cfd";
 
+let shineInterval: NodeJS.Timer | null = null;
+
 export const makeIconShine = () => {
   log(`Making toolbar icon active`);
 
@@ -43,18 +45,10 @@ export const makeIconShine = () => {
 
   let interval: NodeJS.Timer;
 
-  interval = setInterval(() => {
+  shineInterval = setInterval(() => {
     chrome.action.setIcon({ path: `/assets/toolbar/portal-icon-shining-${currentFrame}.png` });
     // Zero indexed
     if (currentFrame + 1 === FRAMES_IN_ANIMATION) {
-      const now = Date.now();
-      const elapsed = Math.abs(now - startDate);
-      // After nimating for 3 secons total, stop
-      if (elapsed > 10 * SECONDS) {
-        log(`Finished animating icon.`);
-        clearInterval(interval);
-        clearBadge();
-      }
       currentFrame = 0;
       return;
     }
@@ -67,6 +61,8 @@ export const clearBadge = () => {
   log(`Clearing badge text and background color`);
 
   chrome.action.setIcon({ path: `/assets/toolbar/portal-icon.png` });
+
+  clearInterval(shineInterval);
 
   chrome.action.setBadgeText({
     text: "",
