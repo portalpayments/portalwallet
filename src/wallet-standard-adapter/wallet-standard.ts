@@ -77,8 +77,13 @@ const connect: StandardConnectMethod = async ({
   if (!reply?.publicKey) {
     log(`Didn't get a public key from the front end`);
     // Wallet standard is to throw errors
+    if (activeAccounts.length) {
+      log(
+        `User didn't respond to this connect request, but it looks like we already connected via a different request.`
+      );
+      return { accounts: activeAccounts };
+    }
     throw new WalletConnectionError(`Did not accept connection`);
-    // return { accounts: activeAccounts };
   }
   const publicKeyDecoded = base58.decode(reply.publicKey);
   const publicKey = new PublicKey(publicKeyDecoded);
