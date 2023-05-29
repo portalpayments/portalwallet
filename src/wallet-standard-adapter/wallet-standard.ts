@@ -17,22 +17,13 @@ import { PublicKey } from "@solana/web3.js";
 import { convertSolanaMessageToString } from "./util";
 import base58 from "bs58";
 import {
-  // WalletAccountError,
-  // WalletConfigError,
   WalletConnectionError,
-  // WalletDisconnectedError,
-  // WalletDisconnectionError,
   WalletError,
-  // WalletNotConnectedError,
-  // WalletNotReadyError,
-  // WalletPublicKeyError,
-  // WalletReadyState,
   // WalletSendTransactionError,
   WalletSignMessageError,
   WalletSignTransactionError,
 } from "@solana/wallet-adapter-base";
-import type { SolanaChain } from "./types";
-import { sendMessageAndMaybeGetReply, sendMessageAndMaybeGetReplyOrTimeout } from "./messaging-helpers";
+import { sendMessageAndMaybeGetReplyOrTimeout } from "./messaging-helpers";
 
 const NAME = "Portal";
 const VERSION = "1.0.0";
