@@ -46,5 +46,6 @@ export const sendMessageAndMaybeGetReplyOrTimeout = async (
     return null;
   }
   log(`We got a reply from the user.`);
+  sendMessageToContentScript({ topic: "clearPendingUserApproval" });
   return reply;
 };
