@@ -7,7 +7,7 @@
   import { pendingUserApprovalStore, authStore } from "../../lib/stores";
   import { get as getFromStore } from "svelte/store";
   import base58 from "bs58";
-  import { Keypair, PublicKey, Transaction } from "@solana/web3.js";
+  import { VersionedMessage, VersionedTransaction } from "@solana/web3.js";
 
   export let pendingUserApproval: PendingUserApprovalTransaction;
 
@@ -32,12 +32,12 @@
     const auth = getFromStore(authStore);
 
     const decodedTransaction = base58.decode(pendingUserApproval.transaction);
-    const parsedTransaction = Transaction.from(decodedTransaction);
+    const parsedTransaction = VersionedTransaction.deserialize(decodedTransaction);
 
-    parsedTransaction.partialSign(auth.keyPair);
+    parsedTransaction.sign([auth.keyPair]);
 
     // Taken from example in Wallet Adapter Ghostwallet
-    const signedTransaction = new Uint8Array(parsedTransaction.serialize({ requireAllSignatures: false }));
+    const signedTransaction = new Uint8Array(parsedTransaction.serialize());
 
     const signedTransactionBase58 = base58.encode(signedTransaction);
 
