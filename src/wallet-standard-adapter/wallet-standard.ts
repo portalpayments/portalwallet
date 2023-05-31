@@ -31,6 +31,8 @@ const VERSION = "1.0.0";
 let activeAccounts: Array<WalletAccount> = [];
 
 // An implementation of Wallet Standard, which connects to DApps that use Wallet Adapter.
+// This file essentially sends messages to the rest of the wallet to do actual work,
+// like signing transactions, getting public keys, etc. and then sends responses back to the dApp.
 
 // Wallet Standard docs are not good: https://github.com/solana-labs/wallet-standard/issues/17
 // - The instructions at https://github.com/solana-labs/wallet-standard/blob/master/WALLET.md
@@ -175,7 +177,6 @@ const approveTransaction: SolanaSignTransactionMethod = async (...inputs) => {
 
   return outputs;
 };
-
 // Portal's implementation of the wallet standard
 // We use functional programming because 90-s style OOP is garbage.
 export const portalWalletStandardImplementation: WalletStandard = {
