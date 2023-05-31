@@ -95,8 +95,6 @@ const connect: StandardConnectMethod = async ({
 
 const disconnect = async () => {
   log("🔌 Disconnect");
-  // TODO - double check (I don't have internet right now and guessed the code below)
-  // look in the wallet adapter demo wallets to confirm
   activeAccounts = [];
   return { accounts: activeAccounts };
 };
