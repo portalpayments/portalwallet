@@ -125,7 +125,7 @@ const signMessage = async (accountAndMessage: SolanaSignMessageInput) => {
     "replyWalletStandardSignMessage"
   );
 
-  if (!reply.isApproved) {
+  if (!reply?.isApproved) {
     log(`🤔 User didn't sign.`);
     // Wallet Standard behaviour is to throw an error for this
     throw new WalletSignMessageError("Signature was not approved");
@@ -164,7 +164,7 @@ const approveTransaction: SolanaSignTransactionMethod = async (...inputs) => {
       "replyWalletStandardApproveTransaction"
     );
 
-    if (!reply.isApproved) {
+    if (!reply?.isApproved) {
       throw new WalletSignTransactionError("Signature declined");
     }
 
@@ -177,6 +177,7 @@ const approveTransaction: SolanaSignTransactionMethod = async (...inputs) => {
 
   return outputs;
 };
+
 // Portal's implementation of the wallet standard
 // We use functional programming because 90-s style OOP is garbage.
 export const portalWalletStandardImplementation: WalletStandard = {
