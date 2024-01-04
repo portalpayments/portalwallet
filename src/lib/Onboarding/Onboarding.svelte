@@ -12,8 +12,6 @@
   import ProgressBar from "../Shared/ProgressBar.svelte";
   import { Circle } from "svelte-loading-spinners";
   import { log } from "../../backend/functions";
-  import { SECONDS } from "../../backend/constants";
-  import { secretKeyToHex } from "../../backend/solana-functions";
   import { mnemonicToKeypairs, checkIfSecretKeyIsValid, checkIfMnemonicPhraseIsValid } from "../../backend/recovery";
   import base58 from "bs58";
   import { saveSettings, checkIfOnboarded } from "../settings";

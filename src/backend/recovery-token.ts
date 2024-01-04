@@ -7,26 +7,13 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 
-import {
-  RECOVERY_TOKEN_NAME,
-  SECONDS,
-  SOLANA_SEED_SIZE_BYTES,
-} from "./constants";
+import { RECOVERY_TOKEN_NAME, SECONDS, SOLANA_SEED_SIZE_BYTES } from "./constants";
 import * as http from "fetch-unfucked";
 import { log, stringify, sleep, toArrayBuffer } from "./functions";
 import ESSerializer from "esserializer";
 import scryptAsync from "scryptsy";
-import {
-  getRandomValues,
-  encryptWithAESGCM,
-  decryptWithAESGCM,
-} from "./encryption";
-import {
-  cleanPhrase,
-  secretKeyToHex,
-  getKeypairFromString,
-  getAttributesFromNFT,
-} from "./solana-functions";
+import { getRandomValues, encryptWithAESGCM, decryptWithAESGCM } from "./encryption";
+import { cleanPhrase, secretKeyToBase58, getKeypairFromString, getAttributesFromNFT } from "./solana-functions";
 import type { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import type {
   Sft,
@@ -36,15 +23,8 @@ import type {
   CreateNftBuilderParams,
   JsonMetadata,
 } from "@metaplex-foundation/js";
-import {
-  getAnonymousMetaplex,
-  getMetaplex,
-  identityTokenIssuerPublicKey,
-} from "./identity-tokens";
-import type {
-  CipherTextAndInitializationVector,
-  CipherTextAndInitializationVectorSerialized,
-} from "./types";
+import { getAnonymousMetaplex, getMetaplex, identityTokenIssuerPublicKey } from "./identity-tokens";
+import type { CipherTextAndInitializationVector, CipherTextAndInitializationVectorSerialized } from "./types";
 
 if (!globalThis.setImmediate) {
   // Fixes 'ReferenceError: setImmediate is not defined' when running in browser
@@ -52,10 +32,7 @@ if (!globalThis.setImmediate) {
   globalThis.setImmediate = (func: Function) => setTimeout(func, 0);
 }
 
-export const personalPhraseToEntropy = async (
-  phrase: string,
-  password: string
-): Promise<ArrayBuffer> => {
+export const personalPhraseToEntropy = async (phrase: string, password: string): Promise<ArrayBuffer> => {
   // scryptsy is an ascrypt implementation that works in both the browser and node
 
   // CPU/memory cost parameter – must be a power of 2, also called 'N'
@@ -82,10 +59,7 @@ export const personalPhraseToEntropy = async (
 
 // WebCrypto ingests secrets as CryptoKeys to stop malicious apps from say extracting keys
 export const importKey = async (entropy: ArrayBuffer): Promise<CryptoKey> => {
-  return crypto.subtle.importKey("raw", entropy, "AES-GCM", true, [
-    "encrypt",
-    "decrypt",
-  ]);
+  return crypto.subtle.importKey("raw", entropy, "AES-GCM", true, ["encrypt", "decrypt"]);
 };
 
 export const makeRecoveryTokenCiphertextAndInitializationVector = async (
@@ -97,10 +71,7 @@ export const makeRecoveryTokenCiphertextAndInitializationVector = async (
   const cleanedPersonalPhrase = cleanPhrase(personalPhrase);
 
   // Step 1 - use personal phrase and wallet unlock to build entropy
-  const entropy = await personalPhraseToEntropy(
-    cleanedPersonalPhrase,
-    walletUnlockPassword
-  );
+  const entropy = await personalPhraseToEntropy(cleanedPersonalPhrase, walletUnlockPassword);
 
   const tokenEncryptionKey = await importKey(entropy);
 
@@ -108,11 +79,7 @@ export const makeRecoveryTokenCiphertextAndInitializationVector = async (
   const initializationVector: Uint8Array = await getRandomValues();
 
   // Step 3 - encrypt the secret key, using the entropy and IV we just made
-  const cipherText = await encryptWithAESGCM(
-    secretKeyToHex(secretKey),
-    initializationVector,
-    tokenEncryptionKey
-  );
+  const cipherText = await encryptWithAESGCM(secretKeyToBase58(secretKey), initializationVector, tokenEncryptionKey);
 
   const recoveryTokenCiphertextAndInitializationVector = {
     cipherText: ESSerializer.serialize(cipherText),
@@ -127,12 +94,11 @@ export const makeRecoveryTokenOffChainMetadata = async (
   personalPhrase: string,
   walletUnlockPassword: string
 ): Promise<JsonMetadata> => {
-  const recoveryTokenPayload =
-    await makeRecoveryTokenCiphertextAndInitializationVector(
-      user.secretKey,
-      personalPhrase,
-      walletUnlockPassword
-    );
+  const recoveryTokenPayload = await makeRecoveryTokenCiphertextAndInitializationVector(
+    user.secretKey,
+    personalPhrase,
+    walletUnlockPassword
+  );
 
   return {
     name: "Portal Recovery Token",
@@ -184,9 +150,7 @@ export const mintRecoveryToken = async (
 
     // TODO: metaplexNFTs.create() has a bug, see identity-tokens for details.
     // when this is fixed we can move to metaplex.create() and save some code
-    const transactionBuilder = await metaplexNFTs
-      .builders()
-      .create(createNftOptions);
+    const transactionBuilder = await metaplexNFTs.builders().create(createNftOptions);
     const { mintAddress } = transactionBuilder.getContext();
     await metaplex.rpc().sendAndConfirmTransaction(transactionBuilder);
 
@@ -198,9 +162,7 @@ export const mintRecoveryToken = async (
 
     // See https://github.com/metaplex-foundation/js/issues/148
     if (error.message.includes("Failed to pack instruction data")) {
-      throw new Error(
-        `Increase Sol balance of wallet for user ${user.publicKey.toBase58()}`
-      );
+      throw new Error(`Increase Sol balance of wallet for user ${user.publicKey.toBase58()}`);
     }
 
     if (error.message.includes("insufficient lamports")) {
@@ -213,9 +175,7 @@ export const mintRecoveryToken = async (
     throw error;
   }
 
-  log(
-    `🎟️ The recoveryToken has been created, and is in the token account at address ${createdNFT.address}.`
-  );
+  log(`🎟️ The recoveryToken has been created, and is in the token account at address ${createdNFT.address}.`);
 
   return createdNFT;
 };
@@ -227,30 +187,19 @@ export const recoverFromToken = async (
 ): Promise<Keypair | null> => {
   try {
     // Decode the ESSerializer JSON back to JS
-    const cipherText = ESSerializer.deserialize(
-      recoveryTokenPayload.cipherText
-    );
-    const initializationVector = ESSerializer.deserialize(
-      recoveryTokenPayload.initializationVector
-    );
+    const cipherText = ESSerializer.deserialize(recoveryTokenPayload.cipherText);
+    const initializationVector = ESSerializer.deserialize(recoveryTokenPayload.initializationVector);
 
     // Step 0 - normalize personal phrase
     const cleanedPersonalPhrase = cleanPhrase(personalPhrase);
 
     // Step 1 - use personal phrase and wallet unlock to rebuild entropy
-    const entropy = await personalPhraseToEntropy(
-      cleanedPersonalPhrase,
-      walletUnlockPassword
-    );
+    const entropy = await personalPhraseToEntropy(cleanedPersonalPhrase, walletUnlockPassword);
 
     const tokenDecryptionKey = await importKey(entropy);
 
     // Step 3 - decrypt the AES
-    const decryptedData = (await decryptWithAESGCM(
-      cipherText,
-      initializationVector,
-      tokenDecryptionKey
-    )) as string;
+    const decryptedData = (await decryptWithAESGCM(cipherText, initializationVector, tokenDecryptionKey)) as string;
 
     // We're done decrypting, now let's turn it back into a KeyPair
     const restoredWallet = getKeypairFromString(decryptedData);
@@ -277,9 +226,7 @@ export const getRecoveryTokenFromWallet = async (
     // Look for Portal Recovery Token issued by user
     // Quick note we need to toBase58() both addresses for the comparison to work.
     const firstCreator = nft.creators?.[0]?.address?.toBase58();
-    return (
-      nft.name === RECOVERY_TOKEN_NAME && firstCreator === address.toBase58()
-    );
+    return nft.name === RECOVERY_TOKEN_NAME && firstCreator === address.toBase58();
   });
 
   if (!allSelfIssuedRecoveryTokens.length) {
@@ -292,9 +239,7 @@ export const getRecoveryTokenFromWallet = async (
   const attributes = getAttributesFromNFT(body);
 
   if (!attributes.cipherText || !attributes.initializationVector) {
-    log(
-      `Warning: could not get cipherText or initializationVector from recovery token!`
-    );
+    log(`Warning: could not get cipherText or initializationVector from recovery token!`);
     return null;
   }
 

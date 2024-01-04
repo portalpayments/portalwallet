@@ -7,11 +7,8 @@
 // You should have received a copy of the GNU General Public License along with Portal Wallet. If not, see <https://www.gnu.org/licenses/>.
 //
 import { Keypair } from "@solana/web3.js";
-import { cleanPhrase, secretKeyToHex } from "./solana-functions";
-import {
-  dirtyPersonalPhrase,
-  slightlyDifferentDirtyPersonalPhrase,
-} from "./test-data/transactions/test-phrases";
+import { cleanPhrase, secretKeyToBase58 } from "./solana-functions";
+import { dirtyPersonalPhrase, slightlyDifferentDirtyPersonalPhrase } from "./test-data/transactions/test-phrases";
 import mime from "mime";
 
 jest.mock("./functions");
@@ -26,18 +23,16 @@ describe(`restoration`, () => {
 
   test(`two dirty phrases end up the same when cleaned`, () => {
     const cleanedPersonalPhrase1 = cleanPhrase(dirtyPersonalPhrase);
-    const cleanedPersonalPhrase2 = cleanPhrase(
-      slightlyDifferentDirtyPersonalPhrase
-    );
+    const cleanedPersonalPhrase2 = cleanPhrase(slightlyDifferentDirtyPersonalPhrase);
     expect(cleanedPersonalPhrase1).toEqual(cleanedPersonalPhrase2);
   });
 });
 
-describe(`secretKeyToHex`, () => {
-  test(`secretKeyToHex is accurate`, () => {
+describe(`secretKeyToBase58`, () => {
+  test(`secretKeyToBase58 is accurate`, () => {
     const keyPair = new Keypair();
-    const result = secretKeyToHex(keyPair.secretKey);
-    // Hex representation can be either 87 or 88 characters
+    const result = secretKeyToBase58(keyPair.secretKey);
+    // Base58 representation can be either 87 or 88 characters
     expect(result.length).toBeGreaterThanOrEqual(87);
     expect(result.length).toBeLessThan(89);
   });

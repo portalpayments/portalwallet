@@ -25,8 +25,7 @@ export const cleanPhrase = (phrase: string) => {
   return phrase.toLowerCase().trim().replace(WHITESPACE, SINGLE_SPACE).replace(NON_ALPHA_NUMERIC, NOTHING);
 };
 
-// TODO: not hex, this is base58 not base16
-export const secretKeyToHex = (secretKey: Uint8Array) => {
+export const secretKeyToBase58 = (secretKey: Uint8Array) => {
   return base58.encode(secretKey);
 };
 
