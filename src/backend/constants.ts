@@ -105,7 +105,7 @@ export const URLS = {
 
 export const DECAF_APP = "dcafKdWLATod3BLRngsqZ7CrQwcrUxrLjFWYJwYP1Fy";
 
-export const SOLANA_DECIMALS = Math.log10(1_000_000_000);
+export const SOLANA_DECIMALS = Math.log10(LAMPORTS_PER_SOL);
 
 export const SOL = LAMPORTS_PER_SOL;
 

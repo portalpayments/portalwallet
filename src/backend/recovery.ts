@@ -51,6 +51,7 @@ export const mnemonicToKeypairs = async (
     );
     keyPairs.push(keypair);
   }
+
   return keyPairs;
 };
 

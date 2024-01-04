@@ -12,7 +12,7 @@
 
 // TODO: fix upstream. The TS SDK should give real errors.
 
-// https://github.com/solana-labs/solana-program-library/blob/cd8d79a2b4aa4f90c02514d762ab21023449b6cb/token/program/src/error.rs#L9
+// https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/error.rs
 enum customProgramErrors {
   "Lamport balance below rent-exempt threshold",
   "Insufficient funds",
