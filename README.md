@@ -2,8 +2,6 @@
 
 Portal is a wallet with a strong focus on transfers and payments, and is built to be used by everyone.
 
-[![Build status](https://github.com/portalwallet/portalwallet/actions/workflows/tests.yaml/badge.svg)](https://github.com/portalwallet/portalwallet/actions)
-
 ## Portal is alpha software
 
 We don't recommend you use Portal as your main Solana wallet yet.
