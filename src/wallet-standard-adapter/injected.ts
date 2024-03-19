@@ -8,7 +8,7 @@ const main = async () => {
   try {
     registerWallet(portalWalletStandardImplementation);
     log("✅ Registered Portal wallet standard implementation");
-    // Docs saw we should make a wallet global too, but that's gross
+    // Docs say we should make a wallet global too, but that's gross
     // See https://github.com/solana-labs/wallet-standard/issues/18
   } catch (thrownObject) {
     const error = thrownObject as Error;
